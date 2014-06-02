@@ -1,21 +1,24 @@
+#include "ScdfPipe.h"
 #include "Sensor.h"
 
-Sensor* scdf::Sensor::Create(SensorType type, Pipe destPipe)
+using namespace scdf;
+
+Sensor* Sensor::Create(SensorType type, ScdfPipe *destPipe)
 {
-    if (type == Sensor::Invalid)
-        return null;
-    else if (type == Sensor::AudioInput)
+    if (type == SensorType::Invalid)
+        return NULL;
+    else if (type == SensorType::AudioInput)
         return SensorAudioInput::Create(destPipe);
     else
         return SensorStandard::Create(type,destPipe);
 }
 
-SensorType scdf::Sensor::GetType(SensorData* data)
+SensorType Sensor::GetType()
 {
     return type;
 }
 
-void scdf::Sensor::AddIncomingDataToQueue(SensorData* data)
+void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
 }
