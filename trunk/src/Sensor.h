@@ -1,4 +1,8 @@
+#pragma once
+
 #include "TypeDefinitions.h"
+
+
 
 namespace scdf {
     

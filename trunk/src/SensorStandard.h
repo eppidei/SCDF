@@ -7,7 +7,7 @@ namespace scdf {
         
     public:
 
-        SensorStandard* Create(SensorType type, ScdfPipe *destPipe);
+        static SensorStandard* Create(SensorType type, ScdfPipe *destPipe);
         s_bool Setup(SensorSettings settings);        
         s_bool Start();
         s_bool Stop();
