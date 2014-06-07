@@ -12,7 +12,10 @@
 
 using namespace scdf;
 
-extern std::vector<ScdfPipe> pipes;
+namespace scdf
+{
+    extern std::vector<ScdfPipe> pipes;
+}
 
 Sensor *SensorsManager::GetSensor(SensorType type)
 {
@@ -44,7 +47,7 @@ Sensor *SensorsManager::CreateSensor(SensorType type)
     Sensor *s=Sensor::Create(type, &pipes[type]);
     if (NULL==s)
     {
-        Logging::Instance("Error creating sensor");
+        //Logging::Instance("Error creating sensor");
         return NULL;
     }
     sensors.insert(SensorPair(type,s));
