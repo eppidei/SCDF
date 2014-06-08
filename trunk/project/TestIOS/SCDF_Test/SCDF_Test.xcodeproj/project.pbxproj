@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9D9F541E1944A0AE00EB7E48 /* InitApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */; };
 		9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */; };
 		9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
 		DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */; };
-		DC151388194486AB00DC7BF7 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151379194485BE00DC7BF7 /* FirstViewController.mm */; };
-		DC151389194486AB00DC7BF7 /* SecondViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137B194485BE00DC7BF7 /* SecondViewController.mm */; };
 		DC15138A194486AB00DC7BF7 /* SensorAudioInputIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */; };
 		DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */; };
 		DC15138C194486AB00DC7BF7 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
@@ -23,13 +20,16 @@
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
 		DC1513A11944898B00DC7BF7 /* GyroscopeIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */; };
 		DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */; };
+		DC70A3BD1944C1A40057AED4 /* InitApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */; };
+		DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */; };
+		DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */; };
+		DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
+		DC70A3C91944CD3C0057AED4 /* SecondViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */; };
 		DCE8BEA2194393B300D283E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA1194393B300D283E8 /* Foundation.framework */; };
 		DCE8BEA4194393B300D283E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */; };
 		DCE8BEA6194393B300D283E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA5194393B300D283E8 /* UIKit.framework */; };
 		DCE8BEAC194393B300D283E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEAA194393B300D283E8 /* InfoPlist.strings */; };
 		DCE8BEAE194393B300D283E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE8BEAD194393B300D283E8 /* main.m */; };
-		DCE8BEB5194393B300D283E8 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEB3194393B300D283E8 /* Main_iPhone.storyboard */; };
-		DCE8BEB8194393B300D283E8 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEB6194393B300D283E8 /* Main_iPad.storyboard */; };
 		DCE8BEC0194393B300D283E8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEBF194393B300D283E8 /* Images.xcassets */; };
 		DCE8BEE01943970100D283E8 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEDF1943970100D283E8 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
@@ -43,10 +43,6 @@
 		DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerIos.mm; sourceTree = "<group>"; };
 		DC151376194485BE00DC7BF7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		DC151377194485BE00DC7BF7 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		DC151378194485BE00DC7BF7 /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		DC151379194485BE00DC7BF7 /* FirstViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FirstViewController.mm; sourceTree = "<group>"; };
-		DC15137A194485BE00DC7BF7 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		DC15137B194485BE00DC7BF7 /* SecondViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SecondViewController.mm; sourceTree = "<group>"; };
 		DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIos.mm; sourceTree = "<group>"; };
 		DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIos.mm; sourceTree = "<group>"; };
 		DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIosImpl.mm; sourceTree = "<group>"; };
@@ -59,6 +55,12 @@
 		DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GyroscopeIos.mm; sourceTree = "<group>"; };
 		DC1513A219448AC800DC7BF7 /* MagnetometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetometerIos.h; sourceTree = "<group>"; };
 		DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MagnetometerIos.mm; sourceTree = "<group>"; };
+		DC70A3BF1944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		DC70A3C11944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		DC70A3C41944CD3C0057AED4 /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = SOURCE_ROOT; };
+		DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FirstViewController.mm; sourceTree = SOURCE_ROOT; };
+		DC70A3C61944CD3C0057AED4 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = SOURCE_ROOT; };
+		DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SecondViewController.mm; sourceTree = SOURCE_ROOT; };
 		DCE8BE9E194393B300D283E8 /* SCDF_Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCDF_Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCE8BEA1194393B300D283E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -67,13 +69,8 @@
 		DCE8BEAB194393B300D283E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DCE8BEAD194393B300D283E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DCE8BEAF194393B300D283E8 /* SCDF_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SCDF_Test-Prefix.pch"; sourceTree = "<group>"; };
-		DCE8BEB4194393B300D283E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		DCE8BEB7194393B300D283E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		DCE8BEBF194393B300D283E8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DCE8BEC6194393B300D283E8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		DCE8BECE194393B400D283E8 /* SCDF_TestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SCDF_TestTests-Info.plist"; sourceTree = "<group>"; };
-		DCE8BED0194393B400D283E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		DCE8BED2194393B400D283E8 /* SCDF_TestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCDF_TestTests.m; sourceTree = "<group>"; };
 		DCE8BEDF1943970100D283E8 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -124,10 +121,6 @@
 			children = (
 				DC151376194485BE00DC7BF7 /* AppDelegate.h */,
 				DC151377194485BE00DC7BF7 /* AppDelegate.mm */,
-				DC151378194485BE00DC7BF7 /* FirstViewController.h */,
-				DC151379194485BE00DC7BF7 /* FirstViewController.mm */,
-				DC15137A194485BE00DC7BF7 /* SecondViewController.h */,
-				DC15137B194485BE00DC7BF7 /* SecondViewController.mm */,
 			);
 			path = AppLayout;
 			sourceTree = "<group>";
@@ -151,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				DCE8BEA7194393B300D283E8 /* SCDF_Test */,
-				DCE8BECC194393B400D283E8 /* SCDF_TestTests */,
 				DCE8BEA0194393B300D283E8 /* Frameworks */,
 				DCE8BE9F194393B300D283E8 /* Products */,
 			);
@@ -180,10 +172,14 @@
 		DCE8BEA7194393B300D283E8 /* SCDF_Test */ = {
 			isa = PBXGroup;
 			children = (
+				DC70A3C41944CD3C0057AED4 /* FirstViewController.h */,
+				DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */,
+				DC70A3C61944CD3C0057AED4 /* SecondViewController.h */,
+				DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */,
+				DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */,
+				DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */,
 				DC151391194487A100DC7BF7 /* src */,
 				DC151372194485BE00DC7BF7 /* ios */,
-				DCE8BEB3194393B300D283E8 /* Main_iPhone.storyboard */,
-				DCE8BEB6194393B300D283E8 /* Main_iPad.storyboard */,
 				DCE8BEBF194393B300D283E8 /* Images.xcassets */,
 				DCE8BEA8194393B300D283E8 /* Supporting Files */,
 			);
@@ -197,24 +193,6 @@
 				DCE8BEAA194393B300D283E8 /* InfoPlist.strings */,
 				DCE8BEAD194393B300D283E8 /* main.m */,
 				DCE8BEAF194393B300D283E8 /* SCDF_Test-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		DCE8BECC194393B400D283E8 /* SCDF_TestTests */ = {
-			isa = PBXGroup;
-			children = (
-				DCE8BED2194393B400D283E8 /* SCDF_TestTests.m */,
-				DCE8BECD194393B400D283E8 /* Supporting Files */,
-			);
-			path = SCDF_TestTests;
-			sourceTree = "<group>";
-		};
-		DCE8BECD194393B400D283E8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				DCE8BECE194393B400D283E8 /* SCDF_TestTests-Info.plist */,
-				DCE8BECF194393B400D283E8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -271,9 +249,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE8BEB8194393B300D283E8 /* Main_iPad.storyboard in Resources */,
+				DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */,
+				DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */,
 				DCE8BEC0194393B300D283E8 /* Images.xcassets in Resources */,
-				DCE8BEB5194393B300D283E8 /* Main_iPhone.storyboard in Resources */,
 				DCE8BEAC194393B300D283E8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,14 +263,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D9F541E1944A0AE00EB7E48 /* InitApplication.cpp in Sources */,
 				9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */,
 				DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */,
 				DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
-				DC151388194486AB00DC7BF7 /* FirstViewController.mm in Sources */,
 				DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */,
-				DC151389194486AB00DC7BF7 /* SecondViewController.mm in Sources */,
+				DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */,
+				DC70A3BD1944C1A40057AED4 /* InitApplication.cpp in Sources */,
 				DC15138A194486AB00DC7BF7 /* SensorAudioInputIos.mm in Sources */,
 				DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */,
 				DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */,
@@ -301,6 +278,7 @@
 				DCE8BEAE194393B300D283E8 /* main.m in Sources */,
 				9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */,
 				9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */,
+				DC70A3C91944CD3C0057AED4 /* SecondViewController.mm in Sources */,
 				DC1513A11944898B00DC7BF7 /* GyroscopeIos.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,34 +286,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		DCE8BEAA194393B300D283E8 /* InfoPlist.strings */ = {
+		DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DCE8BEAB194393B300D283E8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		DCE8BEB3194393B300D283E8 /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DCE8BEB4194393B300D283E8 /* Base */,
-			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		DCE8BEB6194393B300D283E8 /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DCE8BEB7194393B300D283E8 /* Base */,
+				DC70A3BF1944C38D0057AED4 /* Base */,
 			);
 			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
-		DCE8BECF194393B400D283E8 /* InfoPlist.strings */ = {
+		DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DCE8BED0194393B400D283E8 /* en */,
+				DC70A3C11944C38D0057AED4 /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		DCE8BEAA194393B300D283E8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCE8BEAB194393B300D283E8 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

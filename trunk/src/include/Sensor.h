@@ -41,11 +41,12 @@ namespace scdf {
         
         virtual s_bool Start() = 0;
         virtual s_bool Stop()  = 0;
+        
+         void AddIncomingDataToQueue(SensorData *data);
 
     protected:
 
         SensorType type;
-        void AddIncomingDataToQueue(SensorData *data);
     
     };
   

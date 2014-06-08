@@ -8,6 +8,8 @@
 
 #import "SensorStandardIosImpl.h"
 #import "AccelerometerIos.h"
+#import "MagnetometerIos.h"
+#import "GyroscopeIos.h"
 
 using namespace scdf;
 using  scdf::SensorStandard;
@@ -18,16 +20,15 @@ SensorStandardImpl::SensorStandardImpl(SensorType type)
     switch (type) {
         case scdf::Accelerometer:
             sensorImpl = [[AccelerometerIos alloc] init];
-            //[sensorImpl AssingPipe:destPipe];
             break;
         case scdf::Gyroscope:
-            //
+            sensorImpl = [[GyroscopeIos alloc] init];
             break;
         case scdf::Magnetometer:
-            //
+            sensorImpl = [[MagnetometerIos alloc] init];
             break;
         case scdf::Proximity:
-            //
+            // TODO;
             break;
             
         default:
@@ -36,7 +37,7 @@ SensorStandardImpl::SensorStandardImpl(SensorType type)
     }
 }
 
-SensorStandardImpl::SensorStandardImpl()
+SensorStandardImpl::~SensorStandardImpl()
 {
     if(sensorImpl){
         [sensorImpl release];

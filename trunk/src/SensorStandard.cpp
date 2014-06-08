@@ -29,10 +29,10 @@ s_bool SensorStandard::Setup(SensorSettings settings)
 
 s_bool SensorStandard::Start()
 {
-    return sImpl->Stop();
+    return sImpl->Start();
 }
 
 s_bool SensorStandard::Stop()
 {
-    return sImpl->Start();
+    return sImpl->Stop();
 }

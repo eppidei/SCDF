@@ -12,7 +12,7 @@
 @interface SensorStandardIos : NSObject
 
 {
-    
+    scdf::Sensor  *sensorRef;
 }
 
 + (CMMotionManager *) InitMotionManager;
@@ -21,6 +21,5 @@
 - (s_bool) Start;
 - (s_bool) Stop;
 - (s_bool) Setup:(scdf::SensorSettings)  settings;
-//- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe;
 
 @end

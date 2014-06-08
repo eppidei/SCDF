@@ -27,5 +27,12 @@ SensorType Sensor::GetType()
 void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
-    pipes[GetType()].WriteMessage<SensorData*>(data);
+    //pipes[GetType()].WriteMessage<SensorData*>(data);
+    
+    s_double *mydata = (s_double *)data->data;
+    
+    
+
+    printf("Value Data 1: %.2f, Value Data 2: %.2f,Value Data 3 %.2f \n", mydata[0],mydata[1], mydata[2]);
+
 }
