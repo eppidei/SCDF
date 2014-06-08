@@ -10,5 +10,5 @@ void CreatePipes();
 
 void InitApplication()
 {
-    //CreatePipes();
+    CreatePipes();
 }

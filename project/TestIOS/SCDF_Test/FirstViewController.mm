@@ -22,16 +22,13 @@
 {
     [super viewDidLoad];
     
-    scdf::ScdfPipe pipeAccelerometer;
-    scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer/*, &pipeAccelerometer*/);
+    scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
     accelerometer->Start();
     
-    scdf::ScdfPipe pipeGyro;
-    scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope/*, &pipeGyro*/);
+    scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
     //gyroscope->Start();
     
-    scdf::ScdfPipe pipeMagnetometer;
-    scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer/*, &pipeMagnetometer*/);
+    scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
    // magnetometer->Start();
     
     

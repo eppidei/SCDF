@@ -4,7 +4,7 @@
 //  Created by Andrea Scuderi on 01/06/14.
 //
 //
-
+#include <string>
 #include "Sensor.h"
 #include "ScdfPipe.h"
 #include "unistd.h"
@@ -12,10 +12,11 @@
 
 using namespace scdf;
 
-std::vector<ScdfPipe> pipes;
+std::vector<ScdfPipe*> pipes;
 void CreatePipes()
 {
-    pipes.resize(SensorType::NumTypes);
+    for (int i=0;i<SensorType::NumTypes;++i)
+        pipes.push_back(new ScdfPipe());
 }
 
 void ScdfPipe::Close()
