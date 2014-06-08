@@ -12,8 +12,6 @@
 #import "GyroscopeIos.h"
 
 using namespace scdf;
-using  scdf::SensorStandard;
-using  scdf::SensorType;
 
 SensorStandardImpl::SensorStandardImpl(SensorType type)
 {
