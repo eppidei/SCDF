@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D9F541E1944A0AE00EB7E48 /* InitApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */; };
 		DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */; };
 		DC151388194486AB00DC7BF7 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151379194485BE00DC7BF7 /* FirstViewController.mm */; };
 		DC151389194486AB00DC7BF7 /* SecondViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137B194485BE00DC7BF7 /* SecondViewController.mm */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitApplication.cpp; path = ../../../../src/InitApplication.cpp; sourceTree = "<group>"; };
 		DC151373194485BE00DC7BF7 /* AccelerometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerIos.h; sourceTree = "<group>"; };
 		DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerIos.mm; sourceTree = "<group>"; };
 		DC151376194485BE00DC7BF7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -48,10 +50,6 @@
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
 		DC151399194487BE00DC7BF7 /* ScdfPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScdfPipe.h; path = ../../../../src/include/ScdfPipe.h; sourceTree = "<group>"; };
 		DC15139A194487BE00DC7BF7 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../src/include/Sensor.h; sourceTree = "<group>"; };
-		DC15139B194487BE00DC7BF7 /* SensorAudioInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorAudioInput.h; path = ../../../../src/include/SensorAudioInput.h; sourceTree = "<group>"; };
-		DC15139C194487BE00DC7BF7 /* SensorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorsManager.h; path = ../../../../src/include/SensorsManager.h; sourceTree = "<group>"; };
-		DC15139D194487BE00DC7BF7 /* SensorStandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStandard.h; path = ../../../../src/include/SensorStandard.h; sourceTree = "<group>"; };
-		DC15139E194487BE00DC7BF7 /* TypeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeDefinitions.h; path = ../../../../src/include/TypeDefinitions.h; sourceTree = "<group>"; };
 		DC15139F1944898B00DC7BF7 /* GyroscopeIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GyroscopeIos.h; sourceTree = "<group>"; };
 		DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GyroscopeIos.mm; sourceTree = "<group>"; };
 		DC1513A219448AC800DC7BF7 /* MagnetometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetometerIos.h; sourceTree = "<group>"; };
@@ -126,13 +124,10 @@
 			children = (
 				DC151399194487BE00DC7BF7 /* ScdfPipe.h */,
 				DC15139A194487BE00DC7BF7 /* Sensor.h */,
-				DC15139B194487BE00DC7BF7 /* SensorAudioInput.h */,
-				DC15139C194487BE00DC7BF7 /* SensorsManager.h */,
-				DC15139D194487BE00DC7BF7 /* SensorStandard.h */,
-				DC15139E194487BE00DC7BF7 /* TypeDefinitions.h */,
 				DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */,
 				DC151393194487AD00DC7BF7 /* Sensor.cpp */,
 				DC151394194487AD00DC7BF7 /* SensorsManager.cpp */,
+				9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -275,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D9F541E1944A0AE00EB7E48 /* InitApplication.cpp in Sources */,
 				DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */,
 				DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
@@ -406,7 +402,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -428,7 +424,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
