@@ -14,7 +14,7 @@
 
 - (id) init
 {
-    motionManager = [SensorStandardIosImpl InitMotionManager];
+    motionManager = [SensorStandardIos InitMotionManager];
     
     return self;
 }

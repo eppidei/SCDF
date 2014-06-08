@@ -15,10 +15,13 @@ namespace scdf {
         s_int32 framesPerBuffer;
     };
 
-
-    class SensorAudioInput : public Sensor {
+    class SensorAudioInputImpl;
+    class SensorAudioInput : public Sensor
+    {
+        SensorAudioInputImpl *sImpl;
     public:
-        static SensorAudioInput* Create(SensorType type);
+        SensorAudioInput(){}
+        SensorAudioInput(SensorType type);
         s_bool Setup(SensorSettings settings);        
         s_bool Start();
         s_bool Stop();

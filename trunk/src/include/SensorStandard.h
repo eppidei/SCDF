@@ -1,12 +1,15 @@
 #include "Sensor.h"
 
 namespace scdf {
+    class SensorStandardImpl;
     
-    class SensorStandard : public Sensor {
-        
+    class SensorStandard : public Sensor
+    {
+        SensorStandardImpl *sImpl;
     public:
 
-        static SensorStandard* Create(SensorType type);
+        SensorStandard(){}
+        SensorStandard(SensorType type);
         s_bool Setup(SensorSettings settings);        
         s_bool Start();
         s_bool Stop();

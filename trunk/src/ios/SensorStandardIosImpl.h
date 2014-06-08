@@ -6,25 +6,23 @@
 //  Copyright (c) 2014 Marco Bertola. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreMotion/CoreMotion.h>
-#import "TypeDefinitions.h"
 #import "Sensor.h"
+#import "SensorStandard.h"
+#import "SensorStandardIos.h"
 
-
-
-@interface SensorStandardIosImpl : NSObject
-
-{
+namespace scdf {
     
+    class SensorStandardImpl : public SensorStandard
+    {
+        SensorStandardIos *sensorImpl;
+        
+    public:
+        
+        SensorStandardImpl(SensorType type);
+        SensorStandardImpl();
+        s_bool SetupImpl(scdf::SensorSettings settings);
+        s_bool Start();
+        s_bool Stop();
+        
+    };
 }
-
-+ (CMMotionManager *) InitMotionManager;
-+ (CMMotionManager *) GetMotionManager;
-
-- (s_bool) Start;
-- (s_bool) Stop;
-- (s_bool) Setup:(scdf::SensorSettings)  settings;
-//- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe;
-
-@end
