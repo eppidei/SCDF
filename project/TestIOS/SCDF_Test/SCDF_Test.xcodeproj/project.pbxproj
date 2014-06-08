@@ -37,10 +37,8 @@
 /* Begin PBXFileReference section */
 		9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitApplication.cpp; path = ../../../../src/InitApplication.cpp; sourceTree = "<group>"; };
 		9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
-		9D9F54221944B0AB00EB7E48 /* SensorStandardIos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorStandardIos.h; sourceTree = "<group>"; };
 		9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
 		9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
-		9D9F54281944BFD100EB7E48 /* SensorAudioInputIosImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorAudioInputIosImpl.h; sourceTree = "<group>"; };
 		DC151373194485BE00DC7BF7 /* AccelerometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerIos.h; sourceTree = "<group>"; };
 		DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerIos.mm; sourceTree = "<group>"; };
 		DC151376194485BE00DC7BF7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -51,7 +49,6 @@
 		DC15137B194485BE00DC7BF7 /* SecondViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SecondViewController.mm; sourceTree = "<group>"; };
 		DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIos.mm; sourceTree = "<group>"; };
 		DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIos.mm; sourceTree = "<group>"; };
-		DC15137E194485BE00DC7BF7 /* SensorStandardIosImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorStandardIosImpl.h; sourceTree = "<group>"; };
 		DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIosImpl.mm; sourceTree = "<group>"; };
 		DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfPipe.cpp; path = ../../../../src/ScdfPipe.cpp; sourceTree = "<group>"; };
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
@@ -115,10 +112,7 @@
 				DC151375194485BE00DC7BF7 /* AppLayout */,
 				DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */,
 				9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */,
-				9D9F54281944BFD100EB7E48 /* SensorAudioInputIosImpl.h */,
-				9D9F54221944B0AB00EB7E48 /* SensorStandardIos.h */,
 				DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */,
-				DC15137E194485BE00DC7BF7 /* SensorStandardIosImpl.h */,
 				DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */,
 			);
 			name = ios;
@@ -435,6 +429,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
