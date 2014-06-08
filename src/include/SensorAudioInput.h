@@ -1,7 +1,5 @@
 #include "Sensor.h"
 
-class Pipe;
-
 namespace scdf {
 
     class AudioSettings : public SensorSettings {
@@ -20,7 +18,7 @@ namespace scdf {
 
     class SensorAudioInput : public Sensor {
     public:
-        static SensorAudioInput* Create(SensorType type, ScdfPipe *destPipe);
+        static SensorAudioInput* Create(SensorType type);
         s_bool Setup(SensorSettings settings);        
         s_bool Start();
         s_bool Stop();

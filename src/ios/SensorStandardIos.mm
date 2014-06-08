@@ -22,12 +22,12 @@ class SensorStandardImpl : public SensorStandard {
     SensorStandardIosImpl *sensorImpl;
 public:
     
-    SensorStandardImpl(SensorType type, ScdfPipe *destPipe)
+    SensorStandardImpl(SensorType type/*, ScdfPipe *destPipe*/)
     {
         switch (type) {
             case scdf::Accelerometer:
                 sensorImpl = [[AccelerometerIos alloc] init];
-                [sensorImpl AssingPipe:destPipe];
+                //[sensorImpl AssingPipe:destPipe];
                 break;
             case scdf::Gyroscope:
                 //
@@ -71,11 +71,11 @@ public:
 
 static SensorStandard *sensorStandardImpl = NULL; // TODO: When I have to delete this?
 
-SensorStandard* scdf::SensorStandard::Create(SensorType type, ScdfPipe *destPipe)
+SensorStandard* scdf::SensorStandard::Create(SensorType type/*, ScdfPipe *destPipe*/)
 {
     // if sensor is not available return null
     // otherwise, create it 
-    sensorStandardImpl = new SensorStandardImpl(type,destPipe);
+    sensorStandardImpl = new SensorStandardImpl(type/*,destPipe*/);
     // ios specific setup, store the pipe
     // return the just created sensor
     return sensorStandardImpl;

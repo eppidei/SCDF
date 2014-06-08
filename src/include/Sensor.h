@@ -6,7 +6,6 @@
 
 namespace scdf {
     
-    class ScdfPipe;
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
 
     class SensorSettings {
@@ -29,7 +28,7 @@ namespace scdf {
 
     public:
 
-        static Sensor* Create(SensorType type, ScdfPipe *destPipe);
+        static Sensor* Create(SensorType type);
         static void Destroy(Sensor* sensor);
         
         SensorType GetType();

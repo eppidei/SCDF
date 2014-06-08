@@ -33,7 +33,7 @@ static CMMotionManager *motionManager = nil;
 - (s_bool) Start { return false; }
 - (s_bool) Stop { return false; }
 - (s_bool) Setup:(scdf::SensorSettings) settings {return false; }
-- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe{}
+//- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe{}
 
 
 
