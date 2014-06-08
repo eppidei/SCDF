@@ -17,10 +17,6 @@
     return self;
 }
 
-- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe
-{
-    pipe = *destPipe;
-}
 
 - (s_bool) Start
 {
@@ -43,7 +39,8 @@
     NSTimeInterval updateInterval = settings.rate;
     motionManager.gyroUpdateInterval = updateInterval;
     
-    
+    scdf::SensorData data;
+    sensorRef->AddIncomingDataToQueue(&data);
     
     return false;
 }

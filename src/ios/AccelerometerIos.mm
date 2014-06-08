@@ -7,6 +7,7 @@
 //
 
 #import "AccelerometerIos.h"
+#import "Sensor.h"
 
 
 @implementation AccelerometerIos
@@ -17,11 +18,6 @@
     motionManager = [SensorStandardIos InitMotionManager];
     
     return self;
-}
-
-- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe
-{
-    pipe = *destPipe;
 }
 
 - (s_bool) Start
@@ -59,6 +55,20 @@
     s_double xValue=  acceleration.x;
     s_double yValue=  acceleration.y;
     s_double zValue=  acceleration.z;
+    
+    s_double* accelerometerData = new s_double[3];
+    accelerometerData[0]  = xValue;
+    accelerometerData[1]  = yValue;
+    accelerometerData[2]  = zValue;
+    
+    scdf::SensorData data;
+    
+    data.type = scdf::Accelerometer;
+    data.data = accelerometerData;
+    
+    sensorRef->AddIncomingDataToQueue(&data);
+    
+    delete accelerometerData;
 }
 
 

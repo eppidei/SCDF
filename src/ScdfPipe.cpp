@@ -16,7 +16,6 @@ std::vector<ScdfPipe> pipes;
 void CreatePipes()
 {
     pipes.resize(SensorType::NumTypes);
-    int pippo=0;
 }
 
 void ScdfPipe::Close()

@@ -17,11 +17,6 @@
     return self;
 }
 
-- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe
-{
-    pipe = *destPipe;
-}
-
 - (s_bool) Start
 {
     [motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue]
@@ -57,6 +52,11 @@
     s_double xValue=  magneticField.x;
     s_double yValue=  magneticField.y;
     s_double zValue=  magneticField.z;
+    
+    scdf::SensorData data;
+    sensorRef->AddIncomingDataToQueue(&data);
+    
+
 }
 
 
