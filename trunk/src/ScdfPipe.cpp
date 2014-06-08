@@ -10,16 +10,13 @@
 #include "unistd.h"
 #include <vector>
 
-namespace scdf
-{
-    std::vector<ScdfPipe> pipes;
-    void CreatePipes()
-    {
-        pipes.resize(SensorType::NumTypes);
-    }
-}
-
 using namespace scdf;
+
+std::vector<ScdfPipe> pipes;
+void CreatePipes()
+{
+    pipes.resize(SensorType::NumTypes);
+}
 
 void ScdfPipe::Close()
 {
@@ -53,9 +50,9 @@ s_bool ScdfPipe::Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *byte
     return bytesWritten1!=-1;
 }
 
-template s_int32 ScdfPipe::SendMessage<SensorData*> (SensorData *msg);
+template s_int32 ScdfPipe::WriteMessage<SensorData*> (SensorData *msg);
 
-template <class PipeMessage> s_int32 ScdfPipe::SendMessage(PipeMessage msg)
+template <class PipeMessage> s_int32 ScdfPipe::WriteMessage(PipeMessage msg)
 {
     //_ASSERT(!invalid);
     if (invalid) return 0;

@@ -12,6 +12,7 @@
 #import "Sensor.h"
 
 
+
 @interface SensorStandardIosImpl : NSObject
 
 {
@@ -24,6 +25,6 @@
 - (s_bool) Start;
 - (s_bool) Stop;
 - (s_bool) Setup:(scdf::SensorSettings)  settings;
-- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe;
+//- (void)   AssingPipe: (scdf::ScdfPipe *) destPipe;
 
 @end

@@ -7,15 +7,9 @@
 
 #include "Sensor.h"
 #include "SensorsManager.h"
-#include "ScdfPipe.h"
 #include <vector>
 
 using namespace scdf;
-
-namespace scdf
-{
-    extern std::vector<ScdfPipe> pipes;
-}
 
 Sensor *SensorsManager::GetSensor(SensorType type)
 {
@@ -29,7 +23,7 @@ void SensorsManager::ActivateSensor(SensorType type)
 {
     Sensor *sensor=GetSensor(type);
     if (NULL==sensor){
-        sensor=Sensor::Create(type, &pipes[type]);
+        sensor=Sensor::Create(type);
         if (NULL==sensor) return;
     }
     sensor->Start();
@@ -44,7 +38,7 @@ void SensorsManager::DeActivateSensor(SensorType type)
 
 Sensor *SensorsManager::CreateSensor(SensorType type)
 {
-    Sensor *s=Sensor::Create(type, &pipes[type]);
+    Sensor *s=Sensor::Create(type);
     if (NULL==s)
     {
         //Logging::Instance("Error creating sensor");

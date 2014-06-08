@@ -46,7 +46,6 @@
 		DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfPipe.cpp; path = ../../../../src/ScdfPipe.cpp; sourceTree = "<group>"; };
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
-		DC151395194487AD00DC7BF7 /* TypeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeDefinitions.h; path = ../../../../src/TypeDefinitions.h; sourceTree = "<group>"; };
 		DC151399194487BE00DC7BF7 /* ScdfPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScdfPipe.h; path = ../../../../src/include/ScdfPipe.h; sourceTree = "<group>"; };
 		DC15139A194487BE00DC7BF7 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../src/include/Sensor.h; sourceTree = "<group>"; };
 		DC15139B194487BE00DC7BF7 /* SensorAudioInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorAudioInput.h; path = ../../../../src/include/SensorAudioInput.h; sourceTree = "<group>"; };
@@ -134,7 +133,6 @@
 				DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */,
 				DC151393194487AD00DC7BF7 /* Sensor.cpp */,
 				DC151394194487AD00DC7BF7 /* SensorsManager.cpp */,
-				DC151395194487AD00DC7BF7 /* TypeDefinitions.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -413,6 +411,11 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/Documents/SCDF/trunk/src/include,
+				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -430,6 +433,11 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/SCDF/trunk/include,
+				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";

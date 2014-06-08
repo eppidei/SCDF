@@ -11,7 +11,7 @@
 
 using scdf::SensorAudioInput;
 using scdf::SensorType;
-using scdf::ScdfPipe;
+//using scdf::ScdfPipe;
 
 namespace scdf {
     
@@ -19,7 +19,7 @@ namespace scdf {
         
     public:
         
-        SensorAudioInputImpl(SensorType type, ScdfPipe *destPipe)
+        SensorAudioInputImpl(SensorType type/*, ScdfPipe *destPipe*/)
         {
             
         }
@@ -44,11 +44,11 @@ namespace scdf {
 
 }
 
-SensorAudioInput* scdf::SensorAudioInput::Create(SensorType type, ScdfPipe *destPipe)
+SensorAudioInput* scdf::SensorAudioInput::Create(SensorType type/*, ScdfPipe *destPipe*/)
 {
     // if sensor is not available return null
     // otherwise, create it 
-    SensorAudioInput* s = new SensorAudioInputImpl(type,destPipe);
+    SensorAudioInput* s = new SensorAudioInputImpl(type/*,destPipe*/);
     // ios specific setup, store the pipe
     // return the just created sensor
     return s;

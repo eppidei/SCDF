@@ -23,7 +23,7 @@ namespace scdf
         s_bool Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *bytesWritten);
         
     public:
-        template <class PipeMessage> s_int32 SendMessage(PipeMessage msg);
+        template <class PipeMessage> s_int32 WriteMessage(PipeMessage msg);
         template <class PipeMessage> PipeMessage ReadMessage();
         ScdfPipe();
         ~ScdfPipe();
