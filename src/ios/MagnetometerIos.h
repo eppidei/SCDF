@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Marco Bertola. All rights reserved.
 //
 
-#import "SensorStandardIosImpl.h"
+#import "SensorStandardIos.h"
 #import "ScdfPipe.h"
 
-@interface MagnetometerIos : SensorStandardIosImpl
+@interface MagnetometerIos : SensorStandardIos
 
 {
     scdf::ScdfPipe pipe;

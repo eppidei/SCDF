@@ -14,9 +14,9 @@ Sensor* Sensor::Create(SensorType type)
     if (type == SensorType::Invalid)
         return NULL;
     else if (type == SensorType::AudioInput)
-        return SensorAudioInput::Create(type);
+        return new SensorAudioInput(type);
     else
-        return SensorStandard::Create(type);
+        return new SensorStandard(type);
 }
 
 SensorType Sensor::GetType()
