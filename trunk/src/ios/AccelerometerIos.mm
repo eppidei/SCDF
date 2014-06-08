@@ -24,9 +24,8 @@
 {
     [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
-                                            [self outputAccelertionData:accelerometerData.acceleration];
+                                            [self outputAccelertionData:accelerometerData];
                                             if(error){
-                                                
                                                 NSLog(@"%@", error);
                                             }
                                         }];
@@ -44,31 +43,23 @@
 {
     NSTimeInterval updateInterval = settings.rate;
     motionManager.accelerometerUpdateInterval = updateInterval;
-    
-    
-    
-    return false;
+    return true;
 }
 
--(void)outputAccelertionData:(CMAcceleration)acceleration
+-(void)outputAccelertionData:(CMAccelerometerData*)accelerometerData
 {
-    s_double xValue=  acceleration.x;
-    s_double yValue=  acceleration.y;
-    s_double zValue=  acceleration.z;
+    s_double* data = new s_double[3];
+    data[0]  = accelerometerData.acceleration.x;
+    data[1]  = accelerometerData.acceleration.y;
+    data[2]  = accelerometerData.acceleration.z;
     
-    s_double* accelerometerData = new s_double[3];
-    accelerometerData[0]  = xValue;
-    accelerometerData[1]  = yValue;
-    accelerometerData[2]  = zValue;
+    scdf::SensorData *sData = new scdf::SensorData();
     
-    scdf::SensorData data;
+    sData->type = scdf::Accelerometer;
+    sData->data = (char*)data;
+    sData->timestamp=accelerometerData.timestamp;
     
-    data.type = scdf::Accelerometer;
-    data.data = accelerometerData;
-    
-    sensorRef->AddIncomingDataToQueue(&data);
-    
-    delete accelerometerData;
+    sensorRef->AddIncomingDataToQueue(sData);
 }
 
 
