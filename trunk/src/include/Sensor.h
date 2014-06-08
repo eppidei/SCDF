@@ -3,7 +3,7 @@
 #include "TypeDefinitions.h"
 
 
-
+#define CALLBACK
 namespace scdf {
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
@@ -42,7 +42,7 @@ namespace scdf {
         virtual s_bool Start() = 0;
         virtual s_bool Stop()  = 0;
         
-         void AddIncomingDataToQueue(SensorData *data);
+        void CALLBACK AddIncomingDataToQueue(SensorData *data);
 
     protected:
 

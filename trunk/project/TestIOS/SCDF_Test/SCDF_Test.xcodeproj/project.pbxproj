@@ -10,10 +10,10 @@
 		9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */; };
 		9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
+		9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
 		DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */; };
 		DC15138A194486AB00DC7BF7 /* SensorAudioInputIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */; };
 		DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */; };
-		DC15138C194486AB00DC7BF7 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
 		DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151377194485BE00DC7BF7 /* AppDelegate.mm */; };
 		DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
@@ -266,6 +266,7 @@
 				9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */,
 				DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */,
 				DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */,
+				9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
 				DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */,
 				DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */,
@@ -274,7 +275,6 @@
 				DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */,
 				DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */,
 				DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */,
-				DC15138C194486AB00DC7BF7 /* SensorStandardIosImpl.mm in Sources */,
 				DCE8BEAE194393B300D283E8 /* main.m in Sources */,
 				9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */,
 				9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */,

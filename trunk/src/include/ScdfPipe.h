@@ -3,8 +3,6 @@
 //  scdf
 //
 //  Created by Andrea Scuderi on 01/06/14.
-//
-//
 
 #include "TypeDefinitions.h"
 
