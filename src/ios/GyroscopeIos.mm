@@ -22,7 +22,7 @@
 {
     [motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue]
                                     withHandler:^(CMGyroData *gyroData, NSError *error) {
-                                        [self outputRotationData:gyroData.rotationRate];
+                                        [self outputRotationData:gyroData];
                                     }];
     return true;
     
@@ -45,11 +45,21 @@
     return false;
 }
 
--(void)outputRotationData:(CMRotationRate)rotation
+-(void)outputRotationData:(CMGyroData *) gyroData
 {
-    s_double xValue=  rotation.x;
-    s_double yValue=  rotation.y;
-    s_double zValue=  rotation.z;
+    
+    s_double* data = new s_double[3];
+    data[0]  = gyroData.rotationRate.x;
+    data[1]  = gyroData.rotationRate.y;
+    data[2]  = gyroData.rotationRate.z;
+    
+    scdf::SensorData *sData = new scdf::SensorData();
+    
+    sData->type = scdf::Gyroscope;
+    sData->data = (char*)data;
+    sData->timestamp=gyroData.timestamp;
+    
+    sensorRef->AddIncomingDataToQueue(sData);
 }
 
 
