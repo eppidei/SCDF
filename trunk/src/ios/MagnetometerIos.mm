@@ -21,7 +21,7 @@
 {
     [motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMMagnetometerData  *magneticFieldData, NSError *error) {
-                                            [self outputMagnetometedData:magneticFieldData.magneticField];
+                                            [self outputMagnetometedData:magneticFieldData];
                                             if(error){
                                                 
                                                 NSLog(@"%@", error);
@@ -47,16 +47,21 @@
     return false;
 }
 
--(void)outputMagnetometedData:(CMMagneticField)magneticField
+-(void)outputMagnetometedData:(CMMagnetometerData *)magneticFieldData
 {
-    s_double xValue=  magneticField.x;
-    s_double yValue=  magneticField.y;
-    s_double zValue=  magneticField.z;
+    s_double* data = new s_double[3];
+    data[0]  = magneticFieldData.magneticField.x;
+    data[1]  = magneticFieldData.magneticField.y;
+    data[2]  = magneticFieldData.magneticField.z;
     
-    scdf::SensorData data;
-    sensorRef->AddIncomingDataToQueue(&data);
+    scdf::SensorData *sData = new scdf::SensorData();
     
-
+    sData->type = scdf::Magnetometer;
+    sData->data = (char*)data;
+    sData->timestamp=magneticFieldData.timestamp;
+    
+    sensorRef->AddIncomingDataToQueue(sData);
+    
 }
 
 
