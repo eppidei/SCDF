@@ -1,13 +1,14 @@
 
 #include <vector>
 #include "ScdfPipe.h"
+#include "Harvester.h"
 #include "Sensor.h"
 #include "SensorAudioInput.h"
 #include "SensorStandard.h"
 
 
 using namespace scdf;
-extern std::vector<scdf::ScdfPipe*> pipes;
+extern std::vector<scdf::CustomPipe*> pipes;
 
 Sensor* Sensor::Create(SensorType type)
 {
@@ -37,4 +38,9 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
     delete data;
 #endif
 
+}
+
+void Sensor::Harvest(SensorData* masterData)
+{
+    Harvester::Instance()->Harvest(masterData);
 }

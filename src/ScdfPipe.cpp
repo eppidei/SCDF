@@ -12,14 +12,14 @@
 
 using namespace scdf;
 
-std::vector<ScdfPipe*> pipes;
+std::vector<CustomPipe*> pipes;
 void CreatePipes()
 {
     for (int i=0;i<SensorType::NumTypes;++i)
-        pipes.push_back(new ScdfPipe());
+        pipes.push_back(new CustomPipe());
 }
 
-void ScdfPipe::Close()
+void CustomPipe::Close()
 {
     if(pd[0]!=-1)
         close(pd[0]);
@@ -27,7 +27,7 @@ void ScdfPipe::Close()
         close(pd[1]);
 }
 
-void ScdfPipe::Open()
+void CustomPipe::Open()
 {
     if(pipe(pd) == -1)
     {
@@ -36,7 +36,7 @@ void ScdfPipe::Open()
     }
 }
 
-s_bool ScdfPipe::Read(s_char *buffer, s_int32 bytesToRead, s_int32 *bytesRead)
+s_bool CustomPipe::Read(s_char *buffer, s_int32 bytesToRead, s_int32 *bytesRead)
 {
     s_int32 bytesRead1=0;
     bytesRead1=read(pd[0], buffer, bytesToRead);
@@ -44,16 +44,16 @@ s_bool ScdfPipe::Read(s_char *buffer, s_int32 bytesToRead, s_int32 *bytesRead)
         *bytesRead=bytesRead1;
     return -1!=bytesRead1;
 }
-s_bool ScdfPipe::Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *bytesWritten)
+s_bool CustomPipe::Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *bytesWritten)
 {
     s_int32 bytesWritten1=write(pd[1], buffer, bytesToWrite);
     if(bytesWritten) *bytesWritten=bytesWritten1;
     return bytesWritten1!=-1;
 }
 
-template s_int32 ScdfPipe::WriteMessage<SensorData*> (SensorData *msg);
+template s_int32 CustomPipe::WriteMessage<SensorData*> (SensorData *msg);
 
-template <class PipeMessage> s_int32 ScdfPipe::WriteMessage(PipeMessage msg)
+template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
 {
     //_ASSERT(!invalid);
     if (invalid) return 0;
@@ -68,9 +68,9 @@ template <class PipeMessage> s_int32 ScdfPipe::WriteMessage(PipeMessage msg)
     return 1;
 }
 
-template SensorData* ScdfPipe::ReadMessage<SensorData*>();
+template SensorData* CustomPipe::ReadMessage<SensorData*>();
 
-template <class PipeMessage> PipeMessage ScdfPipe::ReadMessage()
+template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
 {
     //_ASSERT(!invalid);
     if (invalid) return NULL;
@@ -87,12 +87,12 @@ template <class PipeMessage> PipeMessage ScdfPipe::ReadMessage()
     return msg;
 }
 
-ScdfPipe::ScdfPipe() : invalid(false)
+CustomPipe::CustomPipe() : invalid(false)
 {
     Open();
 }
 
-ScdfPipe::~ScdfPipe()
+CustomPipe::~CustomPipe()
 {
     if (invalid) return;
     Close();

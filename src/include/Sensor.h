@@ -17,7 +17,7 @@ namespace scdf {
     class SensorData {
     public: 
         SensorType type;
-        s_int32 rate;
+        s_float rate;
         s_int16 precision;
         s_double timestamp;  // time of the sensor reading as reported by the sensor
         s_int64 timeid;     // will be the same for all data harvested in the same call
@@ -26,9 +26,9 @@ namespace scdf {
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }
     };
-
+    class Harvester;
     class Sensor {
-
+        Harvester *harvester;
     public:
 
         static Sensor* Create(SensorType type);
@@ -46,6 +46,7 @@ namespace scdf {
         virtual s_bool Stop()  = 0;
         
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
+        void CALLBACK Harvest(SensorData *data);
 
     protected:
 
