@@ -8,14 +8,14 @@
 
 #import "AppDelegate.h"
 
-void InitApplication();
+void InitFramework();
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    InitApplication();
+    InitFramework();
     return YES;
 }
 							

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */; };
+		9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */; };
 		9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */; };
 		9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
@@ -14,13 +16,11 @@
 		DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */; };
 		DC15138A194486AB00DC7BF7 /* SensorAudioInputIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */; };
 		DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */; };
-		DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC151377194485BE00DC7BF7 /* AppDelegate.mm */; };
 		DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
 		DC1513A11944898B00DC7BF7 /* GyroscopeIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */; };
 		DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */; };
-		DC70A3BD1944C1A40057AED4 /* InitApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */; };
 		DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */; };
 		DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */; };
 		DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
@@ -35,14 +35,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitApplication.cpp; path = ../../../../src/InitApplication.cpp; sourceTree = "<group>"; };
+		9D5E21E0194C6AE200288DD2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppLayout/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = AppLayout/AppDelegate.mm; sourceTree = SOURCE_ROOT; };
+		9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitFramework.cpp; path = ../../../../src/InitFramework.cpp; sourceTree = "<group>"; };
 		9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
 		9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
 		9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
 		DC151373194485BE00DC7BF7 /* AccelerometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerIos.h; sourceTree = "<group>"; };
 		DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerIos.mm; sourceTree = "<group>"; };
-		DC151376194485BE00DC7BF7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		DC151377194485BE00DC7BF7 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		DC15137C194485BE00DC7BF7 /* SensorAudioInputIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIos.mm; sourceTree = "<group>"; };
 		DC15137D194485BE00DC7BF7 /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIos.mm; sourceTree = "<group>"; };
 		DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIosImpl.mm; sourceTree = "<group>"; };
@@ -119,8 +119,8 @@
 		DC151375194485BE00DC7BF7 /* AppLayout */ = {
 			isa = PBXGroup;
 			children = (
-				DC151376194485BE00DC7BF7 /* AppDelegate.h */,
-				DC151377194485BE00DC7BF7 /* AppDelegate.mm */,
+				9D5E21E0194C6AE200288DD2 /* AppDelegate.h */,
+				9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */,
 			);
 			path = AppLayout;
 			sourceTree = "<group>";
@@ -128,13 +128,13 @@
 		DC151391194487A100DC7BF7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */,
 				DC151399194487BE00DC7BF7 /* ScdfPipe.h */,
 				DC15139A194487BE00DC7BF7 /* Sensor.h */,
 				DC151392194487AD00DC7BF7 /* ScdfPipe.cpp */,
 				DC151393194487AD00DC7BF7 /* Sensor.cpp */,
 				DC151394194487AD00DC7BF7 /* SensorsManager.cpp */,
 				9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */,
-				9D9F541C1944A0AE00EB7E48 /* InitApplication.cpp */,
 				9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */,
 			);
 			name = src;
@@ -264,13 +264,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */,
-				DC151390194486B900DC7BF7 /* AppDelegate.mm in Sources */,
 				DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */,
 				9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */,
+				9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
 				DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */,
+				9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */,
 				DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */,
-				DC70A3BD1944C1A40057AED4 /* InitApplication.cpp in Sources */,
 				DC15138A194486AB00DC7BF7 /* SensorAudioInputIos.mm in Sources */,
 				DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */,
 				DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */,

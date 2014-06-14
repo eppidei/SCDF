@@ -1,5 +1,5 @@
 //
-//  InitApplication.cpp
+//  InitFramework.cpp
 //  SCDF_Test
 //
 //  Created by Andrea Scuderi on 08/06/14.
@@ -20,7 +20,7 @@ pthread_t CreateThread(start_routine routine, void *par)
     return t;
 }
 
-void InitApplication()
+void InitFramework()
 {
     CreatePipes();
     CreateThread((start_routine)StartHarvestingProcedure,NULL);
