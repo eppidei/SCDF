@@ -7,7 +7,7 @@
 //
 
 #include "Harvester.h"
-#include "ScdfPipe.h"
+#include "CustomPipe.h"
 #include "Utils.h"
 
 using namespace scdf;

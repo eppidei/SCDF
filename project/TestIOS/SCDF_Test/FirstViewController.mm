@@ -10,7 +10,6 @@
 
 #include "Sensor.h"
 #include "SensorStandard.h"
-#include "ScdfPipe.h"
 
 @interface FirstViewController ()
 
