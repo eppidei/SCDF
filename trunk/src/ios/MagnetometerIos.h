@@ -7,7 +7,6 @@
 //
 
 #import "SensorStandardIos.h"
-#import "ScdfPipe.h"
 
 @interface MagnetometerIos : SensorStandardIos
 

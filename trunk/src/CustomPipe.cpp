@@ -6,7 +6,7 @@
 //
 #include <string>
 #include "Sensor.h"
-#include "ScdfPipe.h"
+#include "CustomPipe.h"
 #include "unistd.h"
 #include <vector>
 
