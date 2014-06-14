@@ -10,7 +10,7 @@ namespace scdf
 {
     typedef s_int32 PipeDescriptor;
 
-    class ScdfPipe
+    class CustomPipe
     {
         PipeDescriptor pd[2];
         s_bool invalid;
@@ -23,8 +23,8 @@ namespace scdf
     public:
         template <class PipeMessage> s_int32 WriteMessage(PipeMessage msg);
         template <class PipeMessage> PipeMessage ReadMessage();
-        ScdfPipe();
-        ~ScdfPipe();
+        CustomPipe();
+        ~CustomPipe();
     };
 }
 

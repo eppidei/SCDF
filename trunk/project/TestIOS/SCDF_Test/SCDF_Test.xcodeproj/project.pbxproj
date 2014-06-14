@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */; };
 		9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */; };
+		9D5E2217194C870700288DD2 /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E2215194C870700288DD2 /* Harvester.cpp */; };
 		9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */; };
 		9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
@@ -38,6 +39,9 @@
 		9D5E21E0194C6AE200288DD2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppLayout/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = AppLayout/AppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitFramework.cpp; path = ../../../../src/InitFramework.cpp; sourceTree = "<group>"; };
+		9D5E2215194C870700288DD2 /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../../../src/Harvester.cpp; sourceTree = "<group>"; };
+		9D5E2218194C87A000288DD2 /* Harvester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Harvester.h; path = ../../../../src/include/Harvester.h; sourceTree = "<group>"; };
+		9D5E2219194CA3D200288DD2 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = ../../../../src/include/Utils.h; sourceTree = "<group>"; };
 		9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
 		9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
 		9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
@@ -128,6 +132,7 @@
 		DC151391194487A100DC7BF7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9D5E2218194C87A000288DD2 /* Harvester.h */,
 				9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */,
 				DC151399194487BE00DC7BF7 /* ScdfPipe.h */,
 				DC15139A194487BE00DC7BF7 /* Sensor.h */,
@@ -136,6 +141,8 @@
 				DC151394194487AD00DC7BF7 /* SensorsManager.cpp */,
 				9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */,
 				9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */,
+				9D5E2215194C870700288DD2 /* Harvester.cpp */,
+				9D5E2219194CA3D200288DD2 /* Utils.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -275,6 +282,7 @@
 				DC15138B194486AB00DC7BF7 /* SensorStandardIos.mm in Sources */,
 				DC151396194487AD00DC7BF7 /* ScdfPipe.cpp in Sources */,
 				DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */,
+				9D5E2217194C870700288DD2 /* Harvester.cpp in Sources */,
 				DCE8BEAE194393B300D283E8 /* main.m in Sources */,
 				9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */,
 				9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */,
