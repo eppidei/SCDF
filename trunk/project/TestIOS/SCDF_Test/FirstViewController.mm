@@ -10,6 +10,7 @@
 
 #include "Sensor.h"
 #include "SensorStandard.h"
+#include "SensorAudioInput.h"
 
 @interface FirstViewController ()
 
@@ -21,15 +22,24 @@
 {
     [super viewDidLoad];
     
+    scdf::SensorSettings dataAccelerometer;
     scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
-    accelerometer->Start();
+    dataAccelerometer.sensorRef = accelerometer;
     
-    scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
+   // accelerometer->Setup(dataAccelerometer);
+    //accelerometer->Start();
+    
+   // scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
     //gyroscope->Start();
+    //scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
+    //magnetometer->Start();
     
-    scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
-   // magnetometer->Start();
+    scdf::SensorSettings audioSettings;
+    scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
+    audioSettings.sensorRef = audioInputSensor;
     
+    audioInputSensor->Setup(audioSettings);
+    audioInputSensor->Start();
     
 }
 

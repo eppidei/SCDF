@@ -12,7 +12,7 @@
 @interface SensorStandardIos : NSObject
 
 {
-    scdf::Sensor  *sensorRef;
+    scdf::Sensor  *_sensorRef;
 }
 
 + (CMMotionManager *) InitMotionManager;

@@ -38,11 +38,10 @@
 {
     NSTimeInterval updateInterval = settings.rate;
     motionManager.gyroUpdateInterval = updateInterval;
+    _sensorRef = settings.sensorRef;
     
-    scdf::SensorData data;
-    sensorRef->AddIncomingDataToQueue(&data);
     
-    return false;
+    return true;
 }
 
 -(void)outputRotationData:(CMGyroData *) gyroData
@@ -59,7 +58,7 @@
     sData->data = (char*)data;
     sData->timestamp=gyroData.timestamp;
     
-    sensorRef->AddIncomingDataToQueue(sData);
+    _sensorRef->AddIncomingDataToQueue(sData);
 }
 
 

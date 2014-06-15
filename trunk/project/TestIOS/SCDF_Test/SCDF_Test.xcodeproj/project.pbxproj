@@ -23,6 +23,10 @@
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
 		DC1513A11944898B00DC7BF7 /* GyroscopeIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */; };
 		DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */; };
+		DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF56194CD2A10051E311 /* AVFoundation.framework */; };
+		DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */; };
+		DC4DFF5C194CD2CC0051E311 /* AudioController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC4DFF5B194CD2CC0051E311 /* AudioController.mm */; };
+		DC4DFF6B194CD3590051E311 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */; };
 		DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */; };
 		DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */; };
 		DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
@@ -61,6 +65,12 @@
 		DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GyroscopeIos.mm; sourceTree = "<group>"; };
 		DC1513A219448AC800DC7BF7 /* MagnetometerIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetometerIos.h; sourceTree = "<group>"; };
 		DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MagnetometerIos.mm; sourceTree = "<group>"; };
+		DC4DFF56194CD2A10051E311 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		DC4DFF5A194CD2CC0051E311 /* AudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioController.h; sourceTree = "<group>"; };
+		DC4DFF5B194CD2CC0051E311 /* AudioController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioController.mm; sourceTree = "<group>"; };
+		DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		DC4DFF66194CD3590051E311 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
 		DC70A3BF1944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		DC70A3C11944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		DC70A3C41944CD3C0057AED4 /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = SOURCE_ROOT; };
@@ -85,6 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */,
+				DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */,
 				DCE8BEE01943970100D283E8 /* CoreMotion.framework in Frameworks */,
 				DCE8BEA4194393B300D283E8 /* CoreGraphics.framework in Frameworks */,
 				DCE8BEA6194393B300D283E8 /* UIKit.framework in Frameworks */,
@@ -98,6 +110,8 @@
 		9D9F54271944BCFE00EB7E48 /* sensors */ = {
 			isa = PBXGroup;
 			children = (
+				DC4DFF5A194CD2CC0051E311 /* AudioController.h */,
+				DC4DFF5B194CD2CC0051E311 /* AudioController.mm */,
 				DC151373194485BE00DC7BF7 /* AccelerometerIos.h */,
 				DC151374194485BE00DC7BF7 /* AccelerometerIos.mm */,
 				DC15139F1944898B00DC7BF7 /* GyroscopeIos.h */,
@@ -150,9 +164,28 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		DC4DFF5D194CD34B0051E311 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DC4DFF5E194CD3590051E311 /* PublicUtility */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		DC4DFF5E194CD3590051E311 /* PublicUtility */ = {
+			isa = PBXGroup;
+			children = (
+				DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */,
+				DC4DFF66194CD3590051E311 /* CAStreamBasicDescription.h */,
+			);
+			name = PublicUtility;
+			path = "../../../res/iOs Resources/PublicUtility";
+			sourceTree = "<group>";
+		};
 		DCE8BE95194393B300D283E8 = {
 			isa = PBXGroup;
 			children = (
+				DC4DFF5D194CD34B0051E311 /* Utilities */,
 				DCE8BEA7194393B300D283E8 /* SCDF_Test */,
 				DCE8BEA0194393B300D283E8 /* Frameworks */,
 				DCE8BE9F194393B300D283E8 /* Products */,
@@ -170,6 +203,8 @@
 		DCE8BEA0194393B300D283E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */,
+				DC4DFF56194CD2A10051E311 /* AVFoundation.framework */,
 				DCE8BEDF1943970100D283E8 /* CoreMotion.framework */,
 				DCE8BEA1194393B300D283E8 /* Foundation.framework */,
 				DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */,
@@ -277,6 +312,7 @@
 				DC151387194486AB00DC7BF7 /* AccelerometerIos.mm in Sources */,
 				9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */,
 				9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */,
+				DC4DFF5C194CD2CC0051E311 /* AudioController.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
 				DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */,
 				9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */,
@@ -291,6 +327,7 @@
 				9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */,
 				9D5E221C194CB60400288DD2 /* UDPSender.cpp in Sources */,
 				DC70A3C91944CD3C0057AED4 /* SecondViewController.mm in Sources */,
+				DC4DFF6B194CD3590051E311 /* CAStreamBasicDescription.cpp in Sources */,
 				DC1513A11944898B00DC7BF7 /* GyroscopeIos.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -4,7 +4,12 @@
 
 
 #define CALLBACK
+
+
+
 namespace scdf {
+    
+    class Sensor;
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
 
@@ -12,6 +17,7 @@ namespace scdf {
     public:
         s_int32 rate;
         s_bool broken;
+        Sensor *sensorRef;
     };
 
     class SensorData {

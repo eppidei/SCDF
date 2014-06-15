@@ -41,10 +41,9 @@
 {
     NSTimeInterval updateInterval = settings.rate;
     motionManager.accelerometerUpdateInterval = updateInterval;
+    _sensorRef = settings.sensorRef;
     
-    
-    
-    return false;
+    return true;
 }
 
 -(void)outputMagnetometedData:(CMMagnetometerData *)magneticFieldData
@@ -60,7 +59,7 @@
     sData->data = (char*)data;
     sData->timestamp=magneticFieldData.timestamp;
     
-    sensorRef->AddIncomingDataToQueue(sData);
+    _sensorRef->AddIncomingDataToQueue(sData);
     
 }
 
