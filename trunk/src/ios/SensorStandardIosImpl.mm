@@ -43,7 +43,7 @@ SensorStandardImpl::~SensorStandardImpl()
     }
 }
 
-s_bool SensorStandardImpl::SetupImpl(scdf::SensorSettings settings)
+s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 {
     [sensorImpl Setup:settings];
     return true;

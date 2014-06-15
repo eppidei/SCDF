@@ -26,12 +26,21 @@
     scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
     dataAccelerometer.sensorRef = accelerometer;
     
-   // accelerometer->Setup(dataAccelerometer);
+    accelerometer->Setup(dataAccelerometer);
     //accelerometer->Start();
     
-   // scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
+    scdf::SensorSettings dataGyro;
+    scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
+    dataGyro.sensorRef = gyroscope;
+    
+    gyroscope->Setup(dataGyro);
     //gyroscope->Start();
-    //scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
+    
+    scdf::SensorSettings dataMagnetometer;
+    scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
+     dataMagnetometer.sensorRef = magnetometer;
+    
+     magnetometer->Setup(dataMagnetometer);
     //magnetometer->Start();
     
     scdf::SensorSettings audioSettings;
@@ -39,7 +48,7 @@
     audioSettings.sensorRef = audioInputSensor;
     
     audioInputSensor->Setup(audioSettings);
-    audioInputSensor->Start();
+    //audioInputSensor->Start();
     
 }
 

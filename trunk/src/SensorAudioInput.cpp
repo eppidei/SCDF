@@ -18,7 +18,7 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings settings)
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
     // try starting the sensor, return result
-    return  sImpl->SetupImpl(settings);
+    return  sImpl->Setup(settings);
 }
 
 s_bool scdf::SensorAudioInput::Start()
