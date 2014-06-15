@@ -19,6 +19,13 @@ namespace scdf {
         s_bool broken;
         Sensor *sensorRef;
     };
+    
+    class SensorAudioSettings : SensorSettings{
+    public:
+        s_int32 numChannels;
+        s_int32 bufferDim;
+        s_bool broken;
+    };
 
     class SensorData {
     public: 
