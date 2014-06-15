@@ -1,5 +1,5 @@
 //
-//  AccelerometerIos.m
+//  AccelerometerIos.mm
 //  SCDF_Test
 //
 //  Created by Marco Bertola on 08/06/14.
@@ -43,6 +43,8 @@
 {
     NSTimeInterval updateInterval = settings.rate/1000.f;
     motionManager.accelerometerUpdateInterval = updateInterval; //must be in second
+    _sensorRef = settings.sensorRef;
+   
     return true;
 }
 
@@ -59,7 +61,7 @@
     sData->data = (char*)data;
     sData->timestamp=accelerometerData.timestamp;
     
-    sensorRef->AddIncomingDataToQueue(sData);
+    _sensorRef->AddIncomingDataToQueue(sData);
 }
 
 

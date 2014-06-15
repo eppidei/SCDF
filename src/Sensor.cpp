@@ -33,8 +33,12 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
 #ifndef TEST
     pipes[GetType()]->WriteMessage<SensorData*>(data);
 #else
-    s_double *mydata = (s_double *)data->data;
-    printf("Value Data 1: %.2f, Value Data 2: %.2f,Value Data 3 %.2f \n", mydata[0],mydata[1], mydata[2]);
+    s_float *mydata = (s_float *)data->data;
+    
+    for (int i = 0; i< 512; i ++) {
+        printf("Value Data 1: %.4f\n",  mydata[i]);
+    }
+    //printf("Value Data 1: %.4f\n, Value Data 2: %.4f\n,Value Data 3 %.2f \n\n", mydata[0],mydata[1], mydata[2]);
     delete data;
 #endif
 

@@ -9,24 +9,35 @@
 #import "Sensor.h"
 #import "SensorAudioInputIosImpl.h"
 
+
 using namespace scdf;
 
 SensorAudioInputImpl::SensorAudioInputImpl(SensorType type/*, ScdfPipe *destPipe*/)
 {
+    sensorImpl = [[SensorAudioInputdIos alloc] init];
             
+}
+
+SensorAudioInputImpl::~SensorAudioInputImpl()
+{
+    [sensorImpl release];
 }
 
 s_bool SensorAudioInputImpl::SetupImpl(scdf::SensorSettings settings)
 {
-    return true;
+    return [sensorImpl Setup:settings];
 }
 
 s_bool SensorAudioInputImpl::Start()
 {
-    return false;
+    return [sensorImpl Start];
 }
 
 s_bool SensorAudioInputImpl::Stop()
 {
-    return false;
+    return [sensorImpl Stop];
 }
+
+
+
+
