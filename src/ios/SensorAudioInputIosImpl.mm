@@ -23,7 +23,7 @@ SensorAudioInputImpl::~SensorAudioInputImpl()
     [sensorImpl release];
 }
 
-s_bool SensorAudioInputImpl::SetupImpl(scdf::SensorSettings settings)
+s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings settings)
 {
     return [sensorImpl Setup:settings];
 }
