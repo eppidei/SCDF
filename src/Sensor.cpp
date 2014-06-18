@@ -12,9 +12,9 @@ extern std::vector<scdf::CustomPipe*> pipes;
 
 Sensor* Sensor::Create(SensorType type)
 {
-    if (type == SensorType::Invalid)
+    if (type == Invalid)
         return NULL;
-    else if (type == SensorType::AudioInput)
+    else if (type == AudioInput)
         return new SensorAudioInput(type);
     else
         return new SensorStandard(type);
