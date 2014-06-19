@@ -22,7 +22,7 @@
 {
     [super viewDidLoad];
     
-    scdf::SensorSettings dataAccelerometer;
+    /*scdf::SensorSettings dataAccelerometer;
     scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
     dataAccelerometer.sensorRef = accelerometer;
     
@@ -41,14 +41,14 @@
      dataMagnetometer.sensorRef = magnetometer;
     
      magnetometer->Setup(dataMagnetometer);
-    //magnetometer->Start();
+    //magnetometer->Start();*/
     
     scdf::SensorSettings audioSettings;
     scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
     audioSettings.sensorRef = audioInputSensor;
     
     audioInputSensor->Setup(audioSettings);
-    //audioInputSensor->Start();
+    audioInputSensor->Start();
     
 }
 

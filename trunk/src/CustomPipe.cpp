@@ -58,7 +58,7 @@ template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
     //_ASSERT(!invalid);
     if (invalid) return 0;
     s_int32 bytesWritten=0;
-    s_int32 ret=Write((const s_char *)msg, sizeof(PipeMessage), &bytesWritten);
+    s_int32 ret=Write((const s_char *)&msg, sizeof(PipeMessage), &bytesWritten);
     if(!ret)
     {
         //Logging::Instance()->log(_T("Error writing to pipe"));
@@ -75,16 +75,15 @@ template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
     //_ASSERT(!invalid);
     if (invalid) return NULL;
     s_int32 numBytesRead=0;
-    PipeMessage msg;
-    if (Read((s_char *)msg, sizeof(PipeMessage), &numBytesRead))
+    PipeMessage p;
+    if (!Read((s_char*)&p, sizeof(PipeMessage), &numBytesRead))
     {
         //Logging::Instance()->log(_T("Error reading from pipe"));
         return NULL;
     }
-    
     if(0==numBytesRead) return NULL;
     //_ASSERT(numBytesRead==sizeof(PipeMessage));
-    return msg;
+    return p;
 }
 
 CustomPipe::CustomPipe() : invalid(false)
@@ -96,4 +95,37 @@ CustomPipe::~CustomPipe()
 {
     if (invalid) return;
     Close();
+}
+
+void CustomPipe::SetBlockingCalls(PipeDescriptor pd)
+{
+    s_int32 opts = fcntl(pd,F_GETFL);
+    opts = opts & (~O_NONBLOCK);
+    fcntl(pd,F_SETFL,opts);
+}
+
+void CustomPipe::SetNonBlockingCalls(PipeDescriptor pd)
+{
+    s_int32 opts = fcntl(pd,F_GETFL);
+    opts = (opts | O_NONBLOCK);
+    fcntl(pd,F_SETFL,opts);
+}
+
+void CustomPipe::SetBlockingReads()
+{
+    SetBlockingCalls(pd[0]);
+}
+
+void CustomPipe::SetNonBlockingReads()
+{
+    SetNonBlockingCalls(pd[0]);
+}
+void CustomPipe::SetBlockingWrites()
+{
+    SetBlockingCalls(pd[1]);
+}
+
+void CustomPipe::SetNonBlockingWrites()
+{
+    SetNonBlockingCalls(pd[1]);
 }

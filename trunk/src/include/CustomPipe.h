@@ -19,8 +19,14 @@ namespace scdf
         void Open();
         s_bool Read(s_char *buffer, s_int32 bytesToRead, s_int32 *bytesRead);
         s_bool Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *bytesWritten);
+        void SetBlockingCalls(PipeDescriptor pd);
+        void SetNonBlockingCalls(PipeDescriptor pd);
         
     public:
+        void SetBlockingReads();
+        void SetNonBlockingReads();
+        void SetBlockingWrites();
+        void SetNonBlockingWrites();
         template <class PipeMessage> s_int32 WriteMessage(PipeMessage msg);
         template <class PipeMessage> PipeMessage ReadMessage();
         CustomPipe();

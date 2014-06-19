@@ -22,19 +22,22 @@ namespace scdf{
         
         void PipesHarvesting(s_double timestampStart, s_double timestampEnd, SensorType sType);
         void InternalBufferHarvesting(s_double timestampStart, s_double timestampEnd);
+        void SetupPipes();
         void Sort();
+        void NotifyHarvestCompletition();
+        void Harvest(SensorData *_masterData);
         
         struct Compare {
             s_bool operator()(const SensorData* s1, const SensorData* s2) const;
         };
         
-        Harvester(){}
-        void DoHarvest();
+        Harvester();
         static Harvester *_instance;
+        SensorType requesterType;
     public:
-        
-       // static void HarvestOnThread(SensorData *masterData);
-        void Harvest(SensorData *_masterData);
+        bool activated;
+        SensorType GetType() { return requesterType; }
+        void HarvestingProcedure(SensorData *_masterData);
         static Harvester *Instance()
         {
             if (NULL==_instance) _instance=new Harvester();

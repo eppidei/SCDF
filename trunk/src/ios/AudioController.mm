@@ -46,6 +46,9 @@ static OSStatus	performRender (void                         *inRefCon,
     scdf::SensorData *sData = new scdf::SensorData();
     sData->type = scdf::AudioInput;
     sData->data = (char*)audioData;
+    sData->num_samples=inNumberFrames;
+    sData->sample_bit_resolution=((ioData->mBuffers[0].mDataByteSize/inNumberFrames)/ioData->mBuffers[0].mNumberChannels)*8;
+    sData->rate=44100;
     callbackData.sensorRef->AddIncomingDataToQueue(sData);
     
     

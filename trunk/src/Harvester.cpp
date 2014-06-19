@@ -8,22 +8,50 @@
 
 #include "Harvester.h"
 #include "CustomPipe.h"
-#include "Utils.h"
+#include "ThreadUtils.h"
+#include "UDPSender.h"
+#include "UDPSendersManager.h"
 
 using namespace scdf;
-extern std::vector<scdf::CustomPipe> pipes;
+extern std::vector<scdf::CustomPipe*> pipes;
 Harvester *Harvester::_instance=NULL;
-
-/*static void HarvestProcedure(void *param)
-{
-    Harvester *harvester=((Harvester*)param);
-    harvester->DoHarvest();
-    delete harvester;
-}*/
 
 s_bool Harvester::Compare::operator()(const SensorData* s1, const SensorData* s2) const
 {
     return s1->timestamp < s2->timestamp;
+}
+
+static void StartHarvestingProcedure(void *param)
+{
+    Harvester *harvester=((Harvester*)param);
+    while(harvester->activated)
+    {
+        harvester->HarvestingProcedure(pipes[harvester->GetType()]->ReadMessage<SensorData*>());
+    }
+    delete harvester;
+}
+
+void Harvester::SetupPipes()
+{
+    for (int i=0;i<pipes.size();++i)
+    {
+        if(i==requesterType)
+            pipes[i]->SetBlockingReads();
+        else
+            pipes[i]->SetNonBlockingReads();
+    }
+}
+
+Harvester::Harvester() : activated(true),requesterType(SensorType::AudioInput)
+{
+    SetupPipes();
+    ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
+}
+
+void Harvester::Sort()
+{
+    if (myHarvest.size()==0) return;
+    std::sort(myHarvest.begin(), myHarvest.end(), Compare());
 }
 
 void Harvester::PipesHarvesting(s_double timestampStart, s_double timestampEnd, SensorType sType)
@@ -31,23 +59,25 @@ void Harvester::PipesHarvesting(s_double timestampStart, s_double timestampEnd, 
     for (s_int32 i=0;i<pipes.size();++i)
     {
         if (i==sType) continue;
-        s_bool doHarvest=true;
         SensorData *sd=NULL;
-        while (doHarvest)
+        while (1)
         {
-            sd=pipes[i].ReadMessage<SensorData*>();
+            sd=pipes[i]->ReadMessage<SensorData*>();
+            if (NULL==sd) break;
             if (sd->timestamp<timestampStart)
                 delete sd;
-            else if (sd->timestamp<=timestampEnd)
+            else if (sd->timestamp<=timestampEnd){
+                sd->timeid=timestampStart;
                 myHarvest.push_back(sd);
+            }
             else{
                 nextHarvestData.push_back(sd);
-                doHarvest=false;
+                break;
             }
         }
     }
-    
 }
+
 void Harvester::InternalBufferHarvesting(s_double timestampStart, s_double timestampEnd)
 {
     SensorData *sd=NULL;
@@ -67,31 +97,29 @@ void Harvester::InternalBufferHarvesting(s_double timestampStart, s_double times
     }
 }
 
-void Harvester::DoHarvest()
+void Harvester::NotifyHarvestCompletition()
+{
+    UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Wait();
+    //InterlockedExchange
+    myHarvest.swap(UDPSendersManager::Instance()->GetActiveSender()->senderData);
+    UDPSendersManager::Instance()->GetActiveSender()->EventCanSend()->Set();
+}
+
+void Harvester::HarvestingProcedure(SensorData *masterData)
+{
+    Harvest(masterData);
+    NotifyHarvestCompletition();
+}
+
+void Harvester::Harvest(SensorData *masterData)
 {
     s_double timestampStart=masterData->timestamp;
     s_double harvestEpoc_seconds=masterData->rate/1000.f;
     if (masterData->type!=AudioInput)
         timestampStart-=harvestEpoc_seconds;
-
+    
     InternalBufferHarvesting(timestampStart, timestampStart+harvestEpoc_seconds);
     PipesHarvesting(timestampStart, timestampStart+harvestEpoc_seconds, masterData->type);
     Sort();
-}
-
-void Harvester::Harvest(SensorData *_masterData)
-{
-    masterData=_masterData;
-//    Utils::CreateThread((start_routine)HarvestProcedure,this);
-    DoHarvest();
-}
-
-/*void Harvester::HarvestOnThread(SensorData *masterData)
-{
-
-}*/
-
-void Harvester::Sort()
-{
-    std::sort(myHarvest.begin(), myHarvest.end(), Compare());
+    myHarvest.insert(myHarvest.begin(), masterData);
 }
