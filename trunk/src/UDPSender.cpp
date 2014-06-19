@@ -55,7 +55,7 @@ void UDPSenderHelperBase::DoSendData()
 #define BIT_PER_BYTE 8
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=(senderData[i]->num_samples*senderData[i]->sample_bit_resolution)/BIT_PER_BYTE;
+        s_int32 size=(senderData[i]->num_samples*sizeof(s_sample))/BIT_PER_BYTE;
         senders[0]->SendData((s_char*)senderData[i]->data, size);
     }
 }

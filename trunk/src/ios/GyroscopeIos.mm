@@ -38,9 +38,6 @@
 {
     NSTimeInterval updateInterval = settings.rate;
     motionManager.gyroUpdateInterval = updateInterval;
-    _sensorRef = settings.sensorRef;
-    
-    
     return true;
 }
 

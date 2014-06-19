@@ -47,7 +47,6 @@ static OSStatus	performRender (void                         *inRefCon,
     sData->type = scdf::AudioInput;
     sData->data = (char*)audioData;
     sData->num_samples=inNumberFrames;
-    sData->sample_bit_resolution=((ioData->mBuffers[0].mDataByteSize/inNumberFrames)/ioData->mBuffers[0].mNumberChannels)*8;
     sData->rate=44100;
     callbackData.sensorRef->AddIncomingDataToQueue(sData);
     
@@ -99,9 +98,7 @@ static OSStatus	performRender (void                         *inRefCon,
 
 - (s_bool) Setup:(scdf::SensorSettings) setting
 {
-    [self setupAudioChain];
-    _sensorRef = setting.sensorRef;
-    
+    [self setupAudioChain];    
     return true;
 }
 

@@ -43,8 +43,6 @@
 {
     NSTimeInterval updateInterval = settings.rate/1000.f;
     motionManager.accelerometerUpdateInterval = updateInterval; //must be in second
-    _sensorRef = settings.sensorRef;
-   
     return true;
 }
 
