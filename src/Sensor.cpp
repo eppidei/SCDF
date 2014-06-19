@@ -25,13 +25,13 @@ SensorType Sensor::GetType()
     return type;
 }
 
-#define TEST
+//#define TEST
 
 void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
 #ifndef TEST
-    pipes[GetType()]->WriteMessage<SensorData*>(data);
+    pipes[data->type]->WriteMessage<SensorData*>(data);
 #else
     s_float *mydata = (s_float *)data->data;
     
@@ -42,9 +42,4 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
     delete data;
 #endif
 
-}
-
-void Sensor::Harvest(SensorData* masterData)
-{
-    Harvester::Instance()->Harvest(masterData);
 }

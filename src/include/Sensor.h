@@ -23,8 +23,6 @@ namespace scdf {
     class SensorAudioSettings : SensorSettings{
     public:
         s_int32 numChannels;
-        s_int32 bufferDim;
-        s_bool broken;
     };
 
     class SensorData {
@@ -32,9 +30,10 @@ namespace scdf {
         SensorType type;
         s_float rate;
         s_int16 precision;
-        s_double timestamp;  // time of the sensor reading as reported by the sensor
-        s_int64 timeid;     // will be the same for all data harvested in the same call
-        char* data;         // TODO: actually a placeholder for now
+        s_double timestamp;             // time of the sensor reading as reported by the sensor
+        s_int64 timeid;                 // will be the same for all data harvested in the same call
+        s_int32 num_samples;
+        char* data;                     // TODO: actually a placeholder for now
         
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }
@@ -59,7 +58,6 @@ namespace scdf {
         virtual s_bool Stop()  = 0;
         
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
-        void CALLBACK Harvest(SensorData *data);
 
     protected:
 
