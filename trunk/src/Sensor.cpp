@@ -25,21 +25,15 @@ SensorType Sensor::GetType()
     return type;
 }
 
-//#define TEST
-
 void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
-#ifndef TEST
     pipes[data->type]->WriteMessage<SensorData*>(data);
-#else
-    s_float *mydata = (s_float *)data->data;
     
-    for (int i = 0; i< 512; i ++) {
-        printf("Value Data 1: %.4f\n",  mydata[i]);
+#ifdef TEST_PRINT_DATA
+    for (int i = 0; i< data->num_samples; i ++) {
+        printf("Collected data %d from %s: %.4f\n",i,SensorTypeString[data->type].c_str(), ((s_sample*)data->data)[i]);
     }
-    //printf("Value Data 1: %.4f\n, Value Data 2: %.4f\n,Value Data 3 %.2f \n\n", mydata[0],mydata[1], mydata[2]);
-    delete data;
 #endif
 
 }

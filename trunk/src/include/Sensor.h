@@ -4,14 +4,15 @@
 
 
 #define CALLBACK
-
-
+#define TEST_PRINT_DATA
+#include <string>
 
 namespace scdf {
     
     class Sensor;
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
+    static const std::string SensorTypeString[]={"Acceleometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
 
     class SensorSettings {
     public:

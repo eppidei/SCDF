@@ -27,53 +27,60 @@ void UDPSender::Release()
 
 void UDPSender::SendData(s_char* data, s_int32 size)
 {
-    
-    float *data_float=(float*)(((SensorData*)data)->data);
-    float data1=data_float[0];
-    float data2=data_float[1];
-    float data3=data_float[2];
-    int sizee=sizeof(osc::BeginBundleImmediate);
-    s_char buffer[4096];
-	osc::OutboundPacketStream oscc( buffer, (size_t)4096);
-	oscc << osc::BeginBundleImmediate
-	<< osc::BeginMessage( "/Sensor type") << ((SensorData*)data)->type << osc::EndMessage
-    << osc::BeginMessage( "/Rate"	) << ((SensorData*)data)->rate << osc::EndMessage
-    << osc::BeginMessage( "/Num samples"	) << ((SensorData*)data)->num_samples << osc::EndMessage
-    << osc::BeginMessage( "/x:"	) << ((SensorData*)data)->data[0] << osc::EndMessage
-    << osc::BeginMessage( "/y:"	) << ((SensorData*)data)->data[1] << osc::EndMessage
-    << osc::BeginMessage( "/z:"	) << ((SensorData*)data)->data[2] << osc::EndMessage;
-	oscc << osc::EndBundle;
-	
-    transmitSocket->Send(oscc.Data(), oscc.Size());
-//	transmitSocket->Send(data, size);
+    transmitSocket->Send(data, size);
+}
+
+void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
+{
+    transmitSocket->Send(oscData.Data(), oscData.Size());
 }
 
 void UDPSenderHelperBase::SendData()
 {
     switch (senders.size()) {
         case 0:     return;
-        case 1:     DoSendData(); break;
-        default:    DoMultiSendData(); break;
+        case 1:     DoSendData(); /*DoSendDataOSCPacked();*/break;
+        default:    /*DoMultiSendData();*/ DoMultiSendDataOSCPacked(); break;
     }
 }
 
 void UDPSenderHelperBase::DoSendData()
 {
-#define BIT_PER_BYTE 8
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=senderData[i]->num_samples*sizeof(s_sample);
-        senders[0]->SendData((s_char*)senderData[i]->data, size);
+        s_int32 size=sizeof(SensorData)-sizeof(char*)+senderData[i]->num_samples*sizeof(s_sample);
+        senders[0]->SendData((s_char*)senderData[i], size);
     }
 }
 
 void UDPSenderHelperBase::DoMultiSendData()
 {
-#define BIT_PER_BYTE 8
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=senderData[i]->num_samples*sizeof(s_sample);
-        senders[senderData[i]->type]->SendData((s_char*)senderData[i]->data, size);
+        s_int32 size=sizeof(SensorData)-sizeof(char*)+senderData[i]->num_samples*sizeof(s_sample);
+        senders[senderData[i]->type]->SendData((s_char*)senderData[i], size);
+    }
+}
+
+void UDPSenderHelperBase::DoSendDataOSCPacked()
+{
+    for (int i=0;i<senderData.size();++i)
+    {
+        s_char buffer[8192];
+        osc::OutboundPacketStream oscData( buffer, 8192);
+        OSCPackData(senderData[i], oscData);
+        senders[0]->SendDataOSCPacked(oscData);
+    }
+}
+
+void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
+{
+    for (int i=0;i<senderData.size();++i)
+    {
+        s_char buffer[8192];
+        osc::OutboundPacketStream oscData( buffer, 8192);
+        OSCPackData(senderData[i], oscData);
+        senders[senderData[i]->type]->SendDataOSCPacked(oscData);
     }
 }
 
@@ -113,4 +120,27 @@ void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string addres
     for (int i=0;i<udpPorts.size();++i)
         senders.push_back(new UDPSender(udpPorts[i],address));
     ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
+}
+
+void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStream &oscData)
+{
+#ifdef TEST_PRINT_DATA
+    for (int i = 0; i< ((SensorData*)data)->num_samples; i ++) {
+        printf("Sending data %d from %s: %.4f\n",i,SensorTypeString[((SensorData*)data)->type].c_str(), ((s_sample*)((SensorData*)data)->data)[i]);
+    }
+#endif
+
+    switch(data->type)
+    {
+        case SensorType::Accelerometer:
+            oscData << osc::BeginBundleImmediate
+            << osc::BeginMessage( "/Sensor type") << data->type << osc::EndMessage
+            << osc::BeginMessage( "/Rate"	) << data->rate << osc::EndMessage
+            << osc::BeginMessage( "/Num samples") << data->num_samples << osc::EndMessage
+            << osc::BeginMessage( "/x:"	) << ((s_sample*)(data->data))[0] << osc::EndMessage
+            << osc::BeginMessage( "/y:"	) << ((s_sample*)(data->data))[1] << osc::EndMessage
+            << osc::BeginMessage( "/z:"	) << ((s_sample*)(data->data))[2] << osc::EndMessage;
+            oscData << osc::EndBundle;
+            break;
+    }
 }
