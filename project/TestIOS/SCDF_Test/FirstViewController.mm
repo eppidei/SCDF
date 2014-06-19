@@ -45,7 +45,6 @@
     
     scdf::SensorSettings audioSettings;
     scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
-    audioSettings.sensorRef = audioInputSensor;
     
     audioInputSensor->Setup(audioSettings);
     audioInputSensor->Start();

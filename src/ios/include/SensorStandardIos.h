@@ -7,7 +7,9 @@
 #import "TypeDefinitions.h"
 #import "Sensor.h"
 
-
+namespace scdf {
+    class Sensor;
+}
 
 @interface SensorStandardIos : NSObject
 
@@ -21,5 +23,6 @@
 - (s_bool) Start;
 - (s_bool) Stop;
 - (s_bool) Setup:(scdf::SensorSettings)  settings;
+- (void) SetRef:(scdf::Sensor*)  ref;
 
 @end

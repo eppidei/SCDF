@@ -17,7 +17,6 @@ namespace scdf {
     public:
         s_int32 rate;
         s_bool broken;
-        Sensor *sensorRef;
     };
     
     class SensorAudioSettings : SensorSettings{
@@ -28,7 +27,7 @@ namespace scdf {
     class SensorData {
     public: 
         SensorType type;
-        s_float rate;
+        s_int32 rate;
         s_int16 precision;
         s_double timestamp;             // time of the sensor reading as reported by the sensor
         s_int64 timeid;                 // will be the same for all data harvested in the same call

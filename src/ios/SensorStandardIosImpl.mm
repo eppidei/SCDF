@@ -18,12 +18,15 @@ SensorStandardImpl::SensorStandardImpl(SensorType type)
     switch (type) {
         case scdf::Accelerometer:
             sensorImpl = [[AccelerometerIos alloc] init];
+            [sensorImpl SetRef:this];
             break;
         case scdf::Gyroscope:
             sensorImpl = [[GyroscopeIos alloc] init];
+            [sensorImpl SetRef:this];
             break;
         case scdf::Magnetometer:
             sensorImpl = [[MagnetometerIos alloc] init];
+            [sensorImpl SetRef:this];
             break;
         case scdf::Proximity:
             // TODO;
