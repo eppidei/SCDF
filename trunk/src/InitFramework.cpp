@@ -8,6 +8,7 @@
 
 #include "Harvester.h"
 #include "UDPSendersManager.h"
+#include "Sensor.h"
 #include <vector>
 void CreatePipes();
 
@@ -15,8 +16,12 @@ void InitFramework()
 {
     CreatePipes();
     std::vector<int> udpPorts;
-    udpPorts.push_back(7474);
-    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "127.0.0.1");
+    for (int i=0;i<scdf::SensorType::NumTypes;++i)
+    {
+        udpPorts.push_back(9000+i);
+    }
+
+    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "192.168.1.95");
     scdf::Harvester::Instance();
 }
 

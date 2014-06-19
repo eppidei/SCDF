@@ -39,7 +39,7 @@
 }
 - (s_bool) Setup:(scdf::SensorSettings) settings
 {
-    NSTimeInterval updateInterval = settings.rate;
+    NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
     motionManager.accelerometerUpdateInterval = updateInterval;
     return true;
 }
