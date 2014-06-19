@@ -18,6 +18,9 @@
 class UdpTransmitSocket;
 class IpEndpointName;
 
+namespace osc {
+    class OutboundPacketStream;
+}
 namespace scdf
 {
 #define TEST_UDP_PORT_BASE 7000
@@ -34,6 +37,7 @@ namespace scdf
         UDPSender(int udpp, std::string add) { Init(udpp, add); }
         ~UDPSender() { Release(); }
         void SendData(s_char* data, s_int32 size);
+        void SendDataOSCPacked(osc::OutboundPacketStream &oscData);
     };
     
     class UDPSenderHelperBase
@@ -44,6 +48,9 @@ namespace scdf
         void SendData();
         void DoSendData();
         void DoMultiSendData();
+        void OSCPackData(SensorData*, osc::OutboundPacketStream &oscData);
+        void DoSendDataOSCPacked();
+        void DoMultiSendDataOSCPacked();
     public:
         bool activated;
         std::vector<SensorData*> senderData;

@@ -42,7 +42,7 @@ void Harvester::SetupPipes()
     }
 }
 
-Harvester::Harvester() : activated(true),requesterType(SensorType::Accelerometer)
+Harvester::Harvester() : activated(true),requesterType(SensorType::AudioInput)
 {
     SetupPipes();
     ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
@@ -108,13 +108,18 @@ void Harvester::NotifyHarvestCompletition()
 void Harvester::HarvestingProcedure(SensorData *masterData)
 {
     Harvest(masterData);
+#ifdef TEST_PRINT_DATA
+    for (int i = 0; i< masterData->num_samples; i ++) {
+        printf("Harvested data %d from %s: %.4f\n",i,SensorTypeString[masterData->type].c_str(), ((s_sample*)masterData->data)[i]);
+    }
+#endif
     NotifyHarvestCompletition();
 }
 
 void Harvester::Harvest(SensorData *masterData)
 {
     s_double timestampStart=masterData->timestamp;
-    s_double harvestEpoc_seconds=masterData->rate/1000.f;
+    s_double harvestEpoc_seconds=masterData->rate;
     if (masterData->type!=AudioInput)
         timestampStart-=harvestEpoc_seconds;
     

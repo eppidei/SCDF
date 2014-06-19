@@ -22,7 +22,7 @@
 {
     [super viewDidLoad];
     
-    scdf::SensorSettings s_settings;
+   /* scdf::SensorSettings s_settings;
     s_settings.rate=1;
     scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
     
@@ -36,13 +36,13 @@
     scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
     
     magnetometer->Setup(s_settings);
-    magnetometer->Start();
+    magnetometer->Start();*/
     
     scdf::SensorSettings audioSettings;
     scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
     
     audioInputSensor->Setup(audioSettings);
-    audioInputSensor->Start();*/
+    audioInputSensor->Start();
     
 }
 
