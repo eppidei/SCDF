@@ -27,18 +27,25 @@ void UDPSender::Release()
 
 void UDPSender::SendData(s_char* data, s_int32 size)
 {
-/*    s_char buffer[4096];
-	osc::OutboundPacketStream oscPack( buffer, 4096);
-	oscPack << osc::BeginBundleImmediate
+    
+    float *data_float=(float*)(((SensorData*)data)->data);
+    float data1=data_float[0];
+    float data2=data_float[1];
+    float data3=data_float[2];
+    int sizee=sizeof(osc::BeginBundleImmediate);
+    s_char buffer[4096];
+	osc::OutboundPacketStream oscc( buffer, (size_t)4096);
+	oscc << osc::BeginBundleImmediate
 	<< osc::BeginMessage( "/Sensor type") << ((SensorData*)data)->type << osc::EndMessage
     << osc::BeginMessage( "/Rate"	) << ((SensorData*)data)->rate << osc::EndMessage
-    << osc::BeginMessage( "/Bit"	) << ((SensorData*)data)->sample_bit_resolution << osc::EndMessage
-    << osc::BeginMessage( "/Buffer size"	) << ((SensorData*)data)->num_samples << osc::EndMessage
-    << osc::BeginMessage( "/Timestamp"	) << ((SensorData*)data)->timestamp << osc::EndMessage;
-	oscPack << osc::EndBundle;
+    << osc::BeginMessage( "/Num samples"	) << ((SensorData*)data)->num_samples << osc::EndMessage
+    << osc::BeginMessage( "/x:"	) << ((SensorData*)data)->data[0] << osc::EndMessage
+    << osc::BeginMessage( "/y:"	) << ((SensorData*)data)->data[1] << osc::EndMessage
+    << osc::BeginMessage( "/z:"	) << ((SensorData*)data)->data[2] << osc::EndMessage;
+	oscc << osc::EndBundle;
 	
-    transmitSocket->Send(oscPack.Data(), oscPack.Size());*/
-	transmitSocket->Send(data, size);
+    transmitSocket->Send(oscc.Data(), oscc.Size());
+//	transmitSocket->Send(data, size);
 }
 
 void UDPSenderHelperBase::SendData()
@@ -55,14 +62,19 @@ void UDPSenderHelperBase::DoSendData()
 #define BIT_PER_BYTE 8
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=(senderData[i]->num_samples*sizeof(s_sample))/BIT_PER_BYTE;
+        s_int32 size=senderData[i]->num_samples*sizeof(s_sample);
         senders[0]->SendData((s_char*)senderData[i]->data, size);
     }
 }
 
 void UDPSenderHelperBase::DoMultiSendData()
 {
-    //send data according to senders number
+#define BIT_PER_BYTE 8
+    for (int i=0;i<senderData.size();++i)
+    {
+        s_int32 size=senderData[i]->num_samples*sizeof(s_sample);
+        senders[senderData[i]->type]->SendData((s_char*)senderData[i]->data, size);
+    }
 }
 
 static void SentDataRecyclingProcedure(std::vector <SensorData*> *data)

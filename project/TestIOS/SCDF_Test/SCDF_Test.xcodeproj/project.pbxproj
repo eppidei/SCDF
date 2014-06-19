@@ -47,6 +47,7 @@
 		DCE8BEAE194393B300D283E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE8BEAD194393B300D283E8 /* main.m */; };
 		DCE8BEC0194393B300D283E8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEBF194393B300D283E8 /* Images.xcassets */; };
 		DCE8BEE01943970100D283E8 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEDF1943970100D283E8 /* CoreMotion.framework */; };
+		DCFC6D0A195377DD004AAA27 /* ProximityIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCFC6D09195377DD004AAA27 /* ProximityIos.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +119,8 @@
 		DCE8BEBF194393B300D283E8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DCE8BEC6194393B300D283E8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		DCE8BEDF1943970100D283E8 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		DCFC6D08195377DD004AAA27 /* ProximityIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProximityIos.h; sourceTree = "<group>"; };
+		DCFC6D09195377DD004AAA27 /* ProximityIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ProximityIos.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +196,8 @@
 				DC1513A01944898B00DC7BF7 /* GyroscopeIos.mm */,
 				DC1513A219448AC800DC7BF7 /* MagnetometerIos.h */,
 				DC1513A319448AC800DC7BF7 /* MagnetometerIos.mm */,
+				DCFC6D08195377DD004AAA27 /* ProximityIos.h */,
+				DCFC6D09195377DD004AAA27 /* ProximityIos.mm */,
 			);
 			name = sensors;
 			sourceTree = "<group>";
@@ -347,6 +352,11 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Marco Bertola";
+				TargetAttributes = {
+					DCE8BE9D194393B300D283E8 = {
+						DevelopmentTeam = UP7D2B2KTF;
+					};
+				};
 			};
 			buildConfigurationList = DCE8BE99194393B300D283E8 /* Build configuration list for PBXProject "SCDF_Test" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -392,6 +402,7 @@
 				9D5E223C194DE17200288DD2 /* ThreadUtils.cpp in Sources */,
 				9D5E2239194DE15A00288DD2 /* NetworkingUtils.cpp in Sources */,
 				DC4DFF5C194CD2CC0051E311 /* AudioController.mm in Sources */,
+				DCFC6D0A195377DD004AAA27 /* ProximityIos.mm in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
 				DC1513A419448AC800DC7BF7 /* MagnetometerIos.mm in Sources */,
 				9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */,
@@ -527,7 +538,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
@@ -541,6 +553,7 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -552,7 +565,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
@@ -564,6 +578,7 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -41,14 +41,14 @@
 }
 - (s_bool) Setup:(scdf::SensorSettings) settings
 {
-    NSTimeInterval updateInterval = settings.rate/1000.f;
+    NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
     motionManager.accelerometerUpdateInterval = updateInterval; //must be in second
     return true;
 }
 
 -(void)outputAccelertionData:(CMAccelerometerData*)accelerometerData
 {
-    s_double* data = new s_double[3];
+    s_sample* data = new s_sample[3];
     data[0]  = accelerometerData.acceleration.x;
     data[1]  = accelerometerData.acceleration.y;
     data[2]  = accelerometerData.acceleration.z;
@@ -58,6 +58,7 @@
     sData->type = scdf::Accelerometer;
     sData->data = (char*)data;
     sData->timestamp=accelerometerData.timestamp;
+    sData->num_samples=3;
     
     _sensorRef->AddIncomingDataToQueue(sData);
 }
