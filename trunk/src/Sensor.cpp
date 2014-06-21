@@ -1,5 +1,4 @@
 
-#include <vector>
 #include "CustomPipe.h"
 #include "Harvester.h"
 #include "Sensor.h"
@@ -8,7 +7,7 @@
 
 
 using namespace scdf;
-extern std::vector<scdf::CustomPipe*> pipes;
+extern vector<scdf::CustomPipe*> pipes;
 
 Sensor* Sensor::Create(SensorType type)
 {

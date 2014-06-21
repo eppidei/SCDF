@@ -9,13 +9,13 @@
 #include "Harvester.h"
 #include "UDPSendersManager.h"
 #include "Sensor.h"
-#include <vector>
+
 void CreatePipes();
 
 void InitFramework()
 {
     CreatePipes();
-    std::vector<int> udpPorts;
+    vector<int> udpPorts;
     for (int i=0;i<scdf::SensorType::NumTypes;++i)
     {
         udpPorts.push_back(9000+i);

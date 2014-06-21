@@ -13,7 +13,7 @@
 #include "UDPSendersManager.h"
 
 using namespace scdf;
-extern std::vector<scdf::CustomPipe*> pipes;
+extern vector<scdf::CustomPipe*> pipes;
 Harvester *Harvester::_instance=NULL;
 
 s_bool Harvester::Compare::operator()(const SensorData* s1, const SensorData* s2) const

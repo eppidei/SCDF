@@ -2,17 +2,12 @@
 
 #include "TypeDefinitions.h"
 
-
-#define CALLBACK
-#define TEST_PRINT_DATA
-#include <string>
-
 namespace scdf {
     
     class Sensor;
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
-    static const std::string SensorTypeString[]={"Acceleometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
+    static const string SensorTypeString[]={"Acceleometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
 
     class SensorSettings {
     public:
@@ -20,7 +15,7 @@ namespace scdf {
         s_bool broken;
     };
     
-    class SensorAudioSettings : SensorSettings{
+    class SensorAudioSettings : SensorSettings {
     public:
         s_int32 numChannels;
     };
@@ -38,9 +33,13 @@ namespace scdf {
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }
     };
-    class Harvester;
+    
+    class SensorAudioData : public SensorData {
+    public:
+        s_int32 numChannels;
+    };
+
     class Sensor {
-        Harvester *harvester;
     public:
 
         static Sensor* Create(SensorType type);

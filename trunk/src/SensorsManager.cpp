@@ -7,7 +7,6 @@
 
 #include "Sensor.h"
 #include "SensorsManager.h"
-#include <vector>
 
 using namespace scdf;
 

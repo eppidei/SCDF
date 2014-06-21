@@ -4,15 +4,13 @@
 //  Created by Andrea Scuderi on 01/06/14.
 //
 //
-#include <string>
 #include "Sensor.h"
 #include "CustomPipe.h"
 #include "unistd.h"
-#include <vector>
 
 using namespace scdf;
 
-std::vector<CustomPipe*> pipes;
+vector<CustomPipe*> pipes;
 void CreatePipes()
 {
     for (int i=0;i<SensorType::NumTypes;++i)
@@ -55,7 +53,7 @@ template s_int32 CustomPipe::WriteMessage<SensorData*> (SensorData *msg);
 
 template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
 {
-    //_ASSERT(!invalid);
+    assert(!invalid);
     if (invalid) return 0;
     s_int32 bytesWritten=0;
     s_int32 ret=Write((const s_char *)&msg, sizeof(PipeMessage), &bytesWritten);
@@ -64,7 +62,7 @@ template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
         //Logging::Instance()->log(_T("Error writing to pipe"));
         return 0;
     }
-    //_ASSERT(bytesWritten==sizeof(PipeMessage));
+    assert(bytesWritten==sizeof(PipeMessage));
     return 1;
 }
 
@@ -72,7 +70,7 @@ template SensorData* CustomPipe::ReadMessage<SensorData*>();
 
 template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
 {
-    //_ASSERT(!invalid);
+    assert(!invalid);
     if (invalid) return NULL;
     s_int32 numBytesRead=0;
     PipeMessage p;
@@ -82,7 +80,7 @@ template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
         return NULL;
     }
     if(0==numBytesRead) return NULL;
-    //_ASSERT(numBytesRead==sizeof(PipeMessage));
+    assert(numBytesRead==sizeof(PipeMessage));
     return p;
 }
 

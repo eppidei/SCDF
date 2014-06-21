@@ -9,9 +9,6 @@
 #ifndef __SCDF_Test__UDPSender__
 #define __SCDF_Test__UDPSender__
 
-#include <iostream>
-#include <memory>
-#include <vector>
 #include "ThreadUtils.h"
 #include "Sensor.h"
 
@@ -23,18 +20,15 @@ namespace osc {
 }
 namespace scdf
 {
-#define TEST_UDP_PORT_BASE 7000
-#define TEST_IP_ADDRESS "127.0.0.1"
-    
     class UDPSender
     {
-        std::auto_ptr<UdpTransmitSocket> transmitSocket;
-        std::auto_ptr<IpEndpointName> endPoint;
-        void Init(int udpp, std::string add);
+        auto_ptr<UdpTransmitSocket> transmitSocket;
+        auto_ptr<IpEndpointName> endPoint;
+        void Init(int udpp, string add);
         void Release();
     public:
         UDPSender() { Init(TEST_UDP_PORT_BASE, TEST_IP_ADDRESS); }
-        UDPSender(int udpp, std::string add) { Init(udpp, add); }
+        UDPSender(int udpp, string add) { Init(udpp, add); }
         ~UDPSender() { Release(); }
         void SendData(s_char* data, s_int32 size);
         void SendDataOSCPacked(osc::OutboundPacketStream &oscData);
@@ -42,7 +36,7 @@ namespace scdf
     
     class UDPSenderHelperBase
     {
-        std::vector<UDPSender*> senders;
+        vector<UDPSender*> senders;
         ThreadUtils::CustomSemaphore freeSlot, canSend;
         
         void SendData();
@@ -53,10 +47,10 @@ namespace scdf
         void DoMultiSendDataOSCPacked();
     public:
         bool activated;
-        std::vector<SensorData*> senderData;
+        vector<SensorData*> senderData;
         
         UDPSenderHelperBase();
-        virtual void Init(std::vector<s_int32> udpPorts, std::string address);
+        virtual void Init(vector<s_int32> udpPorts, string address);
         void SendOnThread();
         ThreadUtils::CustomSemaphore *EventFreeSlot() {return &freeSlot;}
         ThreadUtils::CustomSemaphore *EventCanSend() {return &canSend;}

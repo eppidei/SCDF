@@ -1,3 +1,12 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <iostream>
+#include <memory>
+#include <assert.h>
+
+using namespace std;
+
 typedef bool    s_bool;
 
 typedef char    s_int8;
@@ -15,4 +24,10 @@ typedef float   s_float;
 typedef double  s_double;
 typedef s_float s_sample;
 
+#define CALLBACK
 
+#define TEST_PRINT_DATA
+
+#define TEST_UDP_PORT_BASE 7000
+#define TEST_IP_ADDRESS "127.0.0.1"
+#define OSC_BUFFER_SIZE 4096
