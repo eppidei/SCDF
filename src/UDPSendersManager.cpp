@@ -12,7 +12,7 @@
 using namespace scdf;
 UDPSendersManager *UDPSendersManager::_instance=NULL;
 
-s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::string ipAdd)
+s_int32 UDPSendersManager::CreateSender(vector<s_int32> udpPorts, string ipAdd)
 {
     if (udpPorts.size()==0) return -1;
     
@@ -25,7 +25,7 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
 
 UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
 {
-    //_ASSERT(activeSender>-1 && activeSender<senders.size());
+    assert(activeSender>-1 && activeSender<senders.size());
     if (activeSender<0 || activeSender>=senders.size()) return NULL;
     return senders[activeSender];
     

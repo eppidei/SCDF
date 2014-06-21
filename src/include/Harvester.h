@@ -16,8 +16,8 @@ namespace scdf{
 
     class Harvester
     {
-        std::vector<SensorData*> nextHarvestData;   //circular buffer?
-        std::vector<SensorData*> myHarvest;         //circular buffer?
+        vector<SensorData*> nextHarvestData;   //circular buffer?
+        vector<SensorData*> myHarvest;         //circular buffer?
         SensorData *masterData;
         
         void PipesHarvesting(s_double timestampStart, s_double timestampEnd, SensorType sType);

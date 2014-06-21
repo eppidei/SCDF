@@ -10,9 +10,10 @@
 
 using namespace scdf;
 
-SensorStandard::SensorStandard(SensorType type)
+SensorStandard::SensorStandard(SensorType _type)
 {
-    sImpl=new SensorStandardImpl(type/*,destPipe*/);
+    type=_type;
+    sImpl=new SensorStandardImpl();
     // ios specific setup, store the pipe
     // return the just created sensor
 }
