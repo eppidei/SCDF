@@ -33,6 +33,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE 	 := scdf
 LOCAL_PATH 		 := $(SCDF_SRC)
 LOCAL_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
+LOCAL_EXPORT_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
 LOCAL_STATIC_LIBRARIES := oscpack
 #LOCAL_LDLIBS += -landroid -llog
 LOCAL_SRC_FILES := 	Sensor.cpp \
@@ -40,10 +41,12 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					android/SensorStandardImplAndroid.cpp \
 					SensorAudioInput.cpp \
 					android/SensorAudioInputImplAndroid.cpp \
+					CustomPipe.cpp \
 					InitFramework.cpp \
 					ThreadUtils.cpp \
 					UDPSender.cpp \
-					UDPSendersManager.cpp
+					UDPSendersManager.cpp \
+					Harvester.cpp
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)

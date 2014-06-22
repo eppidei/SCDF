@@ -42,7 +42,7 @@ void Harvester::SetupPipes()
     }
 }
 
-Harvester::Harvester() : activated(true),requesterType(SensorType::AudioInput)
+Harvester::Harvester() : activated(true),requesterType(AudioInput)
 {
     SetupPipes();
     ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
