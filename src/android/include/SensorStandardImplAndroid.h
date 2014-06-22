@@ -2,11 +2,11 @@
 #define SENSORAUDIOINPUTIMPLANDROID_H_
 
 #include "TypeDefinitions.h"
-#include "Sensor.h"
+#include "SensorStandard.h"
 
 namespace scdf {
 
-    class SensorStandardImpl //: public SensorStandard
+    class SensorStandardImpl : public SensorStandard
     {
 
     public:

@@ -1,3 +1,6 @@
+#ifndef SCDF_SENSOR_STANDARD_H
+#define SCDF_SENSOR_STANDARD_H
+
 #include "Sensor.h"
 
 namespace scdf {
@@ -19,3 +22,5 @@ namespace scdf {
     };  
 
 }
+
+#endif
