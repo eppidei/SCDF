@@ -143,7 +143,7 @@ static OSStatus	performRender (void                         *inRefCon,
     return err;
 }
 
-SensorAudioInputImpl::SensorAudioInputImpl(SensorType type/*, ScdfPipe *destPipe*/)
+SensorAudioInputImpl::SensorAudioInputImpl()
 {
     listener = [[AudioEventsListener alloc] init];
             

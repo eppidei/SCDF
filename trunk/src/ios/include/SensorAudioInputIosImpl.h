@@ -34,7 +34,7 @@ namespace scdf {
         
     public:
         
-        SensorAudioInputImpl(SensorType type);
+        SensorAudioInputImpl();
         ~SensorAudioInputImpl();
         
         s_bool Setup(scdf::SensorSettings &settings);

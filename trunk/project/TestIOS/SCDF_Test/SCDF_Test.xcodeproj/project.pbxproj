@@ -102,8 +102,6 @@
 		DCE8BEBF194393B300D283E8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DCE8BEC6194393B300D283E8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		DCE8BEDF1943970100D283E8 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		DCFC6D08195377DD004AAA27 /* ProximityIos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProximityIos.h; sourceTree = "<group>"; };
-		DCFC6D09195377DD004AAA27 /* ProximityIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ProximityIos.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,19 +166,9 @@
 			path = ../../../../lib/oscpack_1_1_0/osc;
 			sourceTree = "<group>";
 		};
-		9D9F54271944BCFE00EB7E48 /* sensors */ = {
-			isa = PBXGroup;
-			children = (
-				DCFC6D08195377DD004AAA27 /* ProximityIos.h */,
-				DCFC6D09195377DD004AAA27 /* ProximityIos.mm */,
-			);
-			name = sensors;
-			sourceTree = "<group>";
-		};
 		DC151372194485BE00DC7BF7 /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				9D9F54271944BCFE00EB7E48 /* sensors */,
 				DC151375194485BE00DC7BF7 /* AppLayout */,
 				9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */,
 				DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */,
