@@ -40,12 +40,12 @@ namespace scdf {
     };
 
     class Sensor {
+        
+         SensorType type;
     public:
 
         static Sensor* Create(SensorType type);
         static void Destroy(Sensor* sensor);
-        
-        SensorType GetType();
         
         virtual s_bool Setup(SensorSettings settings) = 0;
         /* Returns false on setup failure.
@@ -59,8 +59,11 @@ namespace scdf {
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
 
     protected:
+        
+        SensorType GetType(){return type;};
+        void SetType(SensorType _type){type = _type;}
 
-        SensorType type;
+       
     
     };
   

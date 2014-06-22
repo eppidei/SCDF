@@ -19,10 +19,6 @@ Sensor* Sensor::Create(SensorType type)
         return new SensorStandard(type);
 }
 
-SensorType Sensor::GetType()
-{
-    return type;
-}
 
 void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
