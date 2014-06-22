@@ -10,7 +10,11 @@
 #define SCDF_Test_Utils_h
 
 #include <pthread.h>
+#ifndef ANDROID
 #import "dispatch/semaphore.h"
+#else
+#include <semaphore.h>
+#endif
 #include "TypeDefinitions.h"
 typedef void*(*start_routine)(void*);
 
@@ -49,6 +53,7 @@ namespace scdf
 		};
         class CustomSemaphore
         {
+#ifndef ANDROID
             dispatch_semaphore_t sem;
         public:
             CustomSemaphore()
@@ -68,6 +73,39 @@ namespace scdf
                 dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
                 return true;
             }
+#else // android
+
+        sem_t sem;
+
+        public:
+            CustomSemaphore()
+            {
+            	sem_init(&sem,0,0);
+            	//sem=dispatch_semaphore_create(0);
+            }
+            CustomSemaphore(s_int32 initValue)
+            {
+            	sem_init(&sem,0,initValue);
+            	//sem=dispatch_semaphore_create(initValue);
+            }
+            void Set()
+            {
+            	sem_post(&sem);
+            	//dispatch_semaphore_signal(sem);
+            }
+            bool Wait()
+            {
+            	sem_wait(&sem);
+            	//dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+                return true;
+            }
+            ~CustomSemaphore()
+            {
+            	sem_destroy(&sem);
+            }
+
+#endif
+
         };
         class AutoLock {
             

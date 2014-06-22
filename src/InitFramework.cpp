@@ -16,7 +16,7 @@ void InitFramework()
 {
     CreatePipes();
     vector<int> udpPorts;
-    for (int i=0;i<scdf::SensorType::NumTypes;++i)
+    for (int i=0;i<scdf::NumTypes;++i)
     {
         udpPorts.push_back(9000+i);
     }

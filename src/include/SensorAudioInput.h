@@ -22,7 +22,7 @@ namespace scdf {
     public:
         SensorAudioInput(){}
         SensorAudioInput(SensorType type);
-        s_bool Setup(SensorSettings settings);        
+        s_bool Setup(SensorSettings& settings);
         s_bool Start();
         s_bool Stop();
 
