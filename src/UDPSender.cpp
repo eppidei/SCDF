@@ -10,6 +10,7 @@
 #include "UDPSender.h"
 #include "UDPSendersManager.h"
 #include "osc/OscOutboundPacketStream.h"
+#include "Logging.h"
 
 using namespace scdf;
 
@@ -27,11 +28,13 @@ void UDPSender::Release()
 
 void UDPSender::SendData(s_char* data, s_int32 size)
 {
-    transmitSocket->Send(data, size);
+	LOGD("UDPSender send data");
+	transmitSocket->Send(data, size);
 }
 
 void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
 {
+	LOGD("UDP send data osc packed");
     transmitSocket->Send(oscData.Data(), oscData.Size());
 }
 

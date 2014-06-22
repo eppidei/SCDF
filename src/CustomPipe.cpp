@@ -6,14 +6,15 @@
 //
 #include "Sensor.h"
 #include "CustomPipe.h"
-#include "unistd.h"
+#include "fcntl.h"
+#include "unistd.h" // included by fcntl.h on android, consider removing
 
 using namespace scdf;
 
 vector<CustomPipe*> pipes;
 void CreatePipes()
 {
-    for (int i=0;i<SensorType::NumTypes;++i)
+    for (int i=0;i<NumTypes;++i)
         pipes.push_back(new CustomPipe());
 }
 

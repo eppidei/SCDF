@@ -1,12 +1,13 @@
 #include <jni.h>
-#include <android/log.h>
-#include <android/sensor.h>
-#include <android/looper.h>
+#include "Sensor.h"
+//#include <android/sensor.h>
+//#include <android/looper.h>
 
+#include <android/log.h>
 #define  LOG_TAG    "Scdf test"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
-
+/*
 ASensorEventQueue* sensorEventQueue;
 
 int SensorEventCallback(int fd, int events, void* data)
@@ -17,15 +18,23 @@ int SensorEventCallback(int fd, int events, void* data)
     	LOGD("X = %f y = %f z=%f ", event.acceleration.x, event.acceleration.y, event.acceleration.z);
     }
     return 1;
-}
+}*/
 
+void InitFramework();
 
 extern "C" {
 
+scdf::Sensor* acc;
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
 {
-	ASensorManager* sm = ASensorManager_getInstance();
+    InitFramework();
+	scdf::SensorSettings s_settings;
+    s_settings.rate=1;
+    acc = scdf::Sensor::Create(scdf::Accelerometer);
+    return acc->Setup(s_settings);
+
+	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorList list;
 	int numSensors = ASensorManager_getSensorList(sm, &list);
 
@@ -46,22 +55,24 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv*
 	if (NULL==looper)
 		return false;
 	sensorEventQueue = ASensorManager_createEventQueue(sm,looper,0, SensorEventCallback,NULL);
-	return true;
+	return true;*/
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv* env, jobject thiz)
 {
-	ASensorManager* sm = ASensorManager_getInstance();
+	acc->Start();
+	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);
-	return (0 <= ASensorEventQueue_enableSensor(sensorEventQueue,s) );
+	return (0 <= ASensorEventQueue_enableSensor(sensorEventQueue,s) );*/
 
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnPause(JNIEnv* env, jobject thiz)
 {
-	ASensorManager* sm = ASensorManager_getInstance();
+	acc->Stop();
+	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);
-	return (0 <= ASensorEventQueue_disableSensor(sensorEventQueue,s) );
+	return (0 <= ASensorEventQueue_disableSensor(sensorEventQueue,s) );*/
 }
 
 

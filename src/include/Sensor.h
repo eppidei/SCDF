@@ -28,7 +28,7 @@ namespace scdf {
         s_double timestamp;             // time of the sensor reading as reported by the sensor
         s_int64 timeid;                 // will be the same for all data harvested in the same call
         s_int32 num_samples;
-        char* data;                     // TODO: actually a placeholder for now
+        s_sample* data;
         
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }

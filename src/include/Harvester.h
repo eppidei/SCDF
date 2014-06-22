@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Sensor.h"
 namespace scdf{
 

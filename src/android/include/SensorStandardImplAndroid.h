@@ -4,12 +4,15 @@
 #include "TypeDefinitions.h"
 #include "SensorStandard.h"
 
+class ASensorEventQueue;
+
 namespace scdf {
 
     class SensorStandardImpl : public SensorStandard
     {
-
     public:
+
+    	ASensorEventQueue* sensorEventQueue; // make private and make callback a friend
 
         SensorStandardImpl(SensorType _type);
         ~SensorStandardImpl();
