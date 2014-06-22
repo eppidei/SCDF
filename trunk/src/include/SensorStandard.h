@@ -6,6 +6,7 @@ namespace scdf {
     class SensorStandard : public Sensor
     {
         SensorStandardImpl *sImpl;
+        
     public:
 
         SensorStandard(){}

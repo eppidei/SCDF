@@ -8,8 +8,8 @@ SensorAudioInput::SensorAudioInput(SensorType _type/*, ScdfPipe *destPipe*/)
 {
     // if sensor is not available return null
     // otherwise, create it
-    type=_type;
-    sImpl = new SensorAudioInputImpl(type/*,destPipe*/);
+    SetType(_type);
+    sImpl = new SensorAudioInputImpl(_type/*,destPipe*/);
     // ios specific setup, store the pipe
     // return the just created sensor
 }

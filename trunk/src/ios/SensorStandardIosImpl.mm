@@ -15,10 +15,79 @@ using namespace scdf;
 
 CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
-SensorStandardImpl::SensorStandardImpl()
+
+@interface TimerIos : NSObject
 {
+    s_float updateInterval;
+    NSTimer *timerProx;
+    SensorStandardImpl *senorRef;
+}
+
+@end
+
+@implementation TimerIos
+
+- (id) init
+{
+    timerProx = nil;
+    return self;
+}
+
+- (void) setSensorRef: (SensorStandardImpl  *) _sensorRef
+{
+    senorRef = _sensorRef;
+}
+
+
+- (void) Setup: (scdf::SensorSettings) settings
+{
+    updateInterval = 1.0/ (s_float) settings.rate;
+    
+}
+
+- (void) Start
+{
+    if (!timerProx) {
+        timerProx = [NSTimer scheduledTimerWithTimeInterval:updateInterval
+                                         target:self
+                                       selector:@selector(timerFired:)
+                                       userInfo:nil
+                                        repeats:YES];
+    }
+}
+
+- (void) Stop
+{
+    if(timerProx)
+    {
+        [timerProx invalidate];
+        timerProx = nil;
+    }
+}
+
+- (void) timerFired: (NSTimer *) timer
+{
+    UIDevice *device = [UIDevice currentDevice];
+    SensorsStandardIOSData data;
+    data.value1 = device.proximityState;
+    data.timestamp = [timer timeInterval];
+    
+    senorRef->MySensorsCallback(data);
+}
+
+@end
+
+
+SensorStandardImpl::SensorStandardImpl(SensorType _sensorType)
+{
+    sensorTypeRef = _sensorType;
     if (NULL==motionManager)
         motionManager = [[CMMotionManager alloc] init];
+    
+    if (_sensorType==Proximity) {
+        timerProximity = [[TimerIos alloc] init];
+        [timerProximity setSensorRef:this];
+    }
 }
 
 SensorStandardImpl::~SensorStandardImpl()
@@ -27,12 +96,18 @@ SensorStandardImpl::~SensorStandardImpl()
     if (NULL!=motionManager)
         [motionManager release];
     motionManager=NULL;*/
+    
+    if(timerProximity)
+    {
+        [timerProximity release];
+        timerProximity = nil;
+    }
 }
 
 s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 {
     NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
-    switch (type) {
+    switch (sensorTypeRef) {
         case scdf::Accelerometer:
             motionManager.accelerometerUpdateInterval = updateInterval;
             break;
@@ -42,6 +117,8 @@ s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
         case scdf::Magnetometer:
             motionManager.magnetometerUpdateInterval = updateInterval;
             break;
+        case scdf::Proximity:
+            [timerProximity Setup:settings];
         default:
             break;
     }
@@ -50,14 +127,14 @@ s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 
 s_bool SensorStandardImpl::Start()
 {
-    switch (type) {
+    switch (sensorTypeRef) {
         case scdf::Accelerometer:
             [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
                                             SensorsStandardIOSData data;
-                                            data.x=accelerometerData.acceleration.x;
-                                            data.y=accelerometerData.acceleration.y;
-                                            data.z=accelerometerData.acceleration.z;
+                                            data.value1=accelerometerData.acceleration.x;
+                                            data.value2=accelerometerData.acceleration.y;
+                                            data.value3=accelerometerData.acceleration.z;
                                             data.timestamp=accelerometerData.timestamp;
                                             MySensorsCallback(data);
                                             if(error){
@@ -69,9 +146,9 @@ s_bool SensorStandardImpl::Start()
             [motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue]
                                        withHandler:^(CMGyroData *gyroData, NSError *error) {
                                            SensorsStandardIOSData data;
-                                           data.x=gyroData.rotationRate.x;
-                                           data.y=gyroData.rotationRate.y;
-                                           data.z=gyroData.rotationRate.z;
+                                           data.value1=gyroData.rotationRate.x;
+                                           data.value2=gyroData.rotationRate.y;
+                                           data.value3=gyroData.rotationRate.z;
                                            data.timestamp=gyroData.timestamp;
                                            MySensorsCallback(data);
                                            if(error){
@@ -83,9 +160,9 @@ s_bool SensorStandardImpl::Start()
             [motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMMagnetometerData  *magneticFieldData, NSError *error) {
                                             SensorsStandardIOSData data;
-                                            data.x=magneticFieldData.magneticField.x;
-                                            data.y=magneticFieldData.magneticField.y;
-                                            data.z=magneticFieldData.magneticField.z;
+                                            data.value1=magneticFieldData.magneticField.x;
+                                            data.value2=magneticFieldData.magneticField.y;
+                                            data.value3=magneticFieldData.magneticField.z;
                                             data.timestamp=magneticFieldData.timestamp;
                                             MySensorsCallback(data);
                                             if(error){
@@ -93,6 +170,13 @@ s_bool SensorStandardImpl::Start()
                                             }
                                         }];
             break;
+        case scdf::Proximity:
+        {
+            UIDevice *device = [UIDevice currentDevice];
+            device.proximityMonitoringEnabled = YES;
+            [timerProximity Start];
+            break;
+        }
         default:
             break;
     }
@@ -101,7 +185,7 @@ s_bool SensorStandardImpl::Start()
 
 s_bool SensorStandardImpl::Stop()
 {
-    switch (type) {
+    switch (sensorTypeRef) {
         case scdf::Accelerometer:
             [motionManager stopAccelerometerUpdates];
             break;
@@ -111,6 +195,13 @@ s_bool SensorStandardImpl::Stop()
         case scdf::Magnetometer:
             [motionManager stopMagnetometerUpdates];
             break;
+        case scdf::Proximity:
+        {
+            UIDevice *device = [UIDevice currentDevice];
+            device.proximityMonitoringEnabled = NO;
+            [timerProximity Stop];
+             break;
+        }
         default:
             break;
     }
@@ -120,16 +211,17 @@ s_bool SensorStandardImpl::Stop()
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)
 {
     s_double* data = new s_double[3];
-    data[0]  = sensorIOSData.x;
-    data[1]  = sensorIOSData.y;
-    data[2]  = sensorIOSData.z;
+    data[0]  = sensorIOSData.value1;
+    data[1]  = sensorIOSData.value2;
+    data[2]  = sensorIOSData.value3;
         
     scdf::SensorData *sData = new scdf::SensorData();
         
-    sData->type = scdf::Magnetometer;
+    sData->type = (SensorType) sensorTypeRef;
     sData->data = (char*)data;
     sData->timestamp=sensorIOSData.timestamp;
         
     AddIncomingDataToQueue(sData);
 }
+
 
