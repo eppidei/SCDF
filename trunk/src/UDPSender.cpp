@@ -131,7 +131,7 @@ void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStrea
 #endif
     switch(data->type)
     {
-        case SensorType::AudioInput:
+        case AudioInput:
         {
             SensorAudioData *audioData=(SensorAudioData*)data;
             oscData << osc::BeginBundle()

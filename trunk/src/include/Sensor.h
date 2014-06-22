@@ -7,7 +7,7 @@ namespace scdf {
     class Sensor;
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
-    static const string SensorTypeString[]={"Acceleometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
+    static const string SensorTypeString[]={"Accelerometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
 
     class SensorSettings {
     public:
@@ -47,7 +47,7 @@ namespace scdf {
         static Sensor* Create(SensorType type);
         static void Destroy(Sensor* sensor);
         
-        virtual s_bool Setup(SensorSettings settings) = 0;
+        virtual s_bool Setup(SensorSettings& settings) = 0;
         /* Returns false on setup failure.
          * If any of the settings parameter is not supported, it will be modified,
          * so that the user can retry the setup with the modified (supported) values.

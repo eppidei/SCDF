@@ -6,7 +6,13 @@
 //  Copyright (c) 2014 Marco Bertola. All rights reserved.
 //
 
+#ifdef ANDROID
+#include "SensorStandardImplAndroid.h"
+#else
 #import "SensorStandardIosImpl.h"
+#endif
+#include "SensorStandard.h"
+
 
 using namespace scdf;
 
@@ -14,11 +20,11 @@ SensorStandard::SensorStandard(SensorType _type)
 {
     SetType(_type);
     sImpl=new SensorStandardImpl(_type);
-    // ios specific setup, store the pipe
+    // platform specific setup, store the pipe
     // return the just created sensor
 }
 
-s_bool SensorStandard::Setup(SensorSettings settings)
+s_bool SensorStandard::Setup(SensorSettings& settings)
 {
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
