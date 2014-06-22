@@ -26,7 +26,7 @@ typedef s_float s_sample;
 
 #define CALLBACK
 
-//#define TEST_PRINT_DATA
+#define TEST_PRINT_DATA
 
 #define TEST_UDP_PORT_BASE 7000
 #define TEST_IP_ADDRESS "127.0.0.1"

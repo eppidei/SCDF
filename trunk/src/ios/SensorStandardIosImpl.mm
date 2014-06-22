@@ -210,13 +210,25 @@ s_bool SensorStandardImpl::Stop()
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)
 {
-    s_double* data = new s_double[3];
+    s_int32 numSamples = 0;
+    if (sensorTypeRef==Proximity) {
+        numSamples = 1;
+    } else
+        numSamples = 3;
+    
+    
+    s_double* data = new s_double[numSamples];
     data[0]  = sensorIOSData.value1;
-    data[1]  = sensorIOSData.value2;
-    data[2]  = sensorIOSData.value3;
-        
+    
+    if(sensorTypeRef!=Proximity)
+    {
+        data[1]  = sensorIOSData.value2;
+        data[2]  = sensorIOSData.value3;
+    }
+    
     scdf::SensorData *sData = new scdf::SensorData();
-        
+    
+    sData->num_samples = numSamples;
     sData->type = (SensorType) sensorTypeRef;
     sData->data = (char*)data;
     sData->timestamp=sensorIOSData.timestamp;
