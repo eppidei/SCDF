@@ -16,6 +16,8 @@ using namespace scdf;
 extern vector<scdf::CustomPipe*> pipes;
 Harvester *Harvester::_instance=NULL;
 
+s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
+
 s_bool Harvester::Compare::operator()(const SensorData* s1, const SensorData* s2) const
 {
     return s1->timestamp < s2->timestamp;
@@ -54,7 +56,7 @@ void Harvester::Sort()
     std::sort(myHarvest.begin(), myHarvest.end(), Compare());
 }
 
-void Harvester::PipesHarvesting(s_double timestampStart, s_double timestampEnd, SensorType sType)
+void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType)
 {
     for (s_int32 i=0;i<pipes.size();++i)
     {
@@ -65,12 +67,24 @@ void Harvester::PipesHarvesting(s_double timestampStart, s_double timestampEnd, 
             sd=pipes[i]->ReadMessage<SensorData*>();
             if (NULL==sd) break;
             if (sd->timestamp<timestampStart)
+            {
+#ifdef TEST_PRINT_HARVEST_STATUS
+                printf("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+#endif
                 delete sd;
+            }
+            
             else if (sd->timestamp<=timestampEnd){
+#ifdef TEST_PRINT_HARVEST_STATUS
+                printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+#endif
                 sd->timeid=timestampStart;
                 myHarvest.push_back(sd);
             }
             else{
+#ifdef TEST_PRINT_HARVEST_STATUS
+                printf("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+#endif
                 nextHarvestData.push_back(sd);
                 break;
             }
@@ -78,7 +92,7 @@ void Harvester::PipesHarvesting(s_double timestampStart, s_double timestampEnd, 
     }
 }
 
-void Harvester::InternalBufferHarvesting(s_double timestampStart, s_double timestampEnd)
+void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd)
 {
     SensorData *sd=NULL;
     for (s_int32 i=0;i<nextHarvestData.size();++i)
@@ -86,11 +100,17 @@ void Harvester::InternalBufferHarvesting(s_double timestampStart, s_double times
         sd=nextHarvestData[i];
         if (sd->timestamp<timestampStart)
         {
+#ifdef TEST_PRINT_HARVEST_STATUS
+            printf("DELETING: Timestamp from %s: %lu\n", SensorTypeString[((SensorData*)nextHarvestData[i])->type].c_str(), ((SensorData*)nextHarvestData[i])->timestamp);
+#endif
             delete sd;
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
         else if (sd->timestamp<=timestampEnd)
         {
+#ifdef TEST_PRINT_HARVEST_STATUS
+            printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[((SensorData*)nextHarvestData[i])->type].c_str(), ((SensorData*)nextHarvestData[i])->timestamp);
+#endif
             myHarvest.push_back(nextHarvestData[i]);
             nextHarvestData.erase((nextHarvestData.begin()+i));
         }
@@ -118,13 +138,11 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
 
 void Harvester::Harvest(SensorData *masterData)
 {
-    s_double timestampStart=masterData->timestamp;
-    s_double harvestEpoc_seconds=masterData->rate;
-    if (masterData->type!=AudioInput)
-        timestampStart-=harvestEpoc_seconds;
-    
-    InternalBufferHarvesting(timestampStart, timestampStart+harvestEpoc_seconds);
-    PipesHarvesting(timestampStart, timestampStart+harvestEpoc_seconds, masterData->type);
+#ifdef TEST_PRINT_TIMESTAMP
+    printf("Master sensor: %s; Harvesting starts: %llu; Harvesting ends: %llu; Harvesting ms interval: %llu;\n",SensorTypeString[masterData->type].c_str(),masterData->timeid,masterData->timestamp,getUptimeInMilliseconds(masterData->timestamp-masterData->timeid));
+#endif
+    InternalBufferHarvesting(masterData->timeid, masterData->timestamp);
+    PipesHarvesting(masterData->timeid, masterData->timestamp, masterData->type);
     Sort();
     myHarvest.insert(myHarvest.begin(), masterData);
 }

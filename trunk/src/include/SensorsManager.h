@@ -7,7 +7,6 @@
 //
 
 #include "TypeDefinitions.h"
-#include <map>
 
 namespace scdf{
     

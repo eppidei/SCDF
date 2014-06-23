@@ -9,9 +9,6 @@
 #ifndef __SCDF_Test__UDPSendersManager__
 #define __SCDF_Test__UDPSendersManager__
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include "TypeDefinitions.h"
 
 namespace scdf {

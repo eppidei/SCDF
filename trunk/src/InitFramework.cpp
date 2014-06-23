@@ -20,7 +20,8 @@ void InitFramework()
     {
         udpPorts.push_back(9000+i);
     }
-    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "192.168.1.104");
+
+    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "10.12.209.167");
     scdf::Harvester::Instance();
 }
 

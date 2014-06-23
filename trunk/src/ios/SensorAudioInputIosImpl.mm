@@ -14,6 +14,8 @@
 
 using namespace scdf;
 
+s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
+
 @implementation AudioEventsListener
 
 - (void)Attach:(scdf::SensorAudioInputImpl *)_audioSensor
@@ -92,7 +94,7 @@ using namespace scdf;
 }
 
 @end
-
+#include <mach/mach_time.h>
 struct CallbackData {
     AudioUnit               rioUnit;
     scdf::Sensor            *sensorRef;
@@ -109,25 +111,32 @@ static OSStatus	performRender (void                         *inRefCon,
 {
     OSStatus err = noErr;
     
-    
     err = AudioUnitRender(callbackData.rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     
     s_int32  numberOfFrames = inNumberFrames;
-    s_float* audioData = new s_float[numberOfFrames];
+    s_sample* audioData = new s_sample[numberOfFrames];
     
-    Float32 *frame = (Float32 *) ioData->mBuffers[0].mData; // now use only one channel
+//    Float32 *frame = (Float32 *) ioData->mBuffers[0].mData; // now use only one channel
     
-    for (s_int32 i=0; i<inNumberFrames; ++i)
+    memcpy(audioData, ioData->mBuffers[0].mData, numberOfFrames*sizeof(s_sample));
+    
+    /*for (s_int32 i=0; i<inNumberFrames; ++i)
     {
         audioData[i] = frame[i];
-    }
+    }*/
     
-    
+#ifdef TEST_PRINT_TIMESTAMP
+    s_uint64 timestampInterval=inTimeStamp->mHostTime-mach_absolute_time();
+    printf("AUDIO CALLBACK TIMESTAMPS DIFF: %llu\n",timestampInterval);
+    printf("AUDIO CALLBACK TIMESTAMPS DIFF MS: %llu\n",getUptimeInMilliseconds(timestampInterval));
+#endif
     scdf::SensorData *sData = new scdf::SensorData();
     sData->type = scdf::AudioInput;
     sData->data = (char*)audioData;
     sData->num_samples=inNumberFrames;
     sData->rate=44100;
+    sData->timestamp=inTimeStamp->mHostTime;
+    sData->timeid=mach_absolute_time();
     callbackData.sensorRef->AddIncomingDataToQueue(sData);
     
     

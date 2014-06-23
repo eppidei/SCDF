@@ -77,6 +77,20 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 @end
 
+#include <mach/mach_time.h>
+s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert)
+{
+    const int64_t kOneMillion = 1000 * 1000;
+    static mach_timebase_info_data_t s_timebase_info;
+    
+    if (s_timebase_info.denom == 0) {
+        (void) mach_timebase_info(&s_timebase_info);
+    }
+    
+    // mach_absolute_time() returns billionth of seconds,
+    // so divide by one million to get milliseconds
+    return (s_uint64)((timeToConvert * s_timebase_info.numer) / (kOneMillion * s_timebase_info.denom));
+}
 
 SensorStandardImpl::SensorStandardImpl(SensorType _sensorType)
 {
@@ -217,7 +231,7 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
         numSamples = 3;
     
     
-    s_double* data = new s_double[numSamples];
+    s_sample* data = new s_sample[numSamples];
     data[0]  = sensorIOSData.value1;
     
     if(sensorTypeRef!=Proximity)
@@ -229,9 +243,10 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     scdf::SensorData *sData = new scdf::SensorData();
     
     sData->num_samples = numSamples;
-    sData->type = (SensorType) sensorTypeRef;
+    sData->type = sensorTypeRef;
     sData->data = (char*)data;
-    sData->timestamp=sensorIOSData.timestamp;
+//    sData->timestamp=sensorIOSData.timestamp;
+    sData->timestamp=sData->timeid=mach_absolute_time();
         
     AddIncomingDataToQueue(sData);
 }

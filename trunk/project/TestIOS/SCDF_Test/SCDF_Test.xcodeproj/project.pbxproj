@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D2E7D9119573A1B001DB7D2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D2E7D9019573A1B001DB7D2 /* QuartzCore.framework */; };
 		9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */; };
 		9D5E21E4194C6B4800288DD2 /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */; };
 		9D5E2217194C870700288DD2 /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E2215194C870700288DD2 /* Harvester.cpp */; };
@@ -44,13 +45,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D13127C1958543400169049 /* TypeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeDefinitions.h; path = ../../../../src/include/TypeDefinitions.h; sourceTree = "<group>"; };
+		9D2E7D9019573A1B001DB7D2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9D5E21E0194C6AE200288DD2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppLayout/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = AppLayout/AppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitFramework.cpp; path = ../../../../src/InitFramework.cpp; sourceTree = "<group>"; };
 		9D5E2215194C870700288DD2 /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../../../src/Harvester.cpp; sourceTree = "<group>"; };
-		9D5E2218194C87A000288DD2 /* Harvester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Harvester.h; path = ../../../../src/include/Harvester.h; sourceTree = "<group>"; };
 		9D5E221A194CB60400288DD2 /* UDPSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSender.cpp; path = ../../../../src/UDPSender.cpp; sourceTree = "<group>"; };
-		9D5E221D194CB65900288DD2 /* UDPSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UDPSender.h; path = ../../../../src/include/UDPSender.h; sourceTree = "<group>"; };
 		9D5E221E194CB6AC00288DD2 /* CustomPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomPipe.cpp; path = ../../../../src/CustomPipe.cpp; sourceTree = "<group>"; };
 		9D5E222F194DE15A00288DD2 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = ../../../../lib/oscpack_1_1_0/ip/IpEndpointName.cpp; sourceTree = "<group>"; };
 		9D5E2230194DE15A00288DD2 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../../../lib/oscpack_1_1_0/ip/IpEndpointName.h; sourceTree = "<group>"; };
@@ -109,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D2E7D9119573A1B001DB7D2 /* QuartzCore.framework in Frameworks */,
 				DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */,
 				DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */,
 				DCE8BEE01943970100D283E8 /* CoreMotion.framework in Frameworks */,
@@ -189,10 +191,10 @@
 		DC151391194487A100DC7BF7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9D13127C1958543400169049 /* TypeDefinitions.h */,
 				9D5E22C4194E187E00288DD2 /* Ext_UDP_OSC */,
 				9D5E223B194DE17200288DD2 /* ThreadUtils.cpp */,
 				9D5E221E194CB6AC00288DD2 /* CustomPipe.cpp */,
-				9D5E2218194C87A000288DD2 /* Harvester.h */,
 				9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */,
 				DC15139A194487BE00DC7BF7 /* Sensor.h */,
 				DC151393194487AD00DC7BF7 /* Sensor.cpp */,
@@ -201,7 +203,6 @@
 				9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */,
 				9D5E2215194C870700288DD2 /* Harvester.cpp */,
 				9D5E221A194CB60400288DD2 /* UDPSender.cpp */,
-				9D5E221D194CB65900288DD2 /* UDPSender.h */,
 				9D5E22C5194E18DA00288DD2 /* UDPSendersManager.cpp */,
 			);
 			name = src;
@@ -246,6 +247,7 @@
 		DCE8BEA0194393B300D283E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9D2E7D9019573A1B001DB7D2 /* QuartzCore.framework */,
 				DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */,
 				DC4DFF56194CD2A10051E311 /* AVFoundation.framework */,
 				DCE8BEDF1943970100D283E8 /* CoreMotion.framework */,
@@ -429,6 +431,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -492,8 +495,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
@@ -519,7 +522,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

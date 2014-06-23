@@ -6,8 +6,6 @@
 //
 #include "Sensor.h"
 #include "CustomPipe.h"
-#include "fcntl.h"
-#include "unistd.h" // included by fcntl.h on android, consider removing
 
 using namespace scdf;
 

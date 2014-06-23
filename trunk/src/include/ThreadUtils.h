@@ -16,6 +16,7 @@
 #include <semaphore.h>
 #endif
 #include "TypeDefinitions.h"
+
 typedef void*(*start_routine)(void*);
 
 namespace scdf

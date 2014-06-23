@@ -9,10 +9,9 @@
 #ifndef __SCDF_Test__Harvester__
 #define __SCDF_Test__Harvester__
 
-#include <iostream>
-#include <vector>
 #include <algorithm>
 #include "Sensor.h"
+
 namespace scdf{
 
     class Harvester
@@ -21,8 +20,8 @@ namespace scdf{
         vector<SensorData*> myHarvest;         //circular buffer?
         SensorData *masterData;
         
-        void PipesHarvesting(s_double timestampStart, s_double timestampEnd, SensorType sType);
-        void InternalBufferHarvesting(s_double timestampStart, s_double timestampEnd);
+        void PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType);
+        void InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd);
         void SetupPipes();
         void Sort();
         void NotifyHarvestCompletition();
