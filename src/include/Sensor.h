@@ -25,10 +25,10 @@ namespace scdf {
         SensorType type;
         s_int32 rate;
         s_int16 precision;
-        s_double timestamp;             // time of the sensor reading as reported by the sensor
-        s_int64 timeid;                 // will be the same for all data harvested in the same call
+        s_uint64 timestamp;             // time of the sensor reading as reported by the sensor
+        s_uint64 timeid;                 // will be the same for all data harvested in the same call
         s_int32 num_samples;
-        s_sample* data;
+        s_char* data;                     // TODO: actually a placeholder for now
         
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }
