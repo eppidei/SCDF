@@ -26,9 +26,21 @@ extern "C" {
 
 scdf::Sensor* acc;
 
-JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
+
+JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeInit(JNIEnv* env, jobject thiz)
 {
     InitFramework();
+	scdf::SensorSettings s_settings;
+    s_settings.rate=1;
+    acc = scdf::Sensor::Create(scdf::Accelerometer);
+    acc->Setup(s_settings);
+    acc->Start();
+}
+
+JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
+{
+	return true;
+	InitFramework();
 	scdf::SensorSettings s_settings;
     s_settings.rate=1;
     acc = scdf::Sensor::Create(scdf::Accelerometer);
@@ -60,6 +72,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv*
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv* env, jobject thiz)
 {
+	return true;
 	acc->Start();
 	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);
@@ -69,6 +82,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv*
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnPause(JNIEnv* env, jobject thiz)
 {
+	return true;
 	acc->Stop();
 	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);

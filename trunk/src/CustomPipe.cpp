@@ -41,17 +41,17 @@ void InitReturnPipes(SensorType type, s_int32 numSamples)
     }
     for (int j=0;j<RETURN_PIPES_STATIC_INIT;++j)
     {
-        if (type==SensorType::AudioInput)
+        if (type==AudioInput)
         {
             SensorAudioData *s=new SensorAudioData();
-            s->data=(s_char*) new s_sample[numSamples];
+            s->data=new s_sample[numSamples];
             if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
                 delete s;
         }
         else
         {
             SensorData *s=new SensorData();
-            s->data=(s_char*) new s_sample[numSamples];
+            s->data=new s_sample[numSamples];
             if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
                 delete s;
         }

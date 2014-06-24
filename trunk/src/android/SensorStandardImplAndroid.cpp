@@ -14,7 +14,7 @@ int SensorEventCallback(int fd, int events, void* data)
 	ASensorEvent event;
     while (ASensorEventQueue_getEvents(s->sensorEventQueue, &event, 1) > 0)
     {
-    	//LOGD("X = %f y = %f z=%f ", event.acceleration.x, event.acceleration.y, event.acceleration.z);
+    	LOGD("X = %f y = %f z=%f ", event.acceleration.x, event.acceleration.y, event.acceleration.z);
     	scdf::SensorData *sData = new scdf::SensorData();
    	    sData->type = scdf::Accelerometer;
    	    sData->timestamp = event.timestamp; // scdf timestamp is float, android's one is int64!!
