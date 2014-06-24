@@ -14,6 +14,8 @@
 
 using namespace scdf;
 extern vector<scdf::CustomPipe*> pipes;
+extern vector<scdf::CustomPipe*> returnPipes;
+
 Harvester *Harvester::_instance=NULL;
 
 s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
@@ -68,21 +70,25 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             if (NULL==sd) break;
             if (sd->timestamp<timestampStart)
             {
-#ifdef TEST_PRINT_HARVEST_STATUS
-                printf("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+#ifdef LOG_HARVEST_STATUS
+                LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
-                delete sd;
+                if (0==returnPipes[sd->type]->WriteMessage<SensorData*>(sd))
+                    delete sd;
+#ifdef LOG_PIPES_STATUS
+                LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());
+#endif
             }
             
             else if (sd->timestamp<=timestampEnd){
-#ifdef TEST_PRINT_HARVEST_STATUS
+#ifdef LOG_HARVEST_STATUS
                 printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
                 sd->timeid=timestampStart;
                 myHarvest.push_back(sd);
             }
             else{
-#ifdef TEST_PRINT_HARVEST_STATUS
+#ifdef LOG_HARVEST_STATUS
                 printf("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
                 nextHarvestData.push_back(sd);
@@ -100,16 +106,20 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
         sd=nextHarvestData[i];
         if (sd->timestamp<timestampStart)
         {
-#ifdef TEST_PRINT_HARVEST_STATUS
-            printf("DELETING: Timestamp from %s: %lu\n", SensorTypeString[((SensorData*)nextHarvestData[i])->type].c_str(), ((SensorData*)nextHarvestData[i])->timestamp);
+#ifdef LOG_HARVEST_STATUS
+            printf("DELETING: Timestamp from %s: %lu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
-            delete sd;
+            if (0==returnPipes[sd->type]->WriteMessage<SensorData*>(sd))
+                delete sd;
+#ifdef LOG_PIPES_STATUS
+            LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());
+#endif
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
         else if (sd->timestamp<=timestampEnd)
         {
-#ifdef TEST_PRINT_HARVEST_STATUS
-            printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[((SensorData*)nextHarvestData[i])->type].c_str(), ((SensorData*)nextHarvestData[i])->timestamp);
+#ifdef LOG_HARVEST_STATUS
+            printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
             myHarvest.push_back(nextHarvestData[i]);
             nextHarvestData.erase((nextHarvestData.begin()+i));
@@ -128,7 +138,7 @@ void Harvester::NotifyHarvestCompletition()
 void Harvester::HarvestingProcedure(SensorData *masterData)
 {
     Harvest(masterData);
-#ifdef TEST_PRINT_DATA
+#ifdef LOG_DATA
     for (int i = 0; i< masterData->num_samples; i ++) {
         printf("Harvested data %d from %s: %.4f\n",i,SensorTypeString[masterData->type].c_str(), ((s_sample*)masterData->data)[i]);
     }
@@ -138,7 +148,7 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
 
 void Harvester::Harvest(SensorData *masterData)
 {
-#ifdef TEST_PRINT_TIMESTAMP
+#ifdef LOG_TIMESTAMP
     printf("Master sensor: %s; Harvesting starts: %llu; Harvesting ends: %llu; Harvesting ms interval: %llu;\n",SensorTypeString[masterData->type].c_str(),masterData->timeid,masterData->timestamp,getUptimeInMilliseconds(masterData->timestamp-masterData->timeid));
 #endif
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp);

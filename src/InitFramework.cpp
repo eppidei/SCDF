@@ -11,10 +11,12 @@
 #include "Sensor.h"
 
 void CreatePipes();
+void CreateReturnPipes();
 
 void InitFramework()
 {
     CreatePipes();
+    CreateReturnPipes();
     vector<int> udpPorts;
     for (int i=0;i<scdf::NumTypes;++i)
     {

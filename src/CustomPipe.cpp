@@ -10,10 +10,52 @@
 using namespace scdf;
 
 vector<CustomPipe*> pipes;
+vector<CustomPipe*> returnPipes;
+
+vector<CustomPipe*> *GetReturnPipes() { return &returnPipes; }
+
 void CreatePipes()
 {
     for (int i=0;i<NumTypes;++i)
         pipes.push_back(new CustomPipe());
+}
+
+void CreateReturnPipes()
+{
+    for (int i=0;i<NumTypes;++i)
+    {
+        CustomPipe *p=new CustomPipe();
+        p->SetNonBlockingReads();
+        p->SetNonBlockingWrites();
+        returnPipes.push_back(p);
+    }
+}
+
+void InitReturnPipes(SensorType type, s_int32 numSamples)
+{
+    while(true)
+    {
+        SensorData *s=returnPipes[type]->ReadMessage<SensorData*>();
+        if (NULL==s) break;
+        delete s;
+    }
+    for (int j=0;j<RETURN_PIPES_STATIC_INIT;++j)
+    {
+        if (type==SensorType::AudioInput)
+        {
+            SensorAudioData *s=new SensorAudioData();
+            s->data=(s_char*) new s_sample[numSamples];
+            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
+                delete s;
+        }
+        else
+        {
+            SensorData *s=new SensorData();
+            s->data=(s_char*) new s_sample[numSamples];
+            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
+                delete s;
+        }
+    }
 }
 
 void CustomPipe::Close()
@@ -62,6 +104,7 @@ template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
         return 0;
     }
     assert(bytesWritten==sizeof(PipeMessage));
+    size++;
     return 1;
 }
 
@@ -80,10 +123,11 @@ template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
     }
     if(0==numBytesRead) return NULL;
     assert(numBytesRead==sizeof(PipeMessage));
+    size--;
     return p;
 }
 
-CustomPipe::CustomPipe() : invalid(false)
+CustomPipe::CustomPipe() : invalid(false), size(0)
 {
     Open();
 }

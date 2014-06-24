@@ -14,6 +14,7 @@ namespace scdf
     {
         PipeDescriptor pd[2];
         s_bool invalid;
+        s_int32 size;
     
         void Close();
         void Open();
@@ -23,6 +24,7 @@ namespace scdf
         void SetNonBlockingCalls(PipeDescriptor pd);
         
     public:
+        s_int32 GetSize() { return size; }
         void SetBlockingReads();
         void SetNonBlockingReads();
         void SetBlockingWrites();

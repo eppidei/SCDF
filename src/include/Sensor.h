@@ -15,9 +15,10 @@ namespace scdf {
         s_bool broken;
     };
     
-    class SensorAudioSettings : SensorSettings {
+    class SensorAudioSettings : public SensorSettings {
     public:
         s_int32 numChannels;
+        s_int32 bufferSize;
     };
 
     class SensorData {

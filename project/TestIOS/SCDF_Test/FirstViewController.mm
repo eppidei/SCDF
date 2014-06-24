@@ -24,11 +24,11 @@
     
     scdf::SensorSettings s_settings;
     s_settings.rate=100;
-    scdf::Sensor *proximity = scdf::SensorStandard::Create(scdf::Proximity);
+    /*scdf::Sensor *proximity = scdf::SensorStandard::Create(scdf::Proximity);
     
     proximity->Setup(s_settings);
     proximity->Start();
-
+*/
     
    /* scdf::SensorSettings s_settings;
     s_settings.rate=1;*/
@@ -46,7 +46,8 @@
     magnetometer->Setup(s_settings);
     magnetometer->Start();
     
-    scdf::SensorSettings audioSettings;
+    scdf::SensorAudioSettings audioSettings;
+    audioSettings.bufferSize=512;
     scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
     
     audioInputSensor->Setup(audioSettings);
