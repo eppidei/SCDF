@@ -27,7 +27,7 @@ namespace scdf
         void Init(int udpp, string add);
         void Release();
     public:
-        UDPSender() { Init(TEST_UDP_PORT_BASE, TEST_IP_ADDRESS); }
+        UDPSender() { Init(DEFAULT_UDP_PORT_BASE, DEFAULT_IP_ADDRESS); }
         UDPSender(int udpp, string add) { Init(udpp, add); }
         ~UDPSender() { Release(); }
         void SendData(s_char* data, s_int32 size);

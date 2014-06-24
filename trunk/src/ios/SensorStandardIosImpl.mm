@@ -10,8 +10,11 @@
 #import "AccelerometerIos.h"
 #import "MagnetometerIos.h"
 #import "GyroscopeIos.h"
+#include "CustomPipe.h"
 
 using namespace scdf;
+
+vector<CustomPipe*> *GetReturnPipes();
 
 CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
@@ -224,31 +227,35 @@ s_bool SensorStandardImpl::Stop()
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)
 {
-    s_int32 numSamples = 0;
-    if (sensorTypeRef==Proximity) {
+    s_int32 numSamples = 3;
+    if (sensorTypeRef==Proximity)
         numSamples = 1;
-    } else
-        numSamples = 3;
     
+    SensorData *s=(*(GetReturnPipes()))[sensorTypeRef]->ReadMessage<SensorData*>();
     
-    s_sample* data = new s_sample[numSamples];
-    data[0]  = sensorIOSData.value1;
+#ifdef LOG_PIPES_STATUS
+    LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
+#endif
+    
+    if (NULL==s)
+    {
+        s = new scdf::SensorData();
+        s->data=(s_char*) new s_sample[numSamples];
+    }
+    
+    ((s_sample*)(s->data))[0]  = sensorIOSData.value1;
     
     if(sensorTypeRef!=Proximity)
     {
-        data[1]  = sensorIOSData.value2;
-        data[2]  = sensorIOSData.value3;
+        ((s_sample*)(s->data))[1]  = sensorIOSData.value2;
+        ((s_sample*)(s->data))[2]  = sensorIOSData.value3;
     }
     
-    scdf::SensorData *sData = new scdf::SensorData();
-    
-    sData->num_samples = numSamples;
-    sData->type = sensorTypeRef;
-    sData->data = (char*)data;
-//    sData->timestamp=sensorIOSData.timestamp;
-    sData->timestamp=sData->timeid=mach_absolute_time();
+    s->num_samples = numSamples;
+    s->type = sensorTypeRef;
+    s->timestamp=s->timeid=mach_absolute_time();
         
-    AddIncomingDataToQueue(sData);
+    AddIncomingDataToQueue(s);
 }
 
 

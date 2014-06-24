@@ -10,9 +10,11 @@
 #import <AVFoundation/AVAudioSession.h>
 #import "CAStreamBasicDescription.h"
 #import "SensorAudioInputIosImpl.h"
-
+#include "CustomPipe.h"
 
 using namespace scdf;
+
+vector<CustomPipe*> *GetReturnPipes();
 
 s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
 
@@ -88,9 +90,9 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
     
     // rebuild the audio chain
     
-    AudioSettings s;
-    audioSensor->Setup(s);
-    audioSensor->Start();
+    SensorAudioSettings s;
+    //audioSensor->Setup(s);
+    //audioSensor->Start();
 }
 
 @end
@@ -113,33 +115,32 @@ static OSStatus	performRender (void                         *inRefCon,
     
     err = AudioUnitRender(callbackData.rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     
-    s_int32  numberOfFrames = inNumberFrames;
-    s_sample* audioData = new s_sample[numberOfFrames];
+    SensorAudioData *s=(SensorAudioData*)(*(GetReturnPipes()))[AudioInput]->ReadMessage<SensorData*>();
     
-//    Float32 *frame = (Float32 *) ioData->mBuffers[0].mData; // now use only one channel
+#ifdef LOG_PIPES_STATUS
+    LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
+#endif
     
-    memcpy(audioData, ioData->mBuffers[0].mData, numberOfFrames*sizeof(s_sample));
-    
-    /*for (s_int32 i=0; i<inNumberFrames; ++i)
+    if (NULL==s)
     {
-        audioData[i] = frame[i];
-    }*/
+        s = new scdf::SensorAudioData();
+        s->data=(s_char*) new s_sample[inNumberFrames];
+    }
     
-#ifdef TEST_PRINT_TIMESTAMP
+    memcpy(s->data, ioData->mBuffers[0].mData, inNumberFrames*sizeof(s_sample));
+    
+#ifdef LOG_TIMESTAMP
     s_uint64 timestampInterval=inTimeStamp->mHostTime-mach_absolute_time();
     printf("AUDIO CALLBACK TIMESTAMPS DIFF: %llu\n",timestampInterval);
     printf("AUDIO CALLBACK TIMESTAMPS DIFF MS: %llu\n",getUptimeInMilliseconds(timestampInterval));
 #endif
-    scdf::SensorData *sData = new scdf::SensorData();
-    sData->type = scdf::AudioInput;
-    sData->data = (char*)audioData;
-    sData->num_samples=inNumberFrames;
-    sData->rate=44100;
-    sData->timestamp=inTimeStamp->mHostTime;
-    sData->timeid=mach_absolute_time();
-    callbackData.sensorRef->AddIncomingDataToQueue(sData);
-    
-    
+
+    s->type = scdf::AudioInput;
+    s->num_samples=inNumberFrames;
+    s->rate=44100;
+    s->timestamp=inTimeStamp->mHostTime;
+    s->timeid=mach_absolute_time();
+    callbackData.sensorRef->AddIncomingDataToQueue(s);
     
     // now mute the output
     s_bool muteAudioOutput = true;

@@ -10,9 +10,11 @@
 #include "UDPSender.h"
 #include "UDPSendersManager.h"
 #include "osc/OscOutboundPacketStream.h"
-#include "Logging.h"
+#include "CustomPipe.h"
 
 using namespace scdf;
+
+extern vector<scdf::CustomPipe*> returnPipes;
 
 void UDPSender::Init(int udpp, string add)
 {
@@ -28,13 +30,17 @@ void UDPSender::Release()
 
 void UDPSender::SendData(s_char* data, s_int32 size)
 {
-	LOGD("UDPSender send data");
+#ifdef LOG_UDP_SEND
+	LOGD("UDPSender send data\n");
+#endif
 	transmitSocket->Send(data, size);
 }
 
 void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
 {
-	LOGD("UDP send data osc packed");
+#ifdef LOG_UDP_SEND
+	LOGD("UDP send data osc packed\n");
+#endif
     transmitSocket->Send(oscData.Data(), oscData.Size());
 }
 
@@ -87,11 +93,17 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
     }
 }
 
-static void SentDataRecyclingProcedure(vector <SensorData*> *data)
+static void SentDataRecyclingProcedure(vector<SensorData*> *sData)
 {
-    for (int i=0;i<data->size();++i)
-        delete (*data)[i];
-    data->clear();
+    for (int i=0;i<sData->size();++i)
+    {
+        if (0==returnPipes[(*sData)[i]->type]->WriteMessage<SensorData*>((*sData)[i]))
+            delete (*sData)[i];
+#ifdef LOG_PIPES_STATUS
+        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), returnPipes[(*sData)[i]->type]->GetSize());
+#endif
+    }
+    sData->clear();
     UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Set();
     
 }
@@ -127,7 +139,7 @@ void UDPSenderHelperBase::Init(vector<s_int32> udpPorts, string address)
 
 void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStream &oscData)
 {
-#ifdef TEST_PRINT_DATA
+#ifdef LOG_DATA
     for (int i = 0; i< ((SensorData*)data)->num_samples; i ++) {
         printf("Sending data %d from %s: %.4f\n",i,SensorTypeString[((SensorData*)data)->type].c_str(), ((s_sample*)((SensorData*)data)->data)[i]);
     }

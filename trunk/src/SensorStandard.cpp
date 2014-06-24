@@ -13,8 +13,9 @@
 #endif
 #include "SensorStandard.h"
 
-
 using namespace scdf;
+
+void InitReturnPipes(SensorType type, s_int32 numSamples);
 
 SensorStandard::SensorStandard(SensorType _type)
 {
@@ -29,6 +30,10 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
     // try starting the sensor, return result
+    int num_samples=3;
+    if (GetType()==Proximity)
+        num_samples=1;
+    InitReturnPipes(GetType(), num_samples);
     return sImpl->Setup(settings);
 }
 

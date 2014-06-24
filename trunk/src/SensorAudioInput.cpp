@@ -8,6 +8,8 @@
 
 using namespace scdf;
 
+void InitReturnPipes(SensorType type, s_int32 numSamples);
+
 SensorAudioInput::SensorAudioInput(SensorType _type/*, ScdfPipe *destPipe*/)
 {
     SetType(_type);
@@ -19,6 +21,8 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
     // try starting the sensor, return result
+    
+    InitReturnPipes(GetType(), ((SensorAudioSettings&)settings).bufferSize);
     return  sImpl->Setup(settings);
 }
 

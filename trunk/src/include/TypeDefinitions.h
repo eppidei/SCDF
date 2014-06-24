@@ -8,6 +8,7 @@
 #include <math.h>
 #include <inttypes.h>
 #include "fcntl.h"
+#include "Logging.h"
 
 using namespace std;
 
@@ -30,10 +31,14 @@ typedef s_float s_sample;
 
 #define CALLBACK
 
-//#define TEST_PRINT_DATA
-//#define TEST_PRINT_TIMESTAMP
-//#define TEST_PRINT_HARVEST_STATUS
+#define LOG_UDP_SEND
+//#define LOG_PIPES_STATUS
+//#define LOG_DATA
+//#define LOG_TIMESTAMP
+//#define LOG_HARVEST_STATUS
 
-#define TEST_UDP_PORT_BASE 7000
-#define TEST_IP_ADDRESS "127.0.0.1"
+#define DEFAULT_UDP_PORT_BASE 7000
+#define DEFAULT_IP_ADDRESS "127.0.0.1"
 #define OSC_BUFFER_SIZE 4096
+#define RETURN_PIPES_STATIC_INIT 50
+
