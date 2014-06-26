@@ -11,6 +11,7 @@
 #include "Sensor.h"
 #include "SensorStandard.h"
 #include "SensorAudioInput.h"
+#include "SensorsManager.h"
 
 @interface FirstViewController ()
 
@@ -18,47 +19,117 @@
 
 @implementation FirstViewController
 
+- (void) viewDidUnload
+{
+    delete sensorManager;
+    sensorManager = NULL;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    scdf::SensorSettings s_settings;
-    s_settings.rate=100;
-    /*scdf::Sensor *proximity = scdf::SensorStandard::Create(scdf::Proximity);
     
-    proximity->Setup(s_settings);
-    proximity->Start();
-*/
+    sensorManager = new scdf::SensorsManager();
     
-   /* scdf::SensorSettings s_settings;
-    s_settings.rate=1;*/
-    scdf::Sensor *accelerometer = scdf::SensorStandard::Create(scdf::Accelerometer);
+   sensorManager->CreateSensor(scdf::AudioInput);
+    sensorManager->CreateSensor(scdf::Accelerometer);
+    sensorManager->CreateSensor(scdf::Gyroscope);
+    sensorManager->CreateSensor(scdf::Magnetometer);
+    sensorManager->CreateSensor(scdf::Proximity);
     
-    accelerometer->Setup(s_settings);
-    accelerometer->Start();
     
-    scdf::Sensor *gyroscope = scdf::SensorStandard::Create(scdf::Gyroscope);
-    gyroscope->Setup(s_settings);
-    gyroscope->Start();
+     scdf::SensorSettings s_settings;
+     s_settings.rate=100;
+     sensorManager->InitSensor(scdf::Accelerometer,s_settings);
+     sensorManager->InitSensor(scdf::Magnetometer,s_settings);
+     sensorManager->InitSensor(scdf::Gyroscope,s_settings);
+     sensorManager->InitSensor(scdf::Proximity,s_settings);
     
-    scdf::Sensor *magnetometer = scdf::SensorStandard::Create(scdf::Magnetometer);
-    
-    magnetometer->Setup(s_settings);
-    magnetometer->Start();
     
     scdf::SensorAudioSettings audioSettings;
     audioSettings.bufferSize=512;
-    scdf::Sensor *audioInputSensor = scdf::SensorStandard::Create(scdf::AudioInput);
-    
-    audioInputSensor->Setup(audioSettings);
-    audioInputSensor->Start();
-    
+    sensorManager->InitSensor(scdf::AudioInput,audioSettings);
+
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark User Actions
+
+- (IBAction) toggleAudioSensor: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        sensorManager->ActivateSensor(scdf::SensorType::AudioInput);
+        LOGD("toggle AudioSensor ON \n");
+    } else
+    {
+        sensorManager->DeActivateSensor(scdf::SensorType::AudioInput);
+        LOGD("toggle AudioSensor OFF \n");
+    }
+    
+}
+
+- (IBAction) toggleAccelerometerSensor: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        sensorManager->ActivateSensor(scdf::SensorType::Accelerometer);
+         LOGD("toggle Accelerometer Sensor ON \n");
+    } else
+    {
+        sensorManager->DeActivateSensor(scdf::SensorType::Accelerometer);
+         LOGD("toggle Accelerometer Sensor OFF \n");
+    }
+}
+
+- (IBAction) toggleMagnetometerSensor: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        sensorManager->ActivateSensor(scdf::SensorType::Magnetometer);
+         LOGD("toggle Magnetometer Sensor ON \n");
+    } else
+    {
+        sensorManager->DeActivateSensor(scdf::SensorType::Magnetometer);
+         LOGD("toggle Magnetometer Sensor OFF \n");
+    }
+}
+
+- (IBAction) toggleGyroscopeSensor: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        sensorManager->ActivateSensor(scdf::SensorType::Gyroscope);
+         LOGD("toggle Gyroscope Sensor ON \n");
+    } else
+    {
+        sensorManager->DeActivateSensor(scdf::SensorType::Gyroscope);
+         LOGD("toggle Gyroscope Sensor OFF \n");
+    }
+}
+
+- (IBAction) toggleProximitySensor: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        sensorManager->ActivateSensor(scdf::SensorType::Proximity);
+         LOGD("toggle Proximity Sensor ON \n");
+    } else
+    {
+        sensorManager->DeActivateSensor(scdf::SensorType::Proximity);
+         LOGD("toggle Proximity Sensor OFF \n");
+    }    
 }
 
 @end

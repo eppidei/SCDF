@@ -240,7 +240,7 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     if (NULL==s)
     {
         s = new scdf::SensorData();
-        s->data=(s_char*) new s_sample[numSamples];
+        s->data=(s_sample*) new s_sample[numSamples];
     }
     
     ((s_sample*)(s->data))[0]  = sensorIOSData.value1;

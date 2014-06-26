@@ -27,7 +27,7 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
     
 #ifdef LOG_DATA
     for (int i = 0; i< data->num_samples; i ++) {
-        printf("Collected data %d from %s: %.4f\n",i,SensorTypeString[data->type].c_str(), ((s_sample*)data->data)[i]);
+        printf("Collected data %d from %s: %.4f\n",i,SensorTypeString[data->type].c_str(), ((s_float*)data->data)[i]);
     }
 #endif
 

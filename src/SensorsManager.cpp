@@ -47,7 +47,7 @@ Sensor *SensorsManager::CreateSensor(SensorType type)
     return s;
 }
 
-void SensorsManager::InitSensor(SensorType type, SensorSettings settings)
+void SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
 {
     Sensor *sensor=GetSensor(type);
     if (NULL==sensor){

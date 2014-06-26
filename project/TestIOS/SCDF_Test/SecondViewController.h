@@ -10,4 +10,18 @@
 
 @interface SecondViewController : UIViewController
 
+
+{
+    IBOutlet UITextField             *outputIp;
+    IBOutlet UITextField             *outputPort;
+    IBOutlet UILabel                 *inputIp;
+    
+    NSString                         *addressString;
+    int                              actualPort;
+}
+
+@property (nonatomic, retain) IBOutlet UITextField *outputIp;
+@property (nonatomic, retain) IBOutlet UITextField *outputPort;
+
+
 @end
