@@ -82,6 +82,7 @@
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
 		DC15139A194487BE00DC7BF7 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../src/include/Sensor.h; sourceTree = "<group>"; };
+		DC2BC2C2195C283A0011521F /* SensorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorsManager.h; path = ../../../../src/include/SensorsManager.h; sourceTree = "<group>"; };
 		DC4DFF56194CD2A10051E311 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
@@ -191,6 +192,7 @@
 		DC151391194487A100DC7BF7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				DC2BC2C2195C283A0011521F /* SensorsManager.h */,
 				9D13127C1958543400169049 /* TypeDefinitions.h */,
 				9D5E22C4194E187E00288DD2 /* Ext_UDP_OSC */,
 				9D5E223B194DE17200288DD2 /* ThreadUtils.cpp */,

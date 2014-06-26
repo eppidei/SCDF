@@ -20,7 +20,7 @@ namespace scdf{
         Sensor *GetSensor(SensorType type);
     public:
         Sensor *CreateSensor(SensorType type);
-        void InitSensor(SensorType type, SensorSettings settings);
+        void InitSensor(SensorType type, SensorSettings &settings);
         void ActivateSensor(SensorType type);
         void DeActivateSensor(SensorType type);
     };
