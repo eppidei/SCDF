@@ -7,6 +7,7 @@
 
 #include "Sensor.h"
 #include "SensorsManager.h"
+#include "Logging.h"
 
 using namespace scdf;
 
@@ -40,7 +41,7 @@ Sensor *SensorsManager::CreateSensor(SensorType type)
     Sensor *s=Sensor::Create(type);
     if (NULL==s)
     {
-        //Logging::Instance("Error creating sensor");
+        LOGD("Error creating sensor");
         return NULL;
     }
     sensors.insert(SensorPair(type,s));

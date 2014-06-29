@@ -30,26 +30,28 @@ static void StartHarvestingProcedure(void *param)
     Harvester *harvester=((Harvester*)param);
     while(harvester->activated)
     {
-        harvester->HarvestingProcedure(pipes[harvester->GetType()]->ReadMessage<SensorData*>());
+        SensorData *data=pipes[harvester->GetType()]->ReadMessage<SensorData*>();
+        if (NULL!=data)
+            harvester->HarvestingProcedure(data);
     }
-    delete harvester;
 }
 
 void Harvester::SetupPipes()
 {
     for (int i=0;i<pipes.size();++i)
-    {
-        if(i==requesterType)
-            pipes[i]->SetBlockingReads();
-        else
-            pipes[i]->SetNonBlockingReads();
-    }
+        pipes[i]->SetNonBlockingReads();
 }
 
-Harvester::Harvester() : activated(true),requesterType(AudioInput)
+Harvester::Harvester() : activated(true)
 {
+    SetType(AudioInput);
     SetupPipes();
     ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
+}
+
+void Harvester::SetType(SensorType type)
+{
+    requesterType=type;
 }
 
 void Harvester::Sort()

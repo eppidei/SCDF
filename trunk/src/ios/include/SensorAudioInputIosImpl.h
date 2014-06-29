@@ -25,15 +25,22 @@ namespace scdf {
     
     class SensorAudioInputImpl : public SensorAudioInput
     {
-        void SetupAudioSession(scdf::SensorSettings &settings);
         void SetupIOUnit(scdf::SensorSettings &settings);
-        void SetupAudioChain(scdf::SensorSettings &settings);
+        void InitAudioSession();
+        void InitIOUnit();
         
         AudioEventsListener *listener;
-        AudioUnit _rioUnit;
+        AudioUnit rioUnit;
+        
+        s_int32 currentSampleRate;
         
     public:
-        
+        static OSStatus PerformRender (void                         *inRefCon,
+                                       AudioUnitRenderActionFlags 	*ioActionFlags,
+                                       const AudioTimeStamp 		*inTimeStamp,
+                                       UInt32 						inBusNumber,
+                                       UInt32 						inNumberFrames,
+                                       AudioBufferList              *ioData);
         SensorAudioInputImpl();
         ~SensorAudioInputImpl();
         

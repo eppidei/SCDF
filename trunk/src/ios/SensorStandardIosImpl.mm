@@ -95,7 +95,19 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert)
     return (s_uint64)((timeToConvert * s_timebase_info.numer) / (kOneMillion * s_timebase_info.denom));
 }
 
-SensorStandardImpl::SensorStandardImpl(SensorType _sensorType)
+s_uint64 MillisecondsTo_mach_timebase(double timeToConvert_ms)
+{
+    const int64_t kOneMillion = 1000 * 1000;
+    static mach_timebase_info_data_t s_timebase_info;
+    
+    if (s_timebase_info.denom == 0) {
+        (void) mach_timebase_info(&s_timebase_info);
+    }
+    
+    return (s_uint64)(timeToConvert_ms * (float)(kOneMillion * s_timebase_info.denom))/(float)(s_timebase_info.numer);
+}
+
+SensorStandardImpl::SensorStandardImpl(SensorType _sensorType) : updateInterval(1)
 {
     sensorTypeRef = _sensorType;
     if (NULL==motionManager)
@@ -123,7 +135,7 @@ SensorStandardImpl::~SensorStandardImpl()
 
 s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 {
-    NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
+    updateInterval = 1.0/(s_float)settings.rate;
     switch (sensorTypeRef) {
         case scdf::Accelerometer:
             motionManager.accelerometerUpdateInterval = updateInterval;
@@ -253,7 +265,8 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     
     s->num_samples = numSamples;
     s->type = sensorTypeRef;
-    s->timestamp=s->timeid=mach_absolute_time();
+    s->timestamp=mach_absolute_time();
+    s->timeid=mach_absolute_time()-MillisecondsTo_mach_timebase(updateInterval*1000);
         
     AddIncomingDataToQueue(s);
 }

@@ -11,6 +11,7 @@
 #import "CAStreamBasicDescription.h"
 #import "SensorAudioInputIosImpl.h"
 #include "CustomPipe.h"
+#include <mach/mach_time.h>
 
 using namespace scdf;
 
@@ -89,31 +90,22 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
     usleep(25000); //wait here for some time to ensure that we don't delete these objects while they are being accessed elsewhere
     
     // rebuild the audio chain
-    
-    SensorAudioSettings s;
-    //audioSensor->Setup(s);
-    //audioSensor->Start();
+    assert(false);
 }
 
 @end
-#include <mach/mach_time.h>
-struct CallbackData {
-    AudioUnit               rioUnit;
-    scdf::Sensor            *sensorRef;
-    CallbackData(): rioUnit(NULL) {}
-} callbackData;
 
 // Render callback function
-static OSStatus	performRender (void                         *inRefCon,
-                               AudioUnitRenderActionFlags 	*ioActionFlags,
-                               const AudioTimeStamp 		*inTimeStamp,
-                               UInt32 						inBusNumber,
-                               UInt32 						inNumberFrames,
-                               AudioBufferList              *ioData)
+OSStatus SensorAudioInputImpl::PerformRender (void                         *inRefCon,
+                                              AudioUnitRenderActionFlags   *ioActionFlags,
+                                              const AudioTimeStamp         *inTimeStamp,
+                                              UInt32                       inBusNumber,
+                                              UInt32                       inNumberFrames,
+                                              AudioBufferList              *ioData)
 {
     OSStatus err = noErr;
-    
-    err = AudioUnitRender(callbackData.rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
+    SensorAudioInputImpl* pthis=(SensorAudioInputImpl*)inRefCon;
+    err = AudioUnitRender(pthis->rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     
     SensorAudioData *s=(SensorAudioData*)(*(GetReturnPipes()))[AudioInput]->ReadMessage<SensorData*>();
     
@@ -137,10 +129,10 @@ static OSStatus	performRender (void                         *inRefCon,
 
     s->type = scdf::AudioInput;
     s->num_samples=inNumberFrames;
-    s->rate=44100;
+    s->rate=pthis->currentSampleRate;
     s->timestamp=inTimeStamp->mHostTime;
     s->timeid=mach_absolute_time();
-    callbackData.sensorRef->AddIncomingDataToQueue(s);
+    pthis->AddIncomingDataToQueue(s);
     
     // now mute the output
     s_bool muteAudioOutput = true;
@@ -156,7 +148,10 @@ static OSStatus	performRender (void                         *inRefCon,
 SensorAudioInputImpl::SensorAudioInputImpl()
 {
     listener = [[AudioEventsListener alloc] init];
-            
+
+    InitAudioSession();
+    InitIOUnit();
+    
 }
 
 SensorAudioInputImpl::~SensorAudioInputImpl()
@@ -166,13 +161,13 @@ SensorAudioInputImpl::~SensorAudioInputImpl()
 
 s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 {
-    SetupAudioChain(settings);
+    SetupIOUnit(settings);
     return true;
 }
 
 s_bool SensorAudioInputImpl::Start()
 {
-    OSStatus err = AudioOutputUnitStart(_rioUnit);
+    OSStatus err = AudioOutputUnitStart(rioUnit);
     if (err) {
         NSLog(@"couldn't start AURemoteIO: %d", (int)err);
         return false;
@@ -183,7 +178,7 @@ s_bool SensorAudioInputImpl::Start()
 
 s_bool SensorAudioInputImpl::Stop()
 {
-    OSStatus err = AudioOutputUnitStop(_rioUnit);
+    OSStatus err = AudioOutputUnitStop(rioUnit);
     if (err) {
         NSLog(@"couldn't stop AURemoteIO: %d", (int)err);
         return false;
@@ -196,66 +191,21 @@ s_bool SensorAudioInputImpl::Stop()
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
 {
     try {
-        // Create a new instance of AURemoteIO
+    
+        SensorAudioSettings &audioSettings=(SensorAudioSettings&)settings;
+
+        AudioStreamBasicDescription existingFormat;
         
-        AudioComponentDescription desc;
-        desc.componentType = kAudioUnitType_Output;
-        desc.componentSubType = kAudioUnitSubType_RemoteIO;
-        desc.componentManufacturer = kAudioUnitManufacturer_Apple;
-        desc.componentFlags = 0;
-        desc.componentFlagsMask = 0;
+        s_ulong param = sizeof(AudioStreamBasicDescription);
+        AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
+
+        existingFormat.mSampleRate=audioSettings.rate;
+        existingFormat.mFramesPerPacket=audioSettings.bufferSize;
+        existingFormat.mChannelsPerFrame=audioSettings.numChannels;
+        currentSampleRate=audioSettings.rate;
         
-        AudioComponent comp = AudioComponentFindNext(NULL, &desc);
-        AudioComponentInstanceNew(comp, &_rioUnit);
-        
-        //  Enable input and output on AURemoteIO
-        //  Input is enabled on the input scope of the input element
-        //  Output is enabled on the output scope of the output element
-        
-        UInt32 one = 1;
-        AudioUnitSetProperty(_rioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1, &one, sizeof(one));
-        AudioUnitSetProperty(_rioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, 0, &one, sizeof(one));
-        
-        // Explicitly set the input and output client formats
-        // sample rate = 44100, num channels = 1, format = 32 bit floating point
-        
-        CAStreamBasicDescription ioFormat = CAStreamBasicDescription(44100, 1, CAStreamBasicDescription::kPCMFormatFloat32, false);
-        AudioUnitSetProperty(_rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &ioFormat, sizeof(ioFormat));
-        AudioUnitSetProperty(_rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &ioFormat, sizeof(ioFormat));
-        
-        // Set the MaximumFramesPerSlice property. This property is used to describe to an audio unit the maximum number
-        // of samples it will be asked to produce on any single given call to AudioUnitRender
-        UInt32 maxFramesPerSlice = 4096;
-        AudioUnitSetProperty(_rioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, sizeof(UInt32));
-        
-        // Get the property value back from AURemoteIO. We are going to use this value to allocate buffers accordingly
-        UInt32 propSize = sizeof(UInt32);
-        AudioUnitGetProperty(_rioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, &propSize);
-        
-        
-        
-        // We need references to certain data in the render callback
-        // This simple struct is used to hold that information
-        
-        
-        
-        callbackData.rioUnit = _rioUnit;
-        callbackData.sensorRef = this;
-        
-#define kInputBus 0
-        // Set the render callback on AURemoteIO
-        AURenderCallbackStruct renderCallback;
-        renderCallback.inputProc = performRender;
-        renderCallback.inputProcRefCon = this;      /////??????????????????????????
-        AudioUnitSetProperty(_rioUnit,
-                             kAudioUnitProperty_SetRenderCallback,
-                             kAudioUnitScope_Global,
-                             kInputBus,
-                             &renderCallback,
-                             sizeof(renderCallback));
-        
-        // Initialize the AURemoteIO instance
-        AudioUnitInitialize(_rioUnit);
+        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &existingFormat, sizeof(existingFormat));
+        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &existingFormat, sizeof(existingFormat));
     }
     
     catch (NSException *e) {
@@ -268,14 +218,71 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
     return;
 }
 
-
-void SensorAudioInputImpl::SetupAudioChain(scdf::SensorSettings &settings)
+void SensorAudioInputImpl::InitIOUnit()
 {
-    SetupAudioSession(settings);
-    SetupIOUnit(settings);
+    try {
+        // Create a new instance of AURemoteIO
+        
+        AudioComponentDescription desc;
+        desc.componentType = kAudioUnitType_Output;
+        desc.componentSubType = kAudioUnitSubType_RemoteIO;
+        desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
+        
+        AudioComponent comp = AudioComponentFindNext(NULL, &desc);
+        AudioComponentInstanceNew(comp, &rioUnit);
+        
+        //  Enable input and output on AURemoteIO
+        //  Input is enabled on the input scope of the input element
+        //  Output is enabled on the output scope of the output element
+        
+        UInt32 one = 1;
+        AudioUnitSetProperty(rioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1, &one, sizeof(one));
+        AudioUnitSetProperty(rioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, 0, &one, sizeof(one));
+        
+        // Explicitly set the input and output client formats
+        // sample rate = 44100, num channels = 1, format = 32 bit floating point
+        
+        currentSampleRate= 44100;
+        CAStreamBasicDescription ioFormat = CAStreamBasicDescription(currentSampleRate, 1, CAStreamBasicDescription::kPCMFormatFloat32, false);
+        
+        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &ioFormat, sizeof(ioFormat));
+        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &ioFormat, sizeof(ioFormat));
+        
+        // Set the MaximumFramesPerSlice property. This property is used to describe to an audio unit the maximum number
+        // of samples it will be asked to produce on any single given call to AudioUnitRender
+        
+        UInt32 maxFramesPerSlice = 4096;
+        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, sizeof(UInt32));
+        
+#define kInputBus 0
+        // Set the render callback on AURemoteIO
+        AURenderCallbackStruct renderCallback;
+        renderCallback.inputProc = PerformRender;
+        renderCallback.inputProcRefCon = this;
+        AudioUnitSetProperty(rioUnit,
+                             kAudioUnitProperty_SetRenderCallback,
+                             kAudioUnitScope_Global,
+                             kInputBus,
+                             &renderCallback,
+                             sizeof(renderCallback));
+        
+        // Initialize the AURemoteIO instance
+        AudioUnitInitialize(rioUnit);
+    }
+    
+    catch (NSException *e) {
+        NSLog(@"Error returned from setupIOUnit: %@, %@", e.name, e.reason);
+    }
+    catch (...) {
+        NSLog(@"Unknown error returned from setupIOUnit");
+    }
+    
+    return;
 }
 
-void SensorAudioInputImpl::SetupAudioSession(scdf::SensorSettings &settings)
+void SensorAudioInputImpl::InitAudioSession()
 {
     try {
         // Configure the audio session
@@ -307,7 +314,6 @@ void SensorAudioInputImpl::SetupAudioSession(scdf::SensorSettings &settings)
             NSLog(@"couldn't set session's preferred sample rate %@", error);
             error = nil;
         }
-        
         
         // add interruption handler
         [[NSNotificationCenter defaultCenter] addObserver:listener

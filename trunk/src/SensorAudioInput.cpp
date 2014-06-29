@@ -23,6 +23,7 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
     // try starting the sensor, return result
     
     InitReturnPipes(GetType(), ((SensorAudioSettings&)settings).bufferSize);
+    ((SensorAudioSettings&)settings).numChannels=1;
     return  sImpl->Setup(settings);
 }
 

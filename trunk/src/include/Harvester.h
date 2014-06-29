@@ -37,6 +37,7 @@ namespace scdf{
     public:
         bool activated;
         SensorType GetType() { return requesterType; }
+        void SetType(SensorType type);
         void HarvestingProcedure(SensorData *_masterData);
         static Harvester *Instance()
         {
