@@ -7,7 +7,7 @@
 
 
 using namespace scdf;
-extern vector<scdf::CustomPipe*> pipes;
+extern std::vector<scdf::CustomPipe*> pipes;
 
 Sensor* Sensor::Create(SensorType type)
 {

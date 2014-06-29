@@ -34,6 +34,9 @@ namespace scdf
         CustomPipe();
         ~CustomPipe();
     };
+
+    std::vector<CustomPipe*> *GetReturnPipes();
+
 }
 
 
