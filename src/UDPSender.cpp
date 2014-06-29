@@ -14,9 +14,9 @@
 
 using namespace scdf;
 
-extern vector<scdf::CustomPipe*> returnPipes;
+extern std::vector<scdf::CustomPipe*> returnPipes;
 
-void UDPSender::Init(int udpp, string add)
+void UDPSender::Init(int udpp, std::string add)
 {
 	endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
 	transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
@@ -93,7 +93,7 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
     }
 }
 
-static void SentDataRecyclingProcedure(vector<SensorData*> *sData)
+static void SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 {
     for (int i=0;i<sData->size();++i)
     {
@@ -129,7 +129,7 @@ UDPSenderHelperBase::UDPSenderHelperBase() : activated(true), freeSlot(1), canSe
 {
 }
 
-void UDPSenderHelperBase::Init(vector<s_int32> udpPorts, string address)
+void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string address)
 {
     assert(udpPorts.size()!=0);
     for (int i=0;i<udpPorts.size();++i)

@@ -3,9 +3,9 @@
 //#include <android/sensor.h>
 //#include <android/looper.h>
 
-#include <android/log.h>
-#define  LOG_TAG    "Scdf test"
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+//#include <android/log.h>
+//#define  LOG_TAG    "Scdf test"
+//#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
 /*
 ASensorEventQueue* sensorEventQueue;
@@ -25,7 +25,7 @@ void InitFramework();
 extern "C" {
 
 scdf::Sensor* acc;
-
+scdf::Sensor* audioIn;
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeInit(JNIEnv* env, jobject thiz)
 {
@@ -35,11 +35,18 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeInit(JNIEnv* env
     acc = scdf::Sensor::Create(scdf::Accelerometer);
     acc->Setup(s_settings);
     acc->Start();
+    scdf::SensorAudioSettings audioSettings;
+    audioSettings.rate=44100; // settings are ignored as of now
+    audioSettings.bufferSize=1024;
+    audioIn = scdf::Sensor::Create(scdf::AudioInput);
+    audioIn->Setup(audioSettings);
+    audioIn->Start();
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
 {
 	return true;
+
 	InitFramework();
 	scdf::SensorSettings s_settings;
     s_settings.rate=1;
@@ -72,8 +79,10 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv*
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv* env, jobject thiz)
 {
-	return true;
+	if (acc==NULL)
+		return false;
 	acc->Start();
+	audioIn->Start();
 	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);
 	return (0 <= ASensorEventQueue_enableSensor(sensorEventQueue,s) );*/
@@ -82,8 +91,10 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv*
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnPause(JNIEnv* env, jobject thiz)
 {
-	return true;
+	if (acc==NULL)
+		return false;
 	acc->Stop();
+	audioIn->Stop();
 	/*ASensorManager* sm = ASensorManager_getInstance();
 	ASensorRef s = ASensorManager_getDefaultSensor(sm,ASENSOR_TYPE_ACCELEROMETER);
 	return (0 <= ASensorEventQueue_disableSensor(sensorEventQueue,s) );*/

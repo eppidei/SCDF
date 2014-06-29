@@ -13,8 +13,8 @@
 #include "UDPSendersManager.h"
 
 using namespace scdf;
-extern vector<scdf::CustomPipe*> pipes;
-extern vector<scdf::CustomPipe*> returnPipes;
+extern std::vector<scdf::CustomPipe*> pipes;
+extern std::vector<scdf::CustomPipe*> returnPipes;
 
 Harvester *Harvester::_instance=NULL;
 

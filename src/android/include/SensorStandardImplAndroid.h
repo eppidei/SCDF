@@ -8,17 +8,20 @@ class ASensorEventQueue;
 
 namespace scdf {
 
-    class SensorStandardImpl : public SensorStandard
+	class SensorStandardImpl : public SensorStandard
     {
-    public:
+    private:
+		ASensorEventQueue* sensorEventQueue;
 
-    	ASensorEventQueue* sensorEventQueue; // make private and make callback a friend
+    public:
 
         SensorStandardImpl(SensorType _type);
         ~SensorStandardImpl();
         s_bool Setup(SensorSettings& settings);
         s_bool Start();
         s_bool Stop();
+
+        static int Callback(int fd, int events, void* data);
 
     };
 

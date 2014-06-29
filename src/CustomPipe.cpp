@@ -10,10 +10,10 @@
 
 using namespace scdf;
 
-vector<CustomPipe*> pipes;
-vector<CustomPipe*> returnPipes;
+std::vector<CustomPipe*> pipes;
+std::vector<CustomPipe*> returnPipes;
 
-vector<CustomPipe*> *GetReturnPipes() { return &returnPipes; }
+std::vector<CustomPipe*>* scdf::GetReturnPipes() { return &returnPipes; }
 
 void CreatePipes()
 {

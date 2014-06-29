@@ -17,13 +17,13 @@ void InitFramework()
 {
     CreatePipes();
     CreateReturnPipes();
-    vector<int> udpPorts;
+    std::vector<int> udpPorts;
     for (int i=0;i<scdf::NumTypes;++i)
     {
         udpPorts.push_back(9000+i);
     }
 
-    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "10.12.209.167");
+    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "192.168.1.107");
     scdf::Harvester::Instance();
 }
 

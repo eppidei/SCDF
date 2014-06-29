@@ -7,7 +7,7 @@ namespace scdf {
     class Sensor;
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
-    static const string SensorTypeString[]={"Accelerometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
+    static const std::string SensorTypeString[]={"Accelerometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
 
     class SensorSettings {
     public:
@@ -41,8 +41,9 @@ namespace scdf {
     };
 
     class Sensor {
-        
-         SensorType type;
+
+    	SensorType type;
+
     public:
 
         static Sensor* Create(SensorType type);

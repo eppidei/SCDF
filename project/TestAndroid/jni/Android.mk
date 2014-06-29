@@ -35,7 +35,7 @@ LOCAL_PATH 		 := $(SCDF_SRC)
 LOCAL_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
 LOCAL_EXPORT_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
 LOCAL_STATIC_LIBRARIES := oscpack
-#LOCAL_LDLIBS += -landroid -llog
+LOCAL_LDLIBS += -landroid -llog -lOpenSLES
 LOCAL_SRC_FILES := 	Sensor.cpp \
 					SensorStandard.cpp \
 					android/SensorStandardImplAndroid.cpp \
@@ -52,7 +52,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := scdftest
 LOCAL_PATH:= $(APP_LOCAL_PATH)
-LOCAL_LDLIBS += -landroid -llog
+LOCAL_LDLIBS += -landroid -llog -lOpenSLES
 LOCAL_STATIC_LIBRARIES := scdf
 LOCAL_SRC_FILES := scdftest.cpp
 include $(BUILD_SHARED_LIBRARY)

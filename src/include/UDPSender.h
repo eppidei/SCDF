@@ -22,13 +22,13 @@ namespace scdf
 {
     class UDPSender
     {
-        auto_ptr<UdpTransmitSocket> transmitSocket;
-        auto_ptr<IpEndpointName> endPoint;
-        void Init(int udpp, string add);
+        std::auto_ptr<UdpTransmitSocket> transmitSocket;
+        std::auto_ptr<IpEndpointName> endPoint;
+        void Init(int udpp, std::string add);
         void Release();
     public:
         UDPSender() { Init(DEFAULT_UDP_PORT_BASE, DEFAULT_IP_ADDRESS); }
-        UDPSender(int udpp, string add) { Init(udpp, add); }
+        UDPSender(int udpp, std::string add) { Init(udpp, add); }
         ~UDPSender() { Release(); }
         void SendData(s_char* data, s_int32 size);
         void SendDataOSCPacked(osc::OutboundPacketStream &oscData);
@@ -36,7 +36,7 @@ namespace scdf
     
     class UDPSenderHelperBase
     {
-        vector<UDPSender*> senders;
+        std::vector<UDPSender*> senders;
         ThreadUtils::CustomSemaphore freeSlot, canSend;
         
         void SendData();
@@ -47,10 +47,10 @@ namespace scdf
         void DoMultiSendDataOSCPacked();
     public:
         bool activated;
-        vector<SensorData*> senderData;
+        std::vector<SensorData*> senderData;
         
         UDPSenderHelperBase();
-        virtual void Init(vector<s_int32> udpPorts, string address);
+        virtual void Init(std::vector<s_int32> udpPorts, std::string address);
         void SendOnThread();
         ThreadUtils::CustomSemaphore *EventFreeSlot() {return &freeSlot;}
         ThreadUtils::CustomSemaphore *EventCanSend() {return &canSend;}
