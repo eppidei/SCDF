@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Sensor.h"
 
 @interface SecondViewController : UIViewController
 
@@ -16,12 +17,16 @@
     IBOutlet UITextField             *outputPort;
     IBOutlet UILabel                 *inputIp;
     
-    NSString                         *addressString;
-    int                              actualPort;
+    string                           addressString;
+    s_int32                          actualPort;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *outputIp;
 @property (nonatomic, retain) IBOutlet UITextField *outputPort;
+
+
+- (IBAction) multiOutputToggle: (id) sender;
+- (IBAction) changheOutputRouting:(id)sender;
 
 
 @end

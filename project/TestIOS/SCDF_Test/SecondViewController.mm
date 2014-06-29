@@ -41,6 +41,26 @@
 {
     [super viewDidLoad];
    
+    [self setupInterface];
+    
+    [self setupNetwork];
+    
+    [self UpdateLabels];
+}
+
+- (void) setupNetwork
+{
+    addressString = DEFUALT_ADDRESS;
+    actualPort = DEFAULT_PORT;
+    
+    
+    [self SetOutputPort:actualPort];
+    [self SetOutputAddress:addressString];
+
+}
+
+- (void) setupInterface
+{
     outputIp.delegate = (id <UITextFieldDelegate>)self;
     outputIp.returnKeyType = UIReturnKeyDone;
     outputIp.keyboardType = UIKeyboardTypeNumberPad;
@@ -49,37 +69,43 @@
     outputPort.returnKeyType = UIReturnKeyDone;
     outputPort.keyboardType = UIKeyboardTypeNumberPad;
     
-    addressString = [NSString stringWithFormat:@"%s", DEFUALT_ADDRESS];
-    [addressString retain];
-    actualPort = DEFAULT_PORT;
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapRecognizer];
     
-    [self UpdateLabels];
+   
+
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+- (void) viewTapped {
+    if (outputIp.isFirstResponder) {[outputIp resignFirstResponder];}
+    else if(outputPort.isFirstResponder) {[outputPort resignFirstResponder];}
+}
+
+/*- (BOOL)textFieldShouldReturn:(UITextField *)textField{
     if ([textField canResignFirstResponder]) {
         [textField resignFirstResponder];
     }
     return YES;
-}
+}*/
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    NSString *textUpdated;
     if(textField==outputIp){
-        textUpdated = [outputIp text];
-        addressString = textUpdated;
-        std::string adress([textUpdated UTF8String]);
+        NSString *address = [outputIp text];
+        addressString = [address UTF8String];
+        [self SetOutputAddress:addressString];
         
-        LOGD("UPD IP Address selected %s\n", adress.c_str());
         
         
     } else if (textField==outputPort) {
-        textUpdated = [outputPort text];
-        int port = [textUpdated intValue];
+        NSString *textUpdated = [[NSString stringWithString:[outputPort text]]autorelease];
+        s_int32 port = [textUpdated intValue];
         actualPort = port;
         
-        LOGD("UDP Port Selected: %d\n", actualPort);
+        [self SetOutputPort:port];
+        
+        
     }
     
     [self UpdateLabels];
@@ -87,7 +113,7 @@
 
 - ( void ) UpdateLabels
 {
-    outputIp.text = addressString;
+    outputIp.text = [NSString stringWithUTF8String:addressString.c_str()];
     outputPort.text = [NSString stringWithFormat:@"%d", actualPort];
     inputIp.text = [self getIPAddress];
     
@@ -118,6 +144,58 @@
     freeifaddrs(interfaces);
     return address;
     
+}
+
+#pragma mark IBActions
+
+- (IBAction) multiOutputToggle: (id) sender
+{
+    UISwitch *multioutputToggle = (UISwitch *)sender;
+    [self setMultiOutputActiove:multioutputToggle.on];
+    
+}
+
+- (IBAction) changheOutputRouting:(id)sender
+{
+    UISegmentedControl *control = (UISegmentedControl *) sender;
+    [self setRoutingType:control.selectedSegmentIndex];
+    
+}
+
+#pragma mark from interface to framekork
+
+- (void) setRoutingType: (NSInteger) routingType
+{
+    if(routingType==0)
+    {
+        LOGD("OUTPUT TO UDP \n");
+        
+    } else if(routingType==1)
+    {
+         LOGD("OUTPUT TO OSC \n");
+    }
+}
+
+- (void) setMultiOutputActiove: (BOOL) active
+{
+    if(active)
+    {
+        LOGD("MULTI OUTPUT ON \n");
+    } else
+    {
+        LOGD("MULTI OUTPUT OFF \n");
+    }
+}
+
+-  (void) SetOutputPort: (s_int32) outputUdpPort
+{
+    LOGD("UDP Port Selected: %d\n", outputUdpPort);
+}
+
+-  (void) SetOutputAddress: (string) outputUdpIP
+{
+    LOGD("UPD IP Address selected %s\n", outputUdpIP.c_str());
+
 }
 
 @end
