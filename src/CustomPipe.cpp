@@ -5,6 +5,7 @@
 //
 //
 #include "Sensor.h"
+#include "Logging.h"
 #include "CustomPipe.h"
 
 using namespace scdf;
@@ -70,7 +71,7 @@ void CustomPipe::Open()
 {
     if(pipe(pd) == -1)
     {
-        //Logging::Instance()->log(_T("Error creating pipe"));
+        LOGD("Error creating pipe");
         invalid=true;
     }
 }
@@ -100,7 +101,7 @@ template <class PipeMessage> s_int32 CustomPipe::WriteMessage(PipeMessage msg)
     s_int32 ret=Write((const s_char *)&msg, sizeof(PipeMessage), &bytesWritten);
     if(!ret)
     {
-        //Logging::Instance()->log(_T("Error writing to pipe"));
+        LOGD("Error writing to pipe");
         return 0;
     }
     assert(bytesWritten==sizeof(PipeMessage));
@@ -118,7 +119,7 @@ template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
     PipeMessage p;
     if (!Read((s_char*)&p, sizeof(PipeMessage), &numBytesRead))
     {
-        //Logging::Instance()->log(_T("Error reading from pipe"));
+        LOGD("Error reading from pipe");
         return NULL;
     }
     if(0==numBytesRead) return NULL;

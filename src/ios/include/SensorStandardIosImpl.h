@@ -36,6 +36,7 @@ namespace scdf {
         
         static  CMMotionManager     *motionManager;
         TimerIos                    *timerProximity;
+        NSTimeInterval updateInterval;
         
     public:
         void MySensorsCallback(SensorsStandardIOSData &sensorIOSData);

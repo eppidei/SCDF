@@ -12,6 +12,7 @@
 #include "SensorStandard.h"
 #include "SensorAudioInput.h"
 #include "SensorsManager.h"
+#include "Harvester.h"
 
 @interface FirstViewController ()
 
@@ -21,8 +22,6 @@
 
 - (void) viewDidUnload
 {
-    delete sensorManager;
-    sensorManager = NULL;
 }
 
 - (void)viewDidLoad
@@ -207,7 +206,7 @@
 
 - (void) setMasterSensor: (scdf::SensorType) sensorType
 {
-    
+    scdf::Harvester::Instance()->SetType(sensorType);
 }
 
 

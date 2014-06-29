@@ -19,11 +19,13 @@ typedef char    s_char;
 typedef int16_t   s_int16;
 typedef int32_t     s_int32;
 typedef int64_t    s_int64;
+typedef long    s_long;
 
 typedef unsigned char  s_byte;
 typedef uint16_t s_uint16;
 typedef uint32_t   s_uint32;
 typedef uint64_t s_uint64;
+typedef unsigned long    s_ulong;
 
 typedef float   s_float;
 typedef double  s_double;
