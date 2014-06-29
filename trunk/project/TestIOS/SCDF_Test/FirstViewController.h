@@ -24,6 +24,12 @@ namespace scdf {
     IBOutlet UISwitch *gyroscopeSensorSwitch;
     IBOutlet UISwitch *proximitySensorSwitch;
     
+    IBOutlet UITextField *audioRateField;
+    IBOutlet UITextField *accelRateField;
+    IBOutlet UITextField *magneRateField;
+    IBOutlet UITextField *gyrosRateField;
+    IBOutlet UITextField *proxyRateField;
+    
 }
 
 - (IBAction) toggleAudioSensor: (id) sender;
@@ -31,5 +37,13 @@ namespace scdf {
 - (IBAction) toggleMagnetometerSensor: (id) sender;
 - (IBAction) toggleGyroscopeSensor: (id) sender;
 - (IBAction) toggleProximitySensor: (id) sender;
+- (IBAction) changeMasterSensor: (id) sender;
+
+- (IBAction) AudioRateDidEndEditing:(UITextField *)textField;
+- (IBAction) AccelerometerRateDidEndEditing:(UITextField *)textField;
+- (IBAction) GyroscopeRateDidEndEditing:(UITextField *)textField;
+- (IBAction) MagnetometerRateDidEndEditing:(UITextField *)textField;
+- (IBAction) ProximityRateDidEndEditing:(UITextField *)textField;
+
 
 @end
