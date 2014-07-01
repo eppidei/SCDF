@@ -51,3 +51,8 @@ s_int32 SensorStandard::GetRate()
 {
     return sImpl->GetRate();
 }
+
+s_int32 SensorStandard::GetNumSamples()
+{
+    return sImpl->GetNumSamples();
+}

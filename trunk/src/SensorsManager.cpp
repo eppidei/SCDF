@@ -74,6 +74,9 @@ void SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
 
 void SensorsManager::CreateAllSensor()
 {
+    
+    // NB: Remember to add sensors in sensorList vector in StopAllSensors();
+    
     CreateSensor(scdf::AudioInput);
     CreateSensor(scdf::Accelerometer);
     CreateSensor(scdf::Gyroscope);
@@ -98,6 +101,21 @@ void SensorsManager::CreateAllSensor()
     // create other android sensors
     
 #endif
+}
 
+void SensorsManager::StopAllSensors()
+{
+    std::vector<Sensor *> sensorsList;
+    
+    sensorsList.push_back(GetSensor(AudioInput));
+    sensorsList.push_back(GetSensor(Accelerometer));
+    sensorsList.push_back(GetSensor(Magnetometer));
+    sensorsList.push_back(GetSensor(Gyroscope));
+    sensorsList.push_back(GetSensor(Proximity));
+   
+    
+    for(int i = 0;i<sensorsList.size();i++)
+        sensorsList[i]->Stop();
+    
 }
 

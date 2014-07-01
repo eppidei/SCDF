@@ -58,6 +58,7 @@ namespace scdf {
         virtual s_bool Start() = 0;
         virtual s_bool Stop()  = 0;
         virtual s_int32 GetRate()  = 0;
+        virtual s_int32 GetNumSamples()  = 0;
         
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
 
