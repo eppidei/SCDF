@@ -46,3 +46,8 @@ s_bool SensorStandard::Stop()
 {
     return sImpl->Stop();
 }
+
+s_int32 SensorStandard::GetRate()
+{
+    return sImpl->GetRate();
+}

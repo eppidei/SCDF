@@ -19,6 +19,12 @@ SensorsManager *scdf::theSensorManager()
     return instance;
 }
 
+s_int32 SensorsManager::GetRate(SensorType type)
+{
+    Sensor *sensor=GetSensor(type);
+    return sensor->GetRate();
+}
+
 Sensor *SensorsManager::GetSensor(SensorType type)
 {
     SensorsIterator it=sensors.find(type);

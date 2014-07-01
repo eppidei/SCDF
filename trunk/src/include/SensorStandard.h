@@ -15,9 +15,11 @@ namespace scdf {
 
         SensorStandard(){}
         SensorStandard(SensorType type);
-        s_bool Setup(SensorSettings& settings);        
-        s_bool Start();
-        s_bool Stop();
+        
+        s_bool  Setup(SensorSettings& settings);
+        s_bool  Start();
+        s_bool  Stop();
+        s_int32 GetRate();
 
     };  
 
