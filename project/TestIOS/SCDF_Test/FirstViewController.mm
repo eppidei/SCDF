@@ -33,6 +33,26 @@ scdf::SensorsManager *theSensorManager();
     
     [self setupInterface];
     
+    [self AcquireSensorsValues];
+    
+}
+
+- (void) AcquireSensorsValues
+{
+    s_int32 rate = scdf::theSensorManager()->GetRate(scdf::Accelerometer);
+    accelRateField.text = [NSString stringWithFormat:@"%d", rate];
+    
+    rate = scdf::theSensorManager()->GetRate(scdf::Gyroscope);
+    gyrosRateField.text = [NSString stringWithFormat:@"%d", rate];
+    
+    rate = scdf::theSensorManager()->GetRate(scdf::Magnetometer);
+    magneRateField.text = [NSString stringWithFormat:@"%d", rate];
+    
+    rate = scdf::theSensorManager()->GetRate(scdf::Proximity);
+    proxyRateField.text = [NSString stringWithFormat:@"%d", rate];
+    
+    rate = scdf::theSensorManager()->GetRate(scdf::AudioInput);
+    audioRateField.text = [NSString stringWithFormat:@"%d", rate];
 }
 
 - (void) setupInterface

@@ -10,10 +10,10 @@ using namespace scdf;
 
 void InitReturnPipes(SensorType type, s_int32 numSamples);
 
-SensorAudioInput::SensorAudioInput(SensorType _type/*, ScdfPipe *destPipe*/)
+SensorAudioInput::SensorAudioInput(SensorType _type)
 {
     SetType(_type);
-    sImpl = new SensorAudioInputImpl(/*,destPipe*/);
+    sImpl = new SensorAudioInputImpl();
 }
 
 s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
@@ -35,4 +35,9 @@ s_bool scdf::SensorAudioInput::Start()
 s_bool scdf::SensorAudioInput::Stop()
 {
     return sImpl->Stop();
+}
+
+s_int32 scdf::SensorAudioInput::GetRate()
+{
+    return sImpl->GetRate();
 }

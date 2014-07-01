@@ -121,10 +121,6 @@ SensorStandardImpl::SensorStandardImpl(SensorType _sensorType) : updateInterval(
 
 SensorStandardImpl::~SensorStandardImpl()
 {
-/*    assert(false);
-    if (NULL!=motionManager)
-        [motionManager release];
-    motionManager=NULL;*/
     
     if(timerProximity)
     {
@@ -235,6 +231,11 @@ s_bool SensorStandardImpl::Stop()
             break;
     }
     return true;
+}
+
+s_int32 SensorStandardImpl::GetRate()
+{
+    return (s_int32) 1/updateInterval;
 }
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)

@@ -188,6 +188,17 @@ s_bool SensorAudioInputImpl::Stop()
     return true;
 }
 
+s_int32 SensorAudioInputImpl::GetRate()
+{
+    
+    AudioStreamBasicDescription existingFormat;
+    
+    s_ulong param = sizeof(AudioStreamBasicDescription);
+    AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
+    
+    return (s_int32) existingFormat.mSampleRate;
+}
+
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
 {   
     try {
