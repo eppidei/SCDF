@@ -11,10 +11,9 @@
 #include "UDPSendersManager.h"
 #include "osc/OscOutboundPacketStream.h"
 #include "CustomPipe.h"
+#include "PipesManager.h"
 
 using namespace scdf;
-
-extern std::vector<scdf::CustomPipe*> returnPipes;
 
 void UDPSender::Init(int udpp, std::string add)
 {
@@ -97,7 +96,7 @@ static void SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 {
     for (int i=0;i<sData->size();++i)
     {
-        if (0==returnPipes[(*sData)[i]->type]->WriteMessage<SensorData*>((*sData)[i]))
+        if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
             delete (*sData)[i];
 #ifdef LOG_PIPES_STATUS
         LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), returnPipes[(*sData)[i]->type]->GetSize());

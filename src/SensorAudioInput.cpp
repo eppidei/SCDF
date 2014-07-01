@@ -5,10 +5,9 @@
 #else
 #include "SensorAudioInputImplAndroid.h"
 #endif
+#include "PipesManager.h"
 
 using namespace scdf;
-
-void InitReturnPipes(SensorType type, s_int32 numSamples);
 
 SensorAudioInput::SensorAudioInput(SensorType _type)
 {
@@ -22,7 +21,7 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
     // modify its value in settings and return false
     // try starting the sensor, return result
     
-    InitReturnPipes(GetType(), ((SensorAudioSettings&)settings).bufferSize);
+    thePipesManager()->InitReturnPipes(GetType(), ((SensorAudioSettings&)settings).bufferSize);
     ((SensorAudioSettings&)settings).numChannels=1;
     return  sImpl->Setup(settings);
 }

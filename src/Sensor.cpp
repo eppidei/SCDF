@@ -4,10 +4,10 @@
 #include "Sensor.h"
 #include "SensorAudioInput.h"
 #include "SensorStandard.h"
+#include "PipesManager.h"
 
 
 using namespace scdf;
-extern std::vector<scdf::CustomPipe*> pipes;
 
 Sensor* Sensor::Create(SensorType type)
 {
@@ -23,7 +23,10 @@ Sensor* Sensor::Create(SensorType type)
 void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
-    pipes[data->type]->WriteMessage<SensorData*>(data);
+    if (data->type>=thePipesManager()->NumPipes())
+        delete data;
+    else
+        thePipesManager()->WriteOnPipe(data->type,data);
     
 #ifdef LOG_DATA
     for (int i = 0; i< data->num_samples; i ++) {

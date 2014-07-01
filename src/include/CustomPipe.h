@@ -9,9 +9,10 @@
 namespace scdf
 {
     typedef s_int32 PipeDescriptor;
-
+    class PipesManager;
     class CustomPipe
     {
+        friend PipesManager;
         PipeDescriptor pd[2];
         s_bool invalid;
         s_int32 size;

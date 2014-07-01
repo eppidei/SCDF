@@ -24,7 +24,11 @@ namespace scdf
     namespace ThreadUtils
     {
         typedef pthread_mutex_t CUSTOM_MUTEX;
-        pthread_t CreateThread(start_routine routine, void *par);
+        struct ThreadHandle{
+            pthread_t tid;
+        };
+        ThreadHandle CreateThread(start_routine routine, void *par);
+        void JoinThread(ThreadHandle handle);
         class CustomMutex {
             
             CustomMutex(const CustomMutex &refCustomMutex);

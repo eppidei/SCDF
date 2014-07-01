@@ -10,55 +10,6 @@
 
 using namespace scdf;
 
-std::vector<CustomPipe*> pipes;
-std::vector<CustomPipe*> returnPipes;
-
-std::vector<CustomPipe*>* scdf::GetReturnPipes() { return &returnPipes; }
-
-void CreatePipes()
-{
-    for (int i=0;i<NumTypes;++i)
-        pipes.push_back(new CustomPipe());
-}
-
-void CreateReturnPipes()
-{
-    for (int i=0;i<NumTypes;++i)
-    {
-        CustomPipe *p=new CustomPipe();
-        p->SetNonBlockingReads();
-        p->SetNonBlockingWrites();
-        returnPipes.push_back(p);
-    }
-}
-
-void InitReturnPipes(SensorType type, s_int32 numSamples)
-{
-    while(true)
-    {
-        SensorData *s=returnPipes[type]->ReadMessage<SensorData*>();
-        if (NULL==s) break;
-        delete s;
-    }
-    for (int j=0;j<RETURN_PIPES_STATIC_INIT;++j)
-    {
-        if (type==AudioInput)
-        {
-            SensorAudioData *s=new SensorAudioData();
-            s->data=new s_sample[numSamples];
-            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
-                delete s;
-        }
-        else
-        {
-            SensorData *s=new SensorData();
-            s->data=new s_sample[numSamples];
-            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
-                delete s;
-        }
-    }
-}
-
 void CustomPipe::Close()
 {
     if(pd[0]!=-1)
