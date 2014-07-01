@@ -8,8 +8,13 @@
 
 #include "TypeDefinitions.h"
 
+
+#define DEFAULT_SENORS_STANDARD_RATE 100
+#define DEFAULT_AUDIO_BUFFER_SIZE 512
+
 namespace scdf
 {
+    
     class Sensor;
     class SensorSettings;
     class SensorsManager
@@ -25,6 +30,10 @@ namespace scdf
         void InitSensor(SensorType type, SensorSettings &settings);
         void ActivateSensor(SensorType type);
         void DeActivateSensor(SensorType type);
+        void CreateAllSensor();
     };
+    
+    
+    SensorsManager *theSensorManager();
 
 }

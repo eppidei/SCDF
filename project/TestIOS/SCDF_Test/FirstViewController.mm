@@ -14,6 +14,9 @@
 #include "SensorsManager.h"
 #include "Harvester.h"
 
+
+scdf::SensorsManager *theSensorManager();
+
 @interface FirstViewController ()
 
 @end
@@ -28,35 +31,8 @@
 {
     [super viewDidLoad];
     
-    [self setupSensors];
-    
     [self setupInterface];
     
-}
-
-- (void) setupSensors
-{
-    //sensorManager = new scdf::SensorsManager();
-    
-    sensorManager->CreateSensor(scdf::AudioInput);
-    sensorManager->CreateSensor(scdf::Accelerometer);
-    sensorManager->CreateSensor(scdf::Gyroscope);
-    sensorManager->CreateSensor(scdf::Magnetometer);
-    sensorManager->CreateSensor(scdf::Proximity);
-    
-    
-    scdf::SensorSettings s_settings;
-    s_settings.rate=100;
-    sensorManager->InitSensor(scdf::Accelerometer,s_settings);
-    sensorManager->InitSensor(scdf::Magnetometer,s_settings);
-    sensorManager->InitSensor(scdf::Gyroscope,s_settings);
-    sensorManager->InitSensor(scdf::Proximity,s_settings);
-    
-    
-    scdf::SensorAudioSettings audioSettings;
-    audioSettings.bufferSize=512;
-    sensorManager->InitSensor(scdf::AudioInput,audioSettings);
-
 }
 
 - (void) setupInterface
@@ -254,11 +230,11 @@
         {
             if(state)
             {
-                sensorManager->ActivateSensor(scdf::SensorType::AudioInput);
+                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::AudioInput);
                 LOGD("toggle AudioSensor ON \n");
             } else
             {
-                sensorManager->DeActivateSensor(scdf::SensorType::AudioInput);
+                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::AudioInput);
                 LOGD("toggle AudioSensor OFF \n");
             }
 
@@ -268,11 +244,11 @@
         {
             if(state)
             {
-                sensorManager->ActivateSensor(scdf::SensorType::Accelerometer);
+                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Accelerometer);
                 LOGD("toggle Accelerometer Sensor ON \n");
             } else
             {
-                sensorManager->DeActivateSensor(scdf::SensorType::Accelerometer);
+                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Accelerometer);
                 LOGD("toggle Accelerometer Sensor OFF \n");
             }
             break;
@@ -281,11 +257,11 @@
         {
             if(state)
             {
-                sensorManager->ActivateSensor(scdf::SensorType::Gyroscope);
+                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Gyroscope);
                 LOGD("toggle Gyroscope Sensor ON \n");
             } else
             {
-                sensorManager->DeActivateSensor(scdf::SensorType::Gyroscope);
+                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Gyroscope);
                 LOGD("toggle Gyroscope Sensor OFF \n");
             }
             break;
@@ -294,11 +270,11 @@
         {
             if(state)
             {
-                sensorManager->ActivateSensor(scdf::SensorType::Magnetometer);
+                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Magnetometer);
                 LOGD("toggle Magnetometer Sensor ON \n");
             } else
             {
-                sensorManager->DeActivateSensor(scdf::SensorType::Magnetometer);
+                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Magnetometer);
                 LOGD("toggle Magnetometer Sensor OFF \n");
             }
             break;
@@ -307,11 +283,11 @@
         {
             if(state)
             {
-                sensorManager->ActivateSensor(scdf::SensorType::Proximity);
+                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Proximity);
                 LOGD("toggle Proximity Sensor ON \n");
             } else
             {
-                sensorManager->DeActivateSensor(scdf::SensorType::Proximity);
+                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Proximity);
                 LOGD("toggle Proximity Sensor OFF \n");
             }
             break;
