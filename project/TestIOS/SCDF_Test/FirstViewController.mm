@@ -36,7 +36,7 @@
 
 - (void) setupSensors
 {
-    sensorManager = new scdf::SensorsManager();
+    //sensorManager = new scdf::SensorsManager();
     
     sensorManager->CreateSensor(scdf::AudioInput);
     sensorManager->CreateSensor(scdf::Accelerometer);

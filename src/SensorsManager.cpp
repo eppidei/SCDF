@@ -58,3 +58,9 @@ void SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
     sensor->Setup(settings);
 }
 
+SensorsManager *scdf::theSensorManager()
+{
+    static SensorsManager *instance=new SensorsManager();
+    return instance;
+}
+
