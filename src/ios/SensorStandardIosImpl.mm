@@ -288,17 +288,11 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     if (sensorTypeRef==Proximity)
         numSamples = 1;
     
-    SensorData *s=thePipesManager()->ReadFromPipe(sensorTypeRef);
+    SensorData *s=thePipesManager()->ReadFromReturnPipe(sensorTypeRef);
     
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
 #endif
-    
-    if (NULL==s)
-    {
-        s = new scdf::SensorData();
-        s->data=(s_sample*) new s_sample[numSamples];
-    }
     
     ((s_sample*)(s->data))[0]  = sensorIOSData.value1;
     
