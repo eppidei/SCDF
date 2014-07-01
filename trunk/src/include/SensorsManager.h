@@ -8,8 +8,8 @@
 
 #include "TypeDefinitions.h"
 
-namespace scdf{
-    
+namespace scdf
+{
     class Sensor;
     class SensorSettings;
     class SensorsManager
@@ -18,7 +18,9 @@ namespace scdf{
         typedef std::pair<SensorType, Sensor*> SensorPair;
         std::map<SensorType, Sensor*> sensors;
         Sensor *GetSensor(SensorType type);
+        SensorsManager(){}
     public:
+        friend SensorsManager *theSensorManager();
         Sensor *CreateSensor(SensorType type);
         void InitSensor(SensorType type, SensorSettings &settings);
         void ActivateSensor(SensorType type);

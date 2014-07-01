@@ -30,7 +30,7 @@ typedef s_float s_sample;
 
 #define CALLBACK
 
-#define LOG_UDP_SEND
+//#define LOG_UDP_SEND
 //#define LOG_PIPES_STATUS
 //#define LOG_DATA
 //#define LOG_TIMESTAMP
