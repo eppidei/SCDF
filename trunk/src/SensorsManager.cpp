@@ -5,11 +5,19 @@
 //
 //
 
+
+
 #include "Sensor.h"
 #include "SensorsManager.h"
 #include "Logging.h"
 
 using namespace scdf;
+
+SensorsManager *scdf::theSensorManager()
+{
+    static SensorsManager *instance=new SensorsManager();
+    return instance;
+}
 
 Sensor *SensorsManager::GetSensor(SensorType type)
 {
@@ -58,9 +66,32 @@ void SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
     sensor->Setup(settings);
 }
 
-SensorsManager *scdf::theSensorManager()
+void SensorsManager::CreateAllSensor()
 {
-    static SensorsManager *instance=new SensorsManager();
-    return instance;
+    CreateSensor(scdf::AudioInput);
+    CreateSensor(scdf::Accelerometer);
+    CreateSensor(scdf::Gyroscope);
+    CreateSensor(scdf::Magnetometer);
+    CreateSensor(scdf::Proximity);
+    
+    
+    scdf::SensorSettings s_settings;
+    s_settings.rate= (s_int32) DEFAULT_SENORS_STANDARD_RATE;
+    InitSensor(scdf::Accelerometer,s_settings);
+    InitSensor(scdf::Magnetometer,s_settings);
+    InitSensor(scdf::Gyroscope,s_settings);
+    InitSensor(scdf::Proximity,s_settings);
+    
+    
+    scdf::SensorAudioSettings audioSettings;
+    audioSettings.bufferSize= (s_int32) DEFAULT_AUDIO_BUFFER_SIZE;
+    InitSensor(scdf::AudioInput,audioSettings);
+    
+#ifdef ANDROID
+    
+    // create other android sensors
+    
+#endif
+
 }
 

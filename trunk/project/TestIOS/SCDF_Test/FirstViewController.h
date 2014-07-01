@@ -8,16 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-namespace scdf {
-    class SensorsManager;
-}
-//class scdf::SensorsManager;
 
 @interface FirstViewController : UIViewController
 
-{
-    scdf::SensorsManager   *sensorManager;
-    
+{    
     IBOutlet UISwitch *audioSensorSwitch;
     IBOutlet UISwitch *accelerometerSensorSwitch;
     IBOutlet UISwitch *magnetometerSensorSwitch;

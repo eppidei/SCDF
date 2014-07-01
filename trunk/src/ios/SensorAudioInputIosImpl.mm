@@ -189,14 +189,14 @@ s_bool SensorAudioInputImpl::Stop()
 }
 
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
-{
+{   
     try {
     
         SensorAudioSettings &audioSettings=(SensorAudioSettings&)settings;
 
         AudioStreamBasicDescription existingFormat;
         
-        u_int32_t param = sizeof(AudioStreamBasicDescription);
+        s_ulong param = sizeof(AudioStreamBasicDescription);
         AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
 
         existingFormat.mSampleRate=audioSettings.rate;

@@ -9,9 +9,11 @@
 #include "Harvester.h"
 #include "UDPSendersManager.h"
 #include "Sensor.h"
+#include "SensorsManager.h"
 
 void CreatePipes();
 void CreateReturnPipes();
+scdf::SensorsManager *theSensorManager();
 
 void InitFramework()
 {
@@ -23,8 +25,10 @@ void InitFramework()
         udpPorts.push_back(9000+i);
     }
 
-    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "192.168.1.107");
+    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "10.12.209.167");
     scdf::Harvester::Instance();
+    
+    scdf::theSensorManager()->CreateAllSensor();
 }
 
 
