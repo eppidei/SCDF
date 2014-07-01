@@ -32,7 +32,9 @@ namespace scdf
         void DeActivateSensor(SensorType type);
         void CreateAllSensor();
         s_int32 GetRate(SensorType type);
+        s_int32 GetNumSamples(SensorType type);
         void StopAllSensors();
+       
     };
     
     

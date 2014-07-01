@@ -25,6 +25,12 @@ s_int32 SensorsManager::GetRate(SensorType type)
     return sensor->GetRate();
 }
 
+s_int32 SensorsManager::GetNumSamples(SensorType type)
+{
+    Sensor *sensor=GetSensor(type);
+    return sensor->GetNumSamples();
+}
+
 Sensor *SensorsManager::GetSensor(SensorType type)
 {
     SensorsIterator it=sensors.find(type);

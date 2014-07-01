@@ -53,10 +53,16 @@ scdf::SensorsManager *theSensorManager();
     
     rate = scdf::theSensorManager()->GetRate(scdf::AudioInput);
     audioRateField.text = [NSString stringWithFormat:@"%d", rate];
+    
+    s_int32 bufferSize = scdf::theSensorManager()->GetNumSamples(scdf::AudioInput);
+    audioBufferSizeField.text = [NSString stringWithFormat:@"%d", bufferSize];
 }
 
 - (void) setupInterface
 {
+    audioBufferSizeField.returnKeyType = UIReturnKeyDefault;
+    audioBufferSizeField.keyboardType = UIKeyboardTypeNumberPad;
+    
     audioRateField.returnKeyType = UIReturnKeyDefault;
     audioRateField.keyboardType = UIKeyboardTypeNumberPad;
     
