@@ -33,11 +33,11 @@ scdf::SensorsManager *theSensorManager();
     
     [self setupInterface];
     
-    [self AcquireSensorsValues];
+    [self UpdateSensorsValues];
     
 }
 
-- (void) AcquireSensorsValues
+- (void) UpdateSensorsValues
 {
     s_int32 rate = scdf::theSensorManager()->GetRate(scdf::Accelerometer);
     accelRateField.text = [NSString stringWithFormat:@"%d", rate];
@@ -239,6 +239,8 @@ scdf::SensorsManager *theSensorManager();
         default:
             break;
     }
+    
+     [self UpdateSensorsValues];
 }
 
 

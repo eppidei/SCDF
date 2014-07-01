@@ -36,6 +36,14 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
     return self;
 }
 
+- (NSTimeInterval) GetRate
+{
+    if(timerProx)
+        return [timerProx timeInterval];
+    
+    return updateInterval;
+}
+
 - (void) setSensorRef: (SensorStandardImpl  *) _sensorRef
 {
     senorRef = _sensorRef;
@@ -235,7 +243,44 @@ s_bool SensorStandardImpl::Stop()
 
 s_int32 SensorStandardImpl::GetRate()
 {
-    return (s_int32) 1/updateInterval;
+    NSTimeInterval updateSensorInterval;
+    switch (sensorTypeRef) {
+        case scdf::Accelerometer:
+            updateSensorInterval=motionManager.accelerometerUpdateInterval;
+            break;
+        case scdf::Gyroscope:
+            updateSensorInterval=motionManager.gyroUpdateInterval;
+            break;
+        case scdf::Magnetometer:
+            updateSensorInterval=motionManager.magnetometerUpdateInterval;
+            break;
+        case scdf::Proximity:
+            updateSensorInterval = [timerProximity GetRate];
+        default:
+            break;
+    }
+
+    return (s_int32) 1/updateSensorInterval;
+}
+
+s_int32 SensorStandardImpl::GetNumSamples()
+{
+    s_int32 samplesNumber = 0;
+    switch (sensorTypeRef)
+    {
+        case scdf::Accelerometer:
+        case scdf::Gyroscope:
+        case scdf::Magnetometer:
+            samplesNumber = 3;
+            break;
+        case scdf::Proximity:
+            samplesNumber = 1;
+            break;
+        default:
+            break;
+    }
+    
+    return samplesNumber;
 }
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)

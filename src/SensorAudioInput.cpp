@@ -41,3 +41,8 @@ s_int32 scdf::SensorAudioInput::GetRate()
 {
     return sImpl->GetRate();
 }
+
+s_int32 scdf::SensorAudioInput::GetNumSamples()
+{
+    return sImpl->GetNumSamples();
+}
