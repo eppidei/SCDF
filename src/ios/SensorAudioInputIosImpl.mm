@@ -15,7 +15,7 @@
 
 using namespace scdf;
 
-vector<CustomPipe*> *GetReturnPipes();
+std::vector<CustomPipe*> *GetReturnPipes();
 
 s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
 
@@ -196,7 +196,7 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
 
         AudioStreamBasicDescription existingFormat;
         
-        s_ulong param = sizeof(AudioStreamBasicDescription);
+        u_int32_t param = sizeof(AudioStreamBasicDescription);
         AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
 
         existingFormat.mSampleRate=audioSettings.rate;

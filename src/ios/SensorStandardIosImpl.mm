@@ -14,7 +14,7 @@
 
 using namespace scdf;
 
-vector<CustomPipe*> *GetReturnPipes();
+std::vector<CustomPipe*> *GetReturnPipes();
 
 CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
