@@ -8,10 +8,15 @@
 
 #include <ThreadUtils.h>
 
-pthread_t scdf::ThreadUtils::CreateThread(start_routine routine, void *par)
+scdf::ThreadUtils::ThreadHandle scdf::ThreadUtils::CreateThread(start_routine routine, void *par)
 {
-    pthread_t t;
-    pthread_create(&t, NULL, (start_routine)routine, par);
+    ThreadHandle t;
+    pthread_create(&t.tid, NULL, (start_routine)routine, par);
     return t;
 }
- 
+
+void scdf::ThreadUtils::JoinThread(ThreadHandle handle)
+{
+    void *tmp;
+    pthread_join(handle.tid,&tmp);
+}

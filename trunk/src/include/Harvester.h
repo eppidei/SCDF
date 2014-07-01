@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include "Sensor.h"
+#include "ThreadUtils.h"
 
 namespace scdf{
 
@@ -22,7 +23,6 @@ namespace scdf{
         
         void PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType);
         void InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd);
-        void SetupPipes();
         void Sort();
         void NotifyHarvestCompletition();
         void Harvest(SensorData *_masterData);
@@ -34,11 +34,14 @@ namespace scdf{
         Harvester();
         static Harvester *_instance;
         SensorType requesterType;
+        ThreadUtils::ThreadHandle handle;
     public:
         bool activated;
         SensorType GetType() { return requesterType; }
         void SetType(SensorType type);
         void HarvestingProcedure(SensorData *_masterData);
+        void Start();
+        void Stop();
         static Harvester *Instance()
         {
             if (NULL==_instance) _instance=new Harvester();

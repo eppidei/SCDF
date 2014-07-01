@@ -12,10 +12,9 @@
 #import "SensorStandardIosImpl.h"
 #endif
 #include "SensorStandard.h"
+#include "PipesManager.h"
 
 using namespace scdf;
-
-void InitReturnPipes(SensorType type, s_int32 numSamples);
 
 SensorStandard::SensorStandard(SensorType _type)
 {
@@ -33,7 +32,7 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
     int num_samples=3;
     if (GetType()==Proximity)
         num_samples=1;
-    InitReturnPipes(GetType(), num_samples);
+    thePipesManager()->InitReturnPipes(GetType(), num_samples);
     return sImpl->Setup(settings);
 }
 

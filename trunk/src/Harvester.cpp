@@ -11,10 +11,10 @@
 #include "ThreadUtils.h"
 #include "UDPSender.h"
 #include "UDPSendersManager.h"
+#include "PipesManager.h"
+#include "SensorsManager.h"
 
 using namespace scdf;
-extern std::vector<scdf::CustomPipe*> pipes;
-extern std::vector<scdf::CustomPipe*> returnPipes;
 
 Harvester *Harvester::_instance=NULL;
 
@@ -30,28 +30,38 @@ static void StartHarvestingProcedure(void *param)
     Harvester *harvester=((Harvester*)param);
     while(harvester->activated)
     {
-        SensorData *data=pipes[harvester->GetType()]->ReadMessage<SensorData*>();
+        SensorData *data=thePipesManager()->ReadFromPipe(harvester->GetType());
         if (NULL!=data)
             harvester->HarvestingProcedure(data);
     }
 }
 
-void Harvester::SetupPipes()
-{
-    for (int i=0;i<pipes.size();++i)
-        pipes[i]->SetNonBlockingReads();
-}
-
-Harvester::Harvester() : activated(true)
+Harvester::Harvester() : activated(false)
 {
     SetType(AudioInput);
-    SetupPipes();
-    ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
+}
+
+void Harvester::Start()
+{
+    if (activated) return;
+    activated=true;
+    handle=ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
+}
+
+void Harvester::Stop()
+{
+    if (!activated) return;
+    activated=false;
+    ThreadUtils::JoinThread(handle);
 }
 
 void Harvester::SetType(SensorType type)
 {
     requesterType=type;
+    Stop();
+    theSensorManager()->StopAllSensors();
+    thePipesManager()->InitPipes();
+    Start();
 }
 
 void Harvester::Sort()
@@ -62,20 +72,20 @@ void Harvester::Sort()
 
 void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType)
 {
-    for (s_int32 i=0;i<pipes.size();++i)
+    for (s_int32 i=0;i<thePipesManager()->NumPipes();++i)
     {
         if (i==sType) continue;
         SensorData *sd=NULL;
         while (1)
         {
-            sd=pipes[i]->ReadMessage<SensorData*>();
+            sd=thePipesManager()->ReadFromPipe((SensorType)i);
             if (NULL==sd) break;
             if (sd->timestamp<timestampStart)
             {
 #ifdef LOG_HARVEST_STATUS
                 LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
-                if (0==returnPipes[sd->type]->WriteMessage<SensorData*>(sd))
+                if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                     delete sd;
 #ifdef LOG_PIPES_STATUS
                 LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());
@@ -111,7 +121,7 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
 #ifdef LOG_HARVEST_STATUS
             printf("DELETING: Timestamp from %s: %lu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
-            if (0==returnPipes[sd->type]->WriteMessage<SensorData*>(sd))
+            if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                 delete sd;
 #ifdef LOG_PIPES_STATUS
             LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());

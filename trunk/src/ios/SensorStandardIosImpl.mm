@@ -11,10 +11,9 @@
 #import "MagnetometerIos.h"
 #import "GyroscopeIos.h"
 #include "CustomPipe.h"
+#include "PipesManager.h"
 
 using namespace scdf;
-
-std::vector<CustomPipe*> *GetReturnPipes();
 
 CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
@@ -289,7 +288,7 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     if (sensorTypeRef==Proximity)
         numSamples = 1;
     
-    SensorData *s=(*(GetReturnPipes()))[sensorTypeRef]->ReadMessage<SensorData*>();
+    SensorData *s=thePipesManager()->ReadFromPipe(sensorTypeRef);
     
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());

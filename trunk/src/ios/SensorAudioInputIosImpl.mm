@@ -11,11 +11,10 @@
 #import "CAStreamBasicDescription.h"
 #import "SensorAudioInputIosImpl.h"
 #include "CustomPipe.h"
+#include "PipesManager.h"
 #include <mach/mach_time.h>
 
 using namespace scdf;
-
-std::vector<CustomPipe*> *GetReturnPipes();
 
 s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
 
@@ -107,7 +106,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     SensorAudioInputImpl* pthis=(SensorAudioInputImpl*)inRefCon;
     err = AudioUnitRender(pthis->rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     
-    SensorAudioData *s=(SensorAudioData*)(*(GetReturnPipes()))[AudioInput]->ReadMessage<SensorData*>();
+    SensorAudioData *s=(SensorAudioData*)thePipesManager()->ReadFromReturnPipe(AudioInput);
     
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
@@ -193,7 +192,7 @@ s_int32 SensorAudioInputImpl::GetRate()
     
     AudioStreamBasicDescription existingFormat;
     
-    s_ulong param = sizeof(AudioStreamBasicDescription);
+    UInt32 param = sizeof(AudioStreamBasicDescription);
     AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
     
     return (s_int32) existingFormat.mSampleRate;
@@ -204,7 +203,7 @@ s_int32 SensorAudioInputImpl::GetNumSamples()
     
     AudioStreamBasicDescription existingFormat;
     
-    s_ulong param = sizeof(AudioStreamBasicDescription);
+    UInt32 param = sizeof(AudioStreamBasicDescription);
     AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
     
     return (s_int32) existingFormat.mFramesPerPacket;
@@ -218,7 +217,8 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
 
         AudioStreamBasicDescription existingFormat;
         
-        s_ulong param = sizeof(AudioStreamBasicDescription);
+        UInt32 param = sizeof(AudioStreamBasicDescription);
+
         AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
 
         existingFormat.mSampleRate=audioSettings.rate;
