@@ -112,12 +112,6 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
 #endif
     
-    if (NULL==s)
-    {
-        s = new scdf::SensorAudioData();
-        s->data=(s_sample*) new s_sample[inNumberFrames];
-    }
-    
     memcpy(s->data, ioData->mBuffers[0].mData, inNumberFrames*sizeof(s_sample));
     
 #ifdef LOG_TIMESTAMP
