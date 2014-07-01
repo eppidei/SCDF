@@ -19,6 +19,7 @@
     IBOutlet UISwitch *proximitySensorSwitch;
     
     IBOutlet UITextField *audioRateField;
+    IBOutlet UITextField *audioBufferSizeField;
     IBOutlet UITextField *accelRateField;
     IBOutlet UITextField *magneRateField;
     IBOutlet UITextField *gyrosRateField;
