@@ -4,7 +4,7 @@
 
 #include "SensorAudioInputImplAndroid.h"
 #include "CustomPipe.h"
-
+#include "PipesManager.h"
 #include <time.h>
 #include <climits>
 
@@ -20,17 +20,13 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 	//LOGD("Opensl input callback");
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
 
-    SensorAudioData *s=(SensorAudioData*)(*(GetReturnPipes()))[AudioInput]->ReadMessage<SensorData*>();
+    SensorAudioData *s=(SensorAudioData*) thePipesManager()->ReadFromReturnPipe(AudioInput);
     // the size of the data buffer is decided in the sensor setup.
 
 	#ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
 	#endif
 
-    if (NULL==s) {
-        s = new scdf::SensorAudioData();
-        s->data=(s_sample*) new s_sample[ai->bufferSize];
-    }
 
 #ifdef LOG_TIMESTAMP
     s_uint64 timestampInterval=inTimeStamp->mHostTime-mach_absolute_time();
@@ -220,10 +216,15 @@ s_bool scdf::SensorAudioInputImpl::Stop()
     return true;
 }
 
+s_int32 scdf::SensorAudioInputImpl::GetRate()
+{
+	return (s_int32)(inputOpenSLFormat.samplesPerSec/1000);
+}
 
-
-
-
+s_int32 scdf::SensorAudioInputImpl::GetNumSamples()
+{
+	return (s_int32)(bufferSize);
+}
 
 /** OPENSL ENGINE METHODS */
 

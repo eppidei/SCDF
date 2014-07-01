@@ -12,7 +12,7 @@ namespace scdf
     class PipesManager;
     class CustomPipe
     {
-        friend PipesManager;
+        friend class PipesManager;
         PipeDescriptor pd[2];
         s_bool invalid;
         s_int32 size;

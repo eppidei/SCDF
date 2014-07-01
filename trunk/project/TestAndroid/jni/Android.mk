@@ -41,12 +41,14 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					android/SensorStandardImplAndroid.cpp \
 					SensorAudioInput.cpp \
 					android/SensorAudioInputImplAndroid.cpp \
+					SensorsManager.cpp \
 					CustomPipe.cpp \
 					InitFramework.cpp \
 					ThreadUtils.cpp \
 					UDPSender.cpp \
 					UDPSendersManager.cpp \
-					Harvester.cpp
+					Harvester.cpp \
+					PipesManager.cpp
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)

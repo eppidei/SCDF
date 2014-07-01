@@ -19,6 +19,7 @@ void UDPSender::Init(int udpp, std::string add)
 {
 	endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
 	transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
+	// TODO: handle udpsocket::connect exception!
 }
 
 void UDPSender::Release()

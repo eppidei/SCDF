@@ -50,9 +50,9 @@ namespace scdf {
         static void Destroy(Sensor* sensor);
         
         virtual s_bool Setup(SensorSettings& settings) = 0;
-        /* Returns false on setup failure.
-         * If any of the settings parameter is not supported, it will be modified,
-         * so that the user can retry the setup with the modified (supported) values.
+        /* Returns false when something changed.
+         * If the sensor could be set up with other settings, settings.broken
+         * will be false
          */
         
         virtual s_bool Start() = 0;
@@ -66,8 +66,6 @@ namespace scdf {
         
         SensorType GetType(){return type;};
         void SetType(SensorType _type){type = _type;}
-
-       
     
     };
   

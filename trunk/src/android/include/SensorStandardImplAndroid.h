@@ -5,13 +5,19 @@
 #include "SensorStandard.h"
 
 class ASensorEventQueue;
+class ASensor;
 
 namespace scdf {
 
 	class SensorStandardImpl : public SensorStandard
     {
+
     private:
+
 		ASensorEventQueue* sensorEventQueue;
+		const ASensor* androidSensor;
+		s_int16 androidType;
+		s_int32 currentRate;
 
     public:
 
@@ -20,6 +26,8 @@ namespace scdf {
         s_bool Setup(SensorSettings& settings);
         s_bool Start();
         s_bool Stop();
+        s_int32 GetRate();
+        s_int32 GetNumSamples();
 
         static int Callback(int fd, int events, void* data);
 
