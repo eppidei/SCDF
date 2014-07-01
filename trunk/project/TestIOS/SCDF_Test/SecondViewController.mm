@@ -82,12 +82,6 @@
     else if(outputPort.isFirstResponder) {[outputPort resignFirstResponder];}
 }
 
-/*- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if ([textField canResignFirstResponder]) {
-        [textField resignFirstResponder];
-    }
-    return YES;
-}*/
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
@@ -99,7 +93,7 @@
         
         
     } else if (textField==outputPort) {
-        NSString *textUpdated = [[NSString stringWithString:[outputPort text]]autorelease];
+        NSString *textUpdated = [outputPort text];
         s_int32 port = [textUpdated intValue];
         actualPort = port;
         
@@ -192,7 +186,7 @@
     LOGD("UDP Port Selected: %d\n", outputUdpPort);
 }
 
--  (void) SetOutputAddress: (string) outputUdpIP
+-  (void) SetOutputAddress: (std::string) outputUdpIP
 {
     LOGD("UPD IP Address selected %s\n", outputUdpIP.c_str());
 

@@ -17,7 +17,7 @@
     IBOutlet UITextField             *outputPort;
     IBOutlet UILabel                 *inputIp;
     
-    string                           addressString;
+    std::string                      addressString;
     s_int32                          actualPort;
 }
 
