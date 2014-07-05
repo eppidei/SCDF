@@ -105,7 +105,7 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 	s_bool anySettingChanged = false;
 
 	numBuffers = 2;
-    bufferSize = 1024;
+    bufferSize = 512;
 	inputOpenSLFormat.numChannels = 1;
 	inputOpenSLFormat.samplesPerSec = ConvertToOpenSLSampleRate(44100);
 	inputOpenSLFormat.formatType = SL_DATAFORMAT_PCM;
