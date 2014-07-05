@@ -86,7 +86,7 @@ void PipesManager::InitPipes()
 
 SensorData *PipesManager::ReadFromPipe(SensorType type)
 {
-    return pipes[type]->ReadMessage<SensorData*>();
+	return pipes[type]->ReadMessage<SensorData*>();
 }
 
 s_int32 PipesManager::WriteOnReturnPipe(SensorType type, SensorData *data)

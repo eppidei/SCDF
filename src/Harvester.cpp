@@ -38,7 +38,8 @@ static void StartHarvestingProcedure(void *param)
 
 Harvester::Harvester() : activated(false)
 {
-    SetType(AudioInput);
+	requesterType=AudioInput;
+	//SetType(AudioInput); // this calls the harvester's constructor recursively!!!
 }
 
 void Harvester::Start()

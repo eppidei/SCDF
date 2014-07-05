@@ -21,6 +21,10 @@ namespace scdf {
 
     public:
 
+		static s_bool IsAvailable(SensorType type);
+		static SensorType AndroidToScdfType(int andType);
+		static int ScdfToAndroidType(SensorType scdfType);
+
         SensorStandardImpl(SensorType _type);
         ~SensorStandardImpl();
         s_bool Setup(SensorSettings& settings);

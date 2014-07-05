@@ -114,6 +114,22 @@ s_uint64 MillisecondsTo_mach_timebase(double timeToConvert_ms)
     return (s_uint64)(timeToConvert_ms * (float)(kOneMillion * s_timebase_info.denom))/(float)(s_timebase_info.numer);
 }
 
+
+s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
+{
+	switch (type){
+
+		case Accelerometer:
+		case Gyroscope:
+		case Magnetometer:
+		case Proximity:
+			return true;
+		default:
+			return false;
+	}
+}
+
+
 SensorStandardImpl::SensorStandardImpl(SensorType _sensorType) : updateInterval(1)
 {
     sensorTypeRef = _sensorType;

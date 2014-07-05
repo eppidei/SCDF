@@ -1,18 +1,184 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/scrollView1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000" >
 
-    <LinearLayout
-    	android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/section_generalsettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#DDD" >
 
+        <EditText
+            android:id="@+id/edittext_ip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Dest. IP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="3"
+            android:inputType="numberDecimal" >
+        </EditText>
+        
+        <EditText
+            android:id="@+id/edittext_port"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/edittext_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="3"
+            android:inputType="phone"
+            android:text="Src. port" />
+        
+        <Button
+            android:id="@+id/button_connect"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/edittext_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect" />
+        
         <Button
             android:id="@+id/button_init"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/button_connect"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Init" />
-    
-    </LinearLayout>
-</ScrollView>
+
+        <Spinner
+            android:id="@+id/spinner_mastersensor"
+            android:layout_below="@+id/edittext_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/section_sensors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/section_audioinput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#DDD"
+                android:layout_margin="3dp"
+                android:padding="4dp" >
+
+                <ToggleButton
+                    android:id="@+id/toggle_audioinput"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+               
+                 <TextView
+                    android:id="@+id/text_audioinput"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignBaseline="@id/toggle_audioinput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Audio Input"
+                    android:textSize="20sp" />
+                
+                
+                <EditText
+                    android:id="@+id/edittext_audioinput_port"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/toggle_audioinput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="5"
+                    android:inputType="number"
+                    android:text="Port" />
+                
+                <EditText
+                    android:id="@+id/edittext_audioinput_buffersize"
+                    android:layout_toRightOf="@id/edittext_audioinput_port"
+                    android:layout_below="@id/toggle_audioinput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="4"
+                    android:inputType="number"
+                    android:text="bufsize" />
+                
+				<Button
+                    android:id="@+id/button_audioinput_refresh"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refresh" />
+                
+                <Spinner
+                    android:id="@+id/spinner_audioinput_rate"
+                    android:layout_toLeftOf="@id/button_audioinput_refresh"
+                    android:layout_below="@id/edittext_audioinput_port"
+                   	android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+				
+                
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/section_accelerometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#DDD"
+                android:layout_margin="3dp" 
+                android:padding="4dp" >
+				<TextView
+                    android:id="@+id/text_accelerometer"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accelerometer" />
+                <ToggleButton
+                    android:id="@+id/toggle_accelerometer"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ToggleButton" />
+                <Button
+                    android:id="@+id/button_accelerometer_refresh"
+					android:layout_below="@id/toggle_accelerometer"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refresh" />
+                <EditText
+                    android:id="@+id/edittext_accelerometer_port"
+                    android:layout_alignBaseline="@id/button_accelerometer_refresh"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="5"
+                    android:inputType="number"
+                    android:text="Port" />
+                <EditText
+                    android:id="@+id/edittext_accelerometer_rate"
+                    android:layout_alignBaseline="@id/button_accelerometer_refresh"
+                    android:layout_toRightOf="@id/edittext_accelerometer_port"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="4"
+                    android:inputType="number"
+                    android:text="bufsize" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

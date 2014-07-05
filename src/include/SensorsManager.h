@@ -19,25 +19,37 @@ namespace scdf
     class SensorSettings;
     class SensorsManager
     {
+
+    public:
+
+    	friend SensorsManager *theSensorManager();
+
+        Sensor *CreateSensor(SensorType type);
+        s_bool DestroySensor(SensorType type);
+
+        s_bool InitSensor(SensorType type, SensorSettings &settings);
+        s_bool StartSensor(SensorType type);
+        s_bool StopSensor(SensorType type);
+
+        void CreateAllSensors();
+        void DestroyAllSensors();
+
+        s_int32 GetRate(SensorType type);
+        s_int32 GetNumSamples(SensorType type);
+
+        s_bool StopAllSensors();
+        s_bool StartAllSensors();
+       
+    private:
+
+        SensorsManager(){}
         typedef std::map<SensorType, Sensor*>::iterator SensorsIterator;
         typedef std::pair<SensorType, Sensor*> SensorPair;
         std::map<SensorType, Sensor*> sensors;
         Sensor *GetSensor(SensorType type);
-        SensorsManager(){}
-    public:
-        friend SensorsManager *theSensorManager();
-        Sensor *CreateSensor(SensorType type);
-        void InitSensor(SensorType type, SensorSettings &settings);
-        void ActivateSensor(SensorType type);
-        void DeActivateSensor(SensorType type);
-        void CreateAllSensor();
-        s_int32 GetRate(SensorType type);
-        s_int32 GetNumSamples(SensorType type);
-        void StopAllSensors();
-       
+
     };
-    
-    
+
     SensorsManager *theSensorManager();
 
 }
