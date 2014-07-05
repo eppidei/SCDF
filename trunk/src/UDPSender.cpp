@@ -155,8 +155,8 @@ void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStrea
             << osc::BeginMessage( "/Channels"	) << audioData->numChannels << osc::EndMessage
             << osc::BeginMessage( "/Num samples") << audioData->num_samples << osc::EndMessage
             << osc::BeginMessage( "/Time ref") << (osc::int64)audioData->timeid << osc::EndMessage
-            << osc::BeginMessage( "/Timestamp") << (osc::int64)audioData->timestamp << osc::EndMessage;
-            //<< osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_samples*sizeof(s_sample))<< osc::EndMessage;
+            << osc::BeginMessage( "/Timestamp") << (osc::int64)audioData->timestamp << osc::EndMessage
+            << osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_samples*sizeof(s_sample))<< osc::EndMessage;
             oscData << osc::EndBundle;
         }
             break;
