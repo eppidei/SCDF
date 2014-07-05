@@ -6,7 +6,6 @@
 //
 
 
-
 #include "Sensor.h"
 #include "SensorsManager.h"
 #include "Logging.h"
@@ -39,21 +38,27 @@ Sensor *SensorsManager::GetSensor(SensorType type)
     return NULL;
 }
 
-void SensorsManager::ActivateSensor(SensorType type)
+s_bool SensorsManager::StartSensor(SensorType type)
 {
-    Sensor *sensor=GetSensor(type);
-    if (NULL==sensor){
-        sensor=Sensor::Create(type);
-        if (NULL==sensor) return;
-    }
-    sensor->Start();
+    if (sensors.count(type)==0)
+    	return false;
+	Sensor *sensor=GetSensor(type);
+    if (NULL==sensor)
+        	return false;
+    return sensor->Start();
 }
 
-void SensorsManager::DeActivateSensor(SensorType type)
+s_bool SensorsManager::StopSensor(SensorType type)
 {
-    Sensor *sensor=GetSensor(type);
-    if (NULL!=sensor)
-        sensor->Stop();
+	 if (sensors.count(type)==0)
+	   	return false;
+
+	Sensor *sensor=GetSensor(type);
+
+	if (NULL==sensor)
+	   	return false;
+
+    return sensor->Stop();
 }
 
 Sensor *SensorsManager::CreateSensor(SensorType type)
@@ -68,60 +73,75 @@ Sensor *SensorsManager::CreateSensor(SensorType type)
     return s;
 }
 
-void SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
+
+s_bool SensorsManager::DestroySensor(SensorType type)
 {
-    Sensor *sensor=GetSensor(type);
-    if (NULL==sensor){
-        sensor=CreateSensor(type);
-        if (NULL==sensor) return;
+	if (sensors.count(type))
+		return false;
+
+	Sensor* s = GetSensor(type);
+    if (NULL==s)
+    	return false;
+
+    s->Stop();
+	sensors.erase(type);
+	return true;
+}
+
+
+s_bool SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
+{
+	if (0==sensors.count(type)) { // sensor has not been created
+		settings.broken = true;
+		return false;
+	}
+	return GetSensor(type)->Setup(settings);
+}
+
+void SensorsManager::CreateAllSensors() // creates all AVAILABLE sensors
+{
+    for (int i=Accelerometer ; i<NumTypes; i++)	{
+    	if (Sensor::IsAvailable((SensorType)i))
+    		CreateSensor((SensorType)i);
     }
-    sensor->Setup(settings);
+    // don't setup sensors yet. if you try starting them before setup
+    // just return false.
 }
 
-void SensorsManager::CreateAllSensor()
+void SensorsManager::DestroyAllSensors() // destroys all CREATED sensors
 {
-    
-    // NB: Remember to add sensors in sensorList vector in StopAllSensors();
-    
-    CreateSensor(scdf::AudioInput);
-    CreateSensor(scdf::Accelerometer);
-    CreateSensor(scdf::Gyroscope);
-    CreateSensor(scdf::Magnetometer);
-    CreateSensor(scdf::Proximity);
-    
-    
-    scdf::SensorSettings s_settings;
-    s_settings.rate= (s_int32) DEFAULT_SENORS_STANDARD_RATE;
-    InitSensor(scdf::Accelerometer,s_settings);
-    InitSensor(scdf::Magnetometer,s_settings);
-    InitSensor(scdf::Gyroscope,s_settings);
-    InitSensor(scdf::Proximity,s_settings);
-    
-    
-    scdf::SensorAudioSettings audioSettings;
-    audioSettings.bufferSize= (s_int32) DEFAULT_AUDIO_BUFFER_SIZE;
-    InitSensor(scdf::AudioInput,audioSettings);
-    
-#ifdef ANDROID
-    
-    // create other android sensors
-    
-#endif
+	SensorsIterator it;
+
+	for (it=sensors.begin(); it!=sensors.end(); it++) {
+		it->second->Stop();
+		delete it->second; // delete sensor, don't remove map item to not screw-up the iterator
+	}
+	sensors.clear(); // now we can safely clear the map
 }
 
-void SensorsManager::StopAllSensors()
+s_bool SensorsManager::StopAllSensors() // stops all created sensors
 {
-    std::vector<Sensor *> sensorsList;
-    
-    sensorsList.push_back(GetSensor(AudioInput));
-    sensorsList.push_back(GetSensor(Accelerometer));
-    sensorsList.push_back(GetSensor(Magnetometer));
-    sensorsList.push_back(GetSensor(Gyroscope));
-    sensorsList.push_back(GetSensor(Proximity));
-   
-    
-    for(int i = 0;i<sensorsList.size();i++)
-        sensorsList[i]->Stop();
-    
+	SensorsIterator it;
+	s_bool allok = true;
+	for (it=sensors.begin(); it!=sensors.end(); it++) {
+		if (!it->second->Stop())
+			allok = false;
+	}
+	return allok; // if one of the stops failed, we report it
+	// TODO: decide whether to return true or false when no sensors have been created. (now returns true)
 }
+
+s_bool SensorsManager::StartAllSensors() // starts all created sensors
+{
+	SensorsIterator it;
+	s_bool allok = true;
+	for (it=sensors.begin(); it!=sensors.end(); it++) {
+		if (!it->second->Start())
+			allok = false;
+	}
+	return allok; // if one of the starts failed, we report it
+	// TODO: decide whether to return true or false when no sensors have been created. (now returns true)
+}
+
+
 

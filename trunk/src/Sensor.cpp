@@ -9,6 +9,14 @@
 
 using namespace scdf;
 
+s_bool Sensor::IsAvailable(SensorType type)
+{
+	if (type==AudioInput)
+		return true; // always present by design for both android and ios
+	return SensorStandard::IsAvailable(type);
+}
+
+
 Sensor* Sensor::Create(SensorType type)
 {
     if (type == Invalid)

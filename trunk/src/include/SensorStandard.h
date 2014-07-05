@@ -13,6 +13,8 @@ namespace scdf {
 
     public:
 
+        static s_bool IsAvailable(SensorType type);
+
         SensorStandard(){}
         SensorStandard(SensorType type);
         

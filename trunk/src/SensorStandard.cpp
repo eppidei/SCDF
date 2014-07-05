@@ -16,6 +16,11 @@
 
 using namespace scdf;
 
+s_bool SensorStandard::IsAvailable(SensorType type)
+{
+	return SensorStandardImpl::IsAvailable(type);
+}
+
 SensorStandard::SensorStandard(SensorType _type)
 {
     SetType(_type);

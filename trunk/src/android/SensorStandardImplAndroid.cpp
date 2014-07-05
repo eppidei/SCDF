@@ -13,7 +13,6 @@ s_uint64 now_ns(void)
     return (s_uint64)(1000 * res.tv_sec) + (s_uint64) res.tv_nsec;
 }
 
-
 int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
 {
 	LOGD("Sensor callback");
@@ -77,31 +76,45 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
     return 1;
 }
 
+int scdf::SensorStandardImpl::ScdfToAndroidType(SensorType scdfType)
+{
+	switch (scdfType) {
+		case Accelerometer:	return ASENSOR_TYPE_ACCELEROMETER;
+		case Magnetometer:	return ASENSOR_TYPE_MAGNETIC_FIELD;
+		case Proximity:		return ASENSOR_TYPE_PROXIMITY;
+		case Gyroscope:		return ASENSOR_TYPE_GYROSCOPE;
+		case Light:			return ASENSOR_TYPE_LIGHT;
+		default: LOGE("Invalid scdf sensor type!"); return -1;
+	}
+}
+
+scdf::SensorType scdf::SensorStandardImpl::AndroidToScdfType(int andrType)
+{
+	switch (andrType) {
+		case ASENSOR_TYPE_ACCELEROMETER:	return Accelerometer;
+		case ASENSOR_TYPE_MAGNETIC_FIELD:	return Magnetometer;
+		case ASENSOR_TYPE_PROXIMITY:		return Proximity;
+		case ASENSOR_TYPE_GYROSCOPE:		return Gyroscope;
+		case ASENSOR_TYPE_LIGHT:			return Light;
+		default: LOGE("Invalid android sensor type!"); return Invalid;
+	}
+}
+
+s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
+{
+	int andrType = ScdfToAndroidType(type);
+	if (-1==andrType)
+		return false;
+	ASensorManager* sm = ASensorManager_getInstance();
+	return (NULL!=ASensorManager_getDefaultSensor(sm,andrType));
+}
+
 scdf::SensorStandardImpl::SensorStandardImpl(SensorType _type)
 {
 	SetType(_type);
-
-	switch (GetType()) {
-		case Accelerometer:
-			androidType = ASENSOR_TYPE_ACCELEROMETER;
-			break;
-		case Magnetometer:
-			androidType = ASENSOR_TYPE_MAGNETIC_FIELD;
-			break;
-		case Proximity:
-			androidType = ASENSOR_TYPE_PROXIMITY;
-			break;
-		case Gyroscope:
-			androidType = ASENSOR_TYPE_GYROSCOPE;
-			break;
-		case Light:
-			androidType = ASENSOR_TYPE_LIGHT;
-			break;
-		default:
-			LOGE("Sensor constructor error: invalid sensor type!");
-			break;
-	}
-
+	androidType = ScdfToAndroidType(_type);
+	if (androidType<0)
+		LOGE("Standard sensor creation error, invalid type (%d)",androidType);
 	sensorEventQueue=NULL;
 }
 
@@ -166,7 +179,7 @@ s_bool scdf::SensorStandardImpl::Setup(SensorSettings& settings)
 
 s_bool scdf::SensorStandardImpl::Start()
 {
-	if (NULL==androidSensor)
+	if (NULL==androidSensor || NULL==sensorEventQueue)
 		return false;
 	return (0 <= ASensorEventQueue_enableSensor(sensorEventQueue,androidSensor) );
 }

@@ -17,7 +17,7 @@ namespace scdf
     {
         std::vector<CustomPipe*> pipes;
         std::vector<CustomPipe*> returnPipes;
-        
+        PipesManager() {LOGD("Pipes manager constructor");}
         void CreatePipes();
     public:
         void CreateReturnPipes();

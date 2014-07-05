@@ -46,6 +46,7 @@ namespace scdf {
 
     public:
 
+    	static s_bool IsAvailable(SensorType type);
         static Sensor* Create(SensorType type);
         static void Destroy(Sensor* sensor);
         
@@ -59,6 +60,7 @@ namespace scdf {
         virtual s_bool Stop()  = 0;
         virtual s_int32 GetRate()  = 0;
         virtual s_int32 GetNumSamples()  = 0;
+        // TODO: add getter for num channels (return 1 for standard sensors?)
         
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
 
