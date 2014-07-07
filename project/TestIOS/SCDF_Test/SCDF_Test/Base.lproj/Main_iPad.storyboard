@@ -132,6 +132,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="AudioBufferDidEndEditing:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="8Aa-0e-X3z"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="yj1-qD-osU">
                                 <rect key="frame" x="334" y="213" width="97" height="30"/>

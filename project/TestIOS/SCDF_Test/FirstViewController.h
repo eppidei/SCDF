@@ -35,6 +35,7 @@
 - (IBAction) changeMasterSensor: (id) sender;
 
 - (IBAction) AudioRateDidEndEditing:(UITextField *)textField;
+- (IBAction)AudioBufferDidEndEditing:(UITextField *)textField;
 - (IBAction) AccelerometerRateDidEndEditing:(UITextField *)textField;
 - (IBAction) GyroscopeRateDidEndEditing:(UITextField *)textField;
 - (IBAction) MagnetometerRateDidEndEditing:(UITextField *)textField;

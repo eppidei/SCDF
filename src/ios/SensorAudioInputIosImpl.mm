@@ -156,7 +156,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 {
      AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    scdf::SensorAudioSettings settingsAudio =  (SensorAudioSettings&) settings;
+    scdf::SensorAudioSettings &settingsAudio =  (SensorAudioSettings&) settings;
     
     NSError *error = nil;
     [sessionInstance setActive:NO error:&error];
@@ -172,7 +172,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         NSLog(@"couldn't set session's I/O buffer duration %@", error);
         error = nil;
     }
-    
+    settingsAudio.bufferSize = ((NSTimeInterval) 1.0)/sessionInstance.preferredIOBufferDuration;
     
     
     // set the session's sample rate
@@ -181,14 +181,14 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         NSLog(@"couldn't set session's preferred sample rate %@", error);
         error = nil;
     }
+    settingsAudio.rate = sessionInstance.sampleRate;
     
-    [sessionInstance setActive:YES error:&error];
+   /* [sessionInstance setActive:YES error:&error];
     if (error) {
         NSLog(@"couldn't set audio session da - active %@", error);
         error = nil;
-    }
+    }*/
 
-    
     
     return true;
 }

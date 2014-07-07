@@ -28,7 +28,6 @@ SensorsManager *scdf::theSensorManager()
 void SensorsManager::SetRate(SensorType type, s_int32 rate)
 {
     
-    
     if(type==SensorType::AudioInput)
     {
         SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
@@ -51,7 +50,22 @@ void SensorsManager::SetRate(SensorType type, s_int32 rate)
         sensor->Setup(settings);
         sensor->Start();
     }
+}
 
+void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
+{
+      if(type==SensorType::AudioInput)
+      {
+          SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
+          SensorAudioSettings settings;
+          settings.rate = sensor->GetRate();
+          settings.numChannels = sensor->GetNumChannels();
+          settings.bufferSize = size;
+          
+          sensor->Stop();
+          sensor->Setup(settings);
+          sensor->Start();
+      }
 }
 
 s_int32 SensorsManager::GetRate(SensorType type)

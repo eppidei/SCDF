@@ -108,6 +108,7 @@ scdf::SensorsManager *theSensorManager();
 
 - (void) viewTapped {
     if (audioRateField.isFirstResponder) {[audioRateField resignFirstResponder];}
+     else if(audioBufferSizeField.isFirstResponder) {[audioBufferSizeField resignFirstResponder];}
     else if(gyrosRateField.isFirstResponder) {[gyrosRateField resignFirstResponder];}
     else if(accelRateField.isFirstResponder) {[accelRateField resignFirstResponder];}
     else if(magneRateField.isFirstResponder) {[magneRateField resignFirstResponder];}
@@ -193,6 +194,13 @@ scdf::SensorsManager *theSensorManager();
     NSString *textUpdated = [textField text];
     s_int32 rate = [textUpdated intValue];
     [self setSensorRate:scdf::AudioInput rate:rate];
+}
+
+- (IBAction)AudioBufferDidEndEditing:(UITextField *)textField
+{
+    NSString *textUpdated = [textField text];
+    s_int32 bufferSize = [textUpdated intValue];
+    scdf::theSensorManager()->SetBufferSize(scdf::AudioInput, bufferSize);
 }
 
 - (IBAction)AccelerometerRateDidEndEditing:(UITextField *)textField
