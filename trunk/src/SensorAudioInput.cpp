@@ -20,10 +20,11 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
     // try starting the sensor, return result
-    
+    s_bool ret = sImpl->Setup(settings);
     thePipesManager()->InitReturnPipes(GetType(), ((SensorAudioSettings&)settings).bufferSize);
     ((SensorAudioSettings&)settings).numChannels=1;
-    return  sImpl->Setup(settings);
+    
+    return ret;
 }
 
 s_bool scdf::SensorAudioInput::Start()
