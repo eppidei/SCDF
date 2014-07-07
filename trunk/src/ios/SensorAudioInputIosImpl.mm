@@ -158,7 +158,6 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     
     scdf::SensorAudioSettings settingsAudio =  (SensorAudioSettings&) settings;
     
-    //SensorAudioSettings *settingsAudio = (scdf::SensorAudioSettings *) settings;
     NSError *error = nil;
     [sessionInstance setActive:NO error:&error];
     if (error) {
@@ -219,13 +218,16 @@ s_bool SensorAudioInputImpl::Stop()
 
 s_int32 SensorAudioInputImpl::GetRate()
 {
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    AudioStreamBasicDescription existingFormat;
+    return sessionInstance.sampleRate;
+    
+    /*AudioStreamBasicDescription existingFormat;
     
     UInt32 param = sizeof(AudioStreamBasicDescription);
     AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
     
-    return (s_int32) existingFormat.mSampleRate;
+    return (s_int32) existingFormat.mSampleRate;*/
 }
 
 s_int32 SensorAudioInputImpl::GetNumSamples()
