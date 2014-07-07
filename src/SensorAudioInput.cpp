@@ -45,3 +45,13 @@ s_int32 scdf::SensorAudioInput::GetNumSamples()
 {
     return sImpl->GetNumSamples();
 }
+
+s_int32 scdf::SensorAudioInput::GetNumChannels()
+{
+    return sImpl->GetNumChannels();
+}
+
+s_int32 scdf::SensorAudioInput::GetBufferSize()
+{
+    return sImpl->GetBufferSize();
+}

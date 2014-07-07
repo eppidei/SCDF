@@ -36,6 +36,8 @@ namespace scdf
 
         s_int32 GetRate(SensorType type);
         s_int32 GetNumSamples(SensorType type);
+        
+        void SetRate(SensorType type, s_int32 rate);
 
         s_bool StopAllSensors();
         s_bool StartAllSensors();

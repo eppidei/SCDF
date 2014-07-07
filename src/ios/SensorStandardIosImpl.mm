@@ -32,6 +32,7 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 - (id) init
 {
     timerProx = nil;
+    updateInterval = -1;
     return self;
 }
 

@@ -9,13 +9,49 @@
 #include "Sensor.h"
 #include "SensorsManager.h"
 #include "Logging.h"
+#include "SensorAudioInput.h"
 
 using namespace scdf;
+
+/*SensorsManager *scdf::theSensorManager()
+{
+    static SensorsManager *instance=new SensorsManager();
+    return instance;
+}*/
 
 SensorsManager *scdf::theSensorManager()
 {
     static SensorsManager *instance=new SensorsManager();
     return instance;
+}
+
+void SensorsManager::SetRate(SensorType type, s_int32 rate)
+{
+    
+    
+    if(type==SensorType::AudioInput)
+    {
+        SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
+        SensorAudioSettings settings;
+        settings.rate = rate;
+        settings.numChannels = sensor->GetNumChannels();
+        settings.bufferSize = sensor->GetBufferSize();
+        
+        sensor->Stop();
+        sensor->Setup(settings);
+        sensor->Start();
+        
+    } else
+    {
+        Sensor *sensor=GetSensor(type);
+        SensorSettings settings;
+        settings.rate = rate;
+        
+        sensor->Stop();
+        sensor->Setup(settings);
+        sensor->Start();
+    }
+
 }
 
 s_int32 SensorsManager::GetRate(SensorType type)
