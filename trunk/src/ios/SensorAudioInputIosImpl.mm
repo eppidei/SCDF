@@ -154,7 +154,43 @@ SensorAudioInputImpl::~SensorAudioInputImpl()
 
 s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 {
-    SetupIOUnit(settings);
+     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    
+    scdf::SensorAudioSettings settingsAudio =  (SensorAudioSettings&) settings;
+    
+    //SensorAudioSettings *settingsAudio = (scdf::SensorAudioSettings *) settings;
+    NSError *error = nil;
+    [sessionInstance setActive:NO error:&error];
+    if (error) {
+        NSLog(@"couldn't set audio session de - active %@", error);
+        error = nil;
+    }
+    
+    NSTimeInterval bufferDuration = 1.0/ settingsAudio.bufferSize;
+    [sessionInstance setPreferredIOBufferDuration:bufferDuration error:&error];
+    if(error)
+    {
+        NSLog(@"couldn't set session's I/O buffer duration %@", error);
+        error = nil;
+    }
+    
+    
+    
+    // set the session's sample rate
+    [sessionInstance setPreferredSampleRate:settingsAudio.rate error:&error];
+    if (error) {
+        NSLog(@"couldn't set session's preferred sample rate %@", error);
+        error = nil;
+    }
+    
+    [sessionInstance setActive:YES error:&error];
+    if (error) {
+        NSLog(@"couldn't set audio session da - active %@", error);
+        error = nil;
+    }
+
+    
+    
     return true;
 }
 
@@ -194,13 +230,22 @@ s_int32 SensorAudioInputImpl::GetRate()
 
 s_int32 SensorAudioInputImpl::GetNumSamples()
 {
+    return this->GetBufferSize();
+}
+
+s_int32 SensorAudioInputImpl::GetNumChannels()
+{
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    AudioStreamBasicDescription existingFormat;
+    return sessionInstance.outputNumberOfChannels;
+}
+
+s_int32 SensorAudioInputImpl::GetBufferSize()
+{
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    NSTimeInterval bufferDuration = sessionInstance.preferredIOBufferDuration;
     
-    UInt32 param = sizeof(AudioStreamBasicDescription);
-    AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
-    
-    return (s_int32) existingFormat.mFramesPerPacket;
+    return 1.0/bufferDuration;
 }
 
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)

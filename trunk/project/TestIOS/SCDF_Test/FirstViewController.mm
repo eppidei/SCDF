@@ -15,6 +15,7 @@
 #include "Harvester.h"
 
 
+
 scdf::SensorsManager *theSensorManager();
 
 @interface FirstViewController ()
@@ -31,9 +32,29 @@ scdf::SensorsManager *theSensorManager();
 {
     [super viewDidLoad];
     
+    [self initSensors];
+    
     [self setupInterface];
     
     [self UpdateSensorsValues];
+    
+}
+
+- (void) initSensors
+{
+    scdf::SensorSettings settings;
+    settings.rate = 50;
+    
+    scdf::theSensorManager()->InitSensor(scdf::Accelerometer, settings);
+    scdf::theSensorManager()->InitSensor(scdf::Magnetometer, settings);
+    scdf::theSensorManager()->InitSensor(scdf::Gyroscope, settings);
+    scdf::theSensorManager()->InitSensor(scdf::Proximity, settings);
+    
+    scdf::SensorAudioSettings settingsAudio;
+    settingsAudio.rate = 44100;
+    settingsAudio.bufferSize = 512;
+    settingsAudio.numChannels = 1;
+    scdf::theSensorManager()->InitSensor(scdf::AudioInput, settingsAudio);
     
 }
 
@@ -214,39 +235,9 @@ scdf::SensorsManager *theSensorManager();
 
 - (void ) setSensorRate: (scdf::SensorType) sensorType rate: (s_int32) rate
 {
+    scdf::theSensorManager()->SetRate(sensorType, rate);
     
-    switch (sensorType) {
-        case scdf::AudioInput:
-        {
-            LOGD("AudioInput rate: %d \n", rate);
-            break;
-        }
-        case scdf::Accelerometer:
-        {
-            LOGD("Accelerometer rate: %d \n", rate);
-            break;
-        }
-        case scdf::Gyroscope:
-        {
-            LOGD("Gyroscope rate: %d \n", rate);
-            break;
-        }
-        case scdf::Magnetometer:
-        {
-            LOGD("Magnetometer rate: %d \n", rate);
-            break;
-        }
-        case scdf::Proximity:
-        {
-            LOGD("Proximity rate: %d \n", rate);
-            break;
-        }
-            
-        default:
-            break;
-    }
-    
-     [self UpdateSensorsValues];
+    [self UpdateSensorsValues];
 }
 
 
