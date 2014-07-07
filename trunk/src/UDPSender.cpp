@@ -49,7 +49,7 @@ void UDPSenderHelperBase::SendData()
     switch (senders.size()) {
         case 0:     return;
         case 1:     DoSendData(); /*DoSendDataOSCPacked();*/break;
-        default:    /*DoMultiSendData();*/ DoMultiSendDataOSCPacked(); break;
+        default:    DoMultiSendData(); /*DoMultiSendDataOSCPacked()*/; break;
     }
 }
 

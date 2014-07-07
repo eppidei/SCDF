@@ -11,6 +11,7 @@
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #include <string>
+#include "UDPSendersManager.h"
 
 #define DEFUALT_ADDRESS "127.0.0.1"
 #define DEFAULT_PORT 9000;
@@ -56,6 +57,9 @@
     
     [self SetOutputPort:actualPort];
     [self SetOutputAddress:addressString];
+    [self setMultiOutputActiove:NO];
+    [self setRoutingType:0];
+    
 
 }
 
@@ -162,34 +166,27 @@
 {
     if(routingType==0)
     {
-        LOGD("OUTPUT TO UDP \n");
+        scdf::UDPSendersManager::Instance()->SetOutputType(OutputSenderType::UDP);
         
     } else if(routingType==1)
     {
-         LOGD("OUTPUT TO OSC \n");
+        scdf::UDPSendersManager::Instance()->SetOutputType(OutputSenderType::OSC);
     }
 }
 
 - (void) setMultiOutputActiove: (BOOL) active
 {
-    if(active)
-    {
-        LOGD("MULTI OUTPUT ON \n");
-    } else
-    {
-        LOGD("MULTI OUTPUT OFF \n");
-    }
+    scdf::UDPSendersManager::Instance()->SetMultiOutput(active);
 }
 
 -  (void) SetOutputPort: (s_int32) outputUdpPort
 {
-    LOGD("UDP Port Selected: %d\n", outputUdpPort);
+    scdf::UDPSendersManager::Instance()->SetOutputPort(outputUdpPort);
 }
 
 -  (void) SetOutputAddress: (std::string) outputUdpIP
 {
-    LOGD("UPD IP Address selected %s\n", outputUdpIP.c_str());
-
+    scdf::UDPSendersManager::Instance()->SetOutputAddress(outputUdpIP);
 }
 
 @end

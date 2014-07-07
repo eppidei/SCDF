@@ -11,6 +11,8 @@
 
 #include "TypeDefinitions.h"
 
+enum OutputSenderType{ UDP, OSC};
+
 namespace scdf {
     class UDPSenderHelperBase;
 
@@ -28,6 +30,16 @@ namespace scdf {
         }
         s_int32 CreateSender(std::vector<s_int32> udpPorts, std::string ipAdd);
         UDPSenderHelperBase *GetActiveSender();
+        
+        void SetOutputPort(s_int32 port);
+        void SetOutputAddress(std::string ipAddress);
+        void SetMultiOutput(bool multiOutput);
+        void SetOutputType(OutputSenderType type);
+        
+        s_int32 GetOutputPort();
+        std::string GetOutputAddress();
+        bool GetMultiOutput();
+        OutputSenderType GetOutputType();
     };
 }
 
