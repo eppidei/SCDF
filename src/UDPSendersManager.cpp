@@ -30,3 +30,56 @@ UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
     return senders[activeSender];
     
 }
+
+void UDPSendersManager::SetOutputPort(s_int32 port)
+{
+     LOGD("UDP Port Selected: %d \n", port);
+}
+
+void UDPSendersManager::SetOutputAddress(std::string ipAddress)
+{
+     LOGD("UPD IP Address selected %s \n", ipAddress.c_str());
+}
+
+void UDPSendersManager::SetMultiOutput(bool multiOutput)
+{
+    if(multiOutput)
+    {
+        LOGD("MULTI OUTPUT ON \n");
+    } else
+    {
+        LOGD("MULTI OUTPUT OFF \n");
+    }
+}
+
+void UDPSendersManager::SetOutputType(OutputSenderType type)
+{
+    if(type==OutputSenderType::UDP)
+    {
+        LOGD("OUTPUT TO UDP \n");
+        
+    } else if(type==OutputSenderType::OSC)
+    {
+        LOGD("OUTPUT TO OSC \n");
+    }
+}
+
+s_int32 UDPSendersManager::GetOutputPort()
+{
+    return -1;
+}
+
+std::string UDPSendersManager::GetOutputAddress()
+{
+    return "";
+}
+
+bool UDPSendersManager::GetMultiOutput()
+{
+    return false;
+}
+
+OutputSenderType UDPSendersManager::GetOutputType()
+{
+    return (OutputSenderType)-1;
+}

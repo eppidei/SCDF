@@ -258,11 +258,11 @@ scdf::SensorsManager *theSensorManager();
         {
             if(state)
             {
-                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::AudioInput);
+                scdf::theSensorManager()->StartSensor(scdf::SensorType::AudioInput);
                 LOGD("toggle AudioSensor ON \n");
             } else
             {
-                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::AudioInput);
+                scdf::theSensorManager()->StopSensor(scdf::SensorType::AudioInput);
                 LOGD("toggle AudioSensor OFF \n");
             }
 
@@ -272,11 +272,11 @@ scdf::SensorsManager *theSensorManager();
         {
             if(state)
             {
-                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Accelerometer);
+                scdf::theSensorManager()->StartSensor(scdf::SensorType::Accelerometer);
                 LOGD("toggle Accelerometer Sensor ON \n");
             } else
             {
-                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Accelerometer);
+                scdf::theSensorManager()->StopSensor(scdf::SensorType::Accelerometer);
                 LOGD("toggle Accelerometer Sensor OFF \n");
             }
             break;
@@ -285,11 +285,11 @@ scdf::SensorsManager *theSensorManager();
         {
             if(state)
             {
-                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Gyroscope);
+                scdf::theSensorManager()->StartSensor(scdf::SensorType::Gyroscope);
                 LOGD("toggle Gyroscope Sensor ON \n");
             } else
             {
-                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Gyroscope);
+                scdf::theSensorManager()->StopSensor(scdf::SensorType::Gyroscope);
                 LOGD("toggle Gyroscope Sensor OFF \n");
             }
             break;
@@ -298,11 +298,11 @@ scdf::SensorsManager *theSensorManager();
         {
             if(state)
             {
-                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Magnetometer);
+                scdf::theSensorManager()->StartSensor(scdf::SensorType::Magnetometer);
                 LOGD("toggle Magnetometer Sensor ON \n");
             } else
             {
-                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Magnetometer);
+                scdf::theSensorManager()->StopSensor(scdf::SensorType::Magnetometer);
                 LOGD("toggle Magnetometer Sensor OFF \n");
             }
             break;
@@ -311,11 +311,11 @@ scdf::SensorsManager *theSensorManager();
         {
             if(state)
             {
-                scdf::theSensorManager()->ActivateSensor(scdf::SensorType::Proximity);
+                scdf::theSensorManager()->StartSensor(scdf::SensorType::Proximity);
                 LOGD("toggle Proximity Sensor ON \n");
             } else
             {
-                scdf::theSensorManager()->DeActivateSensor(scdf::SensorType::Proximity);
+                scdf::theSensorManager()->StopSensor(scdf::SensorType::Proximity);
                 LOGD("toggle Proximity Sensor OFF \n");
             }
             break;

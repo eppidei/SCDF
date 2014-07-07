@@ -48,5 +48,7 @@ namespace scdf {
         s_int32 GetRate();
         s_int32 GetNumSamples();
         
+        static s_bool IsAvailable(SensorType type);
+        
     };
 }
