@@ -36,12 +36,14 @@ namespace scdf{
         SensorType requesterType;
         ThreadUtils::ThreadHandle handle;
     public:
+        
         bool activated;
         SensorType GetType() { return requesterType; }
         void SetType(SensorType type);
         void HarvestingProcedure(SensorData *_masterData);
         void Start();
         void Stop();
+        static void SentDataRecyclingProcedure(std::vector<SensorData*> *sData);
         static Harvester *Instance()
         {
             if (NULL==_instance) _instance=new Harvester();

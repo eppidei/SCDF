@@ -36,16 +36,15 @@ static void StartHarvestingProcedure(void *param)
     }
 }
 
-Harvester::Harvester() : activated(false)
-{
-	requesterType=AudioInput;
-	//SetType(AudioInput); // this calls the harvester's constructor recursively!!!
-}
+Harvester::Harvester() : activated(false), requesterType(AudioInput)
+{}
 
 void Harvester::Start()
 {
     if (activated) return;
     activated=true;
+    thePipesManager()->InitPipes();
+    theSensorManager()->StartPrecActiveSensors();
     handle=ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
 }
 
@@ -54,16 +53,16 @@ void Harvester::Stop()
     if (!activated) return;
     activated=false;
     //ThreadUtils::JoinThread(handle);
+    theSensorManager()->StopAllSensors();
     ThreadUtils::TerminateThread(handle);
+    SentDataRecyclingProcedure(&myHarvest);
 }
 
 void Harvester::SetType(SensorType type)
 {
     requesterType=type;
+    if (!activated) return;
     Stop();
-    theSensorManager()->StopAllSensors();
-    thePipesManager()->InitPipes();
-    theSensorManager()->StartPrecActiveSensors();
     Start();
 }
 
@@ -142,12 +141,30 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
     }
 }
 
+void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
+{
+    for (int i=0;i<sData->size();++i)
+    {
+        if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
+            delete (*sData)[i];
+#ifdef LOG_PIPES_STATUS
+        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), returnPipes[(*sData)[i]->type]->GetSize());
+#endif
+    }
+    sData->clear();
+    if (UDPSendersManager::Instance()->GetActiveSender())
+        UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Set();
+    
+}
+
 void Harvester::NotifyHarvestCompletition()
 {
-    UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Wait();
-    //InterlockedExchange
-    myHarvest.swap(UDPSendersManager::Instance()->GetActiveSender()->senderData);
-    UDPSendersManager::Instance()->GetActiveSender()->EventCanSend()->Set();
+    UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetActiveSender();
+    if (NULL==sender) return;
+    sender->EventFreeSlot()->Wait();
+    myHarvest.swap(sender->senderData);
+    sender=UDPSendersManager::Instance()->GetActiveSender();
+    sender->EventCanSend()->Set();
 }
 
 void Harvester::HarvestingProcedure(SensorData *masterData)

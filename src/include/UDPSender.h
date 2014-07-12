@@ -24,17 +24,15 @@ namespace scdf
     {
         std::auto_ptr<UdpTransmitSocket> transmitSocket;
         std::auto_ptr<IpEndpointName> endPoint;
-        void Init(int udpp, std::string add);
         void Release();
         std::string address;
     public:
-        UDPSender() { Init(DEFAULT_UDP_PORT_BASE, DEFAULT_IP_ADDRESS); }
-        UDPSender(int udpp, std::string add) { Init(udpp, add); }
         ~UDPSender() { Release(); }
         void SendData(s_char* data, s_int32 size);
         void SendDataOSCPacked(osc::OutboundPacketStream &oscData);
         s_int32 GetPort();
         std::string GetAddress();
+        s_int32 Init(int udpp, std::string add);
     };
     
     class UDPSenderHelperBase

@@ -8,6 +8,7 @@
 
 #include "UDPSender.h"
 #include "UDPSendersManager.h"
+#include "Harvester.h"
 
 using namespace scdf;
 UDPSendersManager *UDPSendersManager::_instance=NULL;
@@ -25,6 +26,7 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
 
 s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
 {
+    Harvester::Instance()->Stop();
     ReleaseSender();
     std::vector<int> udpPorts;
     udpPorts.push_back(udpPortBase);
@@ -33,7 +35,9 @@ s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
         for (int i=1;i<scdf::NumTypes;++i)
             udpPorts.push_back(udpPortBase+i);
     
-    return CreateSender(udpPorts, ipAdd);
+    s_int32 ret=CreateSender(udpPorts, ipAdd);
+    Harvester::Instance()->Start();
+    return ret;
 }
 
 void UDPSendersManager::ReleaseSender()
@@ -45,7 +49,6 @@ void UDPSendersManager::ReleaseSender()
 
 UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
 {
-    assert(activeSender>-1 && activeSender<senders.size());
     if (activeSender<0 || activeSender>=senders.size()) return NULL;
     return senders[activeSender];
     
