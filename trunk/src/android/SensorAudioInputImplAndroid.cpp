@@ -9,60 +9,126 @@
 #include <climits>
 
 s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
-/*{
-    struct timespec res;
-    clock_gettime(CLOCK_REALTIME, &res);
-    return (s_uint64)(1000 * res.tv_sec) + (s_uint64) res.tv_nsec;
-}*/
+
+//SLAndroidSimpleBufferQueueState state;
+//(*ai->inBufferQueue)->GetState(ai->inBufferQueue,&state);
+//LOGI("Callback %llu, There are %d buffers in the queue",ai->callbacksCount,state.count);
+//usleep(500000); // 20 ms sleep
 
 void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-	//LOGD("Opensl input callback");
+	s_uint64 now = now_ns();
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
+    ai->callbacksCount++;
 
-    SensorAudioData *s=(SensorAudioData*) thePipesManager()->ReadFromReturnPipe(AudioInput);
-    // the size of the data buffer is decided in the sensor setup.
+	SensorAudioData *s=(SensorAudioData*) thePipesManager()->ReadFromReturnPipe(AudioInput); // data buffer size decided in setup
+    //LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
 
-	#ifdef LOG_PIPES_STATUS
-    LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
-	#endif
-
-
-#ifdef LOG_TIMESTAMP
-    s_uint64 timestampInterval=inTimeStamp->mHostTime-mach_absolute_time();
-    printf("AUDIO CALLBACK TIMESTAMPS DIFF: %llu\n",timestampInterval);
-    printf("AUDIO CALLBACK TIMESTAMPS DIFF MS: %llu\n",getUptimeInMilliseconds(timestampInterval));
-#endif
-
-    // fill with data info
     s->type = AudioInput;
     s->num_samples = ai->bufferSize;
     s->numChannels = ai->inputOpenSLFormat.numChannels;
-    s->rate = (s_int32)ai->inputOpenSLFormat.samplesPerSec/1000; // opensl sr is in millihertz!
-    s->timeid = now_ns();
-    s_double samplinginterval_nanosec = ((s_double)1e9)/s->rate;
+    s->rate = (s_int32)(ai->inputOpenSLFormat.samplesPerSec/1000); // opensl sr is in millihertz!
     s_uint64 num_frames = s->num_samples/s->numChannels;
-    s->timestamp = s->timeid + (s_uint64)( num_frames * samplinginterval_nanosec );
+
+    s_double buff_len_ns = (((s_double)num_frames) / s->rate) * 1000000000.0;
+    s_uint64 buff_len_ns_int = (s_uint64) buff_len_ns;
+
+    s_uint64 timeFromLastCallback = now - ai->lastCallbackTime;
+
+    std::string caseIs;
+    s_double ratio = timeFromLastCallback / buff_len_ns;
+    s_int32 ratio_rounded = (s_int32) (ratio+0.5);
+
+    if (ratio_rounded == 1) { // normal situation
+
+    	s->timeid = ai->lastCallbackTime;
+    	s->timestamp = now;
+    	caseIs = "normal";
+
+    } else if ( ratio_rounded == 0 && ai->nGroupedCallbacks > 0) {
+
+    	s->timeid = now - (ai->nGroupedCallbacks * buff_len_ns_int);
+    	s->timestamp = s->timeid + buff_len_ns_int;
+
+    	if (s->timestamp > now)
+    		s->timestamp = now;
+
+    	ai->nGroupedCallbacks -= 1;
+    	ai->lastCallbackWasGrouped = true;
+    	caseIs = "grouped";
+
+    } else if ( ratio_rounded >= 2) { // the first of n grouped callbacks!
+
+    	if (ai->nGroupedCallbacks==0 || ai->lastCallbackWasGrouped) {
+
+    		s->timeid = now - (ratio_rounded * buff_len_ns);
+    		s->timestamp = s->timeid + buff_len_ns_int;
+    		ai->nGroupedCallbacks = ratio_rounded - 1; // one "consumed" right now
+    		caseIs = "first of grouped";
+    		ai->lastCallbackWasGrouped = false;
+
+   		} else { // there has been a delay in a grouped callback!
+
+    		s->timeid = ai->lastTimestamp + buff_len_ns_int;
+    		s->timestamp = s->timeid + buff_len_ns_int;
+    		ai->nGroupedCallbacks -= 1;
+
+    		if (s->timestamp > now)
+   	    		s->timestamp = now;
+
+    		caseIs = "delayed grouped";
+   		}
+
+    } else { // ratio_rounded == 0 but no ngrouped callbacks!
+
+    	// this is a callback coming after a delayed callback
+    	s->timestamp = now;
+    	s->timeid = now - buff_len_ns_int;
+
+    	if (s->timeid < ai->lastTimestamp)
+    		s->timeid = ai->lastTimestamp;
+
+    	caseIs = "after delayed";
+    	ai->lastCallbackWasGrouped = false;
+    }
+
+    ai->lastTimestamp = s->timestamp;
+    ai->lastTimeId = s->timeid;
+    ai->lastCallbackTime = now;
 
     // convert to floating point and copy audio data:
     s_sample scale = ((s_sample)(1.0))/((s_sample)(-SHRT_MIN));
     for (int i=0; i<ai->bufferSize; i++)
        	s->data[i] = ai->inputBuffer[ai->currentBuff][i]*scale;
 
-    ai->AddIncomingDataToQueue(s);
+	s_double error;
+	std::string sign;
+	if (ai->lastTimestamp > now) {
+		error = (ai->lastTimestamp - now)/1000000.0;
+		sign="+";
+	} else {
+		error = (now - ai->lastTimestamp)/1000000.0;
+		sign="-";
+	}
 
-    // re-enqueue the buffer:
+	s_double calc_bufflen = (ai->lastTimestamp - ai->lastTimeId)/1000000.0;
+	LOGI("AUDIO IN cb %llu - error : %s%f ms (%s bufflen %f ms)",ai->callbacksCount,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
+
+	ai->AddIncomingDataToQueue(s);
+
+	if (ai->callbacksCount==100)
+		usleep(50000);
+
     (*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->bufferSize*sizeof(short));
 }
 
 scdf::SensorAudioInputImpl::SensorAudioInputImpl()
 {
-
-	 audioRecorderItf=NULL;
-	 recordItf=NULL;
-	 inBufferQueue=NULL;
-	 inputBuffer=NULL;
-	 theOpenSLEngine()->Initialize();
+	audioRecorderItf=NULL;
+	recordItf=NULL;
+	inBufferQueue=NULL;
+	inputBuffer=NULL;
+	theOpenSLEngine()->Initialize();
 }
 
 scdf::SensorAudioInputImpl::~SensorAudioInputImpl()
@@ -177,6 +243,9 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 	 for (int i=0; i<numBuffers; i++) {
 		 inputBuffer[i] = new short[bufferSize/**sizeof(short)*/];
 	 }
+
+	 // TODO: error handling
+
 	 return true;
 }
 
@@ -189,7 +258,8 @@ s_bool scdf::SensorAudioInputImpl::Start()
 		LOGE("Couldn't start input audio driver: AudioRecorder not realized!");
 	    return false;
 	}
-    (*inBufferQueue)->Clear(inBufferQueue);
+
+	(*inBufferQueue)->Clear(inBufferQueue);
     //(*inBufferQueue)->GetState(inBufferQueue,&state);
 	//LOGI("After clear, there are %d buffers in the INPUT queue",state.count);
     currentBuff=0;
@@ -200,6 +270,12 @@ s_bool scdf::SensorAudioInputImpl::Start()
     currentBuff = 0;
     // set the recorder's state to rec:
 	result = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_RECORDING);
+
+	startTimeReference = now_ns();
+	lastCallbackTime = 	lastTimestamp = lastTimeId = startTimeReference;
+	callbacksCount = 0;
+	nGroupedCallbacks = 0;
+	lastCallbackWasGrouped = false;
 	//ReturnIfSLresultError(result,"Setting REC State");
 	return true;
 }
@@ -428,5 +504,4 @@ std::string scdf::StringizeSLresult(SLresult res)
 
     }
 }
-
 
