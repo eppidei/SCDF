@@ -6,6 +6,7 @@
 #include "SensorAudioInputImplAndroid.h"
 #endif
 #include "PipesManager.h"
+#include "Harvester.h"
 
 using namespace scdf;
 
@@ -32,7 +33,11 @@ s_bool scdf::SensorAudioInput::Start()
 {
 	s_bool ret = sImpl->Start();
 	if (ret)
-		SetActive(true);
+    {
+        if (Harvester::Instance()->GetType()==GetType())
+            Harvester::Instance()->Start();
+        SetActive(true);
+    }
 	return ret;
 }
 
@@ -40,7 +45,11 @@ s_bool scdf::SensorAudioInput::Stop()
 {
 	s_bool ret = sImpl->Stop();
 	if (ret)
+    {
+        if (Harvester::Instance()->GetType()==GetType())
+            Harvester::Instance()->Stop();
 		SetActive(false);
+    }
 	return ret;
 }
 

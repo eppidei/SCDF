@@ -49,7 +49,7 @@ void PipesManager::InitReturnPipes(SensorType type, s_int32 numSamples)
     }
     for (int j=0;j<RETURN_PIPES_STATIC_INIT;++j)
     {
-        if (type==AudioInput)
+        /*if (type==AudioInput)
         {
             SensorAudioData *s=new SensorAudioData();
             s->data=new s_sample[numSamples];
@@ -57,12 +57,12 @@ void PipesManager::InitReturnPipes(SensorType type, s_int32 numSamples)
                 delete s;
         }
         else
-        {
+        {*/
             SensorData *s=new SensorData();
             s->data=new s_sample[numSamples];
             if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
                 delete s;
-        }
+        //}
     }
 }
 
@@ -101,10 +101,10 @@ SensorData *PipesManager::ReadFromReturnPipe(SensorType type)
     {
         switch (type)
         {
-            case AudioInput:
+/*            case AudioInput:
                 data = new scdf::SensorAudioData();
                 data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(AudioInput)];
-                break;
+                break;*/
             default:
                 data = new scdf::SensorData();
                 data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(type)];

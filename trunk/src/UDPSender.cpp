@@ -16,12 +16,20 @@
 
 using namespace scdf;
 
-void UDPSender::Init(int udpp, std::string add)
+s_int32 UDPSender::Init(int udpp, std::string add)
 {
     address=add;
-	endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
-	transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
-	// TODO: handle udpsocket::connect exception!
+    s_int32 res=1;
+    try
+    {
+        endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
+        transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
+    } catch (...)
+    {
+        assert(false);
+        res=0;
+    }
+	return res;
 }
 
 s_int32 UDPSender::GetPort()
@@ -82,17 +90,28 @@ void UDPSenderHelperBase::DoSendData()
 {
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=sizeof(SensorData)-sizeof(char*)+senderData[i]->num_samples*sizeof(s_sample);
-        senders[0]->SendData((s_char*)senderData[i], size);
+        senders[0]->SendData((s_char*)senderData[i], sizeof(SensorData));
+        senders[0]->SendData((s_char*)senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
     }
 }
 
 void UDPSenderHelperBase::DoMultiSendData()
 {
+#ifdef LOG_SENDER_DATA
+    LOGD("MultiSendData, Master sensor: %s\n", SensorTypeString[Harvester::Instance()->GetType()].c_str());
+#endif
     for (int i=0;i<senderData.size();++i)
     {
         s_int32 size=sizeof(SensorData)-sizeof(char*)+senderData[i]->num_samples*sizeof(s_sample);
-        senders[senderData[i]->type]->SendData((s_char*)senderData[i], size);
+        s_char *temp=(char*)malloc(size);
+        memcpy(temp, senderData[i], sizeof(SensorData));
+        memcpy(temp+sizeof(SensorData)-sizeof(char*),senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
+        //int pluto2=sizeof(senderData[i]->type);
+        
+       // senders[senderData[i]->type]->SendData((s_char*)senderData[i], sizeof(SensorData));
+        //senders[senderData[i]->type]->SendData((s_char*)senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
+        senders[senderData[i]->type]->SendData(temp,size);
+        free(temp);
     }
 }
 
@@ -118,26 +137,12 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
     }
 }
 
-static void SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
-{
-    for (int i=0;i<sData->size();++i)
-    {
-        if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
-            delete (*sData)[i];
-#ifdef LOG_PIPES_STATUS
-        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), returnPipes[(*sData)[i]->type]->GetSize());
-#endif
-    }
-    sData->clear();
-    UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Set();
-    
-}
-
 void UDPSenderHelperBase::SendOnThread()
 {
     EventCanSend()->Wait();
+    if (!activated) return;
     SendData();
-    SentDataRecyclingProcedure(&senderData);
+    Harvester::SentDataRecyclingProcedure(&senderData);
 }
 
 static void UDPSenderHelperProcedure(void *param)
@@ -169,7 +174,13 @@ void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string addres
 {
     assert(udpPorts.size()!=0);
     for (int i=0;i<udpPorts.size();++i)
-        senders.push_back(new UDPSender(udpPorts[i],address));
+    {
+        UDPSender *s=new UDPSender();
+        if (1==s->Init(udpPorts[i],address))
+            senders.push_back(s);
+    }
+    if (0==senders.size())
+        return;
     activated=true;
     handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
 }
@@ -177,6 +188,8 @@ void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string addres
 void UDPSenderHelperBase::Release()
 {
     activated=false;
+    EventCanSend()->Set();
+    EventFreeSlot()->Set();
     ThreadUtils::JoinThread(handle);
     for (int i=0;i<senders.size();++i)
         delete senders[i];
@@ -192,7 +205,7 @@ void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStrea
 #endif
     switch(data->type)
     {
-        case AudioInput:
+       /* case AudioInput:
         {
             SensorAudioData *audioData=(SensorAudioData*)data;
             oscData << osc::BeginBundle()
@@ -205,11 +218,12 @@ void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStrea
             << osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_samples*sizeof(s_sample))<< osc::EndMessage;
             oscData << osc::EndBundle;
         }
-            break;
+            break;*/
         default:
             oscData << osc::BeginBundle()
             << osc::BeginMessage( "/Sensor type") << data->type << osc::EndMessage
             << osc::BeginMessage( "/Rate"	) << data->rate << osc::EndMessage
+            << osc::BeginMessage( "/Channels"	) << data->numChannels << osc::EndMessage
             << osc::BeginMessage( "/Num samples") << data->num_samples << osc::EndMessage
             << osc::BeginMessage( "/Time ref") << (osc::int64)data->timeid << osc::EndMessage
             << osc::BeginMessage( "/Timestamp") << (osc::int64)data->timestamp << osc::EndMessage

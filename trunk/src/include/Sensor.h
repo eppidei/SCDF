@@ -25,20 +25,21 @@ namespace scdf {
     public: 
         SensorType type;
         s_int32 rate;
-        s_int16 precision;
+//        s_int16 precision;
         s_uint64 timestamp;             // time of the sensor reading as reported by the sensor
         s_uint64 timeid;                // will be the same for all data harvested in the same call
         s_int32 num_samples;
+        s_int32 numChannels;
         s_sample* data;
         
         SensorData() : data(NULL) {}
         ~SensorData() { if (data) delete data; }
     };
     
-    class SensorAudioData : public SensorData {
+    /*class SensorAudioData : public SensorData {
     public:
         s_int32 numChannels;
-    };
+    };*/
 
     class Sensor {
 
