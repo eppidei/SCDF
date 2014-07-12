@@ -5,34 +5,33 @@
 #include <android/looper.h>
 
 
+/*
+about sensors' timestamps references on different devices,
+and across different sensors on the same device:
+https://code.google.com/p/android/issues/detail?id=56561
+in short... they are not guaranteed to be consistent except for the same sensor!
+*/
+
 #include <time.h>
 s_uint64 now_ns(void)
 {
     struct timespec res;
     clock_gettime(CLOCK_REALTIME, &res);
-    return (s_uint64)(1000 * res.tv_sec) + (s_uint64) res.tv_nsec;
+    s_uint64 now = (s_uint64)(1000000000 * (s_uint64)res.tv_sec) + (s_uint64) res.tv_nsec;
+    //LOGD("GETTIME %llu",now);
+    return now;
 }
 
 int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
 {
-	LOGD("Sensor callback");
+	//LOGD("Sensor callback");
 	scdf::SensorStandardImpl* s = (scdf::SensorStandardImpl*)data;
 	ASensorEvent event;
     while (ASensorEventQueue_getEvents(s->sensorEventQueue, &event, 1) > 0)
     {
-    	LOGD("   Sensor %d : %f  %f  %f", s->GetType(),event.acceleration.x, event.acceleration.y, event.acceleration.z);
-
-
+    	//LOGD("   Sensor %d : %f  %f  %f", s->GetType(),event.acceleration.x, event.acceleration.y, event.acceleration.z);
     	SensorData *sd=thePipesManager()->ReadFromReturnPipe(s->GetType());
-
-   		#ifdef LOG_PIPES_STATUS
-   	    LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
-   		#endif
-
-   	    if (NULL==sd){
-   	    	sd = new scdf::SensorData();
-   	    	sd->data=(s_sample*) new s_sample[3];
-   	    }
+   	    //LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
 
    	    sd->type = s->GetType();
    	    sd->timeid = now_ns();
@@ -70,7 +69,15 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
    	 		default:
    	 			LOGE("Sensor constructor error: invalid sensor type!");
    	 			break;
-   	   	}
+   	   	} if (NULL==sd){
+   	    	sd = new scdf::SensorData();
+   	    	sd->data=(s_sample*) new s_sample[3];
+   	    }
+
+   	   	/*static long count = 0;
+   	   	LOGD("SENSOR callback %ld",count);
+   	   	count++;*/
+
    	    s->AddIncomingDataToQueue(sd);
     }
     return 1;
