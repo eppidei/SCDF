@@ -107,7 +107,7 @@ SensorData *PipesManager::ReadFromReturnPipe(SensorType type)
                 break;
             default:
                 data = new scdf::SensorData();
-                data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(AudioInput)];
+                data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(type)];
                 break;
         }
     }
