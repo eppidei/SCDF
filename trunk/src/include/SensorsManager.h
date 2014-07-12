@@ -19,7 +19,7 @@ namespace scdf
     class SensorSettings;
     class SensorsManager
     {
-
+        std::vector<int> wereActive;
     public:
 
     	friend SensorsManager *theSensorManager();
@@ -42,6 +42,7 @@ namespace scdf
 
         s_bool StopAllSensors();
         s_bool StartAllSensors();
+        s_bool StartPrecActiveSensors();
        
     private:
 

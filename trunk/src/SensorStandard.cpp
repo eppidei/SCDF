@@ -24,6 +24,7 @@ s_bool SensorStandard::IsAvailable(SensorType type)
 SensorStandard::SensorStandard(SensorType _type)
 {
     SetType(_type);
+    SetActive(false);
     sImpl=new SensorStandardImpl(_type);
     // platform specific setup, store the pipe
     // return the just created sensor
@@ -43,11 +44,13 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
 
 s_bool SensorStandard::Start()
 {
+    SetActive(true);
     return sImpl->Start();
 }
 
 s_bool SensorStandard::Stop()
 {
+    SetActive(false);
     return sImpl->Stop();
 }
 

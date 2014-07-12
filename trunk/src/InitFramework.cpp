@@ -14,16 +14,13 @@
 
 void InitFramework()
 {
-	scdf::thePipesManager()->InitPipes();
+	//scdf::thePipesManager()->InitPipes();
     scdf::thePipesManager()->CreateReturnPipes();
-    std::vector<int> udpPorts;
-    for (int i=0;i<scdf::NumTypes;++i)
-    {
-        udpPorts.push_back(9000+i);
-    }
-
-    scdf::UDPSendersManager::Instance()->CreateSender(udpPorts, "192.168.1.108");
     scdf::theSensorManager()->CreateAllSensors();
+    scdf::Harvester::Instance();
+    scdf::Harvester::Instance()->SetType(scdf::AudioInput);
+    scdf::Harvester::Instance()->Start();
+    
 }
 
 

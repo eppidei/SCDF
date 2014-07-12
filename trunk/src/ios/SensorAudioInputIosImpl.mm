@@ -156,7 +156,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 {
      AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    scdf::SensorAudioSettings &settingsAudio =  (SensorAudioSettings&) settings;
+    scdf::SensorAudioSettings &settingsAudio =  (SensorAudioSettings&)settings;
     
     NSError *error = nil;
     [sessionInstance setActive:NO error:&error];

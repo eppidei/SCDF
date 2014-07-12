@@ -11,35 +11,35 @@
 
 #include "TypeDefinitions.h"
 
-enum OutputSenderType{ UDP, OSC};
-
 namespace scdf {
     class UDPSenderHelperBase;
 
     class UDPSendersManager
     {
         static UDPSendersManager *_instance;
-        UDPSendersManager(){}
+        UDPSendersManager() : multiOutput(true), oscPackData(true) {}
         s_int32 activeSender;
         std::vector<UDPSenderHelperBase*> senders;
+        s_bool multiOutput, oscPackData;
+        s_int32 CreateSender(std::vector<s_int32> udpPorts, std::string ipAdd);
     public:
         static UDPSendersManager *Instance()
         {
             if (NULL==_instance) _instance=new UDPSendersManager();
             return _instance;
         }
-        s_int32 CreateSender(std::vector<s_int32> udpPorts, std::string ipAdd);
         UDPSenderHelperBase *GetActiveSender();
-        
+        s_int32 InitSender(s_int32 udpPortBase, std::string ipAdd);
+        void ReleaseSender();
         void SetOutputPort(s_int32 port);
         void SetOutputAddress(std::string ipAddress);
-        void SetMultiOutput(bool multiOutput);
-        void SetOutputType(OutputSenderType type);
+        void SetMultiOutput(s_bool multiOutput);
+        void SetUseOSCPackaging(s_bool pack);
         
         s_int32 GetOutputPort();
         std::string GetOutputAddress();
-        bool GetMultiOutput();
-        OutputSenderType GetOutputType();
+        s_bool GetMultiOutput();
+        s_bool UseOSCPackaging();
     };
 }
 

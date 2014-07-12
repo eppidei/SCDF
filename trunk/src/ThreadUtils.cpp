@@ -20,3 +20,8 @@ void scdf::ThreadUtils::JoinThread(ThreadHandle handle)
     void *tmp;
     pthread_join(handle.tid,&tmp);
 }
+
+void scdf::ThreadUtils::TerminateThread(ThreadHandle handle)
+{
+    pthread_cancel(handle.tid);
+}

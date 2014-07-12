@@ -23,6 +23,26 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
     return activeSender;
 }
 
+s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
+{
+    ReleaseSender();
+    std::vector<int> udpPorts;
+    udpPorts.push_back(udpPortBase);
+
+    if (multiOutput)
+        for (int i=1;i<scdf::NumTypes;++i)
+            udpPorts.push_back(udpPortBase+i);
+    
+    return CreateSender(udpPorts, ipAdd);
+}
+
+void UDPSendersManager::ReleaseSender()
+{
+    for (int i=0;i<senders.size();++i)
+        delete senders[i];
+    senders.clear();
+}
+
 UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
 {
     assert(activeSender>-1 && activeSender<senders.size());
@@ -33,53 +53,47 @@ UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
 
 void UDPSendersManager::SetOutputPort(s_int32 port)
 {
-     LOGD("UDP Port Selected: %d \n", port);
+    if (0==senders.size()) return;
+    InitSender(port, GetOutputAddress());
 }
 
 void UDPSendersManager::SetOutputAddress(std::string ipAddress)
 {
-     LOGD("UPD IP Address selected %s \n", ipAddress.c_str());
+    if (0==senders.size()) return;
+    InitSender(GetOutputPort(), ipAddress);
 }
 
-void UDPSendersManager::SetMultiOutput(bool multiOutput)
+void UDPSendersManager::SetMultiOutput(s_bool _multiOutput)
 {
-    if(multiOutput)
-    {
-        LOGD("MULTI OUTPUT ON \n");
-    } else
-    {
-        LOGD("MULTI OUTPUT OFF \n");
-    }
+    multiOutput=_multiOutput;
+    if (0==senders.size()) return;
+    InitSender(GetOutputPort(), GetOutputAddress());
+
 }
 
-void UDPSendersManager::SetOutputType(OutputSenderType type)
+void UDPSendersManager::SetUseOSCPackaging(s_bool pack)
 {
-    if(type==OutputSenderType::UDP)
-    {
-        LOGD("OUTPUT TO UDP \n");
-        
-    } else if(type==OutputSenderType::OSC)
-    {
-        LOGD("OUTPUT TO OSC \n");
-    }
+    oscPackData=pack;
 }
 
 s_int32 UDPSendersManager::GetOutputPort()
 {
-    return -1;
+    if (0==senders.size()) return -1;
+    return senders[0]->GetPort();
 }
 
 std::string UDPSendersManager::GetOutputAddress()
 {
-    return "";
+    if (0==senders.size()) return "No Sender";
+    return senders[0]->GetAddress();
 }
 
-bool UDPSendersManager::GetMultiOutput()
+s_bool UDPSendersManager::GetMultiOutput()
 {
-    return false;
+    return multiOutput;
 }
 
-OutputSenderType UDPSendersManager::GetOutputType()
+s_bool UDPSendersManager::UseOSCPackaging()
 {
-    return (OutputSenderType)-1;
+    return oscPackData;
 }
