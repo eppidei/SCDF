@@ -165,14 +165,19 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         error = nil;
     }
     
-    NSTimeInterval bufferDuration = 1.0/ settingsAudio.bufferSize;
+    NSTimeInterval bufferDuration = (s_float)settingsAudio.bufferSize/(s_float)settings.rate;
     [sessionInstance setPreferredIOBufferDuration:bufferDuration error:&error];
+    
+    /*Float32 preferredBufferSize = 1.0/ settingsAudio.bufferSize;
+    OSStatus ret = AudioSessionSetProperty(kAudioSessionProperty_PreferredHardwareIOBufferDuration, sizeof(preferredBufferSize), &preferredBufferSize);*/
+    
+    
     if(error)
     {
         NSLog(@"couldn't set session's I/O buffer duration %@", error);
         error = nil;
     }
-    settingsAudio.bufferSize = ((NSTimeInterval) 1.0)/sessionInstance.preferredIOBufferDuration;
+    settingsAudio.bufferSize = sessionInstance.preferredIOBufferDuration*settings.rate;
     
     
     // set the session's sample rate
@@ -188,13 +193,24 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         NSLog(@"couldn't set audio session da - active %@", error);
         error = nil;
     }*/
-
+    
+    
+    
+   // SetupIOUnit(settingsAudio);
     
     return true;
 }
 
 s_bool SensorAudioInputImpl::Start()
 {
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+     NSError *error = nil;
+     [sessionInstance setActive:YES error:&error];
+     if (error) {
+         NSLog(@"couldn't set audio session da - active %@", error);
+         error = nil;
+     }
+    
     OSStatus err = AudioOutputUnitStart(rioUnit);
     if (err) {
         NSLog(@"couldn't start AURemoteIO: %d", (int)err);
@@ -206,6 +222,14 @@ s_bool SensorAudioInputImpl::Start()
 
 s_bool SensorAudioInputImpl::Stop()
 {
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+    [sessionInstance setActive:NO error:&error];
+    if (error) {
+        NSLog(@"couldn't set audio session da - active %@", error);
+        error = nil;
+    }
+    
     OSStatus err = AudioOutputUnitStop(rioUnit);
     if (err) {
         NSLog(@"couldn't stop AURemoteIO: %d", (int)err);
@@ -239,7 +263,7 @@ s_int32 SensorAudioInputImpl::GetNumChannels()
 {
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    return sessionInstance.outputNumberOfChannels;
+    return (s_int32) sessionInstance.outputNumberOfChannels;
 }
 
 s_int32 SensorAudioInputImpl::GetBufferSize()
@@ -247,10 +271,10 @@ s_int32 SensorAudioInputImpl::GetBufferSize()
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSTimeInterval bufferDuration = sessionInstance.preferredIOBufferDuration;
     
-    return 1.0/bufferDuration;
+    return (s_float)bufferDuration*(s_float)sessionInstance.sampleRate;
 }
 
-void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
+void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
 {   
     try {
     
@@ -260,15 +284,28 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorSettings &settings)
         
         UInt32 param = sizeof(AudioStreamBasicDescription);
 
-        AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
+        OSStatus err = noErr;
+        err = AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
+        if (err) {
+            NSLog(@"kAudioUnitScope_Output%d", (int)err);
+        }
+        
+        existingFormat.mFormatID = kAudioFormatLinearPCM;
 
         existingFormat.mSampleRate=audioSettings.rate;
-        existingFormat.mFramesPerPacket=audioSettings.bufferSize;
+        //existingFormat.mFramesPerPacket=audioSettings.bufferSize;
         existingFormat.mChannelsPerFrame=audioSettings.numChannels;
         currentSampleRate=audioSettings.rate;
         
-        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &existingFormat, sizeof(existingFormat));
-        AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &existingFormat, sizeof(existingFormat));
+        
+        err = AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &existingFormat, sizeof(existingFormat));
+        if (err) {
+            NSLog(@"kAudioUnitScope_Output%d", (int)err);
+        }
+        err = AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &existingFormat, sizeof(existingFormat));
+        if (err) {
+            NSLog(@"kAudioUnitScope_Input: %d", (int)err);
+        }
     }
     
     catch (NSException *e) {
