@@ -2,6 +2,7 @@
 #include "Sensor.h"
 #include "SensorsManager.h"
 #include "Harvester.h"
+#include "UDPSendersManager.h"
 
 void InitFramework();
 
@@ -18,7 +19,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv*
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv* env, jobject thiz)
 {
-	return theSensorManager()->StartAllSensors();
+	return theSensorManager()->StartPrecActiveSensors();
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnPause(JNIEnv* env, jobject thiz)
@@ -47,7 +48,10 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeInit(JNIEnv* env
     theSensorManager()->InitSensor(AudioInput,audioSettings);
 
     theSensorManager()->StartAllSensors();
-    Harvester::Instance()->Start();
+
+    UDPSendersManager::Instance()->InitSender(9000,"10.12.209.49");
+    UDPSendersManager::Instance()->SetMultiOutput(true);
+
 }
 
 
