@@ -320,11 +320,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Marco Bertola";
-				TargetAttributes = {
-					DCE8BE9D194393B300D283E8 = {
-						DevelopmentTeam = UP7D2B2KTF;
-					};
-				};
 			};
 			buildConfigurationList = DCE8BE99194393B300D283E8 /* Build configuration list for PBXProject "SCDF_Test" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -516,6 +511,7 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -529,18 +525,21 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$HOME/SCDF/trunk/include,
+					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
+					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

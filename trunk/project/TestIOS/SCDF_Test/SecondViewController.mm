@@ -160,6 +160,19 @@
     
 }
 
+- (IBAction) toggleActiveSender: (id) sender
+{
+    UISwitch *currentSensor = sender;
+    if(currentSensor.on)
+    {
+        scdf::UDPSendersManager::Instance()->InitSender(actualPort, addressString);
+    } else
+    {
+        scdf::UDPSendersManager::Instance()->ReleaseSender();
+    }
+    
+}
+
 #pragma mark from interface to framekork
 
 - (void) setRoutingType: (NSInteger) routingType

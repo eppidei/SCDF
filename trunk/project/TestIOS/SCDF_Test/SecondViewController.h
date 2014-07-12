@@ -17,6 +17,8 @@
     IBOutlet UITextField             *outputPort;
     IBOutlet UILabel                 *inputIp;
     
+    IBOutlet UISwitch                *activeSenderSwitch;
+    
     std::string                      addressString;
     s_int32                          actualPort;
 }
@@ -27,6 +29,7 @@
 
 - (IBAction) multiOutputToggle: (id) sender;
 - (IBAction) changheOutputRouting:(id)sender;
+- (IBAction) toggleActiveSender: (id) sender;
 
 
 @end
