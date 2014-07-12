@@ -25,7 +25,7 @@ namespace scdf {
     
     class SensorAudioInputImpl : public SensorAudioInput
     {
-        void SetupIOUnit(scdf::SensorSettings &settings);
+        void SetupIOUnit(scdf::SensorAudioSettings &settings);
         void InitAudioSession();
         void InitIOUnit();
         
