@@ -29,6 +29,7 @@ namespace scdf
         };
         ThreadHandle CreateThread(start_routine routine, void *par);
         void JoinThread(ThreadHandle handle);
+        void TerminateThread(ThreadHandle handle);
         class CustomMutex {
             
             CustomMutex(const CustomMutex &refCustomMutex);

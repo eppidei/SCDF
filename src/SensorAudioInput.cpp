@@ -12,6 +12,7 @@ using namespace scdf;
 SensorAudioInput::SensorAudioInput(SensorType _type)
 {
     SetType(_type);
+    SetActive(false);
     sImpl = new SensorAudioInputImpl();
 }
 
@@ -29,11 +30,13 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
 
 s_bool scdf::SensorAudioInput::Start()
 {
+    SetActive(true);
     return sImpl->Start();
 }
 
 s_bool scdf::SensorAudioInput::Stop()
 {
+    SetActive(false);
     return sImpl->Stop();
 }
 

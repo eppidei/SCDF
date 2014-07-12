@@ -164,14 +164,7 @@
 
 - (void) setRoutingType: (NSInteger) routingType
 {
-    if(routingType==0)
-    {
-        scdf::UDPSendersManager::Instance()->SetOutputType(OutputSenderType::UDP);
-        
-    } else if(routingType==1)
-    {
-        scdf::UDPSendersManager::Instance()->SetOutputType(OutputSenderType::OSC);
-    }
+    scdf::UDPSendersManager::Instance()->SetUseOSCPackaging(1==routingType);
 }
 
 - (void) setMultiOutputActiove: (BOOL) active

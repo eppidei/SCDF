@@ -53,7 +53,8 @@ void Harvester::Stop()
 {
     if (!activated) return;
     activated=false;
-    ThreadUtils::JoinThread(handle);
+    //ThreadUtils::JoinThread(handle);
+    ThreadUtils::TerminateThread(handle);
 }
 
 void Harvester::SetType(SensorType type)
@@ -62,6 +63,7 @@ void Harvester::SetType(SensorType type)
     Stop();
     theSensorManager()->StopAllSensors();
     thePipesManager()->InitPipes();
+    theSensorManager()->StartPrecActiveSensors();
     Start();
 }
 
@@ -164,7 +166,7 @@ void Harvester::Harvest(SensorData *masterData)
 #ifdef LOG_TIMESTAMP
     printf("Master sensor: %s; Harvesting starts: %llu; Harvesting ends: %llu; Harvesting ms interval: %llu;\n",SensorTypeString[masterData->type].c_str(),masterData->timeid,masterData->timestamp,getUptimeInMilliseconds(masterData->timestamp-masterData->timeid));
 #endif
-    //InternalBufferHarvesting(masterData->timeid, masterData->timestamp);
+    InternalBufferHarvesting(masterData->timeid, masterData->timestamp);
     PipesHarvesting(masterData->timeid, masterData->timestamp, masterData->type);
     Sort();
     myHarvest.insert(myHarvest.begin(), masterData);

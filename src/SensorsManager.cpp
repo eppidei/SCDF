@@ -171,9 +171,12 @@ void SensorsManager::DestroyAllSensors() // destroys all CREATED sensors
 
 s_bool SensorsManager::StopAllSensors() // stops all created sensors
 {
+    wereActive.clear();
 	SensorsIterator it;
 	s_bool allok = true;
 	for (it=sensors.begin(); it!=sensors.end(); it++) {
+        if (it->second->IsActive())
+            wereActive.push_back(it->second->GetType());
 		if (!it->second->Stop())
 			allok = false;
 	}
@@ -186,6 +189,24 @@ s_bool SensorsManager::StartAllSensors() // starts all created sensors
 	SensorsIterator it;
 	s_bool allok = true;
 	for (it=sensors.begin(); it!=sensors.end(); it++) {
+		if (!it->second->Start())
+			allok = false;
+	}
+	return allok; // if one of the starts failed, we report it
+	// TODO: decide whether to return true or false when no sensors have been created. (now returns true)
+}
+
+s_bool SensorsManager::StartPrecActiveSensors() // starts all created sensors
+{
+	SensorsIterator it;
+	s_bool allok = true;
+	for (it=sensors.begin(); it!=sensors.end(); it++) {
+        bool wasActive=false;
+        for (int i=0;i<wereActive.size();++i){
+            if (wereActive[i]==it->second->GetType())
+                wasActive=true;
+        }
+        if (!wasActive) continue;
 		if (!it->second->Start())
 			allok = false;
 	}

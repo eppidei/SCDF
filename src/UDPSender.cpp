@@ -12,18 +12,32 @@
 #include "osc/OscOutboundPacketStream.h"
 #include "CustomPipe.h"
 #include "PipesManager.h"
+#include "Harvester.h"
 
 using namespace scdf;
 
 void UDPSender::Init(int udpp, std::string add)
 {
+    address=add;
 	endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
 	transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
 	// TODO: handle udpsocket::connect exception!
 }
 
+s_int32 UDPSender::GetPort()
+{
+    if (NULL==endPoint.get()) return -1;
+    return endPoint->port;
+}
+
+std::string UDPSender::GetAddress()
+{
+    return address;
+}
+
 void UDPSender::Release()
 {
+    address="Not Assigned";
     transmitSocket.reset();
 	endPoint.reset();
 }
@@ -47,9 +61,20 @@ void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
 void UDPSenderHelperBase::SendData()
 {
     switch (senders.size()) {
-        case 0:     return;
-        case 1:     DoSendData(); /*DoSendDataOSCPacked();*/break;
-        default:    DoMultiSendData(); /*DoMultiSendDataOSCPacked()*/; break;
+        case 0:
+            return;
+        case 1:
+            if (UDPSendersManager::Instance()->UseOSCPackaging())
+                DoSendDataOSCPacked();
+            else
+                DoSendData();
+            break;
+        default:
+            if (UDPSendersManager::Instance()->UseOSCPackaging())
+                DoMultiSendDataOSCPacked();
+            else
+                DoMultiSendData();
+            break;
     }
 }
 
@@ -122,11 +147,22 @@ static void UDPSenderHelperProcedure(void *param)
     {
         sender->SendOnThread();
     }
-    delete sender;
 }
 
-UDPSenderHelperBase::UDPSenderHelperBase() : activated(true), freeSlot(1), canSend(0)
+UDPSenderHelperBase::UDPSenderHelperBase() : activated(false), freeSlot(1), canSend(0)
 {
+}
+
+s_int32 UDPSenderHelperBase::GetPort()
+{
+    if (senders.size()==0) return -1;
+    return senders[0]->GetPort();
+}
+
+std::string UDPSenderHelperBase::GetAddress()
+{
+    if (senders.size()==0) return "No Sender";
+    return senders[0]->GetAddress();
 }
 
 void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string address)
@@ -134,15 +170,25 @@ void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string addres
     assert(udpPorts.size()!=0);
     for (int i=0;i<udpPorts.size();++i)
         senders.push_back(new UDPSender(udpPorts[i],address));
-    ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
+    activated=true;
+    handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
+}
+
+void UDPSenderHelperBase::Release()
+{
+    activated=false;
+    ThreadUtils::JoinThread(handle);
+    for (int i=0;i<senders.size();++i)
+        delete senders[i];
+    senders.clear();
 }
 
 void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStream &oscData)
 {
-#ifdef LOG_DATA
-    for (int i = 0; i< ((SensorData*)data)->num_samples; i ++) {
-        printf("Sending data %d from %s: %.4f\n",i,SensorTypeString[((SensorData*)data)->type].c_str(), ((s_sample*)((SensorData*)data)->data)[i]);
-    }
+#ifdef LOG_SENDER_DATA
+   // for (int i = 0; i< ((SensorData*)data)->num_samples; i ++) {
+    printf("Sending data from %s, Master sensor: %s\n",SensorTypeString[((SensorData*)data)->type].c_str(), SensorTypeString[Harvester::Instance()->GetType()].c_str());
+   // }
 #endif
     switch(data->type)
     {
