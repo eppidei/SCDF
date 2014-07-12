@@ -106,7 +106,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     SensorAudioInputImpl* pthis=(SensorAudioInputImpl*)inRefCon;
     err = AudioUnitRender(pthis->rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     
-    SensorAudioData *s=(SensorAudioData*)thePipesManager()->ReadFromReturnPipe(AudioInput);
+    SensorData *s=thePipesManager()->ReadFromReturnPipe(AudioInput);
     
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
@@ -122,6 +122,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
 
     s->type = scdf::AudioInput;
     s->num_samples=inNumberFrames;
+    s->numChannels=1;
     s->rate=pthis->currentSampleRate;
     s->timestamp=inTimeStamp->mHostTime;
     s->timeid=mach_absolute_time();
