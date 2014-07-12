@@ -44,14 +44,18 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
 
 s_bool SensorStandard::Start()
 {
-    SetActive(true);
-    return sImpl->Start();
+	s_bool ret = sImpl->Start();
+    if (ret)
+    	SetActive(true);
+    return ret;
 }
 
 s_bool SensorStandard::Stop()
 {
-    SetActive(false);
-    return sImpl->Stop();
+	s_bool ret = sImpl->Stop();
+    if (ret)
+    	SetActive(false);
+    return ret;
 }
 
 s_int32 SensorStandard::GetRate()

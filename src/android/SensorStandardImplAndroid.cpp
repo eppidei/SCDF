@@ -193,7 +193,7 @@ s_bool scdf::SensorStandardImpl::Start()
 
 s_bool scdf::SensorStandardImpl::Stop()
 {
-	if (NULL==androidSensor)
+	if (NULL==androidSensor || NULL == sensorEventQueue)
 		return false;
 	return (0 <= ASensorEventQueue_disableSensor(sensorEventQueue,androidSensor) );
 }

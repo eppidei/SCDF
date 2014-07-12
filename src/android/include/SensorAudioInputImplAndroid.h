@@ -51,6 +51,14 @@ namespace scdf {
         int numBuffers;
         int bufferSize;
         int currentBuff;
+
+        s_int16 nGroupedCallbacks;
+        s_uint64 startTimeReference;
+        s_uint64 callbacksCount;
+        s_uint64 lastCallbackTime;
+        s_uint64 lastTimestamp;
+        s_uint64 lastTimeId;
+        s_bool	 lastCallbackWasGrouped;
     };
 
     SLuint32 ConvertToOpenSLSampleRate(s_int32 insr);

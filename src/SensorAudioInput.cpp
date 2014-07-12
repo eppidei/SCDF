@@ -30,14 +30,18 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
 
 s_bool scdf::SensorAudioInput::Start()
 {
-    SetActive(true);
-    return sImpl->Start();
+	s_bool ret = sImpl->Start();
+	if (ret)
+		SetActive(true);
+	return ret;
 }
 
 s_bool scdf::SensorAudioInput::Stop()
 {
-    SetActive(false);
-    return sImpl->Stop();
+	s_bool ret = sImpl->Stop();
+	if (ret)
+		SetActive(false);
+	return ret;
 }
 
 s_int32 scdf::SensorAudioInput::GetRate()
