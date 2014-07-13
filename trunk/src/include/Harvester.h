@@ -50,6 +50,21 @@ namespace scdf{
             return _instance;
         }
     };
+    
+    class StopRestartMachine
+    {
+        bool startMachine;
+    public:
+        StopRestartMachine() : startMachine(Harvester::Instance()->activated)
+        {
+            Harvester::Instance()->Stop();
+        }
+        ~StopRestartMachine()
+        {
+            if (startMachine)
+                Harvester::Instance()->Start();
+        }
+    };
 }
 
 

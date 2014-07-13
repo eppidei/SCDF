@@ -20,9 +20,9 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 @interface TimerIos : NSObject
 {
-    s_float updateInterval;
+    NSTimeInterval updateInterval;
     NSTimer *timerProx;
-    SensorStandardImpl *senorRef;
+    SensorStandardImpl *sensorRef;
 }
 
 @end
@@ -32,11 +32,11 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 - (id) init
 {
     timerProx = nil;
-    updateInterval = -1;
+    updateInterval = 0;
     return self;
 }
 
-- (NSTimeInterval) GetRate
+- (NSTimeInterval) GetTimeInterval
 {
     if(timerProx)
         return [timerProx timeInterval];
@@ -46,7 +46,7 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 - (void) setSensorRef: (SensorStandardImpl  *) _sensorRef
 {
-    senorRef = _sensorRef;
+    sensorRef = _sensorRef;
 }
 
 
@@ -83,7 +83,7 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
     data.value1 = device.proximityState;
     data.timestamp = [timer timeInterval];
     
-    senorRef->MySensorsCallback(data);
+    sensorRef->MySensorsCallback(data);
 }
 
 @end
@@ -131,7 +131,7 @@ s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
 }
 
 
-SensorStandardImpl::SensorStandardImpl(SensorType _sensorType) : updateInterval(1)
+SensorStandardImpl::SensorStandardImpl(SensorType _sensorType)
 {
     sensorTypeRef = _sensorType;
     if (NULL==motionManager)
@@ -155,7 +155,7 @@ SensorStandardImpl::~SensorStandardImpl()
 
 s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 {
-    updateInterval = 1.0/(s_float)settings.rate;
+    NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
     switch (sensorTypeRef) {
         case scdf::Accelerometer:
             motionManager.accelerometerUpdateInterval = updateInterval;
@@ -271,7 +271,7 @@ s_int32 SensorStandardImpl::GetRate()
             updateSensorInterval=motionManager.magnetometerUpdateInterval;
             break;
         case scdf::Proximity:
-            updateSensorInterval = [timerProximity GetRate];
+            updateSensorInterval = [timerProximity GetTimeInterval];
         default:
             break;
     }
@@ -321,8 +321,9 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     
     s->num_samples = numSamples;
     s->type = sensorTypeRef;
+    s->rate = GetRate();
     s->timestamp=mach_absolute_time();
-    s->timeid=mach_absolute_time()-MillisecondsTo_mach_timebase(updateInterval*1000);
+    s->timeid=mach_absolute_time()-MillisecondsTo_mach_timebase((1.0/GetRate())*1000);
         
     AddIncomingDataToQueue(s);
 }

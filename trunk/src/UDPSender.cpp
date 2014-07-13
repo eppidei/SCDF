@@ -90,28 +90,34 @@ void UDPSenderHelperBase::DoSendData()
 {
     for (int i=0;i<senderData.size();++i)
     {
-        senders[0]->SendData((s_char*)senderData[i], sizeof(SensorData));
-        senders[0]->SendData((s_char*)senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
+        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
+        senders[0]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
     }
+}
+
+void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
+{
+    s_int32 sensorDataSize=sizeof(SensorData)-sizeof(char*)+sData->num_samples*sizeof(s_sample);
+    if (size!=sensorDataSize)
+    {
+        size=sensorDataSize;
+        if (NULL!=tempData) free(tempData);
+        tempData=(char*)malloc(size);
+    }
+    memcpy(tempData, sData, sizeof(SensorData));
+    memcpy(tempData+sizeof(SensorData)-sizeof(char*),sData->data, sData->num_samples*sizeof(s_sample));
 }
 
 void UDPSenderHelperBase::DoMultiSendData()
 {
+    if (0==senderData[0]->num_samples) return;
 #ifdef LOG_SENDER_DATA
-    LOGD("MultiSendData, Master sensor: %s\n", SensorTypeString[Harvester::Instance()->GetType()].c_str());
+    LOGD("MultiSend data: %s master sensor send %d samples at rate %d\n", SensorTypeString[Harvester::Instance()->GetType()].c_str(), senderData[0]->num_samples, senderData[0]->rate);
 #endif
     for (int i=0;i<senderData.size();++i)
     {
-        s_int32 size=sizeof(SensorData)-sizeof(char*)+senderData[i]->num_samples*sizeof(s_sample);
-        s_char *temp=(char*)malloc(size);
-        memcpy(temp, senderData[i], sizeof(SensorData));
-        memcpy(temp+sizeof(SensorData)-sizeof(char*),senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
-        //int pluto2=sizeof(senderData[i]->type);
-        
-       // senders[senderData[i]->type]->SendData((s_char*)senderData[i], sizeof(SensorData));
-        //senders[senderData[i]->type]->SendData((s_char*)senderData[i]->data, senderData[i]->num_samples*sizeof(s_sample));
-        senders[senderData[i]->type]->SendData(temp,size);
-        free(temp);
+        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
+        senders[senderData[i]->type]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
     }
 }
 
@@ -128,6 +134,10 @@ void UDPSenderHelperBase::DoSendDataOSCPacked()
 
 void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
 {
+    if (0==senderData[0]->num_samples) return;
+#ifdef LOG_SENDER_DATA
+    LOGD("MultiSend Data OSCPacked data: %s master sensor send %d samples at rate %d\n", SensorTypeString[Harvester::Instance()->GetType()].c_str(), senderData[0]->num_samples, senderData[0]->rate);
+#endif
     for (int i=0;i<senderData.size();++i)
     {
         s_char buffer[OSC_BUFFER_SIZE];
@@ -143,6 +153,7 @@ void UDPSenderHelperBase::SendOnThread()
     if (!activated) return;
     SendData();
     Harvester::SentDataRecyclingProcedure(&senderData);
+    EventFreeSlot()->Set();
 }
 
 static void UDPSenderHelperProcedure(void *param)
@@ -198,11 +209,6 @@ void UDPSenderHelperBase::Release()
 
 void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStream &oscData)
 {
-#ifdef LOG_SENDER_DATA
-   // for (int i = 0; i< ((SensorData*)data)->num_samples; i ++) {
-    printf("Sending data from %s, Master sensor: %s\n",SensorTypeString[((SensorData*)data)->type].c_str(), SensorTypeString[Harvester::Instance()->GetType()].c_str());
-   // }
-#endif
     switch(data->type)
     {
        /* case AudioInput:
