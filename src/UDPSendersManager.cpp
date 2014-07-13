@@ -26,7 +26,8 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
 
 s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
 {
-    Harvester::Instance()->Stop();
+    StopRestartMachine kk;
+//    Harvester::Instance()->Stop();
     ReleaseSender();
     std::vector<int> udpPorts;
     udpPorts.push_back(udpPortBase);
@@ -35,9 +36,9 @@ s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
         for (int i=1;i<scdf::NumTypes;++i)
             udpPorts.push_back(udpPortBase+i);
     
-    s_int32 ret=CreateSender(udpPorts, ipAdd);
-    Harvester::Instance()->Start();
-    return ret;
+    return CreateSender(udpPorts, ipAdd);
+   // Harvester::Instance()->Start();
+//    return ret;
 }
 
 void UDPSendersManager::ReleaseSender()

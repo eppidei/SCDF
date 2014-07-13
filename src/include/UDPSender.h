@@ -48,6 +48,15 @@ namespace scdf
         
         ThreadUtils::CustomSemaphore freeSlot, canSend;
         ThreadUtils::ThreadHandle handle;
+        struct TempSensorData
+        {
+            s_int32 size;
+            s_char *tempData;
+            TempSensorData() : size(0), tempData(NULL) {}
+            ~TempSensorData() { if (NULL!=tempData) free(tempData); }
+            void PrepareBufferToSend(SensorData *data);
+        };
+        TempSensorData tempSensorData[scdf::NumTypes];
     public:
         s_int32 GetPort();
         std::string GetAddress();

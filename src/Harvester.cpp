@@ -52,18 +52,21 @@ void Harvester::Stop()
 {
     if (!activated) return;
     activated=false;
-    //ThreadUtils::JoinThread(handle);
     theSensorManager()->StopAllSensors();
-    ThreadUtils::TerminateThread(handle);
+    //Write dummy buffer on master queue to sblock harvester
+    thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
+
+    ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&myHarvest);
+    SentDataRecyclingProcedure(&nextHarvestData);
 }
 
 void Harvester::SetType(SensorType type)
 {
+    bool activate=activated || theSensorManager()->SensorActivated(type);
+    if (activated) Stop();
     requesterType=type;
-    if (!activated) return;
-    Stop();
-    Start();
+    if (activate) Start();
 }
 
 void Harvester::Sort()
@@ -152,9 +155,6 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 #endif
     }
     sData->clear();
-    if (UDPSendersManager::Instance()->GetActiveSender())
-        UDPSendersManager::Instance()->GetActiveSender()->EventFreeSlot()->Set();
-    
 }
 
 void Harvester::NotifyHarvestCompletition()

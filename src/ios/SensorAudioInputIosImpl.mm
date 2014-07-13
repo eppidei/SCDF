@@ -123,7 +123,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     s->type = scdf::AudioInput;
     s->num_samples=inNumberFrames;
     s->numChannels=1;
-    s->rate=pthis->currentSampleRate;
+    s->rate=pthis->GetRate();
     s->timestamp=inTimeStamp->mHostTime;
     s->timeid=mach_absolute_time();
     pthis->AddIncomingDataToQueue(s);
@@ -223,6 +223,12 @@ s_bool SensorAudioInputImpl::Start()
 
 s_bool SensorAudioInputImpl::Stop()
 {
+    OSStatus err = AudioOutputUnitStop(rioUnit);
+    if (err) {
+        NSLog(@"couldn't stop AURemoteIO: %d", (int)err);
+        return false;
+    }
+    
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSError *error = nil;
     [sessionInstance setActive:NO error:&error];
@@ -230,15 +236,8 @@ s_bool SensorAudioInputImpl::Stop()
         NSLog(@"couldn't set audio session da - active %@", error);
         error = nil;
     }
-    
-    OSStatus err = AudioOutputUnitStop(rioUnit);
-    if (err) {
-        NSLog(@"couldn't stop AURemoteIO: %d", (int)err);
-        return false;
-    }
-    return err;
-    
-    return true;
+
+    return err==noErr;
 }
 
 s_int32 SensorAudioInputImpl::GetRate()
@@ -296,7 +295,7 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
         existingFormat.mSampleRate=audioSettings.rate;
         //existingFormat.mFramesPerPacket=audioSettings.bufferSize;
         existingFormat.mChannelsPerFrame=audioSettings.numChannels;
-        currentSampleRate=audioSettings.rate;
+        //currentSampleRate=audioSettings.rate;
         
         
         err = AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &existingFormat, sizeof(existingFormat));
@@ -345,7 +344,7 @@ void SensorAudioInputImpl::InitIOUnit()
         // Explicitly set the input and output client formats
         // sample rate = 44100, num channels = 1, format = 32 bit floating point
         
-        currentSampleRate= 44100;
+        s_int32 currentSampleRate= 44100;
         CAStreamBasicDescription ioFormat = CAStreamBasicDescription(currentSampleRate, 1, CAStreamBasicDescription::kPCMFormatFloat32, false);
         
         AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &ioFormat, sizeof(ioFormat));

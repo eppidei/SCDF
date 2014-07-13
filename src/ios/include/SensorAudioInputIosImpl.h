@@ -32,7 +32,7 @@ namespace scdf {
         AudioEventsListener *listener;
         AudioUnit rioUnit;
         
-        s_int32 currentSampleRate;
+        //s_int32 currentSampleRate;
         
     public:
         static OSStatus PerformRender (void                         *inRefCon,

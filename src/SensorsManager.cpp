@@ -27,57 +27,60 @@ SensorsManager *scdf::theSensorManager()
 
 void SensorsManager::SetRate(SensorType type, s_int32 rate)
 {
-    
+    Sensor *sensor=GetSensor(type);
+    if (NULL==sensor) return;
+    sensor->Stop();
     if(type==AudioInput)
     {
-        SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
+        SensorAudioInput *audioSensor=dynamic_cast<SensorAudioInput*>(sensor);
         SensorAudioSettings settings;
         settings.rate = rate;
-        settings.numChannels = sensor->GetNumChannels();
-        settings.bufferSize = sensor->GetBufferSize();
-        
-        sensor->Stop();
+        settings.numChannels = audioSensor->GetNumChannels();
+        settings.bufferSize = audioSensor->GetBufferSize();
         sensor->Setup(settings);
-        sensor->Start();
-        
     } else
     {
-        Sensor *sensor=GetSensor(type);
         SensorSettings settings;
         settings.rate = rate;
-        
-        sensor->Stop();
         sensor->Setup(settings);
-        sensor->Start();
     }
+    sensor->Start();
 }
 
 void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
 {
-      if(type==AudioInput)
-      {
-          SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
-          SensorAudioSettings settings;
-          settings.rate = sensor->GetRate();
-          settings.numChannels = sensor->GetNumChannels();
-          settings.bufferSize = size;
+    SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
+    if(NULL==sensor||type!=AudioInput) return;
+    
+    SensorAudioSettings settings;
+    settings.rate = sensor->GetRate();
+    settings.numChannels = sensor->GetNumChannels();
+    settings.bufferSize = size;
           
-          sensor->Stop();
-          sensor->Setup(settings);
-          sensor->Start();
-      }
+    sensor->Stop();
+    sensor->Setup(settings);
+    sensor->Start();
 }
 
 s_int32 SensorsManager::GetRate(SensorType type)
 {
     Sensor *sensor=GetSensor(type);
+    if (NULL==sensor) return -1;
     return sensor->GetRate();
 }
 
 s_int32 SensorsManager::GetNumSamples(SensorType type)
 {
     Sensor *sensor=GetSensor(type);
+    if (NULL==sensor) return -1;
     return sensor->GetNumSamples();
+}
+
+s_bool SensorsManager::SensorActivated(SensorType type)
+{
+    Sensor *sensor=GetSensor(type);
+    if (NULL==sensor) return false;
+    return sensor->IsActive();
 }
 
 Sensor *SensorsManager::GetSensor(SensorType type)
@@ -145,7 +148,9 @@ s_bool SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
 		settings.broken = true;
 		return false;
 	}
-	return GetSensor(type)->Setup(settings);
+    Sensor *s=GetSensor(type);
+    if (NULL==s) return false;
+	return s->Setup(settings);
 }
 
 void SensorsManager::CreateAllSensors() // creates all AVAILABLE sensors

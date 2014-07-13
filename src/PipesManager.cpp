@@ -60,6 +60,7 @@ void PipesManager::InitReturnPipes(SensorType type, s_int32 numSamples)
         {*/
             SensorData *s=new SensorData();
             s->data=new s_sample[numSamples];
+            s->type=type;
             if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
                 delete s;
         //}
@@ -108,6 +109,7 @@ SensorData *PipesManager::ReadFromReturnPipe(SensorType type)
             default:
                 data = new scdf::SensorData();
                 data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(type)];
+                data->type=type;
                 break;
         }
     }
