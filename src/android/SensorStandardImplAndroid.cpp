@@ -36,7 +36,8 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
    	    sd->type = s->GetType();
    	    sd->timeid = now_ns();
    	   	sd->timestamp = sd->timeid;
-   	   	sd->rate = 1;
+   	   	sd->rate = ;
+   	   	sd->numChannels = 1;
 
    	   	switch(event.type)
    	   	{
