@@ -21,8 +21,7 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
     ai->callbacksCount++;
 
-	SensorAudioData *s=(SensorAudioData*) thePipesManager()->ReadFromReturnPipe(AudioInput); // data buffer size decided in setup
-    //LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
+	SensorData *s=(SensorData*) thePipesManager()->ReadFromReturnPipe(AudioInput); // data buffer size decided in setup
 
     s->type = AudioInput;
     s->num_samples = ai->bufferSize;
@@ -85,7 +84,7 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     	s->timestamp = now;
     	s->timeid = now - buff_len_ns_int;
 
-    	if (s->timeid < ai->lastTimestamp)
+    	if (s->timeid < ai->lastTimestamp) // avoid buffer time spans overlapping
     		s->timeid = ai->lastTimestamp;
 
     	caseIs = "after delayed";
@@ -101,25 +100,24 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     for (int i=0; i<ai->bufferSize; i++)
        	s->data[i] = ai->inputBuffer[ai->currentBuff][i]*scale;
 
-	s_double error;
+	/*s_double error;
 	std::string sign;
-	if (ai->lastTimestamp > now) {
-		error = (ai->lastTimestamp - now)/1000000.0;
-		sign="+";
-	} else {
-		error = (now - ai->lastTimestamp)/1000000.0;
-		sign="-";
-	}
+	if (ai->lastTimestamp > now) { error = (ai->lastTimestamp - now)/1000000.0;	sign="+";}
+	else { error = (now - ai->lastTimestamp)/1000000.0;	sign="-";}
+	*/
 
-	s_double calc_bufflen = (ai->lastTimestamp - ai->lastTimeId)/1000000.0;
-	LOGI("AUDIO IN cb %llu - error : %s%f ms (%s bufflen %f ms)",ai->callbacksCount,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
+	//s_double calc_bufflen = (ai->lastTimestamp - ai->lastTimeId)/1000000.0;
+	//if (ai->callbacksCount==100)
+	//	usleep(50000);
 
 	ai->AddIncomingDataToQueue(s);
 
-	if (ai->callbacksCount==100)
-		usleep(50000);
-
     (*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->bufferSize*sizeof(short));
+
+/*  s_uint64 end = now_ns();
+    s_double cb_time_ms = (end - now)/1000000.0;
+    LOGI("AUDIOIN %llu (%f) - drift: %s%f ms (%s - %f ms)",ai->callbacksCount,cb_time_ms,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
+*/
 }
 
 scdf::SensorAudioInputImpl::SensorAudioInputImpl()
