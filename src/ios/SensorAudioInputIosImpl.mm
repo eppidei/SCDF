@@ -35,7 +35,8 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
         
         if (theInterruptionType == AVAudioSessionInterruptionTypeBegan) {
             wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
-            audioSensor->Stop();
+            if(audioSensor)
+                audioSensor->Stop();
         }
         
         if (theInterruptionType == AVAudioSessionInterruptionTypeEnded) {
@@ -43,8 +44,9 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
             NSError *error = nil;
             [[AVAudioSession sharedInstance] setActive:YES error:&error];
             if (nil != error) NSLog(@"AVAudioSession set active failed with error: %@", error);
-            if(wasActive)
-                audioSensor->Start();
+            if(audioSensor)
+                if(wasActive)
+                    audioSensor->Start();
         }
     } catch(NSException * e) {
     }
@@ -145,6 +147,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
 SensorAudioInputImpl::SensorAudioInputImpl()
 {
     listener = [[AudioEventsListener alloc] init];
+    [listener Attach:this];
 
     InitAudioSession();
     InitIOUnit();
