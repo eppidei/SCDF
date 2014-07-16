@@ -62,14 +62,15 @@ namespace scdf {
         virtual s_int32 GetRate()  = 0;
         virtual s_int32 GetNumSamples()  = 0;
         virtual ~Sensor(){};
-        s_bool IsActive() { return active; }
         SensorType GetType() { return type; }
+        s_bool IsActive();
+
         // TODO: add getter for num channels (return 1 for standard sensors?)
         
         void CALLBACK AddIncomingDataToQueue(SensorData *data);
 
     protected:
-        void SetActive(s_bool _active) { active=_active;}
+        void SetActive(s_bool _active);
         void SetType(SensorType _type){type = _type;}
     
     };

@@ -16,6 +16,7 @@ namespace scdf {
 @interface AudioEventsListener :  NSObject{
     
     scdf::SensorAudioInputImpl *audioSensor;
+    s_bool wasActive;
 }
 
 - (void)Attach:(scdf::SensorAudioInputImpl *)_audioSensor;

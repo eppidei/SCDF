@@ -56,10 +56,8 @@ void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
     settings.rate = sensor->GetRate();
     settings.numChannels = sensor->GetNumChannels();
     settings.bufferSize = size;
-          
-    sensor->Stop();
+
     sensor->Setup(settings);
-    sensor->Start();
 }
 
 s_int32 SensorsManager::GetRate(SensorType type)
