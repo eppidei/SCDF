@@ -36,7 +36,7 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
    	    sd->type = s->GetType();
    	    sd->timeid = now_ns();
    	   	sd->timestamp = sd->timeid;
-   	   	sd->rate = ;
+   	   	sd->rate = s->currentRate;
    	   	sd->numChannels = 1;
 
    	   	switch(event.type)
@@ -180,6 +180,7 @@ s_bool scdf::SensorStandardImpl::Setup(SensorSettings& settings)
 	if (0 < ASensorEventQueue_setEventRate(sensorEventQueue, androidSensor,desiredDelay)) {
 		currentRate=-1;
 		return false;
+
 	}
 	currentRate = settings.rate;
 	return true;
