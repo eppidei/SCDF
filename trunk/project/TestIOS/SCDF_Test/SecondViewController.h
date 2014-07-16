@@ -18,6 +18,8 @@
     IBOutlet UILabel                 *inputIp;
     
     IBOutlet UISwitch                *activeSenderSwitch;
+    IBOutlet UISwitch                *multiOutputSwitch;
+    IBOutlet UISegmentedControl      *outputTypeSegmented;
     
     std::string                      addressString;
     s_int32                          actualPort;

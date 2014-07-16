@@ -6,9 +6,11 @@
 //  Copyright (c) 2014 Marco Bertola. All rights reserved.
 //
 
+#include "SaveSettings.h"
 #include "UDPSender.h"
 #include "UDPSendersManager.h"
 #include "Harvester.h"
+
 
 using namespace scdf;
 UDPSendersManager *UDPSendersManager::_instance=NULL;
@@ -19,7 +21,7 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
     
     UDPSenderHelperBase *sender=new UDPSenderHelperBase();
     senders.push_back(sender);
-    activeSender=senders.size()-1;
+    activeSender=(s_int32)senders.size()-1;
     sender->Init(udpPorts, ipAdd);
     return activeSender;
 }
@@ -55,26 +57,34 @@ UDPSenderHelperBase *UDPSendersManager::GetActiveSender()
 
 void UDPSendersManager::SetOutputPort(s_int32 port)
 {
+    scdf::SaveSettings::Instance()->SaveIntValue(port,PORT_IP_KEY);
+    
     if (0==senders.size()) return;
     InitSender(port, GetOutputAddress());
+   
 }
 
 void UDPSendersManager::SetOutputAddress(std::string ipAddress)
 {
+    scdf::SaveSettings::Instance()->SaveStringValue(ipAddress,ADDRESS_IP_KEY);
+    
     if (0==senders.size()) return;
     InitSender(GetOutputPort(), ipAddress);
 }
 
 void UDPSendersManager::SetMultiOutput(s_bool _multiOutput)
 {
+    scdf::SaveSettings::Instance()->SaveBoolValue(_multiOutput, MULTI_ROUTE_KEY);
+    
     multiOutput=_multiOutput;
     if (0==senders.size()) return;
     InitSender(GetOutputPort(), GetOutputAddress());
-
+    
 }
 
 void UDPSendersManager::SetUseOSCPackaging(s_bool pack)
 {
+    scdf::SaveSettings::Instance()->SaveBoolValue(pack, OUTPUT_TYPE);
     oscPackData=pack;
 }
 

@@ -118,7 +118,7 @@ SensorData *PipesManager::ReadFromReturnPipe(SensorType type)
 
 s_int32 PipesManager::NumPipes()
 {
-    return pipes.size();
+    return (s_int32)pipes.size();
 }
 
 s_int32 PipesManager::WriteOnPipe(SensorType type, SensorData *data)
