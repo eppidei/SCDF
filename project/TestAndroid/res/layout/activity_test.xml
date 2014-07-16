@@ -17,7 +17,8 @@
             android:text="Dest. IP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="15"
+            android:textSize="14sp"
+            android:ems="12"
             android:inputType="numberDecimal" >
         </EditText>
         
@@ -25,36 +26,47 @@
             android:id="@+id/edittext_port"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/edittext_ip"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:ems="5"
             android:inputType="phone"
             android:text="Src. port" />
         
-        <Spinner
-            android:id="@+id/spinner_mastersensor"
-            android:layout_below="@+id/edittext_ip"
+        <ToggleButton
+            android:id="@+id/toggle_connect"
             android:layout_alignParentLeft="true"
+            android:layout_below="@id/edittext_ip"
+            android:textOff="Connect"
+            android:textOn="Disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ToggleButton
+            android:id="@+id/toggle_osc"
+            android:textOff="UDP"
+            android:textOn="OSC"
+            android:layout_below="@id/edittext_ip"
+            android:layout_toRightOf="@id/toggle_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ToggleButton
+            android:id="@+id/toggle_multiport"
+            android:layout_below="@id/edittext_ip"
+            android:layout_toRightOf="@id/toggle_osc"
+            android:textOff="Single port"
+            android:textOn="Multi port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+      <Spinner
+            android:id="@+id/spinner_mastersensor"
+            android:layout_below="@id/edittext_ip"
+            android:layout_toRightOf="@id/toggle_multiport"
+            android:layout_alignParentRight="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        
-        <Button
-            android:id="@+id/button_connect"
-            android:layout_below="@id/edittext_ip"
-            android:layout_toRightOf="@id/spinner_mastersensor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect" />
-        
-        <Button
-            android:id="@+id/button_init"
-            android:layout_below="@id/edittext_ip"
-            
-            android:layout_toRightOf="@id/button_connect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Init" />
-
         
     </RelativeLayout>
 
