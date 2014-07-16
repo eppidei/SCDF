@@ -30,14 +30,14 @@ void CustomPipe::Open()
 s_bool CustomPipe::Read(s_char *buffer, s_int32 bytesToRead, s_int32 *bytesRead)
 {
     s_int32 bytesRead1=0;
-    bytesRead1=read(pd[0], buffer, bytesToRead);
+    bytesRead1=(s_int32)read(pd[0], buffer, bytesToRead);
     if(bytesRead)
         *bytesRead=bytesRead1;
     return -1!=bytesRead1;
 }
 s_bool CustomPipe::Write(const s_char *buffer, s_int32 bytesToWrite, s_int32 *bytesWritten)
 {
-    s_int32 bytesWritten1=write(pd[1], buffer, bytesToWrite);
+    s_int32 bytesWritten1=(s_int32)write(pd[1], buffer, bytesToWrite);
     if(bytesWritten) *bytesWritten=bytesWritten1;
     return bytesWritten1!=-1;
 }

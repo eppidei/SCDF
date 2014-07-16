@@ -29,6 +29,7 @@
 		9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
+		DC299E5A197714DA007F430F /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC299E59197714DA007F430F /* SaveSettings.mm */; };
 		DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF56194CD2A10051E311 /* AVFoundation.framework */; };
 		DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */; };
 		DC4DFF6B194CD3590051E311 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */; };
@@ -84,6 +85,8 @@
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
 		DC15139A194487BE00DC7BF7 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../src/include/Sensor.h; sourceTree = "<group>"; };
+		DC299E5819771346007F430F /* SaveSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SaveSettings.h; path = ../../../../src/include/SaveSettings.h; sourceTree = "<group>"; };
+		DC299E59197714DA007F430F /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSettings.mm; sourceTree = "<group>"; };
 		DC2BC2C2195C283A0011521F /* SensorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorsManager.h; path = ../../../../src/include/SensorsManager.h; sourceTree = "<group>"; };
 		DC4DFF56194CD2A10051E311 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -174,6 +177,7 @@
 		DC151372194485BE00DC7BF7 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				DC299E59197714DA007F430F /* SaveSettings.mm */,
 				DC151375194485BE00DC7BF7 /* AppLayout */,
 				9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */,
 				DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */,
@@ -209,6 +213,7 @@
 				9D5E2215194C870700288DD2 /* Harvester.cpp */,
 				9D5E221A194CB60400288DD2 /* UDPSender.cpp */,
 				9D5E22C5194E18DA00288DD2 /* UDPSendersManager.cpp */,
+				DC299E5819771346007F430F /* SaveSettings.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -371,6 +376,7 @@
 				DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */,
 				9D5E221F194CB6AC00288DD2 /* CustomPipe.cpp in Sources */,
 				9D5E22DA194E41C400288DD2 /* OscOutboundPacketStream.cpp in Sources */,
+				DC299E5A197714DA007F430F /* SaveSettings.mm in Sources */,
 				9D5E2217194C870700288DD2 /* Harvester.cpp in Sources */,
 				DCE8BEAE194393B300D283E8 /* main.m in Sources */,
 				9D5E223A194DE15A00288DD2 /* UdpSocket.cpp in Sources */,
@@ -496,8 +502,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
@@ -511,7 +517,7 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3740ADE7-3AED-4A1B-884D-B9ED83ACCEBA";
+				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -524,8 +530,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
@@ -539,7 +545,7 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3740ADE7-3AED-4A1B-884D-B9ED83ACCEBA";
+				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

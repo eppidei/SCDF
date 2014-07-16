@@ -7,11 +7,14 @@
 //
 
 #import "SecondViewController.h"
+#include "UDPSendersManager.h"
+#include "SaveSettings.h"
 #include "Sensor.h"
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #include <string>
-#include "UDPSendersManager.h"
+
+
 
 #define DEFUALT_ADDRESS "127.0.0.1"
 #define DEFAULT_PORT 9000;
@@ -42,25 +45,45 @@
 {
     [super viewDidLoad];
    
-    [self setupInterface];
-    
     [self setupNetwork];
+    
+    [self setupInterface];
     
     [self UpdateLabels];
 }
 
 - (void) setupNetwork
 {
-    addressString = DEFUALT_ADDRESS;
-    actualPort = DEFAULT_PORT;
+    // Load values from settings
+    std::string *ip = scdf::SaveSettings::Instance()->LoadStringValue(ADDRESS_IP_KEY);
+    s_bool multiOutput = scdf::SaveSettings::Instance()->LoadBoolValue(MULTI_ROUTE_KEY);
+    s_bool routingType = scdf::SaveSettings::Instance()->LoadBoolValue(OUTPUT_TYPE);
+    actualPort = scdf::SaveSettings::Instance()->LoadIntValue(PORT_IP_KEY);
     
+     // Check Values from settings
+    if(ip)
+    {
+        addressString = *ip;
+        delete ip;
+        ip = NULL;
+    } else
+        addressString = DEFUALT_ADDRESS;
     
+    if (!actualPort) {
+        actualPort = DEFAULT_PORT;
+    }
+    
+    // Setup Framework
     [self SetOutputPort:actualPort];
     [self SetOutputAddress:addressString];
-    [self setMultiOutputActiove:NO];
-    [self setRoutingType:0];
+    [self setMultiOutputActiove:multiOutput];
+    [self setRoutingType:routingType];
     
-
+    
+    // Update Interface
+    multiOutputSwitch.on = multiOutput;
+    outputTypeSegmented.selectedSegmentIndex = routingType;
+    
 }
 
 - (void) setupInterface
