@@ -13,6 +13,7 @@
 #include "CustomPipe.h"
 #include "PipesManager.h"
 #include <mach/mach_time.h>
+#include "SensorsManager.h"
 
 using namespace scdf;
 
@@ -23,6 +24,7 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
 - (void)Attach:(scdf::SensorAudioInputImpl *)_audioSensor
 {
     audioSensor=_audioSensor;
+    wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
 }
 
 - (void)handleInterruption:(NSNotification *)notification
@@ -32,6 +34,7 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
         NSLog(@"Session interrupted > --- %s ---\n", theInterruptionType == AVAudioSessionInterruptionTypeBegan ? "Begin Interruption" : "End Interruption");
         
         if (theInterruptionType == AVAudioSessionInterruptionTypeBegan) {
+            wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
             audioSensor->Stop();
         }
         
@@ -40,8 +43,8 @@ s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
             NSError *error = nil;
             [[AVAudioSession sharedInstance] setActive:YES error:&error];
             if (nil != error) NSLog(@"AVAudioSession set active failed with error: %@", error);
-            
-            audioSensor->Start();
+            if(wasActive)
+                audioSensor->Start();
         }
     } catch(NSException * e) {
     }
@@ -155,24 +158,18 @@ SensorAudioInputImpl::~SensorAudioInputImpl()
 
 s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 {
-     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
     scdf::SensorAudioSettings &settingsAudio =  (SensorAudioSettings&)settings;
     
+    s_bool wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
+    Stop();
+    
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSError *error = nil;
-    [sessionInstance setActive:NO error:&error];
-    if (error) {
-        NSLog(@"couldn't set audio session de - active %@", error);
-        error = nil;
-    }
     
     NSTimeInterval bufferDuration = (s_float)settingsAudio.bufferSize/(s_float)settings.rate;
     [sessionInstance setPreferredIOBufferDuration:bufferDuration error:&error];
-    
-    /*Float32 preferredBufferSize = 1.0/ settingsAudio.bufferSize;
-    OSStatus ret = AudioSessionSetProperty(kAudioSessionProperty_PreferredHardwareIOBufferDuration, sizeof(preferredBufferSize), &preferredBufferSize);*/
-    
-    
+
     if(error)
     {
         NSLog(@"couldn't set session's I/O buffer duration %@", error);
@@ -188,16 +185,10 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         error = nil;
     }
     settingsAudio.rate = sessionInstance.sampleRate;
+    SetupIOUnit(settingsAudio);
     
-   /* [sessionInstance setActive:YES error:&error];
-    if (error) {
-        NSLog(@"couldn't set audio session da - active %@", error);
-        error = nil;
-    }*/
-    
-    
-    
-   // SetupIOUnit(settingsAudio);
+    if(wasActive)
+        Start();
     
     return true;
 }
@@ -256,7 +247,10 @@ s_int32 SensorAudioInputImpl::GetRate()
 
 s_int32 SensorAudioInputImpl::GetNumSamples()
 {
-    return this->GetBufferSize();
+    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    s_double bufferDuration = sessionInstance.preferredIOBufferDuration;
+    
+    return (s_double)bufferDuration*(s_float)sessionInstance.sampleRate;
 }
 
 s_int32 SensorAudioInputImpl::GetNumChannels()
@@ -268,10 +262,11 @@ s_int32 SensorAudioInputImpl::GetNumChannels()
 
 s_int32 SensorAudioInputImpl::GetBufferSize()
 {
+   
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-    NSTimeInterval bufferDuration = sessionInstance.preferredIOBufferDuration;
+    s_double bufferDuration = sessionInstance.preferredIOBufferDuration;
     
-    return (s_float)bufferDuration*(s_float)sessionInstance.sampleRate;
+    return (s_double)bufferDuration*(s_float)sessionInstance.sampleRate;
 }
 
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
@@ -293,7 +288,6 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
         existingFormat.mFormatID = kAudioFormatLinearPCM;
 
         existingFormat.mSampleRate=audioSettings.rate;
-        //existingFormat.mFramesPerPacket=audioSettings.bufferSize;
         existingFormat.mChannelsPerFrame=audioSettings.numChannels;
         //currentSampleRate=audioSettings.rate;
         

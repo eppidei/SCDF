@@ -9,6 +9,8 @@
 
 using namespace scdf;
 
+
+
 s_bool Sensor::IsAvailable(SensorType type)
 {
 	if (type==AudioInput)
@@ -42,4 +44,13 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
     }
 #endif
 
+}
+
+s_bool Sensor::IsActive()
+{
+    return active;
+}
+void Sensor::SetActive(s_bool _active)
+{
+    active=_active;
 }
