@@ -164,6 +164,9 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     s_bool wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
     Stop();
     
+    
+    SetupIOUnit(settingsAudio);
+    
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSError *error = nil;
     
@@ -176,6 +179,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         error = nil;
     }
     settingsAudio.bufferSize = sessionInstance.preferredIOBufferDuration*settings.rate;
+    currentBufferDuration = sessionInstance.preferredIOBufferDuration;
     
     
     // set the session's sample rate
@@ -185,7 +189,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         error = nil;
     }
     settingsAudio.rate = sessionInstance.sampleRate;
-    SetupIOUnit(settingsAudio);
+    
     
     if(wasActive)
         Start();
@@ -195,13 +199,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
 
 s_bool SensorAudioInputImpl::Start()
 {
-    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-     NSError *error = nil;
-     [sessionInstance setActive:YES error:&error];
-     if (error) {
-         NSLog(@"couldn't set audio session da - active %@", error);
-         error = nil;
-     }
+    LOGD("toggle Audio Input Sensor ON \n");
     
     OSStatus err = AudioOutputUnitStart(rioUnit);
     if (err) {
@@ -214,18 +212,11 @@ s_bool SensorAudioInputImpl::Start()
 
 s_bool SensorAudioInputImpl::Stop()
 {
+    LOGD("toggle Audio Input Sensor OFF \n");
     OSStatus err = AudioOutputUnitStop(rioUnit);
     if (err) {
         NSLog(@"couldn't stop AURemoteIO: %d", (int)err);
         return false;
-    }
-    
-    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-    NSError *error = nil;
-    [sessionInstance setActive:NO error:&error];
-    if (error) {
-        NSLog(@"couldn't set audio session da - active %@", error);
-        error = nil;
     }
 
     return err==noErr;
@@ -234,23 +225,13 @@ s_bool SensorAudioInputImpl::Stop()
 s_int32 SensorAudioInputImpl::GetRate()
 {
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-    
     return sessionInstance.sampleRate;
     
-    /*AudioStreamBasicDescription existingFormat;
-    
-    UInt32 param = sizeof(AudioStreamBasicDescription);
-    AudioUnitGetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,(void*) &existingFormat, &param);
-    
-    return (s_int32) existingFormat.mSampleRate;*/
 }
 
 s_int32 SensorAudioInputImpl::GetNumSamples()
 {
-    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-    s_double bufferDuration = sessionInstance.preferredIOBufferDuration;
-    
-    return (s_double)bufferDuration*(s_float)sessionInstance.sampleRate;
+    return GetBufferSize();
 }
 
 s_int32 SensorAudioInputImpl::GetNumChannels()
@@ -264,9 +245,8 @@ s_int32 SensorAudioInputImpl::GetBufferSize()
 {
    
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
-    s_double bufferDuration = sessionInstance.preferredIOBufferDuration;
-    
-    return (s_double)bufferDuration*(s_float)sessionInstance.sampleRate;
+   
+    return (s_double)currentBufferDuration*(s_double)sessionInstance.sampleRate;
 }
 
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
@@ -286,11 +266,9 @@ void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
         }
         
         existingFormat.mFormatID = kAudioFormatLinearPCM;
-
         existingFormat.mSampleRate=audioSettings.rate;
         existingFormat.mChannelsPerFrame=audioSettings.numChannels;
-        //currentSampleRate=audioSettings.rate;
-        
+       
         
         err = AudioUnitSetProperty(rioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &existingFormat, sizeof(existingFormat));
         if (err) {
@@ -399,6 +377,7 @@ void SensorAudioInputImpl::InitAudioSession()
             NSLog(@"couldn't set session's I/O buffer duration %@", error);
             error = nil;
         }
+        currentBufferDuration = sessionInstance.preferredIOBufferDuration;
         
         
         
