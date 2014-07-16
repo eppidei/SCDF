@@ -37,8 +37,6 @@ s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)
             udpPorts.push_back(udpPortBase+i);
     
     return CreateSender(udpPorts, ipAdd);
-   // Harvester::Instance()->Start();
-//    return ret;
 }
 
 void UDPSendersManager::ReleaseSender()

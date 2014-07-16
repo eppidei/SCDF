@@ -190,6 +190,7 @@ s_bool SensorStandardImpl::Start()
 {
     switch (sensorTypeRef) {
         case scdf::Accelerometer:
+            LOGD("toggle Accelerometer Sensor ON \n");
             [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
                                             SensorsStandardIOSData data;
@@ -204,6 +205,7 @@ s_bool SensorStandardImpl::Start()
                                         }];
             break;
         case scdf::Gyroscope:
+            LOGD("toggle Gyroscope Sensor ON \n");
             [motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue]
                                        withHandler:^(CMGyroData *gyroData, NSError *error) {
                                            SensorsStandardIOSData data;
@@ -218,6 +220,7 @@ s_bool SensorStandardImpl::Start()
                                        }];
             break;
         case scdf::Magnetometer:
+            LOGD("toggle Magnetometer Sensor ON \n");
             [motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMMagnetometerData  *magneticFieldData, NSError *error) {
                                             SensorsStandardIOSData data;
@@ -233,6 +236,7 @@ s_bool SensorStandardImpl::Start()
             break;
         case scdf::Proximity:
         {
+            LOGD("toggle Proximity Sensor ON \n");
             UIDevice *device = [UIDevice currentDevice];
             device.proximityMonitoringEnabled = YES;
             [timerProximity Start];
@@ -248,16 +252,20 @@ s_bool SensorStandardImpl::Stop()
 {
     switch (sensorTypeRef) {
         case scdf::Accelerometer:
+            LOGD("toggle Accelerometer Sensor OFF \n");
             [motionManager stopAccelerometerUpdates];
             break;
         case scdf::Gyroscope:
+            LOGD("toggle Gyroscope Sensor OFF \n");
             [motionManager stopGyroUpdates];
             break;
         case scdf::Magnetometer:
+            LOGD("toggle Magnetometer Sensor OFF \n");
             [motionManager stopMagnetometerUpdates];
             break;
         case scdf::Proximity:
         {
+             LOGD("toggle Proximity Sensor OFF \n");
             UIDevice *device = [UIDevice currentDevice];
             device.proximityMonitoringEnabled = NO;
             [timerProximity Stop];

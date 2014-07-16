@@ -44,7 +44,6 @@ void SensorsManager::SetRate(SensorType type, s_int32 rate)
         settings.rate = rate;
         sensor->Setup(settings);
     }
-    sensor->Start();
 }
 
 void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
