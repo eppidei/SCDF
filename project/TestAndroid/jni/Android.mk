@@ -48,13 +48,16 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					UDPSender.cpp \
 					UDPSendersManager.cpp \
 					Harvester.cpp \
-					PipesManager.cpp
-include $(BUILD_STATIC_LIBRARY)
+					PipesManager.cpp \
+					android/FrameworkJniGlue.cpp \
+					android/SaveSettings.cpp
+					
+include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := scdftest
 LOCAL_PATH:= $(APP_LOCAL_PATH)
 LOCAL_LDLIBS += -landroid -llog -lOpenSLES
-LOCAL_STATIC_LIBRARIES := scdf
-LOCAL_SRC_FILES := scdftest.cpp
+LOCAL_SHARED_LIBRARIES := scdf
+LOCAL_SRC_FILES := scdftest.cpp 
 include $(BUILD_SHARED_LIBRARY)

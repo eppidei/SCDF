@@ -29,6 +29,7 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
 	ASensorEvent event;
     while (ASensorEventQueue_getEvents(s->sensorEventQueue, &event, 1) > 0)
     {
+    	LOGD("   Sensor %d", s->GetType());
     	//LOGD("   Sensor %d : %f  %f  %f", s->GetType(),event.acceleration.x, event.acceleration.y, event.acceleration.z);
     	SensorData *sd=thePipesManager()->ReadFromReturnPipe(s->GetType());
    	    //LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());

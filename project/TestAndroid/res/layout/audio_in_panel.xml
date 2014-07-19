@@ -24,7 +24,7 @@
          android:textSize="20sp" />
    
     <Spinner
-	    android:id="@+id/rate"
+	    android:id="@+id/spinner_rate"
 	    android:layout_alignParentRight="true"
         android:layout_below="@id/toggle"
 	    android:layout_width="150dp"

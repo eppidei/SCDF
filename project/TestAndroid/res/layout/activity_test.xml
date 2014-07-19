@@ -2,24 +2,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000" >
+    android:background="#000"
+    android:focusable="true"
+	android:focusableInTouchMode="true" >
 
     <RelativeLayout
         android:id="@+id/section_generalsettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#DDD" >
+        android:background="#CCC" >
 
         <EditText
             android:id="@+id/edittext_ip"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="Dest. IP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:ems="12"
-            android:inputType="numberDecimal" >
+            android:inputType="phone"
+            android:digits="0123456789." >
         </EditText>
         
         <EditText
