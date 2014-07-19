@@ -156,33 +156,22 @@ SensorStandardImpl::~SensorStandardImpl()
 
 s_bool SensorStandardImpl::Setup(scdf::SensorSettings settings)
 {
-    Stop();
-    s_bool wasActive = false;
-    
     NSTimeInterval updateInterval = 1.0/(s_float)settings.rate;
     switch (sensorTypeRef) {
         case scdf::Accelerometer:
-            wasActive = scdf::theSensorManager()->SensorActivated(scdf::Accelerometer);
             motionManager.accelerometerUpdateInterval = updateInterval;
             break;
         case scdf::Gyroscope:
-            wasActive = scdf::theSensorManager()->SensorActivated(scdf::Gyroscope);
             motionManager.gyroUpdateInterval = updateInterval;
             break;
         case scdf::Magnetometer:
-            wasActive = scdf::theSensorManager()->SensorActivated(scdf::Magnetometer);
             motionManager.magnetometerUpdateInterval = updateInterval;
             break;
         case scdf::Proximity:
-            wasActive = scdf::theSensorManager()->SensorActivated(scdf::Proximity);
             [timerProximity Setup:settings];
         default:
             break;
     }
-    
-    if(wasActive)
-        Start();
-    
     return true;
 }
 

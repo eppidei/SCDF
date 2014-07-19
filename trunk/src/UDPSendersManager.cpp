@@ -22,8 +22,7 @@ s_int32 UDPSendersManager::CreateSender(std::vector<s_int32> udpPorts, std::stri
     UDPSenderHelperBase *sender=new UDPSenderHelperBase();
     senders.push_back(sender);
     activeSender=(s_int32)senders.size()-1;
-    sender->Init(udpPorts, ipAdd);
-    return activeSender;
+    return sender->Init(udpPorts, ipAdd);
 }
 
 s_int32 UDPSendersManager::InitSender(s_int32 udpPortBase, std::string ipAdd)

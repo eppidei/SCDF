@@ -203,7 +203,8 @@ public:
 	{
 		assert( isConnected_ );
 
-        send( socket_, data, size, 0 );
+        if (send( socket_, data, size, 0 ) < 0)
+            throw std::runtime_error(strerror(errno));
 	}
 
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, std::size_t size )
@@ -211,7 +212,8 @@ public:
 		sendToAddr_.sin_addr.s_addr = htonl( remoteEndpoint.address );
         sendToAddr_.sin_port = htons( remoteEndpoint.port );
 
-        sendto( socket_, data, size, 0, (sockaddr*)&sendToAddr_, sizeof(sendToAddr_) );
+        if (sendto( socket_, data, size, 0, (sockaddr*)&sendToAddr_, sizeof(sendToAddr_) )<0)
+            throw std::runtime_error(strerror(errno));
 	}
 
 	void Bind( const IpEndpointName& localEndpoint )
