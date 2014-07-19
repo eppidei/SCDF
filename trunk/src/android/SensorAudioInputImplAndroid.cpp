@@ -17,6 +17,8 @@ s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
 void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
+	//LOGI("Audio callback");
+
 	s_uint64 now = now_ns();
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
     ai->callbacksCount++;
@@ -126,6 +128,13 @@ scdf::SensorAudioInputImpl::SensorAudioInputImpl()
 	recordItf=NULL;
 	inBufferQueue=NULL;
 	inputBuffer=NULL;
+
+	// in case these values are asked before setup,
+	// they act as "default" values:
+	inputOpenSLFormat.samplesPerSec=44100000;
+	inputOpenSLFormat.numChannels=1;
+	bufferSize = 512;
+
 	theOpenSLEngine()->Initialize();
 }
 

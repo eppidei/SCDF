@@ -14,17 +14,18 @@ using namespace scdf;
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
 {
+	InitFramework();
 	return true;
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnResume(JNIEnv* env, jobject thiz)
 {
-	return theSensorManager()->StartPrecActiveSensors();
+	//return theSensorManager()->StartPrecActiveSensors();
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnPause(JNIEnv* env, jobject thiz)
 {
-	return theSensorManager()->StopAllSensors();
+	//return theSensorManager()->StopAllSensors();
 }
 
 
@@ -52,6 +53,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeInit(JNIEnv* env
     UDPSendersManager::Instance()->InitSender(9000,"10.12.209.49");
     UDPSendersManager::Instance()->SetMultiOutput(true);
 
+    return true;
 }
 
 

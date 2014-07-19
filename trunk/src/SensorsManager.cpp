@@ -150,6 +150,11 @@ s_bool SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
 	return s->Setup(settings);
 }
 
+s_bool SensorsManager::IsSensorAvailable(SensorType type)
+{
+	return Sensor::IsAvailable((SensorType)type);
+}
+
 void SensorsManager::CreateAllSensors() // creates all AVAILABLE sensors
 {
     for (int i=Accelerometer ; i<NumTypes; i++)	{

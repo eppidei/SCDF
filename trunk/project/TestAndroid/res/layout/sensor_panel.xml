@@ -15,6 +15,7 @@
         android:layout_alignBaseline="@id/toggle"
         android:layout_height="wrap_content"
         android:text="ToggleButton" />
+	
     <TextView
     	android:id="@+id/text"
         android:layout_alignParentTop="true"

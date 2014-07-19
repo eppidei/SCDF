@@ -7,7 +7,7 @@
 //
 
 #include "TypeDefinitions.h"
-
+#include "Sensor.h"
 
 #define DEFAULT_SENORS_STANDARD_RATE 100
 #define DEFAULT_AUDIO_BUFFER_SIZE 512
@@ -24,6 +24,7 @@ namespace scdf
 
     	friend SensorsManager *theSensorManager();
 
+    	s_bool IsSensorAvailable(SensorType type);
         Sensor *CreateSensor(SensorType type);
         s_bool DestroySensor(SensorType type);
 
