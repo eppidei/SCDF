@@ -34,6 +34,7 @@ namespace scdf {
         AudioUnit rioUnit;
         
         NSTimeInterval currentBufferDuration;
+        s_int32  currentBufferSizeSample;
         
     public:
         static OSStatus PerformRender (void                         *inRefCon,

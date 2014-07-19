@@ -168,21 +168,11 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     Stop();
     
     
-    SetupIOUnit(settingsAudio);
-    
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSError *error = nil;
     
-    NSTimeInterval bufferDuration = (s_float)settingsAudio.bufferSize/(s_float)settings.rate;
-    [sessionInstance setPreferredIOBufferDuration:bufferDuration error:&error];
-
-    if(error)
-    {
-        NSLog(@"couldn't set session's I/O buffer duration %@", error);
-        error = nil;
-    }
-    settingsAudio.bufferSize = sessionInstance.preferredIOBufferDuration*settings.rate;
-    currentBufferDuration = sessionInstance.preferredIOBufferDuration;
+    
+    [sessionInstance setActive:NO error:&error];
     
     
     // set the session's sample rate
@@ -192,6 +182,25 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
         error = nil;
     }
     settingsAudio.rate = sessionInstance.sampleRate;
+    
+    
+    NSTimeInterval bufferDuration = (NSTimeInterval)settingsAudio.bufferSize/(NSTimeInterval)settings.rate;
+    [sessionInstance setPreferredIOBufferDuration:bufferDuration error:&error];
+    
+    if(error)
+    {
+        NSLog(@"couldn't set session's I/O buffer duration %@", error);
+        error = nil;
+    }
+   
+    
+    currentBufferDuration = sessionInstance.IOBufferDuration;
+    currentBufferSizeSample = settingsAudio.bufferSize;
+    
+     SetupIOUnit(settingsAudio);
+    
+    
+    [sessionInstance setActive:YES error:&error];
     
     
     if(wasActive)
@@ -247,9 +256,11 @@ s_int32 SensorAudioInputImpl::GetNumChannels()
 s_int32 SensorAudioInputImpl::GetBufferSize()
 {
    
-    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    /*AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+    
+    s_int32  dim = (currentBufferDuration*((NSTimeInterval)sessionInstance.sampleRate));*/
    
-    return (s_double)currentBufferDuration*(s_double)sessionInstance.sampleRate;
+    return currentBufferSizeSample;
 }
 
 void SensorAudioInputImpl::SetupIOUnit(scdf::SensorAudioSettings &settings)
