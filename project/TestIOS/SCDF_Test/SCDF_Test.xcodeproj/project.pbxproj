@@ -498,11 +498,15 @@
 		DCE8BED7194393B400D283E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"armv7,",
+					armv7s,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Flavio Antonioli (LE2RP52E3W)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Leonardo Di Carlo (S5C22B8JC9)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -517,8 +521,8 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				PROVISIONING_PROFILE = "3740ADE7-3AED-4A1B-884D-B9ED83ACCEBA";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -526,6 +530,10 @@
 		DCE8BED8194393B400D283E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"armv7,",
+					armv7s,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
@@ -545,8 +553,8 @@
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5B9C004A-6659-418A-BE26-DA6BCEDD5760";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				PROVISIONING_PROFILE = "3740ADE7-3AED-4A1B-884D-B9ED83ACCEBA";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
