@@ -9,6 +9,7 @@
 #include <inttypes.h>
 #include "fcntl.h"
 #include "Logging.h"
+#include <stdexcept>
 
 typedef bool    s_bool;
 typedef int8_t  s_int8;

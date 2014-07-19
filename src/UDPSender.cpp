@@ -22,10 +22,12 @@ s_int32 UDPSender::Init(int udpp, std::string add)
     s_int32 res=1;
     try
     {
-        endPoint.reset(new IpEndpointName(IpEndpointName(add.c_str(), udpp)));
-        transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
-    } catch (...)
+        endPoint.reset(new IpEndpointName(add.c_str(), udpp));
+        //transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
+        transmitSocket.reset(new UdpSocket());
+    } catch(std::runtime_error& e)
     {
+        LOGD(e.what());
         assert(false);
         res=0;
     }
@@ -47,7 +49,7 @@ void UDPSender::Release()
 {
     address="Not Assigned";
     transmitSocket.reset();
-	endPoint.reset();
+	//endPoint.reset();
 }
 
 void UDPSender::SendData(s_char* data, s_int32 size)
@@ -55,7 +57,8 @@ void UDPSender::SendData(s_char* data, s_int32 size)
 #ifdef LOG_UDP_SEND
 	LOGD("UDPSender send data\n");
 #endif
-	transmitSocket->Send(data, size);
+	//transmitSocket->Send(data, size);
+    transmitSocket->SendTo(*endPoint.get(),data, size);
 }
 
 void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
@@ -63,7 +66,8 @@ void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
 #ifdef LOG_UDP_SEND
 	LOGD("UDP send data osc packed\n");
 #endif
-    transmitSocket->Send(oscData.Data(), oscData.Size());
+    //transmitSocket->Send(oscData.Data(), oscData.Size());
+    transmitSocket->SendTo(*endPoint.get(), oscData.Data(), oscData.Size());
 }
 
 void UDPSenderHelperBase::SendData()
@@ -151,7 +155,16 @@ void UDPSenderHelperBase::SendOnThread()
 {
     EventCanSend()->Wait();
     if (!activated) return;
-    SendData();
+    try{
+        SendData();
+    }
+    catch(std::runtime_error& e)
+    {
+        std::string s(e.what());
+        s+=std::string("/n");
+        LOGD(s.c_str());
+        //assert(false);
+    }
     Harvester::SentDataRecyclingProcedure(&senderData);
     EventFreeSlot()->Set();
 }
@@ -181,7 +194,7 @@ std::string UDPSenderHelperBase::GetAddress()
     return senders[0]->GetAddress();
 }
 
-void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string address)
+s_int32 UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string address)
 {
     assert(udpPorts.size()!=0);
     for (int i=0;i<udpPorts.size();++i)
@@ -191,9 +204,10 @@ void UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string addres
             senders.push_back(s);
     }
     if (0==senders.size())
-        return;
+        return 0;
     activated=true;
     handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
+    return 1;
 }
 
 void UDPSenderHelperBase::Release()

@@ -29,7 +29,9 @@ void SensorsManager::SetRate(SensorType type, s_int32 rate)
 {
     Sensor *sensor=GetSensor(type);
     if (NULL==sensor) return;
-    sensor->Stop();
+    bool wasActive=sensor->IsActive();
+    if (wasActive)
+        sensor->Stop();
     if(type==AudioInput)
     {
         SensorAudioInput *audioSensor=dynamic_cast<SensorAudioInput*>(sensor);
@@ -44,6 +46,8 @@ void SensorsManager::SetRate(SensorType type, s_int32 rate)
         settings.rate = rate;
         sensor->Setup(settings);
     }
+    if (wasActive)
+        sensor->Start();
 }
 
 void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
@@ -51,12 +55,19 @@ void SensorsManager::SetBufferSize(SensorType type, s_int32 size)
     SensorAudioInput *sensor=(SensorAudioInput *)GetSensor(type);
     if(NULL==sensor||type!=AudioInput) return;
     
+    bool wasActive=sensor->IsActive();
+    if (wasActive)
+        sensor->Stop();
+    
     SensorAudioSettings settings;
     settings.rate = sensor->GetRate();
     settings.numChannels = sensor->GetNumChannels();
     settings.bufferSize = size;
 
     sensor->Setup(settings);
+    
+    if (wasActive)
+        sensor->Start();
 }
 
 s_int32 SensorsManager::GetRate(SensorType type)

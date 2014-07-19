@@ -116,7 +116,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
 #endif
-    
+    assert(inNumberFrames<=pthis->GetNumSamples());
     memcpy(s->data, ioData->mBuffers[0].mData, inNumberFrames*sizeof(s_sample));
     
 #ifdef LOG_TIMESTAMP
@@ -164,10 +164,6 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     
     scdf::SensorAudioSettings &settingsAudio =  (SensorAudioSettings&)settings;
     
-    s_bool wasActive = scdf::theSensorManager()->SensorActivated(scdf::AudioInput);
-    Stop();
-    
-    
     AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     NSError *error = nil;
     
@@ -194,17 +190,13 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     }
    
     
-    currentBufferDuration = sessionInstance.IOBufferDuration;
+    //currentBufferDuration = sessionInstance.IOBufferDuration;
     currentBufferSizeSample = settingsAudio.bufferSize;
     
      SetupIOUnit(settingsAudio);
     
     
     [sessionInstance setActive:YES error:&error];
-    
-    
-    if(wasActive)
-        Start();
     
     return true;
 }
@@ -391,7 +383,7 @@ void SensorAudioInputImpl::InitAudioSession()
             NSLog(@"couldn't set session's I/O buffer duration %@", error);
             error = nil;
         }
-        currentBufferDuration = sessionInstance.preferredIOBufferDuration;
+      //  currentBufferDuration = sessionInstance.preferredIOBufferDuration;
         
         
         

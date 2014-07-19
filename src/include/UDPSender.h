@@ -12,7 +12,7 @@
 #include "ThreadUtils.h"
 #include "Sensor.h"
 
-class UdpTransmitSocket;
+class UdpSocket;
 class IpEndpointName;
 
 namespace osc {
@@ -22,7 +22,8 @@ namespace scdf
 {
     class UDPSender
     {
-        std::auto_ptr<UdpTransmitSocket> transmitSocket;
+//        std::auto_ptr<UdpTransmitSocket> transmitSocket;
+        std::auto_ptr<UdpSocket> transmitSocket;
         std::auto_ptr<IpEndpointName> endPoint;
         void Release();
         std::string address;
@@ -65,7 +66,7 @@ namespace scdf
         
         UDPSenderHelperBase();
         ~UDPSenderHelperBase() { Release();}
-        virtual void Init(std::vector<s_int32> udpPorts, std::string address);
+        virtual s_int32 Init(std::vector<s_int32> udpPorts, std::string address);
         void Release();
         void SendOnThread();
         ThreadUtils::CustomSemaphore *EventFreeSlot() {return &freeSlot;}

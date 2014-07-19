@@ -188,7 +188,8 @@
     UISwitch *currentSensor = sender;
     if(currentSensor.on)
     {
-        scdf::UDPSendersManager::Instance()->InitSender(actualPort, addressString);
+        if (scdf::UDPSendersManager::Instance()->InitSender(actualPort, addressString)<=0)
+            assert(false);
     } else
     {
         scdf::UDPSendersManager::Instance()->ReleaseSender();
