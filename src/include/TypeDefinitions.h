@@ -34,7 +34,7 @@ typedef s_float s_sample;
 //#define LOG_UDP_SEND
 //#define LOG_PIPES_STATUS
 //#define LOG_DATA
-//#define LOG_SENDER_DATA
+#define LOG_SENDER_DATA
 //#define LOG_TIMESTAMP
 //#define LOG_HARVEST_STATUS
 
@@ -42,4 +42,12 @@ typedef s_float s_sample;
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
 #define OSC_BUFFER_SIZE 4096
 #define RETURN_PIPES_STATIC_INIT 50
+
+#define MAX_SAMP_FREQ 48000
+#define MAX_SENSOR_RATE 100
+#define MAX_AUDIO_BUF_LENGTH 4096
+
+#define MAX_SENSOR_BUF_LENGTH 9
+
+
 

@@ -126,10 +126,10 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
 #endif
 
     s->type = scdf::AudioInput;
-    s->num_samples=inNumberFrames;
-    s->numChannels=1;
+    s->num_frames=inNumberFrames;
+    s->num_channels=1;
     s->rate=pthis->GetRate();
-    s->timestamp=inTimeStamp->mHostTime;
+    s->timestamp[0]=inTimeStamp->mHostTime;
     s->timeid=mach_absolute_time();
     pthis->AddIncomingDataToQueue(s);
     

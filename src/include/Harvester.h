@@ -19,13 +19,25 @@ namespace scdf{
     {
         std::vector<SensorData*> nextHarvestData;   //circular buffer?
         std::vector<SensorData*> myHarvest;         //circular buffer?
-        SensorData *masterData;
         
+        struct HarvestInfo{
+            std::vector<std::vector<int> > info;
+            HarvestInfo() : info(NumTypes) {}
+            void CleanUp()
+            {
+                for(int i=0;i<NumTypes;++i)
+                    info[i].clear();
+            }
+        } myHarvestInfo;
+        
+        std::vector<SensorData*> bufferHarvest;
         void PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType);
         void InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd);
-        void Sort();
+        void BuildSensorsDataBuffers(SensorData *masterData);
+//        void Sort();
         void NotifyHarvestCompletition();
         void Harvest(SensorData *_masterData);
+        void AllocBufferHarvest();
         
         struct Compare {
             s_bool operator()(const SensorData* s1, const SensorData* s2) const;

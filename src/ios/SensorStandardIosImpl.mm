@@ -310,9 +310,9 @@ s_int32 SensorStandardImpl::GetNumSamples()
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)
 {
-    s_int32 numSamples = 3;
+    s_int32 numChannels = 3;
     if (sensorTypeRef==Proximity)
-        numSamples = 1;
+        numChannels = 1;
     
     SensorData *s=thePipesManager()->ReadFromReturnPipe(sensorTypeRef);
     
@@ -328,10 +328,11 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
         ((s_sample*)(s->data))[2]  = sensorIOSData.value3;
     }
     
-    s->num_samples = numSamples;
+    s->num_frames = 1;
+    s->num_channels=numChannels;
     s->type = sensorTypeRef;
     s->rate = GetRate();
-    s->timestamp=mach_absolute_time();
+    s->timestamp[0]=mach_absolute_time();
     s->timeid=mach_absolute_time()-MillisecondsTo_mach_timebase((1.0/GetRate())*1000);
         
     AddIncomingDataToQueue(s);
