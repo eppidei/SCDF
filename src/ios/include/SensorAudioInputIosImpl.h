@@ -33,7 +33,7 @@ namespace scdf {
         AudioEventsListener *listener;
         AudioUnit rioUnit;
         
-       // NSTimeInterval currentBufferDuration;
+        s_bool audioUnitInitialized;
         s_int32  currentBufferSizeSample;
         
     public:
