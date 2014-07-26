@@ -148,6 +148,8 @@ SensorAudioInputImpl::SensorAudioInputImpl()
 {
     listener = [[AudioEventsListener alloc] init];
     [listener Attach:this];
+    
+    audioUnitInitialized = false;
 
     InitAudioSession();
     InitIOUnit();
@@ -171,6 +173,10 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     [sessionInstance setActive:NO error:&error];
     
     
+    InitIOUnit();
+    SetupIOUnit(settingsAudio);
+    
+    
     // set the session's sample rate
     [sessionInstance setPreferredSampleRate:settingsAudio.rate error:&error];
     if (error) {
@@ -190,12 +196,7 @@ s_bool SensorAudioInputImpl::Setup(scdf::SensorSettings &settings)
     }
    
     
-    //currentBufferDuration = sessionInstance.IOBufferDuration;
     currentBufferSizeSample = settingsAudio.bufferSize;
-    
-     SetupIOUnit(settingsAudio);
-    
-    
     [sessionInstance setActive:YES error:&error];
     
     return true;
@@ -301,6 +302,9 @@ void SensorAudioInputImpl::InitIOUnit()
     try {
         // Create a new instance of AURemoteIO
         
+        if(audioUnitInitialized)
+             AudioUnitUninitialize(rioUnit);
+            
         AudioComponentDescription desc;
         desc.componentType = kAudioUnitType_Output;
         desc.componentSubType = kAudioUnitSubType_RemoteIO;
@@ -348,6 +352,7 @@ void SensorAudioInputImpl::InitIOUnit()
         
         // Initialize the AURemoteIO instance
         AudioUnitInitialize(rioUnit);
+        audioUnitInitialized = true;
     }
     
     catch (NSException *e) {

@@ -72,20 +72,13 @@ scdf::SensorsManager *theSensorManager();
     rate = scdf::theSensorManager()->GetRate(scdf::Proximity);
     proxyRateField.text = [NSString stringWithFormat:@"%d", rate];
     
-    rate = scdf::theSensorManager()->GetRate(scdf::AudioInput);
-    audioRateField.text = [NSString stringWithFormat:@"%d", rate];
-    
-    s_int32 bufferSize = scdf::theSensorManager()->GetNumSamples(scdf::AudioInput);
-    audioBufferSizeField.text = [NSString stringWithFormat:@"%d", bufferSize];
+   
 }
 
 - (void) setupInterface
 {
-    audioBufferSizeField.returnKeyType = UIReturnKeyDefault;
-    audioBufferSizeField.keyboardType = UIKeyboardTypeNumberPad;
-    
-    audioRateField.returnKeyType = UIReturnKeyDefault;
-    audioRateField.keyboardType = UIKeyboardTypeNumberPad;
+    sampleRateControl.selectedSegmentIndex = 4;
+    bufferSizeRateControl.selectedSegmentIndex = 1;
     
     gyrosRateField.returnKeyType = UIReturnKeyDone;
     gyrosRateField.keyboardType = UIKeyboardTypeNumberPad;
@@ -107,9 +100,8 @@ scdf::SensorsManager *theSensorManager();
 }
 
 - (void) viewTapped {
-    if (audioRateField.isFirstResponder) {[audioRateField resignFirstResponder];}
-     else if(audioBufferSizeField.isFirstResponder) {[audioBufferSizeField resignFirstResponder];}
-    else if(gyrosRateField.isFirstResponder) {[gyrosRateField resignFirstResponder];}
+   
+    if(gyrosRateField.isFirstResponder) {[gyrosRateField resignFirstResponder];}
     else if(accelRateField.isFirstResponder) {[accelRateField resignFirstResponder];}
     else if(magneRateField.isFirstResponder) {[magneRateField resignFirstResponder];}
     else if(proxyRateField.isFirstResponder) {[proxyRateField resignFirstResponder];}
@@ -189,17 +181,67 @@ scdf::SensorsManager *theSensorManager();
     }
 }
 
-- (IBAction)AudioRateDidEndEditing:(UITextField *)textField
+- (IBAction) changeSampleRateSensor: (id) sender
 {
-    NSString *textUpdated = [textField text];
-    s_int32 rate = [textUpdated intValue];
-    [self setSensorRate:scdf::AudioInput rate:rate];
-}
+    
+    UISegmentedControl *controller = (UISegmentedControl* )sender;
+    
+    s_int32 sampleRate = 0;
+    switch (controller.selectedSegmentIndex) {
+        case 0:
+            sampleRate = 8000;
+            break;
+        case 1:
+            sampleRate = 11025;
+            break;
+        case 2:
+            sampleRate = 22050;
+            break;
+        case 3:
+            sampleRate = 32000;
+            break;
+        case 4:
+            sampleRate = 44100;
+            break;
+        case 5:
+            sampleRate = 48000;
+            break;
+        default:
+            sampleRate = 44100;
+            break;
+    }
+    
+    scdf::theSensorManager()->SetRate(scdf::AudioInput, sampleRate);
 
-- (IBAction)AudioBufferDidEndEditing:(UITextField *)textField
+    
+            
+}
+- (IBAction) changeBufferSizeSensor: (id) sender
 {
-    NSString *textUpdated = [textField text];
-    s_int32 bufferSize = [textUpdated intValue];
+    UISegmentedControl *controller = (UISegmentedControl* )sender;
+    
+    s_int32 bufferSize = 0;
+    switch (controller.selectedSegmentIndex) {
+        case 0:
+            bufferSize = 256;
+            break;
+        case 1:
+            bufferSize = 512;
+            break;
+        case 2:
+            bufferSize = 1024;
+            break;
+        case 3:
+            bufferSize = 2048;
+            break;
+        case 4:
+            bufferSize = 4096;
+            break;
+        default:
+            bufferSize = 512;
+            break;
+    }
+    
     scdf::theSensorManager()->SetBufferSize(scdf::AudioInput, bufferSize);
 }
 
@@ -230,7 +272,6 @@ scdf::SensorsManager *theSensorManager();
     s_int32 rate = [textUpdated intValue];
     [self setSensorRate:scdf::Proximity rate:rate];
 }
-
 
 
 #pragma mark from interface to framekork

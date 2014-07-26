@@ -33,6 +33,10 @@
 		DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF56194CD2A10051E311 /* AVFoundation.framework */; };
 		DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */; };
 		DC4DFF6B194CD3590051E311 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */; };
+		DC57E13B1983DA120033521B /* greyNoiseBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1371983DA120033521B /* greyNoiseBackground.png */; };
+		DC57E13C1983DA120033521B /* greyNoiseBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1381983DA120033521B /* greyNoiseBackground@2x.png */; };
+		DC57E13D1983DA120033521B /* metalBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1391983DA120033521B /* metalBackground.png */; };
+		DC57E13E1983DA120033521B /* metalBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E13A1983DA120033521B /* metalBackground@2x.png */; };
 		DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */; };
 		DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */; };
 		DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
@@ -92,6 +96,10 @@
 		DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
 		DC4DFF66194CD3590051E311 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
+		DC57E1371983DA120033521B /* greyNoiseBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = greyNoiseBackground.png; path = ../../../res/graphics/greyNoiseBackground.png; sourceTree = "<group>"; };
+		DC57E1381983DA120033521B /* greyNoiseBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "greyNoiseBackground@2x.png"; path = "../../../res/graphics/greyNoiseBackground@2x.png"; sourceTree = "<group>"; };
+		DC57E1391983DA120033521B /* metalBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = metalBackground.png; path = ../../../res/graphics/metalBackground.png; sourceTree = "<group>"; };
+		DC57E13A1983DA120033521B /* metalBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "metalBackground@2x.png"; path = "../../../res/graphics/metalBackground@2x.png"; sourceTree = "<group>"; };
 		DC70A3BF1944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		DC70A3C11944C38D0057AED4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		DC70A3C41944CD3C0057AED4 /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = SOURCE_ROOT; };
@@ -236,9 +244,21 @@
 			path = "../../../res/iOs Resources/PublicUtility";
 			sourceTree = "<group>";
 		};
+		DC57E1321983D2560033521B /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				DC57E1371983DA120033521B /* greyNoiseBackground.png */,
+				DC57E1381983DA120033521B /* greyNoiseBackground@2x.png */,
+				DC57E1391983DA120033521B /* metalBackground.png */,
+				DC57E13A1983DA120033521B /* metalBackground@2x.png */,
+			);
+			name = Graphics;
+			sourceTree = "<group>";
+		};
 		DCE8BE95194393B300D283E8 = {
 			isa = PBXGroup;
 			children = (
+				DC57E1321983D2560033521B /* Graphics */,
 				DC4DFF5D194CD34B0051E311 /* Utilities */,
 				DCE8BEA7194393B300D283E8 /* SCDF_Test */,
 				DCE8BEA0194393B300D283E8 /* Frameworks */,
@@ -349,9 +369,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC57E13D1983DA120033521B /* metalBackground.png in Resources */,
+				DC57E13B1983DA120033521B /* greyNoiseBackground.png in Resources */,
 				DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */,
+				DC57E13C1983DA120033521B /* greyNoiseBackground@2x.png in Resources */,
 				DC70A3C21944C38D0057AED4 /* Main_iPad.storyboard in Resources */,
 				DCE8BEC0194393B300D283E8 /* Images.xcassets in Resources */,
+				DC57E13E1983DA120033521B /* metalBackground@2x.png in Resources */,
 				DCE8BEAC194393B300D283E8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,10 +522,7 @@
 		DCE8BED7194393B400D283E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"armv7,",
-					armv7s,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
@@ -530,10 +551,7 @@
 		DCE8BED8194393B400D283E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"armv7,",
-					armv7s,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
