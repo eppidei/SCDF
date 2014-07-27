@@ -36,7 +36,8 @@ namespace scdf
         void DestroyAllSensors();
 
         s_int32 GetRate(SensorType type);
-        s_int32 GetNumSamples(SensorType type);
+        s_int32 GetNumFramesPerCallback(SensorType type);
+        s_int32 GetNumChannels(SensorType type);
         s_bool SensorActivated(SensorType type);
         
         void SetRate(SensorType type, s_int32 rate);

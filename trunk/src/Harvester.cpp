@@ -43,12 +43,13 @@ void Harvester::AllocBufferHarvest()
         SensorData *s=new SensorData((SensorType)i);
         s_int32 bufferSize;
         s_int32 timestampSize;
+        s_int32 numChannels=theSensorManager()->GetNumChannels((SensorType)i);
         if (i==AudioInput)
         {
-            bufferSize = SensorTypeNumChannels[i]*MAX_AUDIO_BUF_LENGTH;
+            bufferSize = numChannels*MAX_AUDIO_BUF_LENGTH;
             timestampSize = 2; //start, end
         }else
-            bufferSize = timestampSize = SensorTypeNumChannels[i]*MAX_SENSOR_BUF_LENGTH;
+            bufferSize = timestampSize = numChannels*MAX_SENSOR_BUF_LENGTH;
 
         s->data= new s_sample[bufferSize];
         s->timestamp= new s_uint64[timestampSize];
@@ -75,6 +76,7 @@ void Harvester::Stop()
     activated=false;
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to sblock harvester
+   // for (int i=0;i<10;++i)
     thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
 
     ThreadUtils::JoinThread(handle);
@@ -185,9 +187,11 @@ void Harvester::NotifyHarvestCompletition()
     UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetActiveSender();
     if (NULL==sender) return;
     sender->EventFreeSlot()->Wait();
-    bufferHarvest.swap(sender->senderData);
-    
     sender=UDPSendersManager::Instance()->GetActiveSender();
+    if (NULL==sender) return;
+    bufferHarvest.swap(sender->senderData);
+    sender=UDPSendersManager::Instance()->GetActiveSender();
+    if (NULL==sender) return;
     sender->EventCanSend()->Set();
 }
 
@@ -197,8 +201,9 @@ void Harvester::BuildSensorsDataBuffers(SensorData *masterData)
        AllocBufferHarvest();
     for (int i=0;i<myHarvestInfo.info.size();++i)   // myHarvestInfo.info.size() = NumTypes
     {
+        s_int32 numChannels=theSensorManager()->GetNumChannels((SensorType)i);
         bufferHarvest[i]->num_frames=myHarvestInfo.info[i].size();
-        bufferHarvest[i]->num_channels=SensorTypeNumChannels[i];
+        bufferHarvest[i]->num_channels=numChannels;
         bufferHarvest[i]->timeid=masterData->timeid;
         bufferHarvest[i]->rate=theSensorManager()->GetRate((SensorType)i);
         if (AudioInput==i)
@@ -211,7 +216,7 @@ void Harvester::BuildSensorsDataBuffers(SensorData *masterData)
         {
             SensorData *currentData=myHarvest[myHarvestInfo.info[i][j]];
 
-            memcpy(bufferHarvest[i]->data+(j*SensorTypeNumChannels[i]), currentData->data, currentData->num_frames*currentData->num_channels*sizeof(s_sample));
+            memcpy(bufferHarvest[i]->data+(j*numChannels), currentData->data, currentData->num_frames*currentData->num_channels*sizeof(s_sample));
                 
             if (AudioInput==i) continue;
             bufferHarvest[i]->timestamp[j]=currentData->timestamp[0];

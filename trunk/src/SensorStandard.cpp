@@ -36,10 +36,8 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
     // negotiate the settings, if any of them is not supported,
     // modify its value in settings and return false
     // try starting the sensor, return result
-    int num_samples=3;
-    if (GetType()==Proximity)
-        num_samples=1;
-    thePipesManager()->InitReturnPipes(GetType(), num_samples);
+    //const s_int32 samplesPerCallback=1;
+    thePipesManager()->InitReturnPipes(GetType()/*, samplesPerCallback*/);
     return sImpl->Setup(settings);
 }
 
@@ -72,7 +70,12 @@ s_int32 SensorStandard::GetRate()
     return sImpl->GetRate();
 }
 
-s_int32 SensorStandard::GetNumSamples()
+s_int32 SensorStandard::GetNumFramesPerCallback()
 {
-    return sImpl->GetNumSamples();
+    return sImpl->GetNumFramesPerCallback();
+}
+
+s_int32 SensorStandard::GetNumChannels()
+{
+    return sImpl->GetNumChannels();
 }

@@ -116,7 +116,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
 #ifdef LOG_PIPES_STATUS
     LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
 #endif
-    assert(inNumberFrames<=pthis->GetNumSamples());
+    assert(inNumberFrames<=pthis->GetNumFramesPerCallback());
     memcpy(s->data, ioData->mBuffers[0].mData, inNumberFrames*sizeof(s_sample));
     
 #ifdef LOG_TIMESTAMP
@@ -234,16 +234,17 @@ s_int32 SensorAudioInputImpl::GetRate()
     
 }
 
-s_int32 SensorAudioInputImpl::GetNumSamples()
+s_int32 SensorAudioInputImpl::GetNumFramesPerCallback()
 {
     return GetBufferSize();
 }
 
 s_int32 SensorAudioInputImpl::GetNumChannels()
 {
-    AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
+   /* AVAudioSession *sessionInstance = [AVAudioSession sharedInstance];
     
-    return (s_int32) sessionInstance.outputNumberOfChannels;
+    return (s_int32) sessionInstance.outputNumberOfChannels;*/
+    return 1;
 }
 
 s_int32 SensorAudioInputImpl::GetBufferSize()

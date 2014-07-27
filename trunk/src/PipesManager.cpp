@@ -39,7 +39,7 @@ std::vector<CustomPipe*>* PipesManager::GetReturnPipes()
     return &returnPipes;
 }
 
-void PipesManager::InitReturnPipes(SensorType type, s_int32 numSamples)
+void PipesManager::InitReturnPipes(SensorType type/*, s_int32 numSamples*/)
 {
     while(true)
     {
@@ -49,21 +49,12 @@ void PipesManager::InitReturnPipes(SensorType type, s_int32 numSamples)
     }
     for (int j=0;j<RETURN_PIPES_STATIC_INIT;++j)
     {
-        /*if (type==AudioInput)
-        {
-            SensorAudioData *s=new SensorAudioData();
-            s->data=new s_sample[numSamples];
-            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
-                delete s;
-        }
-        else
-        {*/
-            SensorData *s=new SensorData(type);
-            s->data=new s_sample[numSamples];
-            s->timestamp = new s_uint64[1];
-            if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
-                delete s;
-        //}
+        SensorData *s=new SensorData(type);
+        s_int32 size=theSensorManager()->GetNumChannels(type)*theSensorManager()->GetNumFramesPerCallback(type);
+        s->data=new s_sample[size];
+        s->timestamp = new s_uint64[1];
+        if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
+            delete s;
     }
 }
 
@@ -100,18 +91,10 @@ SensorData *PipesManager::ReadFromReturnPipe(SensorType type)
     SensorData *data=returnPipes[type]->ReadMessage<SensorData*>();
     if (NULL==data)
     {
-        switch (type)
-        {
-/*            case AudioInput:
-                data = new scdf::SensorAudioData();
-                data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(AudioInput)];
-                break;*/
-            default:
-                data = new scdf::SensorData(type);
-                data->timestamp = new s_uint64[1];
-                data->data=(s_sample*) new s_sample[theSensorManager()->GetNumSamples(type)];
-                break;
-        }
+        data = new scdf::SensorData(type);
+        data->timestamp = new s_uint64[1];
+        s_int32 size=theSensorManager()->GetNumFramesPerCallback(type)*theSensorManager()->GetNumChannels(type);
+        data->data=(s_sample*) new s_sample[size];
     }
     return data;
 }
