@@ -38,7 +38,7 @@ void SensorsManager::SetRate(SensorType type, s_int32 rate)
         SensorAudioSettings settings;
         settings.rate = rate;
         settings.numChannels = audioSensor->GetNumChannels();
-        settings.bufferSize = audioSensor->GetBufferSize();
+        settings.bufferSize = audioSensor->GetNumFramesPerCallback();
         sensor->Setup(settings);
     } else
     {
@@ -77,11 +77,18 @@ s_int32 SensorsManager::GetRate(SensorType type)
     return sensor->GetRate();
 }
 
-s_int32 SensorsManager::GetNumSamples(SensorType type)
+s_int32 SensorsManager::GetNumFramesPerCallback(SensorType type)
 {
     Sensor *sensor=GetSensor(type);
-    if (NULL==sensor) return -1;
-    return sensor->GetNumSamples();
+    if (NULL==sensor) return 0;
+    return sensor->GetNumFramesPerCallback();
+}
+
+s_int32 SensorsManager::GetNumChannels(SensorType type)
+{
+    Sensor *sensor=GetSensor(type);
+    if (NULL==sensor) return 0;
+    return sensor->GetNumChannels();
 }
 
 s_bool SensorsManager::SensorActivated(SensorType type)

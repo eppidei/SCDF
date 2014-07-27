@@ -8,7 +8,7 @@ namespace scdf {
     
     enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
     static const std::string SensorTypeString[]={"Accelerometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
-    static const s_int32 SensorTypeNumChannels[]={3, 3, 3, 1, 1, 1};
+    //static const s_int32 SensorTypeNumChannels[]={3, 3, 3, 1, 1, 1};
 
 
     class SensorSettings {
@@ -72,7 +72,8 @@ namespace scdf {
         virtual s_bool Start() = 0;
         virtual s_bool Stop()  = 0;
         virtual s_int32 GetRate()  = 0;
-        virtual s_int32 GetNumSamples()  = 0;
+        virtual s_int32 GetNumFramesPerCallback()  = 0;
+        virtual s_int32 GetNumChannels()  = 0;
         virtual ~Sensor(){};
         SensorType GetType() { return type; }
         s_bool IsActive();

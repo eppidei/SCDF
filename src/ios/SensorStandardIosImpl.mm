@@ -288,32 +288,28 @@ s_int32 SensorStandardImpl::GetRate()
     return (s_int32) 1/updateSensorInterval;
 }
 
-s_int32 SensorStandardImpl::GetNumSamples()
+s_int32 SensorStandardImpl::GetNumFramesPerCallback()
 {
-    s_int32 samplesNumber = 0;
-    switch (sensorTypeRef)
-    {
+    return 1;
+}
+
+s_int32 SensorStandardImpl::GetNumChannels()
+{
+    switch (sensorTypeRef) {
         case scdf::Accelerometer:
         case scdf::Gyroscope:
         case scdf::Magnetometer:
-            samplesNumber = 3;
-            break;
-        case scdf::Proximity:
-            samplesNumber = 1;
+            return 3;
             break;
         default:
+            return 1;
             break;
     }
-    
-    return samplesNumber;
+    return 1;
 }
 
 void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData)
 {
-    s_int32 numChannels = 3;
-    if (sensorTypeRef==Proximity)
-        numChannels = 1;
-    
     SensorData *s=thePipesManager()->ReadFromReturnPipe(sensorTypeRef);
     
 #ifdef LOG_PIPES_STATUS
@@ -328,8 +324,8 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
         ((s_sample*)(s->data))[2]  = sensorIOSData.value3;
     }
     
-    s->num_frames = 1;
-    s->num_channels=numChannels;
+    s->num_frames = GetNumFramesPerCallback();
+    s->num_channels = GetNumChannels();
     s->type = sensorTypeRef;
     s->rate = GetRate();
     s->timestamp[0]=mach_absolute_time();
