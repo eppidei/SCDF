@@ -241,6 +241,7 @@ void Harvester::Harvest(SensorData *masterData)
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp[0]);
     PipesHarvesting(masterData->timeid, masterData->timestamp[0], masterData->type);
     //Sort();
-    myHarvest.insert(myHarvest.begin(), masterData);
-    myHarvestInfo.info[masterData->type].push_back(0);
+    myHarvest.push_back(masterData);
+    //myHarvest.insert(myHarvest.begin(), masterData);
+    myHarvestInfo.info[masterData->type].push_back(myHarvest.size()-1);
 }
