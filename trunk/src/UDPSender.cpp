@@ -90,15 +90,6 @@ void UDPSenderHelperBase::SendData()
     }
 }
 
-void UDPSenderHelperBase::DoSendData()
-{
-    for (int i=0;i<senderData.size();++i)
-    {
-        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
-        senders[0]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
-    }
-}
-
 void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
 {
     s_int32 numTimestamps=2;
@@ -118,14 +109,25 @@ void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
     memcpy(tempData+sizeof(SensorData)-sizeof(s_sample*)-sizeof(s_uint64*)+sData->num_frames*sData->num_channels*sizeof(s_sample),sData->timestamp, numTimestamps*sizeof(s_uint64));
 }
 
-void UDPSenderHelperBase::DoMultiSendData()
+void UDPSenderHelperBase::DoSendData()
 {
-   // if (0==senderData[0]->num_frames) return;
-#ifdef LOG_SENDER_DATA
-    LOGD("MultiSend data: %s master sensor send %d samples at rate %d\n", SensorTypeString[Harvester::Instance()->GetType()].c_str(), senderData[AudioInput]->num_frames, senderData[AudioInput]->rate);
-#endif
     for (int i=0;i<senderData.size();++i)
     {
+#ifdef LOG_SENDER_DATA
+        LOGD("Send data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+#endif
+        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
+        senders[0]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
+    }
+}
+
+void UDPSenderHelperBase::DoMultiSendData()
+{
+    for (int i=0;i<senderData.size();++i)
+    {
+#ifdef LOG_SENDER_DATA
+        LOGD("MultiSend data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+#endif
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
         senders[senderData[i]->type]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
     }
@@ -135,6 +137,9 @@ void UDPSenderHelperBase::DoSendDataOSCPacked()
 {
     for (int i=0;i<senderData.size();++i)
     {
+#ifdef LOG_SENDER_DATA
+        LOGD("Send OSC packed data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+#endif
         s_char buffer[OSC_BUFFER_SIZE];
         osc::OutboundPacketStream oscData( buffer, OSC_BUFFER_SIZE);
         OSCPackData(senderData[i], oscData);
@@ -144,12 +149,11 @@ void UDPSenderHelperBase::DoSendDataOSCPacked()
 
 void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
 {
-   // if (0==senderData[0]->num_frames) return;
-#ifdef LOG_SENDER_DATA
-    LOGD("MultiSend Data OSCPacked data: %s master sensor send %d samples at rate %d\n", SensorTypeString[Harvester::Instance()->GetType()].c_str(), senderData[0]->num_frames, senderData[0]->rate);
-#endif
     for (int i=0;i<senderData.size();++i)
     {
+#ifdef LOG_SENDER_DATA
+        LOGD("MultiSend OSC packed data: %s sensor send %d samples at rate %d\n", SensorTypeString[i].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+#endif
         s_char buffer[OSC_BUFFER_SIZE];
         osc::OutboundPacketStream oscData( buffer, OSC_BUFFER_SIZE);
         OSCPackData(senderData[i], oscData);
@@ -239,7 +243,7 @@ void UDPSenderHelperBase::OSCPackData(SensorData *data, osc::OutboundPacketStrea
     << osc::BeginMessage( "/Channels"	) << data->num_channels << osc::EndMessage
     << osc::BeginMessage( "/Num samples") << data->num_frames << osc::EndMessage
     << osc::BeginMessage( "/Time ref") << (osc::int64)data->timeid << osc::EndMessage
-    << osc::BeginMessage( "/Timestamp") << osc::Blob(data->timestamp,numTimestamps*sizeof(s_uint64)) << osc::EndMessage
-    << osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_frames*data->num_frames*sizeof(s_sample))<< osc::EndMessage;
+    << osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_frames*data->num_channels*sizeof(s_sample))<< osc::EndMessage
+    << osc::BeginMessage( "/Timestamp") << osc::Blob(data->timestamp,numTimestamps*sizeof(s_uint64)) << osc::EndMessage;
     oscData << osc::EndBundle;
 }
