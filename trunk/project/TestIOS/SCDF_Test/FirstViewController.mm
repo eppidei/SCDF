@@ -7,12 +7,15 @@
 //
 
 #import "FirstViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 #include "Sensor.h"
 #include "SensorStandard.h"
 #include "SensorAudioInput.h"
 #include "SensorsManager.h"
 #include "Harvester.h"
+
+#define MAX_SENSOR_RATE_VALUE 200
 
 
 
@@ -63,14 +66,23 @@ scdf::SensorsManager *theSensorManager();
     s_int32 rate = scdf::theSensorManager()->GetRate(scdf::Accelerometer);
     accelRateField.text = [NSString stringWithFormat:@"%d", rate];
     
+    [accelRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateNormal];
+    [accelRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateHighlighted];
+    
     rate = scdf::theSensorManager()->GetRate(scdf::Gyroscope);
     gyrosRateField.text = [NSString stringWithFormat:@"%d", rate];
+    [gyrosRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateNormal];
+    [gyrosRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateHighlighted];
     
     rate = scdf::theSensorManager()->GetRate(scdf::Magnetometer);
     magneRateField.text = [NSString stringWithFormat:@"%d", rate];
+    [magneRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateNormal];
+    [magneRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateHighlighted];
     
     rate = scdf::theSensorManager()->GetRate(scdf::Proximity);
     proxyRateField.text = [NSString stringWithFormat:@"%d", rate];
+    [proxyRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateNormal];
+    [proxyRateButton setTitle:[NSString stringWithFormat:@"%d", rate] forState:UIControlStateHighlighted];
     
    
 }
@@ -97,6 +109,16 @@ scdf::SensorsManager *theSensorManager();
     tapRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapRecognizer];
     
+    
+    [pickerCointainerView removeFromSuperview];
+    pickerViewIsVisible = NO;
+    pickerView.delegate = self;
+    
+    
+    pickerCointainerView.layer.cornerRadius = 5;
+    pickerCointainerView.layer.masksToBounds = YES;
+    [pickerCointainerView.layer setBorderWidth:1.0];
+    [pickerCointainerView.layer setBorderColor:[[UIColor blackColor] CGColor]];
 }
 
 - (void) viewTapped {
@@ -273,6 +295,109 @@ scdf::SensorsManager *theSensorManager();
     [self setSensorRate:scdf::Proximity rate:rate];
 }
 
+- (IBAction) callPickerView:(id)sender
+{
+    UIButton *senderButton = (UIButton *) sender;
+    int buttonIndex = -1;
+    if(senderButton==accelRateButton)
+        buttonIndex = 0;
+    else if(senderButton==gyrosRateButton)
+        buttonIndex = 1;
+    else if(senderButton==magneRateButton)
+        buttonIndex = 2;
+    else if(senderButton==proxyRateButton)
+        buttonIndex = 3;
+    
+    
+    if(pickerViewIsVisible)
+    {
+        [pickerCointainerView removeFromSuperview];
+        pickerViewIsVisible = NO;
+    } else
+    {
+        
+        [self.view addSubview:pickerCointainerView];
+
+        sensorTypeInPickerView.selectedSegmentIndex = buttonIndex;
+        
+        [self UpdatePickerForIndex:buttonIndex];
+        
+        pickerViewIsVisible = YES;
+    }
+    
+}
+
+- (void) UpdatePickerForIndex: (s_int32) index
+{
+    s_int32 rate = -1;
+    switch (index) {
+        case 0:
+            rate = scdf::theSensorManager()->GetRate(scdf::Accelerometer);
+            break;
+        case 1:
+            rate = scdf::theSensorManager()->GetRate(scdf::Gyroscope);
+            break;
+        case 2:
+            rate = scdf::theSensorManager()->GetRate(scdf::Magnetometer);
+            break;
+        case 3:
+            rate = scdf::theSensorManager()->GetRate(scdf::Proximity);
+            break;
+        default:
+            break;
+    }
+    
+    
+    [pickerView selectRow:rate inComponent:0 animated:YES];
+    
+
+}
+
+- (IBAction) acquireSensorValue:(id)sender
+{
+    s_int32 rowValue = [pickerView selectedRowInComponent:0];
+    s_int32 sensorIndex = sensorTypeInPickerView.selectedSegmentIndex;
+    
+    switch (sensorIndex) {
+        case 0:
+             [self setSensorRate:scdf::Accelerometer rate:rowValue];
+            break;
+        case 1:
+           [self setSensorRate:scdf::Gyroscope rate:rowValue];
+            break;
+        case 2:
+           [self setSensorRate:scdf::Magnetometer rate:rowValue];
+            break;
+        case 3:
+           [self setSensorRate:scdf::Proximity rate:rowValue];
+            break;
+        default:
+            break;
+    }
+
+}
+
+- (IBAction) sensorIndexChanged:(id)sender
+{
+    [self UpdatePickerForIndex:sensorTypeInPickerView.selectedSegmentIndex];
+}
+
+#pragma mark pickerView delegatas
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return MAX_SENSOR_RATE_VALUE;
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [NSString stringWithFormat:@"%d", row];
+}
 
 #pragma mark from interface to framekork
 

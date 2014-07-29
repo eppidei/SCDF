@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 
-@interface FirstViewController : UIViewController 
+@interface FirstViewController : UIViewController <UIPickerViewDelegate>
 
 {
+    
+    BOOL pickerViewIsVisible;
     
     IBOutlet UISwitch *audioSensorSwitch;
     IBOutlet UISwitch *accelerometerSensorSwitch;
@@ -25,8 +27,18 @@
     IBOutlet UITextField *gyrosRateField;
     IBOutlet UITextField *proxyRateField;
     
+    
+    IBOutlet UIButton *accelRateButton;
+    IBOutlet UIButton *magneRateButton;
+    IBOutlet UIButton *gyrosRateButton;
+    IBOutlet UIButton *proxyRateButton;
+    
     IBOutlet UISegmentedControl *sampleRateControl;
     IBOutlet UISegmentedControl *bufferSizeRateControl;
+    
+    IBOutlet UIView       *pickerCointainerView;
+    IBOutlet UIPickerView *pickerView;
+    IBOutlet UISegmentedControl *sensorTypeInPickerView;
     
     
     
@@ -45,6 +57,10 @@
 - (IBAction) GyroscopeRateDidEndEditing:(UITextField *)textField;
 - (IBAction) MagnetometerRateDidEndEditing:(UITextField *)textField;
 - (IBAction) ProximityRateDidEndEditing:(UITextField *)textField;
+
+- (IBAction) callPickerView:(id)sender;
+- (IBAction) acquireSensorValue:(id)sender;
+- (IBAction) sensorIndexChanged:(id)sender;
 
 
 

@@ -183,7 +183,7 @@
                                     <segment title="44100"/>
                                     <segment title="48000"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeSampleRateSensor:" destination="CZ4-MO-1fc" eventType="valueChanged" id="dfU-Qd-8hR"/>
                                 </connections>
@@ -198,7 +198,7 @@
                                     <segment title="2048"/>
                                     <segment title="4096"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeBufferSizeSensor:" destination="CZ4-MO-1fc" eventType="valueChanged" id="w2d-br-QqB"/>
                                 </connections>
