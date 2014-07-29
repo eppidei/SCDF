@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Sensor.h"
 
-@interface SecondViewController : UIViewController
+@interface SecondViewController : UIViewController <UIPickerViewDelegate>
 
 
 {
@@ -21,6 +21,11 @@
     IBOutlet UISwitch                *multiOutputSwitch;
     IBOutlet UISegmentedControl      *outputTypeSegmented;
     
+    IBOutlet UIView                 *pickerCointainerView;
+    IBOutlet UIPickerView           *pickerViewPort;
+    IBOutlet UIButton               *buttonPort;
+    
+    BOOL                             pickerViewPortIsVisible;
     std::string                      addressString;
     s_int32                          actualPort;
 }
@@ -32,6 +37,8 @@
 - (IBAction) multiOutputToggle: (id) sender;
 - (IBAction) changheOutputRouting:(id)sender;
 - (IBAction) toggleActiveSender: (id) sender;
+
+- (IBAction) callPickerIpPortView:(id)sender;
 
 
 @end

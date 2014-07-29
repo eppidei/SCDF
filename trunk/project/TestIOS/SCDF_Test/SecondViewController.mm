@@ -18,6 +18,7 @@
 
 #define DEFUALT_ADDRESS "127.0.0.1"
 #define DEFAULT_PORT 9000;
+#define MAX_NUMBER_IP_PORT 65535;
 
 @interface SecondViewController ()
 
@@ -100,6 +101,18 @@
     tapRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapRecognizer];
     
+    
+    [pickerCointainerView removeFromSuperview];
+    pickerViewPortIsVisible = NO;
+    pickerViewPort.delegate = self;
+    
+    
+    
+    pickerCointainerView.layer.cornerRadius = 5;
+    pickerCointainerView.layer.masksToBounds = YES;
+    [pickerCointainerView.layer setBorderWidth:1.0];
+    [pickerCointainerView.layer setBorderColor:[[UIColor blackColor] CGColor]];
+    
    
 
 }
@@ -137,6 +150,9 @@
     outputIp.text = [NSString stringWithUTF8String:addressString.c_str()];
     outputPort.text = [NSString stringWithFormat:@"%d", actualPort];
     inputIp.text = [self getIPAddress];
+    
+    [buttonPort setTitle:[NSString stringWithFormat:@"%d", actualPort] forState:UIControlStateNormal];
+    [buttonPort setTitle:[NSString stringWithFormat:@"%d", actualPort] forState:UIControlStateHighlighted];
     
 }
 
@@ -197,6 +213,54 @@
     
 }
 
+- (IBAction) callPickerIpPortView:(id)sender
+{
+    
+
+    if(pickerViewPortIsVisible)
+    {
+        [pickerCointainerView removeFromSuperview];
+        pickerViewPortIsVisible = NO;
+    } else
+    {
+        
+        [self.view addSubview:pickerCointainerView];
+        
+        [pickerViewPort selectRow:actualPort inComponent:0 animated:YES];
+        
+        pickerViewPortIsVisible = YES;
+    }
+    
+}
+
+- (IBAction) acquirePortValue:(id)sender
+{
+    s_int32 rowValue = [pickerViewPort selectedRowInComponent:0];
+   
+    [self SetOutputPort:rowValue];
+    [self UpdateLabels];
+}
+
+
+
+#pragma mark pickerView delegatas
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return MAX_NUMBER_IP_PORT;
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [NSString stringWithFormat:@"%d", row];
+}
+
+
 #pragma mark from interface to framekork
 
 - (void) setRoutingType: (NSInteger) routingType
@@ -211,6 +275,7 @@
 
 -  (void) SetOutputPort: (s_int32) outputUdpPort
 {
+    actualPort = outputUdpPort;
     scdf::UDPSendersManager::Instance()->SetOutputPort(outputUdpPort);
 }
 
