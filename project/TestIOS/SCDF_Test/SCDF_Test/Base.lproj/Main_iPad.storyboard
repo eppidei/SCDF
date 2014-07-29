@@ -103,71 +103,35 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SENSORS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pOQ-b7-9V9">
-                                <rect key="frame" x="397" y="20" width="217" height="21"/>
+                                <rect key="frame" x="404" y="23" width="217" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="yj1-qD-osU">
-                                <rect key="frame" x="560" y="455" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="AccelerometerRateDidEndEditing:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="xrl-pn-X6w"/>
-                                </connections>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="Ab8-1J-pqu">
-                                <rect key="frame" x="560" y="510" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="GyroscopeRateDidEndEditing:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="tXA-5P-TbN"/>
-                                </connections>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="08W-ON-09T">
-                                <rect key="frame" x="560" y="568" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="MagnetometerRateDidEndEditing:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="xpH-yZ-t6K"/>
-                                </connections>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="C6S-cF-mXv">
-                                <rect key="frame" x="560" y="622" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="ProximityRateDidEndEditing:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="X1a-hv-ut0"/>
-                                </connections>
-                            </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="320-Ky-htX">
-                                <rect key="frame" x="713" y="459" width="36" height="21"/>
+                                <rect key="frame" x="684" y="459" width="36" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="R0K-RS-t81">
-                                <rect key="frame" x="713" y="514" width="36" height="21"/>
+                                <rect key="frame" x="684" y="514" width="36" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Kfc-uO-VWz">
-                                <rect key="frame" x="713" y="572" width="36" height="21"/>
+                                <rect key="frame" x="684" y="572" width="36" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ifr-DK-yZb">
-                                <rect key="frame" x="713" y="626" width="36" height="21"/>
+                                <rect key="frame" x="684" y="626" width="36" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -191,7 +155,7 @@
                                     <segment title="44100"/>
                                     <segment title="48000"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeSampleRateSensor:" destination="9pv-A4-QxB" eventType="valueChanged" id="iVn-NF-OHE"/>
                                 </connections>
@@ -206,11 +170,96 @@
                                     <segment title="2048"/>
                                     <segment title="4096"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeBufferSizeSensor:" destination="9pv-A4-QxB" eventType="valueChanged" id="ACq-Xz-kkT"/>
                                 </connections>
                             </segmentedControl>
+                            <view contentMode="scaleToFill" id="T1E-5n-uQv">
+                                <rect key="frame" x="284" y="87" width="443" height="310"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="metalBackground.png" id="ZkR-Ex-tTy">
+                                        <rect key="frame" x="0.0" y="0.0" width="443" height="382"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <pickerView contentMode="scaleToFill" id="em4-40-yHV">
+                                        <rect key="frame" x="34" y="0.0" width="375" height="216"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    </pickerView>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="v40-Ic-cm5">
+                                        <rect key="frame" x="0.0" y="210" width="443" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="Acc"/>
+                                            <segment title="Gyro"/>
+                                            <segment title="Magne"/>
+                                            <segment title="Proxy"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="sensorIndexChanged:" destination="9pv-A4-QxB" eventType="valueChanged" id="A7x-ti-Xmy"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gzk-Z9-XuA">
+                                        <rect key="frame" x="145" y="254" width="153" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <state key="normal" title="Acquire Value">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="acquireSensorValue:" destination="9pv-A4-QxB" eventType="touchUpInside" id="pKm-IY-pMT"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ppE-Sw-Fld">
+                                        <rect key="frame" x="398" y="9" width="36" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="closeButton.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="callPickerView:" destination="9pv-A4-QxB" eventType="touchUpInside" id="ZEy-Wg-Zcu"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="BDk-uL-zeG">
+                                <rect key="frame" x="584" y="455" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="callPickerView:" destination="9pv-A4-QxB" eventType="touchUpInside" id="uoC-aH-Gn9"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="uMk-Ah-bg7">
+                                <rect key="frame" x="584" y="510" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="callPickerView:" destination="9pv-A4-QxB" eventType="touchUpInside" id="HND-nv-SeF"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="3vY-FO-r9f">
+                                <rect key="frame" x="584" y="568" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="callPickerView:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Ihw-o2-KvD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI3-mV-zPG">
+                                <rect key="frame" x="584" y="623" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="callPickerView:" destination="9pv-A4-QxB" eventType="touchUpInside" id="u80-sT-Wi4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -218,16 +267,19 @@
                     <tabBarItem key="tabBarItem" title="Sensors" image="first" id="acW-dT-cKf"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="accelRateField" destination="yj1-qD-osU" id="OWE-Lg-niO"/>
+                        <outlet property="accelRateButton" destination="BDk-uL-zeG" id="T9E-7T-q0l"/>
                         <outlet property="accelerometerSensorSwitch" destination="Dr4-bd-Jvs" id="9FD-nA-dJ4"/>
                         <outlet property="bufferSizeRateControl" destination="Mx9-q2-8nT" id="Ev7-q9-25G"/>
-                        <outlet property="gyrosRateField" destination="Ab8-1J-pqu" id="2VN-Jo-FvL"/>
+                        <outlet property="gyrosRateButton" destination="uMk-Ah-bg7" id="qRI-OP-l3A"/>
                         <outlet property="gyroscopeSensorSwitch" destination="cux-W2-ZQ4" id="Aui-no-qvP"/>
-                        <outlet property="magneRateField" destination="08W-ON-09T" id="zM3-Ny-yZy"/>
+                        <outlet property="magneRateButton" destination="3vY-FO-r9f" id="1Tx-gG-wxe"/>
                         <outlet property="magnetometerSensorSwitch" destination="ElD-lH-gZY" id="sSl-ok-xzO"/>
+                        <outlet property="pickerCointainerView" destination="T1E-5n-uQv" id="rZJ-Cu-0Ut"/>
+                        <outlet property="pickerView" destination="em4-40-yHV" id="C0P-5Z-9EE"/>
                         <outlet property="proximitySensorSwitch" destination="L1J-4b-bbn" id="fWE-Ep-ABQ"/>
-                        <outlet property="proxyRateField" destination="C6S-cF-mXv" id="yTB-Ah-Ajh"/>
+                        <outlet property="proxyRateButton" destination="zI3-mV-zPG" id="b6t-CJ-d1Y"/>
                         <outlet property="sampleRateControl" destination="d1B-37-Gbg" id="FpO-Bl-qrm"/>
+                        <outlet property="sensorTypeInPickerView" destination="v40-Ic-cm5" id="3WN-Vz-jRf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -312,7 +364,7 @@
                                     <segment title="UDP"/>
                                     <segment title="OSC"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changheOutputRouting:" destination="8rJ-Kc-sve" eventType="valueChanged" id="6rw-K7-qkI"/>
                                 </connections>
@@ -371,11 +423,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="closeButton.png" width="165" height="164"/>
         <image name="first" width="30" height="30"/>
         <image name="greyNoiseBackground.png" width="840" height="525"/>
         <image name="metalBackground.png" width="1750" height="1312"/>
         <image name="second" width="30" height="30"/>
     </resources>
+    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
