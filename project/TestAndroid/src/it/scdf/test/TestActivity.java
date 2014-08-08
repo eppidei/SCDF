@@ -103,13 +103,6 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		Find(R.id.toggle_connect).setOnClickListener(this);
 		Find(R.id.toggle_osc).setOnClickListener(this);
 		Find(R.id.toggle_multiport).setOnClickListener(this);
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-		for (int i=0; i<Scdf.NUM_TYPES; i++)
-			if (Scdf.IsSensorAvailable(i))
-				adapter.add(Scdf.TypeStr(i));
-		((Spinner)Find(R.id.spinner_mastersensor)).setAdapter(adapter);
-		((Spinner)Find(R.id.spinner_mastersensor)).setOnItemSelectedListener(this);	
 	}
 	
 	void SetupViews()
@@ -142,11 +135,21 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		((EditText)Find(R.id.edittext_port)).setText( Integer.toString(Scdf.GetUdpDestinationPort()) );
 		((ToggleButton)Find(R.id.toggle_multiport)).setChecked( Scdf.IsUdpMultiportModeActive() );
 		((ToggleButton)Find(R.id.toggle_osc)).setChecked( Scdf.IsUdpOSCmodeActive() );
+		//((Spinner)Find(R.id.spinner_mastersensor)).setTag(true); // ignore this setting!
+		
 		// TODO: refresh state of connection, like: ((ToggleButton)Find(R.id.toggle_connection)).setChecked( isconnected? );
 		
 		// audio:
-		((EditText)Find(Scdf.AUDIOINPUT,R.id.buffer_size)).setText( Integer.toString(Scdf.GetAudioInputBufferSize()) );
+		((EditText)Find(Scdf.AUDIOINPUT,R.id.buffer_size)).setText( Integer.toString(Scdf.GetAudioInputFramesPerBuffer()) );
 		((ToggleButton)Find(Scdf.AUDIOINPUT,R.id.toggle)).setChecked( Scdf.IsSensorActive(Scdf.AUDIOINPUT) );
+		Spinner rs = ((Spinner)Find(R.id.spinner_rate));
+		for (int i=0; i<rs.getAdapter().getCount(); i++) {
+			if ( ((Integer)rs.getAdapter().getItem(i))==Scdf.GetSensorRate(Scdf.AUDIOINPUT)) {
+				//((Spinner)Find(R.id.spinner_rate)).setTag(true); // ignore this setting!
+				rs.setSelection(i);
+				break;
+			}
+		}
 		
 		// sensors:
 		for (int i=0; i<Scdf.AUDIOINPUT; i++)
@@ -165,9 +168,9 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		//ed.putBoolean("UDP_CONNECTED", ((ToggleButton)Find(R.id.toggle_connect)).isChecked());
 		// TODO: better way to retrieve connection state
 		
-		ed.putInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_BUFFERSIZE", Scdf.GetAudioInputBufferSize() );
-		// TODO: save audio in channels
 		
+		ed.putInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_BUFFERSIZE", Scdf.GetAudioInputFramesPerBuffer() );
+				
 		for (int i=0; i<Scdf.NUM_TYPES; i++) {
 			if (!Scdf.IsSensorAvailable(i))
 				continue;
@@ -187,6 +190,7 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		int port = p.getInt("DEST_PORT",Scdf.GetUdpDestinationPort());
 		boolean multiport = p.getBoolean("MULTIPORT_MODE", Scdf.IsUdpMultiportModeActive());
 		boolean osc = p.getBoolean("OSC_MODE", Scdf.IsUdpOSCmodeActive() );
+		
 		//boolean conn = p.getBoolean("UDP_CONNECTED", ((ToggleButton)Find(R.id.toggle_connect)).isChecked());
 		
 		//((EditText)Find(R.id.edittext_ip)).setText(ip);
@@ -196,7 +200,7 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		Scdf.OpenUdpConnection(ip,port);
 		Scdf.CloseUdpConnection();
 		
-		int audioBufSize = p.getInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_BUFFERSIZE", Scdf.GetAudioInputBufferSize() );
+		int audioBufSize = p.getInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_BUFFERSIZE", Scdf.GetAudioInputFramesPerBuffer() );
 		int audiorate = p.getInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_RATE", Scdf.GetSensorRate(Scdf.AUDIOINPUT) );
 		//boolean audioactive = p.getBoolean(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_ACTIVE", Scdf.IsSensorActive(Scdf.AUDIOINPUT) );
 		Scdf.SetupAudioInput(audiorate, audioBufSize, 1);
@@ -212,6 +216,9 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		}
 		
 		RefreshViews();
+		((EditText)Find(R.id.edittext_ip)).setText( "79.23.90.225" );
+		((EditText)Find(R.id.edittext_port)).setText( Integer.toString(50000) );
+		
 		
 	}
 		
@@ -282,18 +289,15 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 	void OnSensorStateToggle(ToggleButton t)
 	{
 		int type = ((Integer)t.getTag()).intValue();
-		int res;
 		if (t.isChecked()) {
-			res = Scdf.StartSensor(type);
-			if (res==Scdf.SENSOR_SETUP_BROKEN) {
+			if ( !Scdf.StartSensor(type) ) {
 				t.setChecked(false);
 				QuickAlert("Could not start "+Scdf.TypeStr(type));
 			}
-			else if (res == Scdf.SENSOR_SETUP_OK_CHANGED)
-				Toast(Scdf.TypeStr(type)+"started with modified settings");
-		} else {
-			res = Scdf.StopSensor(type);
-			if (res==Scdf.SENSOR_SETUP_BROKEN) {
+		}
+		else {
+		
+			if ( !Scdf.StopSensor(type)) {
 				QuickAlert("Error stopping "+Scdf.TypeStr(type));
 			}
 		}
@@ -390,15 +394,26 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 	}
 	
 	@Override
-	public void onItemSelected(AdapterView<?> adapt, View v, int id, long sel)
+	public void onItemSelected(AdapterView<?> adapt, View v, int pos, long id)
 	{
-		switch(v.getId()) {
-			case R.id.spinner_mastersensor:
-				Toast("Master selection - Not implemented");
-				break;
+		if (adapt.getTag()!=null) {
+			if ( ((Boolean)adapt.getTag()).booleanValue()==true ) // asked to ignore this
+					return;
+		}
+		
+		switch(adapt.getId()) {
+			
 			case R.id.spinner_rate:
-				Toast("Audio rate selection - not implemented");
-				break;
+			{
+				int rate = (Integer)adapt.getAdapter().getItem(pos);
+				Toast("Audio rate selection. rate "+rate);
+				Scdf.SetupAudioInput(rate, -1, -1);
+			}
+			break;
+			
+			default:
+				Log.e(TAG,"Unknown spinner");
+			
 		}
 		
 	}

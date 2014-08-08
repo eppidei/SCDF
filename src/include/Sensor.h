@@ -20,7 +20,7 @@ namespace scdf {
     class SensorAudioSettings : public SensorSettings {
     public:
         s_int32 numChannels;
-        s_int32 bufferSize;
+        s_int32 bufferSize;  // in frames!
     };
 
     class SensorData

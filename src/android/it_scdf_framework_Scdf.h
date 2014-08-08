@@ -42,7 +42,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsSensorAvailable
  * Method:    StartSensor
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartSensor
+JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_StartSensor
   (JNIEnv *, jclass, jint);
 
 /*
@@ -50,7 +50,7 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartSensor
  * Method:    StopSensor
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopSensor
+JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_StopSensor
   (JNIEnv *, jclass, jint);
 
 /*
@@ -79,10 +79,10 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetSensorRate
 
 /*
  * Class:     it_scdf_framework_Scdf
- * Method:    GetAudioInputBufferSize
+ * Method:    GetAudioInputFramesPerBuffer
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputBufferSize
+JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputFramesPerBuffer
   (JNIEnv *, jclass);
 
 /*
@@ -123,22 +123,6 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopAllSensors
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartPreviouslyActiveSensors
-  (JNIEnv *, jclass);
-
-/*
- * Class:     it_scdf_framework_Scdf
- * Method:    SetMasterSensor
- * Signature: (I)Z
- */
-JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_SetMasterSensor
-  (JNIEnv *, jclass, jint);
-
-/*
- * Class:     it_scdf_framework_Scdf
- * Method:    GetMasterSensor
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetMasterSensor
   (JNIEnv *, jclass);
 
 /*

@@ -62,13 +62,13 @@
             android:textOn="Multi port"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-      <Spinner
+     <!-- <Spinner
             android:id="@+id/spinner_mastersensor"
             android:layout_below="@id/edittext_ip"
             android:layout_toRightOf="@id/toggle_multiport"
             android:layout_alignParentRight="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />  --> 
         
     </RelativeLayout>
 

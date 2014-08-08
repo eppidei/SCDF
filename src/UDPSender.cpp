@@ -27,7 +27,7 @@ s_int32 UDPSender::Init(int udpp, std::string add)
         transmitSocket.reset(new UdpSocket());
     } catch(std::runtime_error& e)
     {
-        LOGD(e.what());
+        LOGD("%s",e.what());
         assert(false);
         res=0;
     }
@@ -93,20 +93,32 @@ void UDPSenderHelperBase::SendData()
 void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
 {
     s_int32 numTimestamps=2;
-    if (AudioInput!=sData->type)
+    if (AudioInput!=sData->type) {
         numTimestamps=sData->num_frames;
-    
-    s_int32 sensorDataSize=sizeof(SensorData)-sizeof(s_sample*)-sizeof(s_uint64*)+sData->num_frames*sData->num_channels*sizeof(s_sample)+numTimestamps*sizeof(s_uint64);
+        //LOGD("Prepare buffer to send for %d. timestamps num = %d",sData->type,numTimestamps);
+    }
+
+    s_int32 samplesBlockSize = sData->num_frames*sData->num_channels*sizeof(s_sample);
+    s_int32 timestampsBlockSize = numTimestamps*sizeof(s_uint64);
+    s_int32 unusedPointersBlockSize = 0;//sizeof(s_sample*) + sizeof(s_uint64*);
+    s_int32 sensorDataSize=sizeof(SensorData) -unusedPointersBlockSize + samplesBlockSize + timestampsBlockSize;
     
     if (size!=sensorDataSize)
     {
-        size=sensorDataSize;
-        if (NULL!=tempData) free(tempData);
+    	LOGD("type %d current size: %d, new size: %d",sData->type,size,sensorDataSize);
+    	size=sensorDataSize;
+        if (NULL!=tempData) {
+        	free(tempData);
+        }
         tempData=(char*)malloc(size);
     }
+
+    s_char* tempData_samples = tempData + sizeof(SensorData) - unusedPointersBlockSize ;
+    s_char* tempData_timestamps = tempData_samples + samplesBlockSize;
+    LOGD("tempdata %d, samples offset %d, timestamps offset %d",tempData,tempData_samples,tempData_timestamps);
     memcpy(tempData, sData, sizeof(SensorData));
-    memcpy(tempData+sizeof(SensorData)-sizeof(s_sample*)-sizeof(s_uint64*),sData->data, sData->num_frames*sData->num_channels*sizeof(s_sample));
-    memcpy(tempData+sizeof(SensorData)-sizeof(s_sample*)-sizeof(s_uint64*)+sData->num_frames*sData->num_channels*sizeof(s_sample),sData->timestamp, numTimestamps*sizeof(s_uint64));
+    memcpy(tempData_samples,sData->data, samplesBlockSize);
+    memcpy(tempData_timestamps,sData->timestamp, timestampsBlockSize);
 }
 
 void UDPSenderHelperBase::DoSendData()
@@ -114,7 +126,7 @@ void UDPSenderHelperBase::DoSendData()
     for (int i=0;i<senderData.size();++i)
     {
 #ifdef LOG_SENDER_DATA
-        LOGD("Send data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+       // LOGD("Send data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
         senders[0]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
@@ -126,7 +138,7 @@ void UDPSenderHelperBase::DoMultiSendData()
     for (int i=0;i<senderData.size();++i)
     {
 #ifdef LOG_SENDER_DATA
-        LOGD("MultiSend data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+       // LOGD("MultiSend data: %s sensor send %d frames at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
         senders[senderData[i]->type]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
@@ -172,7 +184,7 @@ void UDPSenderHelperBase::SendOnThread()
     {
         std::string s(e.what());
         s+=std::string("/n");
-        LOGD(s.c_str());
+        LOGD("%s",s.c_str());
         //assert(false);
     }
     
