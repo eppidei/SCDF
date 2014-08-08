@@ -31,12 +31,14 @@ namespace scdf {
         s_bool Start();
         s_bool Stop();
         s_int32 GetRate();
-        s_int32 GetNumSamples();
+        s_int32 GetNumFramesPerCallback();
+        s_int32 GetNumChannels();
 
     private:
 
         static void Callback(SLAndroidSimpleBufferQueueItf bq, void *context);
         void Reset();
+        int GetBufferSize();
 
         // OpenSL interfaces:
         SLObjectItf audioRecorderItf;
@@ -49,7 +51,7 @@ namespace scdf {
         // data structures and indexes:
         short** inputBuffer;
         int numBuffers;
-        int bufferSize;
+        s_int32 framesPerBuffer;
         int currentBuff;
 
         s_int16 nGroupedCallbacks;

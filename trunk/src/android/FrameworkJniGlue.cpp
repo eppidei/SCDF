@@ -2,7 +2,7 @@
  *  Created on: Jul 17, 2014
  *      Author: athos */
 
-#include "it_scdf_framework_Scdf.h"
+#include "it_scdf_framework_Scdf.h" // use GenerateJniHeader.sh script in src/android dir
 #include "Logging.h"
 #include "UDPSendersManager.h"
 #include "SensorsManager.h"
@@ -22,22 +22,22 @@ SensorType ItoType(int itype)
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsSensorAvailable
   (JNIEnv *e, jclass c, jint type)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->IsSensorAvailable(ItoType(type));
 }
 
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartSensor
+JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_StartSensor
   (JNIEnv *e, jclass c, jint type)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->StartSensor(ItoType(type));
 }
 
 
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopSensor
+JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_StopSensor
   (JNIEnv *e, jclass c, jint type)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->StopSensor(ItoType(type));
 }
 
@@ -45,7 +45,7 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopSensor
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_SetupSensor
   (JNIEnv *e, jclass c, jint type, jint rate)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	if (type==AudioInput) {
 		LOGE("Don't use SetupSensor for audio input!");
 		return false;
@@ -65,13 +65,13 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_SetupSensor
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_SetupAudioInput
   (JNIEnv *e, jclass c, jint rate, jint bufferSize, jint channels)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	LOGD("Java called setupaudioinput. rate %d, fpb %d, ch %d",rate,bufferSize,channels);
 	SensorAudioSettings settings;
 
 	settings.rate = rate==-1 ? theSensorManager()->GetRate(AudioInput) : rate;
-	settings.bufferSize = bufferSize==-1 ? theSensorManager()->GetNumSamples(AudioInput) : bufferSize;
-	settings.numChannels = channels==-1 ? 1 : channels;
-	// TODO: ask for actual number of current channels
+	settings.bufferSize = bufferSize==-1 ? theSensorManager()->GetNumFramesPerCallback(AudioInput) : bufferSize;
+	settings.numChannels = channels==-1 ? theSensorManager()->GetNumChannels(AudioInput) : channels;
+
 	s_bool ret = theSensorManager()->InitSensor(AudioInput,settings);
 
 	if (ret==true)
@@ -86,23 +86,23 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_SetupAudioInput
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetSensorRate
   (JNIEnv *e, jclass c, jint type)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->GetRate(ItoType(type));
 }
 
 
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputBufferSize
+JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputFramesPerBuffer
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
-	return theSensorManager()->GetNumSamples(AudioInput);
+	//LOGD("%s",__PRETTY_FUNCTION__);
+	return theSensorManager()->GetNumFramesPerCallback(AudioInput);
 }
 
 
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputChannels
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	// TODO: return actual number of channels;
 	return 1;
 }
@@ -111,7 +111,7 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetAudioInputChannels
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsSensorActive
   (JNIEnv *e, jclass c, jint type)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 
 	return theSensorManager()->SensorActivated(ItoType(type));
 }
@@ -120,7 +120,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsSensorActive
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartAllSensors
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->StartAllSensors();
 }
 
@@ -128,7 +128,7 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartAllSensors
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopAllSensors
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->StopAllSensors();
 }
 
@@ -136,32 +136,15 @@ JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StopAllSensors
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_StartPreviouslyActiveSensors
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return theSensorManager()->StartPrecActiveSensors();
-}
-
-
-JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_SetMasterSensor
-  (JNIEnv *e, jclass c, jint type)
-{
-	LOGD("%s",__PRETTY_FUNCTION__);
-	Harvester::Instance()->SetType(ItoType(type));
-	// TODO: make set type return success or failure;
-	return true;
-}
-
-JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetMasterSensor
-  (JNIEnv *e, jclass c)
-{
-	LOGD("%s",__PRETTY_FUNCTION__);
-	return Harvester::Instance()->GetType();
 }
 
 
 JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpOSCmode
   (JNIEnv *e, jclass c, jboolean active)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	UDPSendersManager::Instance()->SetUseOSCPackaging(active);
 }
 
@@ -169,7 +152,7 @@ JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpOSCmode
 JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpMultiportMode
   (JNIEnv *e, jclass c, jboolean active)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	UDPSendersManager::Instance()->SetMultiOutput(active);
 }
 
@@ -191,7 +174,7 @@ JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpDestinationPort
 JNIEXPORT jstring JNICALL Java_it_scdf_framework_Scdf_GetUdpDestinationIp
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	std::string ip = UDPSendersManager::Instance()->GetOutputAddress();
 	return e->NewStringUTF(ip.c_str());
 }
@@ -199,14 +182,14 @@ JNIEXPORT jstring JNICALL Java_it_scdf_framework_Scdf_GetUdpDestinationIp
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetUdpDestinationPort
   (JNIEnv *, jclass)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return UDPSendersManager::Instance()->GetOutputPort();
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsUdpOSCmodeActive
   (JNIEnv *, jclass)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return UDPSendersManager::Instance()->UseOSCPackaging();
 }
 
@@ -214,7 +197,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsUdpOSCmodeActive
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsUdpMultiportModeActive
   (JNIEnv *, jclass)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	return UDPSendersManager::Instance()->GetMultiOutput();
 }
 
@@ -222,7 +205,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsUdpMultiportModeActive
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_OpenUdpConnection
   (JNIEnv *e, jclass c, jstring jip, jint port)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
 	char const* cstr = e->GetStringUTFChars(jip, NULL);
 	std::string ip(cstr);
 	UDPSendersManager::Instance()->InitSender(port,ip);
@@ -235,7 +218,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_OpenUdpConnection
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_CloseUdpConnection
   (JNIEnv *e, jclass c)
 {
-	LOGD("%s",__PRETTY_FUNCTION__);
+	//LOGD("%s",__PRETTY_FUNCTION__);
     UDPSendersManager::Instance()->ReleaseSender();
 	// tODO: make release report success or failure
 	return true;
@@ -245,3 +228,18 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_CloseUdpConnection
 
 
 
+/*JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_SetMasterSensor
+  (JNIEnv *e, jclass c, jint type)
+{
+	//LOGD("%s",__PRETTY_FUNCTION__);
+	Harvester::Instance()->SetType(ItoType(type));
+	// TODO: make set type return success or failure;
+	return true;
+}
+
+JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetMasterSensor
+  (JNIEnv *e, jclass c)
+{
+	//LOGD("%s",__PRETTY_FUNCTION__);
+	return Harvester::Instance()->GetType();
+}*/

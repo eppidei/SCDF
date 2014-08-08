@@ -29,52 +29,55 @@ int scdf::SensorStandardImpl::Callback(int fd, int events, void* data)
 	ASensorEvent event;
     while (ASensorEventQueue_getEvents(s->sensorEventQueue, &event, 1) > 0)
     {
-    	LOGD("   Sensor %d", s->GetType());
+    	//LOGD("   Sensor %d", s->GetType());
     	//LOGD("   Sensor %d : %f  %f  %f", s->GetType(),event.acceleration.x, event.acceleration.y, event.acceleration.z);
     	SensorData *sd=thePipesManager()->ReadFromReturnPipe(s->GetType());
    	    //LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
 
+    	if (sd==NULL) {
+    		LOGE("Null sensor data structure!");
+    		return 1;
+    	}
+
+
    	    sd->type = s->GetType();
    	    sd->timeid = now_ns();
-   	   	sd->timestamp = sd->timeid;
+	    sd->timestamp[0] = sd->timeid;
    	   	sd->rate = s->currentRate;
-   	   	sd->numChannels = 1;
+   	   	sd->num_frames = 1;
 
    	   	switch(event.type)
    	   	{
    	   		case ASENSOR_TYPE_ACCELEROMETER:
-   	    	    sd->num_samples=3;
-   	    	    sd->data[0]  = event.acceleration.x;
+   	   			sd->num_channels = 3;
+   	   		    sd->data[0]  = event.acceleration.x;
    	    	    sd->data[1]  = event.acceleration.y;
    	    	    sd->data[2]  = event.acceleration.z;
    	 			break;
    	 		case ASENSOR_TYPE_MAGNETIC_FIELD:
-   	 			sd->num_samples=3;
-   	 			sd->data[0]  = event.magnetic.x;
+   	 			sd->num_channels=3;
+   	 		   	 sd->data[0]  = event.magnetic.x;
    	 		   	sd->data[1]  = event.magnetic.y;
    	 		   	sd->data[2]  = event.magnetic.z;
    	 		   	break;
    	 		case ASENSOR_TYPE_PROXIMITY:
-   	 			sd->num_samples=1;
+   	 			sd->num_channels=1;
    	 		   	sd->data[0] = event.distance;
    	 		   	break;
    	 		case ASENSOR_TYPE_GYROSCOPE:
-   	 			sd->num_samples=3;
+   	 			sd->num_channels=3;
    	 			sd->data[0]  = event.vector.x;
    	 		   	sd->data[1]  = event.vector.y;
    	 		   	sd->data[2]  = event.vector.z;
    	 		   	break;
    	 		case ASENSOR_TYPE_LIGHT:
-   	 			sd->num_samples=1;
+   	 			sd->num_channels=1;
    	 	   	 	sd->data[0] = event.light;
    	 	   	 	break;
    	 		default:
    	 			LOGE("Sensor constructor error: invalid sensor type!");
    	 			break;
-   	   	} if (NULL==sd){
-   	    	sd = new scdf::SensorData();
-   	    	sd->data=(s_sample*) new s_sample[3];
-   	    }
+   	   	}
 
    	   	/*static long count = 0;
    	   	LOGD("SENSOR callback %ld",count);
@@ -206,7 +209,7 @@ s_int32 scdf::SensorStandardImpl::GetRate()
 	return currentRate;
 }
 
-s_int32 scdf::SensorStandardImpl::GetNumSamples()
+s_int32 scdf::SensorStandardImpl::GetNumChannels()
 {
 	switch(androidType)
    	{
@@ -220,6 +223,13 @@ s_int32 scdf::SensorStandardImpl::GetNumSamples()
    	 	default: LOGE("GetNumSamples(): invalid sensor type... returning 0"); return 0;
    	}
 }
+
+
+s_int32 scdf::SensorStandardImpl::GetNumFramesPerCallback()
+{
+    return 1;
+}
+
 
 /*ASensorList list;
 	int numSensors = ASensorManager_getSensorList(sm, &list);

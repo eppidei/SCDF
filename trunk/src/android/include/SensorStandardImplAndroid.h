@@ -31,7 +31,8 @@ namespace scdf {
         s_bool Start();
         s_bool Stop();
         s_int32 GetRate();
-        s_int32 GetNumSamples();
+        s_int32 GetNumFramesPerCallback();
+        s_int32 GetNumChannels();
 
         static int Callback(int fd, int events, void* data);
 

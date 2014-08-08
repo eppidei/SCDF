@@ -16,20 +16,17 @@ public class Scdf {
 	public static final int SENSOR_SETUP_BROKEN = -1;
 	
 	public static native boolean IsSensorAvailable(int type);
-	public static native int StartSensor(int type);
-	public static native int StopSensor(int type);
+	public static native boolean StartSensor(int type);
+	public static native boolean StopSensor(int type);
 	public static native int SetupSensor(int type,int rate);
 	public static native int SetupAudioInput(int rate, int bufferSize, int channels);
 	public static native int GetSensorRate(int type);
-	public static native int GetAudioInputBufferSize(); // in samples (divide by chans to obtain frames)
+	public static native int GetAudioInputFramesPerBuffer();
 	public static native int GetAudioInputChannels();
 	public static native boolean IsSensorActive(int type);
 	public static native int StartAllSensors();
 	public static native int StopAllSensors();
 	public static native int StartPreviouslyActiveSensors();
-	
-	public static native boolean SetMasterSensor(int type);
-	public static native int GetMasterSensor();
 	
 	public static native void SetUdpDestinationIp(String ip);
 	public static native void SetUdpDestinationPort(int port);

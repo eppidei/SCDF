@@ -14,6 +14,11 @@ using namespace scdf;
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_test_TestActivity_NativeOnCreate(JNIEnv* env, jobject thiz)
 {
+#ifdef _DEBUG
+	LOGE("sleep...");
+	usleep(3000000);
+#endif
+
 	InitFramework();
 	return true;
 }

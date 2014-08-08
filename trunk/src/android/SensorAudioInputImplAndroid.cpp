@@ -26,12 +26,11 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 	SensorData *s=(SensorData*) thePipesManager()->ReadFromReturnPipe(AudioInput); // data buffer size decided in setup
 
     s->type = AudioInput;
-    s->num_samples = ai->bufferSize;
-    s->numChannels = ai->inputOpenSLFormat.numChannels;
+    s->num_frames = ai->framesPerBuffer;
+    s->num_channels = ai->inputOpenSLFormat.numChannels;
     s->rate = (s_int32)(ai->inputOpenSLFormat.samplesPerSec/1000); // opensl sr is in millihertz!
-    s_uint64 num_frames = s->num_samples/s->numChannels;
 
-    s_double buff_len_ns = (((s_double)num_frames) / s->rate) * 1000000000.0;
+    s_double buff_len_ns = (((s_double)ai->framesPerBuffer) / s->rate) * 1000000000.0;
     s_uint64 buff_len_ns_int = (s_uint64) buff_len_ns;
 
     s_uint64 timeFromLastCallback = now - ai->lastCallbackTime;
@@ -43,16 +42,16 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     if (ratio_rounded == 1) { // normal situation
 
     	s->timeid = ai->lastCallbackTime;
-    	s->timestamp = now;
+    	s->timestamp[0] = now;
     	caseIs = "normal";
 
     } else if ( ratio_rounded == 0 && ai->nGroupedCallbacks > 0) {
 
     	s->timeid = now - (ai->nGroupedCallbacks * buff_len_ns_int);
-    	s->timestamp = s->timeid + buff_len_ns_int;
+    	s->timestamp[0] = s->timeid + buff_len_ns_int;
 
-    	if (s->timestamp > now)
-    		s->timestamp = now;
+    	if (s->timestamp[0] > now)
+    		s->timestamp[0] = now;
 
     	ai->nGroupedCallbacks -= 1;
     	ai->lastCallbackWasGrouped = true;
@@ -63,7 +62,7 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     	if (ai->nGroupedCallbacks==0 || ai->lastCallbackWasGrouped) {
 
     		s->timeid = now - (ratio_rounded * buff_len_ns);
-    		s->timestamp = s->timeid + buff_len_ns_int;
+    		s->timestamp[0] = s->timeid + buff_len_ns_int;
     		ai->nGroupedCallbacks = ratio_rounded - 1; // one "consumed" right now
     		caseIs = "first of grouped";
     		ai->lastCallbackWasGrouped = false;
@@ -71,11 +70,11 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
    		} else { // there has been a delay in a grouped callback!
 
     		s->timeid = ai->lastTimestamp + buff_len_ns_int;
-    		s->timestamp = s->timeid + buff_len_ns_int;
+    		s->timestamp[0] = s->timeid + buff_len_ns_int;
     		ai->nGroupedCallbacks -= 1;
 
-    		if (s->timestamp > now)
-   	    		s->timestamp = now;
+    		if (s->timestamp[0] > now)
+   	    		s->timestamp[0] = now;
 
     		caseIs = "delayed grouped";
    		}
@@ -83,7 +82,7 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     } else { // ratio_rounded == 0 but no ngrouped callbacks!
 
     	// this is a callback coming after a delayed callback
-    	s->timestamp = now;
+    	s->timestamp[0] = now;
     	s->timeid = now - buff_len_ns_int;
 
     	if (s->timeid < ai->lastTimestamp) // avoid buffer time spans overlapping
@@ -93,14 +92,15 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     	ai->lastCallbackWasGrouped = false;
     }
 
-    ai->lastTimestamp = s->timestamp;
+    ai->lastTimestamp = s->timestamp[0];
     ai->lastTimeId = s->timeid;
     ai->lastCallbackTime = now;
 
     // convert to floating point and copy audio data:
     s_sample scale = ((s_sample)(1.0))/((s_sample)(-SHRT_MIN));
-    for (int i=0; i<ai->bufferSize; i++)
-       	s->data[i] = ai->inputBuffer[ai->currentBuff][i]*scale;
+    int bufferSize = ai->GetBufferSize();
+    for (int i=0; i<bufferSize; i++)
+    	s->data[i] = ai->inputBuffer[ai->currentBuff][i]*scale;
 
 	/*s_double error;
 	std::string sign;
@@ -114,7 +114,7 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 
 	ai->AddIncomingDataToQueue(s);
 
-    (*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->bufferSize*sizeof(short));
+    (*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],bufferSize*sizeof(short));
 
 /*  s_uint64 end = now_ns();
     s_double cb_time_ms = (end - now)/1000000.0;
@@ -133,7 +133,7 @@ scdf::SensorAudioInputImpl::SensorAudioInputImpl()
 	// they act as "default" values:
 	inputOpenSLFormat.samplesPerSec=44100000;
 	inputOpenSLFormat.numChannels=1;
-	bufferSize = 512;
+	framesPerBuffer = 512;
 
 	theOpenSLEngine()->Initialize();
 }
@@ -169,18 +169,34 @@ void scdf::SensorAudioInputImpl::Reset()
 s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 {
     // negotiate the settings, if any of them is not supported,
-    // modify its value in settings and return false
-    // try starting the sensor, return result
+    // modify its value in settings and return false. but if setup succeeds with
+	// modified values, return broken = false
 
 	Reset();
-	// OBS: streamingEvents and numbuff not used.
 	SLresult result;
 	s_bool anySettingChanged = false;
+	SensorAudioSettings &settingsAudio =  (SensorAudioSettings&)settings;
+
+	LOGI("Setup Audio Input. rate %d, fpb: %d, chan %d",settingsAudio.rate,settingsAudio.bufferSize,settingsAudio.numChannels);
 
 	numBuffers = 2;
-    bufferSize = 512;
-	inputOpenSLFormat.numChannels = 1;
-	inputOpenSLFormat.samplesPerSec = ConvertToOpenSLSampleRate(44100);
+    framesPerBuffer = settingsAudio.bufferSize;
+
+    inputOpenSLFormat.numChannels = 1;
+	if (settingsAudio.numChannels!=1) {
+		LOGD("Num channels adjusted...");
+		settingsAudio.numChannels=1;
+		anySettingChanged = true;
+	}
+
+	inputOpenSLFormat.samplesPerSec = ConvertToOpenSLSampleRate(settingsAudio.rate);
+
+	if (settingsAudio.rate!=((int)(inputOpenSLFormat.samplesPerSec/1000))) {
+		LOGD("Rate adjusted...");
+		settingsAudio.rate = inputOpenSLFormat.samplesPerSec/1000;
+		anySettingChanged = true;
+	}
+
 	inputOpenSLFormat.formatType = SL_DATAFORMAT_PCM;
 	inputOpenSLFormat.bitsPerSample = ConvertToOpenSLSampleFormat(16);
 	inputOpenSLFormat.containerSize = inputOpenSLFormat.bitsPerSample;
@@ -212,14 +228,18 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 	const SLInterfaceID recorderInterfacesIDs[] = {SL_IID_ANDROIDSIMPLEBUFFERQUEUE,SL_IID_ANDROIDCONFIGURATION};
 	const SLboolean recorderRequiredFlags[] = {SL_BOOLEAN_TRUE,SL_BOOLEAN_TRUE};
 
-	 result = (*theOpenSLEngine()->engineInterface)->CreateAudioRecorder( theOpenSLEngine()->engineInterface,
+	result = (*theOpenSLEngine()->engineInterface)->CreateAudioRecorder( theOpenSLEngine()->engineInterface,
 	                                                                      &audioRecorderItf,
 	                                                                      &inputSource,
 	                                                                      &inputSink,
 	                                                                      numRecorderExplicitInterfaces,
 	                                                                      recorderInterfacesIDs,
 	                                                                      recorderRequiredFlags);
-	 // ThrowIfSLresultError(result,"Can't create android audio recorder");
+	if (result != SL_RESULT_SUCCESS) {
+		LOGE("Error creating Audio recorder.");
+		settingsAudio.broken = true;
+		return false;
+	}
 
 	 // Get android specific configuration interface (can be retrieved before recorder realization):
 	 SLAndroidConfigurationItf recConfig;
@@ -232,28 +252,51 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 
      // realize the audio recorder:
 	 result = (*audioRecorderItf)->Realize(audioRecorderItf, SL_BOOLEAN_FALSE);
-	 //ThrowIfSLresultError(result,"Can't initialize android audio recorder");
+	 if (result != SL_RESULT_SUCCESS) {
+	 		LOGE("Error realizing Audio recorder.");
+	 		settingsAudio.broken = true;
+	 		return false;
+	 }
+
+
 	 // get the record interface:
 	 result = (*audioRecorderItf)->GetInterface(audioRecorderItf, SL_IID_RECORD, &recordItf);
-	 //ThrowIfSLresultError(result,"Can't get android recorder interface");
+	 if (result != SL_RESULT_SUCCESS) {
+	 		LOGE("Error getting record interface.");
+	 		settingsAudio.broken = true;
+	 		return false;
+	 }
 
 	 // get the buffer queue interface
 	 result = (*audioRecorderItf)->GetInterface(audioRecorderItf, SL_IID_ANDROIDSIMPLEBUFFERQUEUE,
 	                                                    &inBufferQueue);
-	 //ThrowIfSLresultError(result,"Can't get android input buffer queue");
+	 if (result != SL_RESULT_SUCCESS) {
+	 	LOGE("Error getting buffer queue interface.");
+	 	settingsAudio.broken = true;
+	 	return false;
+	 }
+
 
 	 // register callback on the buffer queue
 	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, Callback,this);
-	 //ThrowIfSLresultError(result,"Can't setup android input callback");
+	 if (result != SL_RESULT_SUCCESS) {
+	 		LOGE("Error registering input audio callback.");
+	 		settingsAudio.broken = true;
+	 		return false;
+	 }
 
 	 inputBuffer = new short*[numBuffers];
 	 for (int i=0; i<numBuffers; i++) {
-		 inputBuffer[i] = new short[bufferSize/**sizeof(short)*/];
+		 inputBuffer[i] = new short[GetBufferSize()];
 	 }
 
-	 // TODO: error handling
+	 settingsAudio.broken = false;
+	 return !anySettingChanged;
+}
 
-	 return true;
+int scdf::SensorAudioInputImpl::GetBufferSize()
+{
+	return framesPerBuffer*inputOpenSLFormat.numChannels;
 }
 
 s_bool scdf::SensorAudioInputImpl::Start()
@@ -272,7 +315,7 @@ s_bool scdf::SensorAudioInputImpl::Start()
     currentBuff=0;
     for (int i=0; i<numBuffers; i++)
 	{
-    	(*inBufferQueue)->Enqueue(inBufferQueue, inputBuffer[i],bufferSize*sizeof(short));
+    	(*inBufferQueue)->Enqueue(inBufferQueue, inputBuffer[i],GetBufferSize()*sizeof(short));
 	}
     currentBuff = 0;
     // set the recorder's state to rec:
@@ -304,15 +347,22 @@ s_int32 scdf::SensorAudioInputImpl::GetRate()
 	return (s_int32)(inputOpenSLFormat.samplesPerSec/1000);
 }
 
-s_int32 scdf::SensorAudioInputImpl::GetNumSamples()
+
+s_int32 scdf::SensorAudioInputImpl::GetNumFramesPerCallback()
 {
-	return (s_int32)(bufferSize);
+    return framesPerBuffer;
+}
+
+
+s_int32 scdf::SensorAudioInputImpl::GetNumChannels()
+{
+    return inputOpenSLFormat.numChannels;
 }
 
 /** OPENSL ENGINE METHODS */
 
 // function called by both input and output drivers intialization methods:
-// so  the engine might be already initialized: check it!
+// the engine might be already initialized, so we check it!
 
 scdf::OpenSLEngine* scdf::theOpenSLEngine()
 {
@@ -413,8 +463,7 @@ SLuint32 scdf::ConvertToOpenSLSampleRate(s_int32 insr)
         case 48000:
             sr = SL_SAMPLINGRATE_48;
             break;
-        /* // apparently, following rates are not supported on android
-           // see $NDK/docs/opensles/index.htm
+        /* // following rates are not supported on android, see $NDK/docs/opensles/index.htm
         case 64000:
             sr = SL_SAMPLINGRATE_64;
             break;
@@ -428,7 +477,7 @@ SLuint32 scdf::ConvertToOpenSLSampleRate(s_int32 insr)
             sr = SL_SAMPLINGRATE_192;
             break; */
         default:
-            LOGD("Invalid sample rate, setting to SL_SAMPLERATE_44_1 (44.1kHz)");
+            LOGE("Invalid sample rate, setting to SL_SAMPLERATE_44_1 (44.1kHz)");
             return SL_SAMPLINGRATE_44_1;
     }
     return sr;
