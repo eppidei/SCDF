@@ -22,15 +22,13 @@ namespace scdf
 {
     class UDPSender
     {
-//        std::auto_ptr<UdpTransmitSocket> transmitSocket;
         std::auto_ptr<UdpSocket> transmitSocket;
         std::auto_ptr<IpEndpointName> endPoint;
         void Release();
         std::string address;
     public:
         ~UDPSender() { Release(); }
-        void SendData(s_char* data, s_int32 size);
-        void SendDataOSCPacked(osc::OutboundPacketStream &oscData);
+        void SendData(const s_char* data, s_int32 size);
         s_int32 GetPort();
         std::string GetAddress();
         s_int32 Init(int udpp, std::string add);
@@ -43,9 +41,11 @@ namespace scdf
         void SendData();
         void DoSendData();
         void DoMultiSendData();
-        void OSCPackData(SensorData*, osc::OutboundPacketStream &oscData);
+        void OSCPackData(const std::vector<SensorData*> &sData, osc::OutboundPacketStream &oscData);
+        void OSCSinglePackData(SensorData*, osc::OutboundPacketStream &oscData);
         void DoSendDataOSCPacked();
         void DoMultiSendDataOSCPacked();
+        s_int32 CalculateOSCDataBufferSize();
         
         ThreadUtils::CustomSemaphore freeSlot, canSend;
         ThreadUtils::ThreadHandle handle;
@@ -61,7 +61,7 @@ namespace scdf
     public:
         s_int32 GetPort();
         std::string GetAddress();
-        bool activated;
+        s_bool activated;
         std::vector<SensorData*> senderData;
         
         UDPSenderHelperBase();
