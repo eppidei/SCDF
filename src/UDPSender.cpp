@@ -290,17 +290,9 @@ void UDPSenderHelperBase::OSCPackData(const std::vector<SensorData*> &sData, osc
         oscData << osc::BeginMessage( std::string(sensorTag+rateTag).c_str() ) << data->rate << osc::EndMessage
         << osc::BeginMessage( std::string(sensorTag+channelsTag).c_str() ) << data->num_channels << osc::EndMessage
         << osc::BeginMessage( std::string(sensorTag+samplesTag).c_str() ) << data->num_frames << osc::EndMessage
-        << osc::BeginMessage( std::string(sensorTag+timeIDTag).c_str() ) << (osc::int64)data->timeid << osc::EndMessage;
-        //<< osc::BeginMessage( std::string(sensorTag+dataTag).c_str() ) << osc::Blob(data->data, data->num_frames*data->num_channels*sizeof(s_sample))<< osc::EndMessage
-        
-        oscData << osc::BeginMessage( std::string(sensorTag+dataTag).c_str() )
-        << osc::BeginArray;
-        for (int i=0;i<data->num_frames*data->num_channels;++i)
-            oscData << data->data[i];
-        oscData << osc::EndArray << osc::EndMessage;
-        
-            
-        oscData << osc::BeginMessage( std::string(sensorTag+timestampsTag).c_str() ) << osc::Blob(data->timestamp,numTimestamps*sizeof(s_uint64)) << osc::EndMessage;
+        << osc::BeginMessage( std::string(sensorTag+timeIDTag).c_str() ) << (osc::int64)data->timeid << osc::EndMessage
+        << osc::BeginMessage( std::string(sensorTag+dataTag).c_str() ) << osc::Blob(data->data, data->num_frames*data->num_channels*sizeof(s_sample))<< osc::EndMessage
+        << osc::BeginMessage( std::string(sensorTag+timestampsTag).c_str() ) << osc::Blob(data->timestamp,numTimestamps*sizeof(s_uint64)) << osc::EndMessage;
     }
     oscData << osc::EndBundle;
 }
