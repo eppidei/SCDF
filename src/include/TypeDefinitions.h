@@ -40,7 +40,6 @@ typedef s_float s_sample;
 
 #define DEFAULT_UDP_PORT_BASE 7000
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
-#define OSC_BUFFER_SIZE 4096
 #define RETURN_PIPES_STATIC_INIT 50
 
 #define MAX_SAMP_FREQ 48000
