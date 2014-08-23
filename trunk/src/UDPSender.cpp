@@ -303,18 +303,4 @@ void UDPSenderHelperBase::OSCSinglePackData(SensorData *data, osc::OutboundPacke
     tempData.push_back(data);
     
     OSCPackData(tempData,oscData);
-    
-/*    s_int32 numTimestamps=2;
-    if (AudioInput!=data->type)
-        numTimestamps=data->num_frames;
-
-    oscData << osc::BeginBundle()
-    << osc::BeginMessage( "/Sensor type") << data->type << osc::EndMessage
-    << osc::BeginMessage( "/Rate"	) << data->rate << osc::EndMessage
-    << osc::BeginMessage( "/Channels"	) << data->num_channels << osc::EndMessage
-    << osc::BeginMessage( "/Num samples") << data->num_frames << osc::EndMessage
-    << osc::BeginMessage( "/Time ref") << (osc::int64)data->timeid << osc::EndMessage
-    << osc::BeginMessage( "/Data:"	) << osc::Blob(data->data, data->num_frames*data->num_channels*sizeof(s_sample))<< osc::EndMessage
-    << osc::BeginMessage( "/Timestamp") << osc::Blob(data->timestamp,numTimestamps*sizeof(s_uint64)) << osc::EndMessage;
-    oscData << osc::EndBundle;*/
 }
