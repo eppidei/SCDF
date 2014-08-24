@@ -23,32 +23,28 @@ namespace scdf
     class UDPSender
     {
         std::auto_ptr<UdpSocket> transmitSocket;
-        std::auto_ptr<IpEndpointName> endPoint;
-        void Release();
+        std::vector<IpEndpointName*> endPoints;
+        ThreadUtils::CustomMutex endpointsChanger;
+        s_int32 portBase;
         std::string address;
+        
+        s_bool CheckCreateSender();
     public:
-        ~UDPSender() { Release(); }
-        void SendData(const s_char* data, s_int32 size);
+        UDPSender();
+        void SendData(const s_char* data, s_int32 size, s_int32 endpointIndex);
+        void InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::string IP_address);
         s_int32 GetPort();
         std::string GetAddress();
-        s_int32 Init(int udpp, std::string add);
     };
     
     class UDPSenderHelperBase
     {
-        std::vector<UDPSender*> senders;
-        
-        void SendData();
-        void DoSendData();
-        void DoMultiSendData();
-        void OSCPackData(const std::vector<SensorData*> &sData, osc::OutboundPacketStream &oscData);
-        void OSCSinglePackData(SensorData*, osc::OutboundPacketStream &oscData);
-        void DoSendDataOSCPacked();
-        void DoMultiSendDataOSCPacked();
-        s_int32 CalculateOSCDataBufferSize();
-        
-        ThreadUtils::CustomSemaphore freeSlot, canSend;
+        friend class UDPSendersManager;
+        std::auto_ptr<UDPSender> sender;
+        ThreadUtils::CustomMutex activator;
         ThreadUtils::ThreadHandle handle;
+        s_bool multiOutput, oscPackData;
+        
         struct TempSensorData
         {
             s_int32 size;
@@ -58,19 +54,23 @@ namespace scdf
             void PrepareBufferToSend(SensorData *data);
         };
         TempSensorData tempSensorData[scdf::NumTypes];
-    public:
+        
+        void Init(s_int32 udpPortBase, std::string address);
+        void SendData(std::vector<SensorData*> &senderData);
+        void DoSendData(std::vector<SensorData*> &senderData);
+        void DoMultiSendData(std::vector<SensorData*> &senderData);
+        void OSCPackData(const std::vector<SensorData*> &sData, osc::OutboundPacketStream &oscData);
+        void OSCSinglePackData(SensorData*, osc::OutboundPacketStream &oscData);
+        void DoSendDataOSCPacked(std::vector<SensorData*> &senderData);
+        void DoMultiSendDataOSCPacked(std::vector<SensorData*> &senderData);
+        s_int32 CalculateOSCDataBufferSize(std::vector<SensorData*> &senderData);
         s_int32 GetPort();
         std::string GetAddress();
-        s_bool activated;
-        std::vector<SensorData*> senderData;
         
         UDPSenderHelperBase();
-        ~UDPSenderHelperBase() { Release();}
-        virtual s_int32 Init(std::vector<s_int32> udpPorts, std::string address);
-        void Release();
+    public:
+        void Activate(bool activate);
         void SendOnThread();
-        ThreadUtils::CustomSemaphore *EventFreeSlot() {return &freeSlot;}
-        ThreadUtils::CustomSemaphore *EventCanSend() {return &canSend;}
     };
 }
 #endif /* defined(__SCDF_Test__UDPSender__) */

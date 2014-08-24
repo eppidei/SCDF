@@ -114,7 +114,7 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     SensorData *s=thePipesManager()->ReadFromReturnPipe(AudioInput);
     
 #ifdef LOG_PIPES_STATUS
-    LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(GetReturnPipes()))[AudioInput]->GetSize());
+    LOGD("Return pipe size of %s: %d\n", SensorTypeString[AudioInput].c_str(), (*(thePipesManager()->GetReturnPipes()))[AudioInput]->GetSize());
 #endif
     assert(inNumberFrames<=pthis->GetNumFramesPerCallback());
     memcpy(s->data, ioData->mBuffers[0].mData, inNumberFrames*sizeof(s_sample));

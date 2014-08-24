@@ -24,7 +24,7 @@ s_bool scdf::SensorAudioInput::Setup(SensorSettings& settings)
     // try starting the sensor, return result
     s_bool ret = sImpl->Setup(settings);
    // s_int32 samplesPerCallback=((SensorAudioSettings&)settings).bufferSize;
-    thePipesManager()->InitReturnPipes(GetType());
+    thePipesManager()->InitReturnPipe(GetType());
     ((SensorAudioSettings&)settings).numChannels=GetNumChannels();
     
     return ret;
@@ -68,8 +68,3 @@ s_int32 scdf::SensorAudioInput::GetNumChannels()
 {
     return sImpl->GetNumChannels();
 }
-
-/*s_int32 scdf::SensorAudioInput::GetBufferSize()
-{
-    return sImpl->GetBufferSize();
-}*/

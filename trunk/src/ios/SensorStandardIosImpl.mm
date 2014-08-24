@@ -39,10 +39,12 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 - (NSTimeInterval) GetTimeInterval
 {
+    if(updateInterval)
+        return updateInterval;
     if(timerProx)
         return [timerProx timeInterval];
     
-    return updateInterval;
+    return -1;
 }
 
 - (void) setSensorRef: (SensorStandardImpl  *) _sensorRef
@@ -313,7 +315,7 @@ void SensorStandardImpl::MySensorsCallback(SensorsStandardIOSData &sensorIOSData
     SensorData *s=thePipesManager()->ReadFromReturnPipe(sensorTypeRef);
     
 #ifdef LOG_PIPES_STATUS
-    LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(GetReturnPipes()))[sensorTypeRef]->GetSize());
+    LOGD("Return pipe size of %s: %d\n", SensorTypeString[sensorTypeRef].c_str(), (*(thePipesManager()->GetReturnPipes()))[sensorTypeRef]->GetSize());
 #endif
     
     ((s_sample*)(s->data))[0]  = sensorIOSData.value1;

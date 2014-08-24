@@ -13,11 +13,7 @@
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #include <string>
-
-
-
-#define DEFUALT_ADDRESS "127.0.0.1"
-#define DEFAULT_PORT 9000;
+#include "UdpSender.h"
 #define MAX_NUMBER_IP_PORT 65535;
 
 @interface SecondViewController ()
@@ -68,10 +64,10 @@
         delete ip;
         ip = NULL;
     } else
-        addressString = DEFUALT_ADDRESS;
+        addressString = DEFAULT_IP_ADDRESS;
     
     if (!actualPort) {
-        actualPort = DEFAULT_PORT;
+        actualPort = DEFAULT_UDP_PORT_BASE;
     }
     
     // Setup Framework
@@ -201,16 +197,8 @@
 
 - (IBAction) toggleActiveSender: (id) sender
 {
-    UISwitch *currentSensor = sender;
-    if(currentSensor.on)
-    {
-        if (scdf::UDPSendersManager::Instance()->InitSender(actualPort, addressString)<=0)
-            assert(false);
-    } else
-    {
-        scdf::UDPSendersManager::Instance()->ReleaseSender();
-    }
-    
+    UISwitch *senderSwitch = sender;
+    scdf::UDPSendersManager::Instance()->GetSender()->Activate(senderSwitch.on);
 }
 
 - (IBAction) callPickerIpPortView:(id)sender

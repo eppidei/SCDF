@@ -37,7 +37,7 @@ s_bool SensorStandard::Setup(SensorSettings& settings)
     // modify its value in settings and return false
     // try starting the sensor, return result
     //const s_int32 samplesPerCallback=1;
-    thePipesManager()->InitReturnPipes(GetType()/*, samplesPerCallback*/);
+    thePipesManager()->InitReturnPipe(GetType()/*, samplesPerCallback*/);
     return sImpl->Setup(settings);
 }
 

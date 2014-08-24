@@ -22,7 +22,9 @@ namespace scdf
     public:
         void CreateReturnPipes();
         std::vector<CustomPipe*>* GetReturnPipes();
-        void InitReturnPipes(SensorType type/*, s_int32 numSamples*/);
+        std::vector<CustomPipe*>* GetPipes();
+        void InitReturnPipe(SensorType type/*, s_int32 numSamples*/);
+        void InitReturnPipes();
         friend PipesManager *thePipesManager();
         SensorData *ReadFromPipe(SensorType type);
         SensorData *ReadFromReturnPipe(SensorType type);

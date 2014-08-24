@@ -36,8 +36,9 @@ static void StartHarvestingProcedure(void *param)
     }
 }
 
-void Harvester::AllocBufferHarvest()
+std::vector<SensorData*> *Harvester::AllocBufferHarvest()
 {
+    std::vector<SensorData*> *buffer=new std::vector<SensorData*>();
     for(int i=0;i<NumTypes;++i)
     {
         SensorData *s=new SensorData((SensorType)i);
@@ -53,8 +54,9 @@ void Harvester::AllocBufferHarvest()
 
         s->data= new s_sample[bufferSize];
         s->timestamp= new s_uint64[timestampSize];
-        bufferHarvest.push_back(s);
+        buffer->push_back(s);
     }
+    return buffer;
     
 }
 
@@ -66,6 +68,7 @@ void Harvester::Start()
     if (activated) return;
     activated=true;
     thePipesManager()->InitPipes();
+    thePipesManager()->InitReturnPipes();
     theSensorManager()->StartPrecActiveSensors();
     handle=ThreadUtils::CreateThread((start_routine)StartHarvestingProcedure, this);
 }
@@ -75,12 +78,10 @@ void Harvester::Stop()
     if (!activated) return;
     activated=false;
     theSensorManager()->StopAllSensors();
-    //Write dummy buffer on master queue to sblock harvester
-   // for (int i=0;i<10;++i)
+    //Write dummy buffer on master queue to unlock harvester
     thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
-
     ThreadUtils::JoinThread(handle);
-    SentDataRecyclingProcedure(&myHarvest);
+    SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
 }
 
@@ -116,7 +117,7 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
                 if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                     delete sd;
 #ifdef LOG_PIPES_STATUS
-                LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());
+                LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
 #endif
             }
             
@@ -125,8 +126,8 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
                 printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
                 sd->timeid=timestampStart;
-                myHarvest.push_back(sd);
-                myHarvestInfo.info[(int)sd->type].push_back(myHarvest.size()-1);
+                harvestData.push_back(sd);
+                myHarvestInfo.info[(int)sd->type].push_back(harvestData.size()-1);
             }
             else{
 #ifdef LOG_HARVEST_STATUS
@@ -153,7 +154,7 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
             if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                 delete sd;
 #ifdef LOG_PIPES_STATUS
-            LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), returnPipes[sd->type]->GetSize());
+            LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
 #endif
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
@@ -162,8 +163,8 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
 #ifdef LOG_HARVEST_STATUS
             printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
 #endif
-            myHarvest.push_back(nextHarvestData[i]);
-            myHarvestInfo.info[(int)nextHarvestData[i]->type].push_back(myHarvest.size()-1);
+            harvestData.push_back(nextHarvestData[i]);
+            myHarvestInfo.info[(int)nextHarvestData[i]->type].push_back(harvestData.size()-1);
             nextHarvestData.erase((nextHarvestData.begin()+i));
         }
     }
@@ -176,52 +177,55 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
         if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
             delete (*sData)[i];
 #ifdef LOG_PIPES_STATUS
-        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), returnPipes[(*sData)[i]->type]->GetSize());
+        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[(*sData)[i]->type]->GetSize());
 #endif
     }
     sData->clear();
 }
 
-void Harvester::NotifyHarvestCompletition()
+void Harvester::SendingQueuePushBuffer(std::vector<SensorData*> *buffer)
 {
-    UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetActiveSender();
+    UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetSender();
     if (NULL==sender) return;
-    sender->EventFreeSlot()->Wait();
-    sender=UDPSendersManager::Instance()->GetActiveSender();
-    if (NULL==sender) return;
-    bufferHarvest.swap(sender->senderData);
-    sender=UDPSendersManager::Instance()->GetActiveSender();
-    if (NULL==sender) return;
-    sender->EventCanSend()->Set();
+    syncDataQueue.push(buffer);
+#ifdef LOG_SEM
+    LOGD("Sender data queue size :%d\n",syncDataQueue.size());
+#endif
+    harvestReady.Set();
 }
 
-void Harvester::BuildSensorsDataBuffers(SensorData *masterData)
+void Harvester::WaitForHarvest()
 {
-    if(0==bufferHarvest.size())
-       AllocBufferHarvest();
+    harvestReady.Wait();
+}
+
+std::vector<SensorData*> *Harvester::BuildSensorsDataBuffers(SensorData *masterData)
+{
+    std::vector<SensorData*> *bufferHarvest=AllocBufferHarvest();
     for (int i=0;i<myHarvestInfo.info.size();++i)   // myHarvestInfo.info.size() = NumTypes
     {
         s_int32 numChannels=theSensorManager()->GetNumChannels((SensorType)i);
-        bufferHarvest[i]->num_frames=myHarvestInfo.info[i].size();
-        bufferHarvest[i]->num_channels=numChannels;
-        bufferHarvest[i]->timeid=masterData->timeid;
-        bufferHarvest[i]->rate=theSensorManager()->GetRate((SensorType)i);
+        (*bufferHarvest)[i]->num_frames=myHarvestInfo.info[i].size();
+        (*bufferHarvest)[i]->num_channels=numChannels;
+        (*bufferHarvest)[i]->timeid=masterData->timeid;
+        (*bufferHarvest)[i]->rate=theSensorManager()->GetRate((SensorType)i);
         if (AudioInput==i)
         {
-            bufferHarvest[i]->num_frames=masterData->num_frames;
-            bufferHarvest[i]->timestamp[0]=masterData->timeid;
-            bufferHarvest[i]->timestamp[1]=masterData->timestamp[0];
+            (*bufferHarvest)[i]->num_frames=masterData->num_frames;
+            (*bufferHarvest)[i]->timestamp[0]=masterData->timeid;
+            (*bufferHarvest)[i]->timestamp[1]=masterData->timestamp[0];
         }
         for(int j=0;j<myHarvestInfo.info[i].size();++j)
         {
-            SensorData *currentData=myHarvest[myHarvestInfo.info[i][j]];
+            SensorData *currentData=harvestData[myHarvestInfo.info[i][j]];
 
-            memcpy(bufferHarvest[i]->data+(j*numChannels), currentData->data, currentData->num_frames*currentData->num_channels*sizeof(s_sample));
+            memcpy((*bufferHarvest)[i]->data+(j*numChannels), currentData->data, currentData->num_frames*currentData->num_channels*sizeof(s_sample));
                 
             if (AudioInput==i) continue;
-            bufferHarvest[i]->timestamp[j]=currentData->timestamp[0];
+            (*bufferHarvest)[i]->timestamp[j]=currentData->timestamp[0];
         }
     }
+    return bufferHarvest;
 }
 
 void Harvester::HarvestingProcedure(SensorData *masterData)
@@ -232,9 +236,9 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
         printf("Harvested data %d from %s: %.4f\n",i,SensorTypeString[masterData->type].c_str(), ((s_sample*)masterData->data)[i]);
     }
 #endif
-    BuildSensorsDataBuffers(masterData);
-    SentDataRecyclingProcedure(&myHarvest);
-    NotifyHarvestCompletition();
+    std::vector<SensorData*> *b=BuildSensorsDataBuffers(masterData);
+    SentDataRecyclingProcedure(&harvestData);
+    SendingQueuePushBuffer(b);
 }
 
 void Harvester::Harvest(SensorData *masterData)
@@ -246,7 +250,6 @@ void Harvester::Harvest(SensorData *masterData)
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp[0]);
     PipesHarvesting(masterData->timeid, masterData->timestamp[0], masterData->type);
     //Sort();
-    myHarvest.push_back(masterData);
-    //myHarvest.insert(myHarvest.begin(), masterData);
-    myHarvestInfo.info[masterData->type].push_back(myHarvest.size()-1);
+    harvestData.push_back(masterData);
+    myHarvestInfo.info[masterData->type].push_back(harvestData.size()-1);
 }
