@@ -39,7 +39,12 @@ std::vector<CustomPipe*>* PipesManager::GetReturnPipes()
     return &returnPipes;
 }
 
-void PipesManager::InitReturnPipes(SensorType type/*, s_int32 numSamples*/)
+std::vector<CustomPipe*>* PipesManager::GetPipes()
+{
+    return &pipes;
+}
+
+void PipesManager::InitReturnPipe(SensorType type/*, s_int32 numSamples*/)
 {
     while(true)
     {
@@ -56,6 +61,12 @@ void PipesManager::InitReturnPipes(SensorType type/*, s_int32 numSamples*/)
         if (0==returnPipes[type]->WriteMessage<SensorData*>(s))
             delete s;
     }
+}
+
+void PipesManager::InitReturnPipes()
+{
+    for (int i=0;i<NumTypes;++i)
+        InitReturnPipe((SensorType)i);
 }
 
 void PipesManager::InitPipes()

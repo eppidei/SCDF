@@ -17,8 +17,16 @@ namespace scdf{
 
     class Harvester
     {
+        friend class UDPSenderHelperBase;
         std::vector<SensorData*> nextHarvestData;   //circular buffer?
-        std::vector<SensorData*> myHarvest;         //circular buffer?
+        std::vector<SensorData*> harvestData;         //circular buffer?
+
+        std::queue<std::vector<SensorData*>* > syncDataQueue;
+        
+        static Harvester *_instance;
+        SensorType requesterType;
+        ThreadUtils::ThreadHandle handle;
+        ThreadUtils::CustomSemaphore harvestReady;
         
         struct HarvestInfo{
             std::vector<std::vector<int> > info;
@@ -30,25 +38,20 @@ namespace scdf{
             }
         } myHarvestInfo;
         
-        std::vector<SensorData*> bufferHarvest;
         void PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType);
         void InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd);
-        void BuildSensorsDataBuffers(SensorData *masterData);
-//        void Sort();
-        void NotifyHarvestCompletition();
+        std::vector<SensorData*> *BuildSensorsDataBuffers(SensorData *masterData);
         void Harvest(SensorData *_masterData);
-        void AllocBufferHarvest();
+        std::vector<SensorData*> *AllocBufferHarvest();
         
         struct Compare {
             s_bool operator()(const SensorData* s1, const SensorData* s2) const;
         };
         
         Harvester();
-        static Harvester *_instance;
-        SensorType requesterType;
-        ThreadUtils::ThreadHandle handle;
     public:
-        
+        void SendingQueuePushBuffer(std::vector<SensorData*> *buffer);
+        void WaitForHarvest();
         bool activated;
         SensorType GetType() { return requesterType; }
         void SetType(SensorType type);

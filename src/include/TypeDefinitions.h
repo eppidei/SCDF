@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <queue>
 #include <iostream>
 #include <memory>
 #include <assert.h>
@@ -34,11 +35,12 @@ typedef s_float s_sample;
 //#define LOG_UDP_SEND
 //#define LOG_PIPES_STATUS
 //#define LOG_DATA
-#define LOG_SENDER_DATA
+//#define LOG_SENDER_DATA
 //#define LOG_TIMESTAMP
 //#define LOG_HARVEST_STATUS
+#define LOG_SEM
 
-#define DEFAULT_UDP_PORT_BASE 7000
+#define DEFAULT_UDP_PORT_BASE 9000
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
 #define RETURN_PIPES_STATIC_INIT 50
 
@@ -47,6 +49,9 @@ typedef s_float s_sample;
 #define MAX_AUDIO_BUF_LENGTH 4096
 
 #define MAX_SENSOR_BUF_LENGTH 9
+
+#define DEFAULT_SENORS_STANDARD_RATE 100
+#define DEFAULT_AUDIO_BUFFER_SIZE 512
 
 
 

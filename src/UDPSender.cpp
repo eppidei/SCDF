@@ -8,7 +8,6 @@
 
 #include "UdpSocket.h"
 #include "UDPSender.h"
-#include "UDPSendersManager.h"
 #include "osc/OscOutboundPacketStream.h"
 #include "CustomPipe.h"
 #include "PipesManager.h"
@@ -16,28 +15,43 @@
 
 using namespace scdf;
 
-s_int32 UDPSender::Init(int udpp, std::string add)
+s_bool UDPSender::CheckCreateSender()
 {
-    address=add;
-    s_int32 res=1;
-    try
-    {
-        endPoint.reset(new IpEndpointName(add.c_str(), udpp));
-        //transmitSocket.reset(new UdpTransmitSocket((*(endPoint.get()))));
+    if (NULL!=transmitSocket.get()) return true;
+    
+    try{
         transmitSocket.reset(new UdpSocket());
-    } catch(std::runtime_error& e)
-    {
-        LOGD("%s",e.what());
-        assert(false);
-        res=0;
     }
-	return res;
+    catch(std::runtime_error& e){
+        LOGD("%s",e.what());
+        return false;
+    }
+    return true;
+}
+
+UDPSender::UDPSender()
+{
+    CheckCreateSender();
+}
+
+void UDPSender::InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::string IP_address)
+{
+    ThreadUtils::AutoLock kk(&endpointsChanger);
+    address=IP_address;
+    portBase=udp_base_num;
+    endPoints.clear();
+    for (int i=0;i<endPoints.size();++i)
+        delete endPoints[i];
+    endPoints.clear();
+    
+    endPoints.resize(num_endpoints);
+    for (int i=0;i<num_endpoints;++i)
+        endPoints[i]=new IpEndpointName(address.c_str(),udp_base_num+i);
 }
 
 s_int32 UDPSender::GetPort()
 {
-    if (NULL==endPoint.get()) return -1;
-    return endPoint->port;
+    return portBase;
 }
 
 std::string UDPSender::GetAddress()
@@ -45,48 +59,32 @@ std::string UDPSender::GetAddress()
     return address;
 }
 
-void UDPSender::Release()
-{
-    address="Not Assigned";
-    transmitSocket.reset();
-	//endPoint.reset();
-}
-
-void UDPSender::SendData(const s_char* data, s_int32 size)
+void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex)
 {
 #ifdef LOG_UDP_SEND
 	LOGD("UDPSender send data\n");
 #endif
-	//transmitSocket->Send(data, size);
-    transmitSocket->SendTo(*endPoint.get(),data, size);
+    if (!CheckCreateSender()) return;
+    if (endpointIndex>=endPoints.size()) return;
+    ThreadUtils::AutoLock kk(&endpointsChanger);
+    transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
 }
 
-/*void UDPSender::SendDataOSCPacked(osc::OutboundPacketStream &oscData)
+void UDPSenderHelperBase::SendData(std::vector<SensorData*> &senderData)
 {
-#ifdef LOG_UDP_SEND
-	LOGD("UDP send data osc packed\n");
-#endif
-    //transmitSocket->Send(oscData.Data(), oscData.Size());
-    transmitSocket->SendTo(*endPoint.get(), oscData.Data(), oscData.Size());
-}*/
-
-void UDPSenderHelperBase::SendData()
-{
-    switch (senders.size()) {
-        case 0:
-            return;
-        case 1:
-            if (UDPSendersManager::Instance()->UseOSCPackaging())
-                DoSendDataOSCPacked();
-            else
-                DoSendData();
-            break;
-        default:
-            if (UDPSendersManager::Instance()->UseOSCPackaging())
-                DoMultiSendDataOSCPacked();
-            else
-                DoMultiSendData();
-            break;
+    if (multiOutput)
+    {
+        if (oscPackData)
+            DoMultiSendDataOSCPacked(senderData);
+        else
+            DoMultiSendData(senderData);
+    }
+    else
+    {
+        if (oscPackData)
+            DoSendDataOSCPacked(senderData);
+        else
+            DoSendData(senderData);
     }
 }
 
@@ -121,7 +119,7 @@ void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
     memcpy(tempData_timestamps,sData->timestamp, timestampsBlockSize);
 }
 
-void UDPSenderHelperBase::DoSendData()
+void UDPSenderHelperBase::DoSendData(std::vector<SensorData*> &senderData)
 {
     for (int i=0;i<senderData.size();++i)
     {
@@ -130,33 +128,20 @@ void UDPSenderHelperBase::DoSendData()
 #endif
         if (0==senderData[i]->num_frames) continue;
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
-        senders[0]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
+        sender->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size, 0);
     }
 }
 
-void UDPSenderHelperBase::DoMultiSendData()
-{
-    for (int i=0;i<senderData.size();++i)
-    {
-#ifdef LOG_SENDER_DATA
-       // LOGD("MultiSend data: %s sensor send %d frames at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
-#endif
-        if (0==senderData[i]->num_frames) continue;
-        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
-        senders[senderData[i]->type]->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size);
-    }
-}
-
-void UDPSenderHelperBase::DoSendDataOSCPacked()
+void UDPSenderHelperBase::DoSendDataOSCPacked(std::vector<SensorData*> &senderData)
 {
 #ifdef LOG_SENDER_DATA
     //LOGD("Send OSC packed data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
-    s_int32 oscBufferSize=CalculateOSCDataBufferSize();
+    s_int32 oscBufferSize=CalculateOSCDataBufferSize(senderData);
     s_char buffer[oscBufferSize];
     osc::OutboundPacketStream oscData( buffer, oscBufferSize);
     OSCPackData(senderData, oscData);
-    senders[0]->SendData(oscData.Data(), oscData.Size());
+    sender->SendData(oscData.Data(), oscData.Size(),0);
 }
 
 s_int32 CalculateOSCDataSingleBufferSize(SensorData *data)
@@ -171,7 +156,7 @@ s_int32 CalculateOSCDataSingleBufferSize(SensorData *data)
     return (sensorDataStructMembersSize + samplesBlockSize + timestampsBlockSize + 512);
 }
 
-s_int32 UDPSenderHelperBase::CalculateOSCDataBufferSize()
+s_int32 UDPSenderHelperBase::CalculateOSCDataBufferSize(std::vector<SensorData*> &senderData)
 {
     s_int32 size=0;
     for (s_int32 i=0;i<senderData.size();++i)
@@ -179,7 +164,7 @@ s_int32 UDPSenderHelperBase::CalculateOSCDataBufferSize()
     return size;
 }
 
-void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
+void UDPSenderHelperBase::DoMultiSendDataOSCPacked(std::vector<SensorData*> &senderData)
 {
     for (int i=0;i<senderData.size();++i)
     {
@@ -192,78 +177,75 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked()
         s_char buffer[oscSingleBufferSize];
         osc::OutboundPacketStream oscData( buffer, oscSingleBufferSize);
         OSCSinglePackData(senderData[i], oscData);
-        senders[senderData[i]->type]->SendData(oscData.Data(), oscData.Size());
+        sender->SendData(oscData.Data(), oscData.Size(), senderData[i]->type);
+    }
+}
+
+void UDPSenderHelperBase::DoMultiSendData(std::vector<SensorData*> &senderData)
+{
+    for (int i=0;i<senderData.size();++i)
+    {
+#ifdef LOG_SENDER_DATA
+        // LOGD("MultiSend data: %s sensor send %d frames at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+#endif
+        if (0==senderData[i]->num_frames) continue;
+        tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
+        sender->SendData(tempSensorData[senderData[i]->type].tempData,tempSensorData[senderData[i]->type].size, senderData[i]->type);
     }
 }
 
 void UDPSenderHelperBase::SendOnThread()
 {
-    EventCanSend()->Wait();
-    if (!activated) return;
+    ThreadUtils::AutoLock kk(&activator);
+    Harvester::Instance()->WaitForHarvest();
     try{
-        SendData();
+        std::vector<SensorData*> *buffer=Harvester::Instance()->syncDataQueue.front();
+        Harvester::Instance()->syncDataQueue.pop();
+#ifdef LOG_SEM
+        LOGD("Sender data queue size :%d\n",Harvester::Instance()->syncDataQueue.size());
+#endif
+        if (NULL==buffer) return;
+        SendData(*buffer);
+        for(int i=0;i<buffer->size();++i)
+            delete (*buffer)[i];
+        delete buffer;
     }
     catch(std::runtime_error& e)
     {
         std::string s(e.what());
         s+=std::string("/n");
         LOGD("%s",s.c_str());
-        //assert(false);
     }
-    
-    EventFreeSlot()->Set();
 }
 
 static void UDPSenderHelperProcedure(void *param)
 {
     UDPSenderHelperBase *sender=((UDPSenderHelperBase*)param);
-    while(sender->activated)
+    while(1)
     {
         sender->SendOnThread();
     }
 }
 
-UDPSenderHelperBase::UDPSenderHelperBase() : activated(false), freeSlot(1), canSend(0)
+UDPSenderHelperBase::UDPSenderHelperBase() : sender(new UDPSender()), multiOutput(true), oscPackData(true)
 {
+    activator.Lock();
+    handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
 }
 
 s_int32 UDPSenderHelperBase::GetPort()
 {
-    if (senders.size()==0) return -1;
-    return senders[0]->GetPort();
+    return sender->GetPort();
 }
 
 std::string UDPSenderHelperBase::GetAddress()
 {
-    if (senders.size()==0) return "No Sender";
-    return senders[0]->GetAddress();
+    return sender->GetAddress();
 }
 
-s_int32 UDPSenderHelperBase::Init(std::vector<s_int32> udpPorts, std::string address)
+void UDPSenderHelperBase::Init(s_int32 udpPortBase, std::string address)
 {
-    assert(udpPorts.size()!=0);
-    for (int i=0;i<udpPorts.size();++i)
-    {
-        UDPSender *s=new UDPSender();
-        if (1==s->Init(udpPorts[i],address))
-            senders.push_back(s);
-    }
-    if (0==senders.size())
-        return 0;
-    activated=true;
-    handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
-    return 1;
-}
-
-void UDPSenderHelperBase::Release()
-{
-    activated=false;
-    EventCanSend()->Set();
-    EventFreeSlot()->Set();
-    ThreadUtils::JoinThread(handle);
-    for (int i=0;i<senders.size();++i)
-        delete senders[i];
-    senders.clear();
+    sender->InitEndpoints(udpPortBase, NumTypes, address);
 }
 
 void UDPSenderHelperBase::OSCPackData(const std::vector<SensorData*> &sData, osc::OutboundPacketStream &oscData)
@@ -304,3 +286,16 @@ void UDPSenderHelperBase::OSCSinglePackData(SensorData *data, osc::OutboundPacke
     
     OSCPackData(tempData,oscData);
 }
+
+void UDPSenderHelperBase::Activate(s_bool active)
+{
+    if (active){
+        activator.Unlock();
+    }
+    else{
+        Harvester::Instance()->SendingQueuePushBuffer(NULL);
+        activator.Lock();
+    }
+}
+
+

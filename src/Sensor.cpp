@@ -38,10 +38,17 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
     else
         thePipesManager()->WriteOnPipe(data->type,data);
     
+    if(0!=thePipesManager()->GetPipes()->size()&&(*(thePipesManager()->GetPipes()))[data->type]->GetSize()>1000)
+        StopRestartMachine kk;
 #ifdef LOG_DATA
     for (int i = 0; i< data->num_samples; i ++) {
         printf("Collected data %d from %s: %.4f\n",i,SensorTypeString[data->type].c_str(), ((s_float*)data->data)[i]);
     }
+#endif
+    
+#ifdef LOG_PIPES_STATUS
+    if(0!=thePipesManager()->GetPipes()->size())
+        LOGD("Sensor %s pipe size: %d\n", SensorTypeString[data->type].c_str(), (*(thePipesManager()->GetPipes()))[data->type]->GetSize());
 #endif
 
 }

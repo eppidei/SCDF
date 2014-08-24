@@ -40,7 +40,7 @@ namespace scdf
 			CustomMutex() {
                 pthread_mutexattr_t    attr={0};
                 pthread_mutexattr_init(&attr);
-                pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+                pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL);
                 pthread_mutex_init(&cMutex, &attr);
                 pthread_mutexattr_destroy(&attr);
 			};
@@ -59,23 +59,37 @@ namespace scdf
 		};
         class CustomSemaphore
         {
+            int initValue;
 #ifndef ANDROID
             dispatch_semaphore_t sem;
+            void Init(s_int32 _initValue)
+            {
+                initValue=_initValue;
+                sem=dispatch_semaphore_create(_initValue);
+            }
         public:
             CustomSemaphore()
             {
-                sem=dispatch_semaphore_create(0);
+                Init(0);
             }
-            CustomSemaphore(s_int32 initValue)
+            CustomSemaphore(s_int32 _initValue)
             {
-                sem=dispatch_semaphore_create(initValue);
+                Init(_initValue);
             }
             void Set()
             {
+                initValue++;
+#ifdef LOG_SEM
+                LOGD("Semaphore dim: %d\n", initValue);
+#endif
                 dispatch_semaphore_signal(sem);
             }
             bool Wait()
             {
+                initValue--;
+#ifdef LOG_SEM
+                LOGD("Semaphore dim: %d\n", initValue);
+#endif
                 dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
                 return true;
             }
@@ -83,16 +97,20 @@ namespace scdf
 
         sem_t sem;
 
+            void Init(s_int32 _initValue)
+            {
+                initValue=_initValue;
+                sem_init(&sem,0,_initValue);
+            }
         public:
             CustomSemaphore()
             {
-            	sem_init(&sem,0,0);
-            	//sem=dispatch_semaphore_create(0);
+                Init(0);
             }
-            CustomSemaphore(s_int32 initValue)
+            CustomSemaphore(s_int32 _initValue)
             {
-            	sem_init(&sem,0,initValue);
-            	//sem=dispatch_semaphore_create(initValue);
+            	
+            	Init(_initValue);
             }
             void Set()
             {
