@@ -230,6 +230,14 @@ s_bool SensorStandardImpl::Start()
             LOGD("toggle Proximity Sensor ON \n");
             UIDevice *device = [UIDevice currentDevice];
             device.proximityMonitoringEnabled = YES;
+            BOOL proximityEnabled = device.proximityMonitoringEnabled;
+            if(!proximityEnabled)
+            {
+                
+                return false;
+            }
+            
+            
             [timerProximity Start];
             break;
         }

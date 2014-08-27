@@ -14,7 +14,8 @@
 #import <arpa/inet.h>
 #include <string>
 #include "UdpSender.h"
-#define MAX_NUMBER_IP_PORT 65535;
+
+const int max_number_ip_port = 65535;
 
 @interface SecondViewController ()
 
@@ -214,7 +215,20 @@
         
         [self.view addSubview:pickerCointainerView];
         
-        [pickerViewPort selectRow:actualPort inComponent:0 animated:YES];
+        int value = actualPort %10;
+        [pickerViewPort selectRow:value inComponent:4 animated:YES];
+        
+        value = (actualPort/10) %10;
+        [pickerViewPort selectRow:value inComponent:3 animated:YES];
+        
+        value = (actualPort/100) %10;
+        [pickerViewPort selectRow:value inComponent:2 animated:YES];
+        
+        value = (actualPort/1000) %10;
+        [pickerViewPort selectRow:value inComponent:1 animated:YES];
+        
+        value = (actualPort/10000) %10;
+        [pickerViewPort selectRow:value inComponent:0 animated:YES];
         
         pickerViewPortIsVisible = YES;
     }
@@ -223,7 +237,12 @@
 
 - (IBAction) acquirePortValue:(id)sender
 {
-    s_int32 rowValue = [pickerViewPort selectedRowInComponent:0];
+    s_int32 rowValue = [pickerViewPort selectedRowInComponent:4];
+    rowValue+= 10*[pickerViewPort selectedRowInComponent:3];
+    rowValue+= 100*[pickerViewPort selectedRowInComponent:2];
+    rowValue+= 1000*[pickerViewPort selectedRowInComponent:1];
+    rowValue+= 10000*[pickerViewPort selectedRowInComponent:0];
+    
    
     [self SetOutputPort:rowValue];
     [self UpdateLabels];
@@ -235,12 +254,12 @@
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return 1;
+    return 5;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return MAX_NUMBER_IP_PORT;
+    return 10;
 }
 
 - (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -263,6 +282,10 @@
 
 -  (void) SetOutputPort: (s_int32) outputUdpPort
 {
+    if (outputUdpPort>max_number_ip_port) {
+        outputUdpPort = max_number_ip_port;
+    }
+    
     actualPort = outputUdpPort;
     scdf::UDPSendersManager::Instance()->SetOutputPort(outputUdpPort);
 }
