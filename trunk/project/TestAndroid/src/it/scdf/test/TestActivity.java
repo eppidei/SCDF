@@ -6,10 +6,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -195,18 +197,18 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		
 		//((EditText)Find(R.id.edittext_ip)).setText(ip);
 		//((EditText)Find(R.id.edittext_port)).setText(Integer.toString(port));
+		Scdf.SetUdpDestinationIp(ip);
+		Scdf.SetUdpDestinationPort(port);
 		Scdf.SetUdpOSCmode(osc);
 		Scdf.SetUdpMultiportMode(multiport);
-		Scdf.OpenUdpConnection(ip,port);
-		Scdf.CloseUdpConnection();
+		//Scdf.OpenUdpConnection(ip,port);
+		//Scdf.CloseUdpConnection();
 		
 		int audioBufSize = p.getInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_BUFFERSIZE", Scdf.GetAudioInputFramesPerBuffer() );
 		int audiorate = p.getInt(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_RATE", Scdf.GetSensorRate(Scdf.AUDIOINPUT) );
 		//boolean audioactive = p.getBoolean(Scdf.TypeStr(Scdf.AUDIOINPUT)+"_ACTIVE", Scdf.IsSensorActive(Scdf.AUDIOINPUT) );
 		Scdf.SetupAudioInput(audiorate, audioBufSize, 1);
-		
-		// TODO: load audio in channels
-		
+				
 		for (int i=0; i<Scdf.AUDIOINPUT; i++) {
 			if (!Scdf.IsSensorAvailable(i))
 				continue;
@@ -216,9 +218,8 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		}
 		
 		RefreshViews();
-		((EditText)Find(R.id.edittext_ip)).setText( "79.23.90.225" );
-		((EditText)Find(R.id.edittext_port)).setText( Integer.toString(50000) );
-		
+		//((EditText)Find(R.id.edittext_ip)).setText( "79.23.90.225" );
+		//((EditText)Find(R.id.edittext_port)).setText( Integer.toString(50000) );
 		
 	}
 		
@@ -226,7 +227,11 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_test);
+		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	
+    	setContentView(R.layout.activity_test);
 		setupOk = NativeOnCreate();
 		SetupViews();
 		//RefreshViews();	
@@ -309,17 +314,21 @@ public class TestActivity extends Activity implements OnClickListener, OnEditorA
 		if (t.isChecked()) {
 		
 			String ip = ((EditText)Find(R.id.edittext_ip)).getText().toString();
-			if (ip.isEmpty()) {
-				QuickAlert("Provide a valid destination IP");
-				t.setChecked(false);
-				return;
+			if (!ip.isEmpty()) {
+				
+				Scdf.SetUdpDestinationIp(ip);
+				//QuickAlert("Provide a valid destination IP");
+				//t.setChecked(false);
+				//return;
 			}
 			
 			int port = TextToInt((TextView)Find(R.id.edittext_port));
-			if (port == 0) {
-				QuickAlert("Provide a valid destination port");
-				t.setChecked(false);
-				return;
+			if (port != 0) {
+				
+				Scdf.SetUdpDestinationPort(port);
+				//QuickAlert("Provide a valid destination port");
+				//t.setChecked(false);
+				//return;
 			}
 			
 			if (!Scdf.OpenUdpConnection(ip,port)) {

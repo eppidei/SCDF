@@ -25,12 +25,18 @@ s_bool Harvester::Compare::operator()(const SensorData* s1, const SensorData* s2
     return s1->timestamp < s2->timestamp;
 }
 
+s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
+
 static void StartHarvestingProcedure(void *param)
 {
     Harvester *harvester=((Harvester*)param);
     while(harvester->activated)
     {
+    	//s_uint64 start = now_ns();
+    	//LOGD("Read master pipe");
         SensorData *data=thePipesManager()->ReadFromPipe(harvester->GetType());
+        //s_uint64 elap = now_ns() - start;
+        //LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
         if (NULL!=data)
             harvester->HarvestingProcedure(data);
     }
@@ -103,7 +109,7 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
 {
     for (s_int32 i=0;i<thePipesManager()->NumPipes();++i)
     {
-        if (i==sType) continue;
+        if (i==sType) continue; // don't harvest the master pipe, already done
         SensorData *sd=NULL;
         while (1)
         {
@@ -112,18 +118,18 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             if (sd->timestamp[0]<timestampStart)
             {
 #ifdef LOG_HARVEST_STATUS
-                LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+                LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
                 if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                     delete sd;
 #ifdef LOG_PIPES_STATUS
-                LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
+                LOGD("PipesHarvesting. %s pipe size: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
 #endif
             }
             
             else if (sd->timestamp[0]<=timestampEnd){
 #ifdef LOG_HARVEST_STATUS
-                printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+                LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
                 sd->timeid=timestampStart;
                 harvestData.push_back(sd);
@@ -131,7 +137,7 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             }
             else{
 #ifdef LOG_HARVEST_STATUS
-                printf("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+                LOGD("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
                 nextHarvestData.push_back(sd);
                 break;
@@ -149,19 +155,19 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
         if (sd->timestamp[0]<timestampStart)
         {
 #ifdef LOG_HARVEST_STATUS
-            printf("DELETING: Timestamp from %s: %lu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+            LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
             if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                 delete sd;
 #ifdef LOG_PIPES_STATUS
-            LOGD("Return pipe size of %s: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
+            LOGD("InternalBufferHarvesting. %s pipe size: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
 #endif
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
         else if (sd->timestamp[0]<=timestampEnd)
         {
 #ifdef LOG_HARVEST_STATUS
-            printf("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp);
+            LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
             harvestData.push_back(nextHarvestData[i]);
             myHarvestInfo.info[(int)nextHarvestData[i]->type].push_back(harvestData.size()-1);
@@ -177,7 +183,7 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
         if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
             delete (*sData)[i];
 #ifdef LOG_PIPES_STATUS
-        LOGD("Return pipe size of %s: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[(*sData)[i]->type]->GetSize());
+        LOGD("SentDataRecyclingProcedure. Size of %s RETURN pipe: %d\n", SensorTypeString[(*sData)[i]->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[(*sData)[i]->type]->GetSize());
 #endif
     }
     sData->clear();

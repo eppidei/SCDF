@@ -156,17 +156,26 @@ JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpMultiportMode
 	UDPSendersManager::Instance()->SetMultiOutput(active);
 }
 
+static std::string theIp("127.0.0.1");
+static int thePort = 55556;
 
 JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpDestinationIp
-  (JNIEnv *, jclass, jstring)
+  (JNIEnv* e, jclass c, jstring jip)
 {
+	char const* cstr = e->GetStringUTFChars(jip, NULL);
+	std::string ip(cstr);
+
+	theIp = ip;
+
 	// TODO: implement, and find a way not to start the manager if you don't want!
 	//UDPSendersManager::Instance()->SetOutputAddress("");
 }
 
 JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpDestinationPort
-  (JNIEnv *, jclass, jint)
+  (JNIEnv * e, jclass c, jint port)
 {
+	thePort = port;
+
 	// TODO: implement, and find a way not to start the manager if you don't want!
 	//UDPSendersManager::Instance()->SetDestinationPort(0);
 }
@@ -175,15 +184,15 @@ JNIEXPORT jstring JNICALL Java_it_scdf_framework_Scdf_GetUdpDestinationIp
   (JNIEnv *e, jclass c)
 {
 	//LOGD("%s",__PRETTY_FUNCTION__);
-	std::string ip = UDPSendersManager::Instance()->GetOutputAddress();
-	return e->NewStringUTF(ip.c_str());
+	//std::string ip = UDPSendersManager::Instance()->GetOutputAddress();
+	return e->NewStringUTF(theIp.c_str());
 }
 
 JNIEXPORT jint JNICALL Java_it_scdf_framework_Scdf_GetUdpDestinationPort
   (JNIEnv *, jclass)
 {
 	//LOGD("%s",__PRETTY_FUNCTION__);
-	return UDPSendersManager::Instance()->GetOutputPort();
+	return thePort;//UDPSendersManager::Instance()->GetOutputPort();
 }
 
 JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_IsUdpOSCmodeActive
@@ -206,11 +215,14 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_OpenUdpConnection
   (JNIEnv *e, jclass c, jstring jip, jint port)
 {
 	//LOGD("%s",__PRETTY_FUNCTION__);
-	char const* cstr = e->GetStringUTFChars(jip, NULL);
-	std::string ip(cstr);
-	UDPSendersManager::Instance()->InitSender(port,ip);
+
+	//char const* cstr = e->GetStringUTFChars(jip, NULL);
+	//std::string ip(cstr);
+
+	UDPSendersManager::Instance()->InitSender(thePort,theIp);
+
 	// TODO: make init report success or failure
-	e->ReleaseStringUTFChars(jip,cstr);
+	//e->ReleaseStringUTFChars(jip,cstr);
 	return true;
 }
 
@@ -219,7 +231,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_CloseUdpConnection
   (JNIEnv *e, jclass c)
 {
 	//LOGD("%s",__PRETTY_FUNCTION__);
-    UDPSendersManager::Instance()->ReleaseSender();
+    //UDPSendersManager::Instance()->ReleaseSender();
 	// tODO: make release report success or failure
 	return true;
 }
