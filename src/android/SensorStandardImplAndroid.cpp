@@ -16,9 +16,9 @@ in short... they are not guaranteed to be consistent except for the same sensor!
 s_uint64 now_ns(void)
 {
     struct timespec res;
-    clock_gettime(CLOCK_REALTIME, &res);
-    s_uint64 now = (s_uint64)(1000000000 * (s_uint64)res.tv_sec) + (s_uint64) res.tv_nsec;
-    //LOGD("GETTIME %llu",now);
+    clock_gettime(CLOCK_MONOTONIC, &res);
+    s_uint64 now = (((s_uint64)res.tv_sec) * 1000000000) + ((s_uint64) res.tv_nsec);
+    //LOGD("GETTIME %f sec",now/1000000000.0);
     return now;
 }
 
@@ -139,7 +139,7 @@ scdf::SensorStandardImpl::~SensorStandardImpl()
 s_bool scdf::SensorStandardImpl::Setup(SensorSettings& settings)
 {
 	settings.broken = false;
-	currentRate = -1;
+	currentRate = settings.rate;
 
 	ASensorManager* sm = ASensorManager_getInstance();
 
@@ -182,9 +182,8 @@ s_bool scdf::SensorStandardImpl::Setup(SensorSettings& settings)
 	}
 	int desiredDelay = (int)(1000000.0/settings.rate);
 	if (0 < ASensorEventQueue_setEventRate(sensorEventQueue, androidSensor,desiredDelay)) {
-		currentRate=-1;
+		currentRate = settings.rate = -1;
 		return false;
-
 	}
 	currentRate = settings.rate;
 	return true;

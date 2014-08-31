@@ -17,7 +17,7 @@ s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
 void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-	//LOGI("Audio callback");
+	//LOGI("----> Audio callback");
 
 	s_uint64 now = now_ns();
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
@@ -95,6 +95,15 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
     ai->lastTimestamp = s->timestamp[0];
     ai->lastTimeId = s->timeid;
     ai->lastCallbackTime = now;
+
+    /*static int countz = 0;
+    countz++;
+    if (countz>=8) {
+    LOGI("AUDIO - %s [last: %lld ms ago, ratio: %f, nGrouped: %d]",
+    		caseIs.c_str(),timeFromLastCallback/1000000,ratio,ai->nGroupedCallbacks);
+    	countz = 0;
+    }*/
+
 
     // convert to floating point and copy audio data:
     s_sample scale = ((s_sample)(1.0))/((s_sample)(-SHRT_MIN));

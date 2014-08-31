@@ -32,13 +32,13 @@ typedef s_float s_sample;
 
 #define CALLBACK
 
-//#define LOG_UDP_SEND
+#define LOG_UDP_SEND
 //#define LOG_PIPES_STATUS
 //#define LOG_DATA
-//#define LOG_SENDER_DATA
+#define LOG_SENDER_DATA
 //#define LOG_TIMESTAMP
-//#define LOG_HARVEST_STATUS
-#define LOG_SEM
+#define LOG_HARVEST_STATUS
+//#define LOG_SEM
 
 #define DEFAULT_UDP_PORT_BASE 9000
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
