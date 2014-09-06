@@ -4,6 +4,7 @@
 
 #include "it_scdf_framework_Scdf.h" // use GenerateJniHeader.sh script in src/android dir
 #include "Logging.h"
+#include "UDPSender.h"
 #include "UDPSendersManager.h"
 #include "SensorsManager.h"
 #include "Harvester.h"
@@ -220,6 +221,7 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_OpenUdpConnection
 	//std::string ip(cstr);
 
 	UDPSendersManager::Instance()->InitSender(thePort,theIp);
+	UDPSendersManager::Instance()->GetSender()->Activate(true);
 
 	// TODO: make init report success or failure
 	//e->ReleaseStringUTFChars(jip,cstr);
@@ -233,6 +235,20 @@ JNIEXPORT jboolean JNICALL Java_it_scdf_framework_Scdf_CloseUdpConnection
 	//LOGD("%s",__PRETTY_FUNCTION__);
     //UDPSendersManager::Instance()->ReleaseSender();
 	// tODO: make release report success or failure
+
+	bool dummyRestart = false;
+
+	if ( !theSensorManager()->SensorActivated(AudioInput) ) {
+
+		theSensorManager()->StartSensor(AudioInput);
+		dummyRestart = true;
+	}
+
+	UDPSendersManager::Instance()->GetSender()->Activate(false);
+
+	if (dummyRestart)
+		theSensorManager()->StopSensor(AudioInput);
+
 	return true;
 }
 

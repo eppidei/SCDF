@@ -62,17 +62,21 @@ std::string UDPSender::GetAddress()
 void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex)
 {
 #ifdef LOG_UDP_SEND
-	LOGD("UDPSender send data\n");
+	//LOGD("UDPSender send data\n");
 #endif
     if (!CheckCreateSender()) return;
     if (endpointIndex>=endPoints.size()) return;
     ThreadUtils::AutoLock kk(&endpointsChanger);
+
+    //LOGD("UDP SENDER - actually send %d bytes to %s [%d]",size,address.c_str(),portBase);
     transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
 }
 
 void UDPSenderHelperBase::SendData(std::vector<SensorData*> &senderData)
 {
-    if (multiOutput)
+	//LOGD("UDP SENDER - SEND DATA - select the way (multi: %d, osc: %d)!",multiOutput,oscPackData);
+
+	if (multiOutput)
     {
         if (oscPackData)
             DoMultiSendDataOSCPacked(senderData);
@@ -124,7 +128,7 @@ void UDPSenderHelperBase::DoSendData(std::vector<SensorData*> &senderData)
     for (int i=0;i<senderData.size();++i)
     {
 #ifdef LOG_SENDER_DATA
-       // LOGD("Send data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+       LOGD("Pure UDP Send data");//: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         if (0==senderData[i]->num_frames) continue;
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
@@ -135,7 +139,7 @@ void UDPSenderHelperBase::DoSendData(std::vector<SensorData*> &senderData)
 void UDPSenderHelperBase::DoSendDataOSCPacked(std::vector<SensorData*> &senderData)
 {
 #ifdef LOG_SENDER_DATA
-    //LOGD("Send OSC packed data: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+   LOGD("Send OSC packed data");//: %s sensor send %d samples at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
     s_int32 oscBufferSize=CalculateOSCDataBufferSize(senderData);
     s_char buffer[oscBufferSize];
@@ -169,7 +173,7 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked(std::vector<SensorData*> &sen
     for (int i=0;i<senderData.size();++i)
     {
 #ifdef LOG_SENDER_DATA
-        LOGD("MultiSend OSC packed data: %s sensor send %d samples at rate %d\n", SensorTypeString[i].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+        LOGD("MultiSend OSC packed data");//: %s sensor send %d samples at rate %d\n", SensorTypeString[i].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         if (0==senderData[i]->num_frames) continue;
         
@@ -186,7 +190,7 @@ void UDPSenderHelperBase::DoMultiSendData(std::vector<SensorData*> &senderData)
     for (int i=0;i<senderData.size();++i)
     {
 #ifdef LOG_SENDER_DATA
-        // LOGD("MultiSend data: %s sensor send %d frames at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
+         LOGD("Pure UDP MultiSend data");//: %s sensor send %d frames at rate %d\n", SensorTypeString[senderData[i]->type].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         if (0==senderData[i]->num_frames) continue;
         tempSensorData[senderData[i]->type].PrepareBufferToSend(senderData[i]);
@@ -196,9 +200,15 @@ void UDPSenderHelperBase::DoMultiSendData(std::vector<SensorData*> &senderData)
 
 void UDPSenderHelperBase::SendOnThread()
 {
+	//LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - acquiring lock...");
     ThreadUtils::AutoLock kk(&activator);
+    //LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - ACQUIRED LOCK, wait for harvest...");
+
     Harvester::Instance()->WaitForHarvest();
     try{
+
+    	//LOGD("UDP SENDER - UDPSenderHelperBase - SendOnThread()");
+
         std::vector<SensorData*> *buffer=Harvester::Instance()->syncDataQueue.front();
         Harvester::Instance()->syncDataQueue.pop();
 #ifdef LOG_SEM
@@ -220,15 +230,20 @@ void UDPSenderHelperBase::SendOnThread()
 
 static void UDPSenderHelperProcedure(void *param)
 {
-    UDPSenderHelperBase *sender=((UDPSenderHelperBase*)param);
+	UDPSenderHelperBase *sender=((UDPSenderHelperBase*)param);
+
+	//LOGD("UDP SENDER HELPER Procedure start");
+
     while(1)
     {
+    	//LOGD("UDP SENDER HELPER Send on thread");
         sender->SendOnThread();
     }
 }
 
 UDPSenderHelperBase::UDPSenderHelperBase() : sender(new UDPSender()), multiOutput(true), oscPackData(true)
 {
+	//LOGD("UDP SENDER HELPER BASE Creation");
     activator.Lock();
     handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
 }
@@ -289,11 +304,15 @@ void UDPSenderHelperBase::OSCSinglePackData(SensorData *data, osc::OutboundPacke
 
 void UDPSenderHelperBase::Activate(s_bool active)
 {
+	LOGD("UDP SENDER - UDPSenderHelperBase::Activate(%d)",active);
+
     if (active){
+    	//LOGD("UDP SENDER - Sender helper base activate: UNLOCKING activator...");
         activator.Unlock();
     }
     else{
         Harvester::Instance()->SendingQueuePushBuffer(NULL);
+        //LOGD("UDP SENDER - Activate() : Activator LOCK...");
         activator.Lock();
     }
 }

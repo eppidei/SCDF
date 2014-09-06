@@ -105,6 +105,9 @@ void Harvester::SetType(SensorType type)
     std::sort(myHarvest.begin(), myHarvest.end(), Compare());
 }*/
 
+#define DONT_THROW_AWAY_OLD_VALUES
+
+
 void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType)
 {
     for (s_int32 i=0;i<thePipesManager()->NumPipes();++i)
@@ -115,6 +118,9 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
         {
             sd=thePipesManager()->ReadFromPipe((SensorType)i);
             if (NULL==sd) break;
+
+#ifndef DONT_THROW_AWAY_OLD_VALUES
+
             if (sd->timestamp[0]<timestampStart)
             {
 #ifdef LOG_HARVEST_STATUS
@@ -127,7 +133,9 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
 #endif
             }
             
-            else if (sd->timestamp[0]<=timestampEnd){
+            else
+#endif
+            if (sd->timestamp[0]<=timestampEnd){
 #ifdef LOG_HARVEST_STATUS
                 LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
@@ -137,7 +145,8 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             }
             else{
 #ifdef LOG_HARVEST_STATUS
-                LOGD("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
+            	//if (sd->type==Proximity)
+            		LOGD("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
                 nextHarvestData.push_back(sd);
                 break;
@@ -149,9 +158,12 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
 void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd)
 {
     SensorData *sd=NULL;
+
     for (s_int32 i=0;i<nextHarvestData.size();++i)
     {
         sd=nextHarvestData[i];
+
+#ifndef DONT_THROW_AWAY_OLD_VALUES
         if (sd->timestamp[0]<timestampStart)
         {
 #ifdef LOG_HARVEST_STATUS
@@ -164,15 +176,31 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
 #endif
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
-        else if (sd->timestamp[0]<=timestampEnd)
-        {
+        else
+#endif
+        //if (sd->timestamp[0]<=timestampEnd)
+        //{
 #ifdef LOG_HARVEST_STATUS
             LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
 #endif
             harvestData.push_back(nextHarvestData[i]);
             myHarvestInfo.info[(int)nextHarvestData[i]->type].push_back(harvestData.size()-1);
             nextHarvestData.erase((nextHarvestData.begin()+i));
-        }
+
+            //if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
+            //	delete sd;
+        //}
+        /*else {
+
+        	LOGE("Future in internal buffer, dropping");
+        	if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
+			  delete sd;
+
+        	nextHarvestData.erase(nextHarvestData.begin()+i);
+        	//SensorData* crashme = (SensorData*)123123;
+        	//crashme->timeid = 2;
+        }*/
+
     }
 }
 
@@ -191,17 +219,22 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 
 void Harvester::SendingQueuePushBuffer(std::vector<SensorData*> *buffer)
 {
-    UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetSender();
+	//LOGD("UDP SENDER - Harvester SendingQueuePushBUffer");
+
+	UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetSender();
     if (NULL==sender) return;
     syncDataQueue.push(buffer);
 #ifdef LOG_SEM
     LOGD("Sender data queue size :%d\n",syncDataQueue.size());
 #endif
+
+    //LOGD("UDP SENDER - Harvester setting harvestReady...");
     harvestReady.Set();
 }
 
 void Harvester::WaitForHarvest()
 {
+	//LOGD("UDP SENDER - Harvester::WaitForHarwest()");
     harvestReady.Wait();
 }
 
