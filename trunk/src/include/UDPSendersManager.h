@@ -23,7 +23,8 @@ namespace scdf {
     public:
         static UDPSendersManager *Instance()
         {
-            if (NULL==_instance) _instance=new UDPSendersManager();
+            if (NULL==_instance)
+            	_instance=new UDPSendersManager();
             return _instance;
         }
         UDPSenderHelperBase *GetSender();
