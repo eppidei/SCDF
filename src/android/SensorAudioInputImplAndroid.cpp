@@ -136,16 +136,19 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 
 /*********************** TEST CALLBACK ****************************/
 
+// MODIFY IP AND PORT ACCORDING TO YOUR NEEDS:
+std::string testIp("192.168.1.103");
+int testport = 55555;
+
 scdf::UDPSender testSender;
 bool initDone = false;
 s_char data = 'a';
-std::string testIp("192.168.1.103");
 s_uint64 startTime;
 int lengthOccurences[20];
 s_uint64 previousTime;
 bool printcb = true;
 s_int16 frames;
-int testport = 55555;
+
 
 void scdf::SensorAudioInputImpl::TestCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
