@@ -159,6 +159,7 @@ JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpMultiportMode
 
 static std::string theIp("127.0.0.1");
 static int thePort = 55556;
+//extern std::string testIp;
 
 JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpDestinationIp
   (JNIEnv* e, jclass c, jstring jip)
@@ -167,6 +168,7 @@ JNIEXPORT void JNICALL Java_it_scdf_framework_Scdf_SetUdpDestinationIp
 	std::string ip(cstr);
 
 	theIp = ip;
+	//testIp = ip;
 
 	// TODO: implement, and find a way not to start the manager if you don't want!
 	//UDPSendersManager::Instance()->SetOutputAddress("");

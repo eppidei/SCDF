@@ -7,6 +7,9 @@
 #include "PipesManager.h"
 #include <time.h>
 #include <climits>
+#include "UDPSender.h"
+
+#define TEST_ANDROID_AUDIO_SEND_DIRECT
 
 s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
@@ -125,11 +128,64 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 
     (*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],bufferSize*sizeof(short));
 
-/*  s_uint64 end = now_ns();
+    s_uint64 end = now_ns();
     s_double cb_time_ms = (end - now)/1000000.0;
-    LOGI("AUDIOIN %llu (%f) - drift: %s%f ms (%s - %f ms)",ai->callbacksCount,cb_time_ms,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
-*/
+    LOGI("AUDIOIN");//%llu (%f) - drift: %s%f ms (%s - %f ms)",ai->callbacksCount,cb_time_ms,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
+
 }
+
+/*********************** TEST CALLBACK ****************************/
+
+scdf::UDPSender testSender;
+bool initDone = false;
+s_char data = 'a';
+std::string testIp("192.168.1.103");
+s_uint64 startTime;
+int lengthOccurences[20];
+s_uint64 previousTime;
+bool printcb = true;
+s_int16 frames;
+int testport = 55555;
+
+void scdf::SensorAudioInputImpl::TestCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
+{
+	if (!initDone) {
+		LOGD("TestCallback - setup send - ip:%s, port:%d",testIp.c_str(),testport);
+		testSender.InitEndpoints(testport,1,testIp);
+		initDone = true;
+		//startTime = now_ns();
+	}
+
+	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
+	ai->callbacksCount++;
+	//if (printcb)
+	//	LOGD("Test audio callback %llu",ai->callbacksCount);
+	s_uint64 now = now_ns();
+	s_uint64 length = now - previousTime;
+	s_uint64 nominal = (s_uint64)( ai->GetNumFramesPerCallback()*(1000000000.0/ai->GetRate()) );
+	int i = (int)( ((double)length)/nominal + 0.5 );
+	if (i>=20) i=19;
+	lengthOccurences[i]++;
+
+	if (0==ai->callbacksCount%6000) // modify module to get report sooner or later
+	{
+		printcb=false;
+		float tot = 0;
+		for (int k=0; k<20; k++)
+			tot += lengthOccurences[k];
+		for (int k=0; k<20; k++)
+			LOGD("%d -> %f ",k,lengthOccurences[k]/tot*100);
+	}
+
+	previousTime = now;
+	frames = (s_int16)ai->GetNumFramesPerCallback();
+	testSender.SendData((s_char*)&frames,2,0);
+	//testSender.SendData(&data,1,0);
+	//data++;
+
+	(*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->GetBufferSize()*sizeof(short));
+}
+
 
 scdf::SensorAudioInputImpl::SensorAudioInputImpl()
 {
@@ -287,7 +343,12 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 
 
 	 // register callback on the buffer queue
+#ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
+	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, TestCallback,this);
+#else
 	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, Callback,this);
+#endif
+
 	 if (result != SL_RESULT_SUCCESS) {
 	 		LOGE("Error registering input audio callback.");
 	 		settingsAudio.broken = true;

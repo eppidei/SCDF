@@ -37,6 +37,8 @@ namespace scdf {
     private:
 
         static void Callback(SLAndroidSimpleBufferQueueItf bq, void *context);
+        static void TestCallback(SLAndroidSimpleBufferQueueItf bq, void *context);
+
         void Reset();
         int GetBufferSize();
 
