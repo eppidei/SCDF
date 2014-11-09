@@ -119,37 +119,37 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             sd=thePipesManager()->ReadFromPipe((SensorType)i);
             if (NULL==sd) break;
 
-#ifndef DONT_THROW_AWAY_OLD_VALUES
-
+		#ifndef DONT_THROW_AWAY_OLD_VALUES
             if (sd->timestamp[0]<timestampStart)
             {
-#ifdef LOG_HARVEST_STATUS
+				#ifdef LOG_HARVEST_STATUS
                 LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
-#endif
+				#endif
                 if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                     delete sd;
-#ifdef LOG_PIPES_STATUS
+				#ifdef LOG_PIPES_STATUS
                 LOGD("PipesHarvesting. %s pipe size: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
-#endif
+				#endif
             }
-            
             else
-#endif
-            if (sd->timestamp[0]<=timestampEnd){
-#ifdef LOG_HARVEST_STATUS
-                LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
-#endif
-                sd->timeid=timestampStart;
-                harvestData.push_back(sd);
-                myHarvestInfo.info[(int)sd->type].push_back(harvestData.size()-1);
-            }
-            else{
-#ifdef LOG_HARVEST_STATUS
-            	//if (sd->type==Proximity)
+         #endif
+            {
+		    	if (sd->timestamp[0]<=timestampEnd){
+					#ifdef LOG_HARVEST_STATUS
+                	LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
+					#endif
+                	sd->timeid=timestampStart;
+                	harvestData.push_back(sd);
+                	myHarvestInfo.info[(int)sd->type].push_back(harvestData.size()-1);
+            	}
+            	else{
+					#ifdef LOG_HARVEST_STATUS
+            		//if (sd->type==Proximity)
             		LOGD("ADDING TO NEXT: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
-#endif
-                nextHarvestData.push_back(sd);
-                break;
+					#endif
+            		nextHarvestData.push_back(sd);
+                	break;
+            	}
             }
         }
     }
@@ -159,47 +159,46 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
 {
     SensorData *sd=NULL;
 
-    for (s_int32 i=0;i<nextHarvestData.size();++i)
+    for (s_int32 i=0;i<nextHarvestData.size();/*++i*/)
     {
         sd=nextHarvestData[i];
 
 #ifndef DONT_THROW_AWAY_OLD_VALUES
         if (sd->timestamp[0]<timestampStart)
         {
-#ifdef LOG_HARVEST_STATUS
+			#ifdef LOG_HARVEST_STATUS
             LOGD("DELETING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
-#endif
+			#endif
             if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
                 delete sd;
-#ifdef LOG_PIPES_STATUS
+			#ifdef LOG_PIPES_STATUS
             LOGD("InternalBufferHarvesting. %s pipe size: %d\n", SensorTypeString[sd->type].c_str(), (*(thePipesManager()->GetReturnPipes()))[sd->type]->GetSize());
-#endif
+			#endif
             nextHarvestData.erase(nextHarvestData.begin()+i);
         }
         else
 #endif
-        //if (sd->timestamp[0]<=timestampEnd)
-        //{
-#ifdef LOG_HARVEST_STATUS
+        if (sd->timestamp[0]<=timestampEnd)
+        {
+			#ifdef LOG_HARVEST_STATUS
             LOGD("ADDING: Timestamp from %s: %llu\n", SensorTypeString[sd->type].c_str(), sd->timestamp[0]);
-#endif
+			#endif
             harvestData.push_back(nextHarvestData[i]);
             myHarvestInfo.info[(int)nextHarvestData[i]->type].push_back(harvestData.size()-1);
             nextHarvestData.erase((nextHarvestData.begin()+i));
 
-            //if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
+            // TODO: understand... should I send the collected sensor data back to the sensor?
+            // it seems to me not, since the buffer is now harvested but must be sent... or not?!?
+            // if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
             //	delete sd;
-        //}
-        /*else {
-
-        	LOGE("Future in internal buffer, dropping");
-        	if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
-			  delete sd;
-
-        	nextHarvestData.erase(nextHarvestData.begin()+i);
-        	//SensorData* crashme = (SensorData*)123123;
-        	//crashme->timeid = 2;
-        }*/
+        }
+        else {
+        	// the sensor data still belongs to the future. keep it into the nextHarvestData for next round
+        	//if (0==thePipesManager()->WriteOnReturnPipe(sd->type,sd))
+			//  delete sd;
+        	//nextHarvestData.erase(nextHarvestData.begin()+i);
+        	i++;
+        }
 
     }
 }
