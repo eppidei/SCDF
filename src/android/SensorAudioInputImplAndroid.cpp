@@ -8,6 +8,7 @@
 #include <time.h>
 #include <climits>
 #include "UDPSender.h"
+#include "ThreadUtils.h"
 
 #define TEST_ANDROID_AUDIO_SEND_DIRECT
 
@@ -187,6 +188,36 @@ void scdf::SensorAudioInputImpl::TestCallback(SLAndroidSimpleBufferQueueItf bq, 
 	//data++;
 
 	(*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->GetBufferSize()*sizeof(short));
+}
+
+bool dummyThreadActive = false;
+
+void* DummyThreadCallback(void* ctx)
+{
+	dummyThreadActive = true;
+
+	if (!initDone) {
+		LOGD("Dummy Callback - setup send - ip:%s, port:%d",testIp.c_str(),testport);
+		testSender.InitEndpoints(testport,1,testIp);
+		initDone = true;
+		//startTime = now_ns();
+	}
+
+	scdf::SensorAudioInputImpl* ai = (scdf::SensorAudioInputImpl*)ctx;
+
+	s_int32 fpb = ai->GetNumFramesPerCallback();
+	s_int32 sr = ai->GetRate();
+	s_uint32 sleeptime  = (s_uint32)( (1000000.0/sr)*fpb );
+
+	while (dummyThreadActive) {
+		usleep(sleeptime);
+		LOGD("Dummy callback - slept for %u usec",sleeptime);
+		s_int32 frames = ai->GetNumFramesPerCallback();
+		testSender.SendData((s_char*)&frames,4,0);
+	}
+
+	return NULL;
+
 }
 
 
@@ -374,6 +405,10 @@ int scdf::SensorAudioInputImpl::GetBufferSize()
 
 s_bool scdf::SensorAudioInputImpl::Start()
 {
+#ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
+	ThreadUtils::CreateThread(DummyThreadCallback,this);
+#else
+
 	SLresult result;
 	SLuint32 recorderState;
 	result = (*audioRecorderItf)->GetState(audioRecorderItf, &recorderState);
@@ -400,11 +435,18 @@ s_bool scdf::SensorAudioInputImpl::Start()
 	nGroupedCallbacks = 0;
 	lastCallbackWasGrouped = false;
 	//ReturnIfSLresultError(result,"Setting REC State");
+#endif
 	return true;
 }
 
 s_bool scdf::SensorAudioInputImpl::Stop()
 {
+#ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
+
+	dummyThreadActive = false;
+
+#else
+
 	if (NULL==audioRecorderItf || NULL==recordItf || NULL == inBufferQueue)
 		return false;
 	SLresult result;
@@ -412,6 +454,9 @@ s_bool scdf::SensorAudioInputImpl::Stop()
     //ReturnIfSLresultError(result,"OpenSL Driver close: Input stop");
     result = (*inBufferQueue)->Clear(inBufferQueue);
     //ReturnIfSLresultError(result,"OpenSL Driver close: Input buffer queue clear");
+
+#endif
+
     return true;
 }
 
