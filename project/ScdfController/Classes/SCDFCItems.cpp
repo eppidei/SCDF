@@ -193,7 +193,7 @@ void Knob::Create()
     slideBar=NULL;
     isVertical=false;
     ItemSlider::CreateThumb();
-    thumb->setBackGroundImage("2_knob_anim0015.png");
+    thumb->setBackGroundImage("test_knob.png");
 }
 
 void ItemPad::Create()
