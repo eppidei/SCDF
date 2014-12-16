@@ -1,6 +1,11 @@
+
+#include "SCDFCDefinitions.h"
 #include "AppDelegate.h"
 #include "MainScene.h"
+#include "SCDFCWorkingPanel.h"
+#include "SCDFCScrollView.h"
 
+using namespace SCDFC;
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
