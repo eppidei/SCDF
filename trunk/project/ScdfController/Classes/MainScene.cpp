@@ -352,23 +352,14 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::TouchEventType type)
                 HideShowToolbar();
             break;
         case (int)ui::Widget::TouchEventType::MOVED:
-        {
-            int diff=button->getTouchMovePosition().y-button->getTouchBeganPosition().y;
-            diff/=2;
-            if ((position+diff)<0 || (position+diff)>124) break;
-            position+=diff;
-            char str[50];
-            sprintf(str, "2_knob_anim0%03d.png", position);
-            button->loadTextures(str, str, "");
-        }
             // TODO
-            break;
+          //  break;
         case (int)ui::Widget::TouchEventType::ENDED:
             // TODO
-            break;
+           // break;
         case (int)ui::Widget::TouchEventType::CANCELED:
             // TODO
-            break;
+           // break;
         default:
             // TODO
             break;

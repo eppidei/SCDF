@@ -199,10 +199,12 @@ void Knob::Create()
 void ItemPad::Create()
 {
     pad = Button::create();
-    pad->setScale9Enabled(true);
-    pad->loadTextures("CloseNormal.png", "CloseSelected.png");
     pad->setTouchEnabled(true);
+    pad->setScale9Enabled(true);
+    pad->loadTextures("CloseNormal.png", "CloseSelected.png","CloseNormal.png");
     pad->setAnchorPoint(Vec2(0,1));
+    pad->setPosition(Vec2(0,getContentSize().height));
+    pad->setContentSize(getContentSize());
     pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     addChild(pad);
 }
