@@ -205,6 +205,7 @@ void UDPSenderHelperBase::SendOnThread()
     //LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - ACQUIRED LOCK, wait for harvest...");
 
     Harvester::Instance()->WaitForHarvest();
+
     try{
 
     	//LOGD("UDP SENDER - UDPSenderHelperBase - SendOnThread()");
@@ -280,7 +281,7 @@ void UDPSenderHelperBase::OSCPackData(const std::vector<SensorData*> &sData, osc
         SensorData *data=sData[i];
         s_int32 numTimestamps=2;
         if (AudioInput!=data->type)
-        numTimestamps=data->num_frames;
+        	numTimestamps=data->num_frames;
         
         std::string sensorTag=std::string("/") + SensorTypeString[i];
         

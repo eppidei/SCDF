@@ -105,7 +105,7 @@ void Harvester::SetType(SensorType type)
     std::sort(myHarvest.begin(), myHarvest.end(), Compare());
 }*/
 
-#define DONT_THROW_AWAY_OLD_VALUES
+//#define THROW_AWAY_OLD_VALUES
 
 
 void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, SensorType sType)
@@ -119,7 +119,7 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             sd=thePipesManager()->ReadFromPipe((SensorType)i);
             if (NULL==sd) break;
 
-		#ifndef DONT_THROW_AWAY_OLD_VALUES
+		#ifdef THROW_AWAY_OLD_VALUES
             if (sd->timestamp[0]<timestampStart)
             {
 				#ifdef LOG_HARVEST_STATUS
@@ -163,7 +163,7 @@ void Harvester::InternalBufferHarvesting(s_uint64 timestampStart, s_uint64 times
     {
         sd=nextHarvestData[i];
 
-#ifndef DONT_THROW_AWAY_OLD_VALUES
+#ifdef THROW_AWAY_OLD_VALUES
         if (sd->timestamp[0]<timestampStart)
         {
 			#ifdef LOG_HARVEST_STATUS

@@ -1,0 +1,10 @@
+Libusb code has been modified to work on android, adding a function
+that accepts and already opened file descriptor for a usb device.
+
+The code should work on other platforms as well, but the current config.h
+file has been tweaked for android specifically. So if you plan to use
+libusb on other platforms, generate config.h using the official methods
+(you will need executables and other stuff not included in this repository,
+download them from libusb site). 
+
+In that case, please don't just override config.h, but discuss a solution with who's responsible for SCDF on android.
