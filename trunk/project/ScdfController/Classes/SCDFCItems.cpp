@@ -8,6 +8,9 @@
 
 #include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
+#include "SCDFCScrollView.h"
+#include "PropertiesPanel.h"
+#include "MainScene.h"
 using namespace SCDFC;
 USING_NS_CC;
 using namespace ui;
@@ -21,16 +24,16 @@ ItemBase *ItemBase::CreateItem(Rect r,  int itemID)
             item=ItemSlider::create();
             break;
         case ITEM_KEYBOARD_ID:
-            item=Keyboard::create();
+            item=ItemKeyboard::create();
             break;
         case ITEM_KNOB_ID:
-            item=Knob::create();
+            item=ItemKnob::create();
             break;
         case ITEM_PAD_ID:
             item=ItemPad::create();
             break;
         case ITEM_SENSOR1_ID:
-            item=Sensor1::create();
+            item=ItemSensor1::create();
             break;
         default:
             return NULL;
@@ -44,19 +47,26 @@ ItemBase *ItemBase::CreateItem(Rect r,  int itemID)
 void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     Widget* widget = dynamic_cast<Widget*>(pSender);
+    WorkingPanel *wPanel=dynamic_cast<WorkingPanel*>(getParent());
+    if (NULL==wPanel)
+    {
+        ItemBase *item=dynamic_cast<ItemBase*>(getParent());
+        if (NULL!=item)
+            item->ItemsTouchCallback(pSender,type);
+    }
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
-            if (!((WorkingPanel*)getWidgetParent())->OnControlMove(this, widget->getTouchBeganPosition(), type))
+            if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchBeganPosition(), type))
                 OnItemTouchBegan(widget, type);
             break;
         case Widget::TouchEventType::MOVED:
-            if (!((WorkingPanel*)getWidgetParent())->OnControlMove(this, widget->getTouchMovePosition(), type))
+            if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchMovePosition(), type))
                 OnItemTouchMoved(widget, type);
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
-            if (!((WorkingPanel*)getWidgetParent())->OnControlMove (this, widget->getTouchEndPosition(), type))
+            if (NULL==wPanel||!wPanel->OnControlMove (this, widget->getTouchEndPosition(), type))
                 OnItemTouchEnded(widget, type);
             break;
         default:
@@ -148,14 +158,24 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     if (widget==slideBar) return;
     Vec2 touchPos=widget->getTouchMovePosition();
     float distanceX=0, distanceY=0;
+    
+#ifdef DEBUG
+    float posY=getPositionY();
+    float posX=getPositionX();
+    //seems that SetPosition needs corrdinates referred to widget anchor point;
+    //GetPosition returns coordinates referred to GL space so that (0,0) is at bottom-left;
+#endif
+    
     Rect rItem(getPositionX(), getPositionY()-getContentSize().height,getContentSize().width, getContentSize().height);
+
     if (!rItem.containsPoint(touchPos))
     {
-        distanceX=dragStartPos.x-touchPos.x;
-        distanceY=dragStartPos.y-touchPos.y;
+        distanceX=abs(dragStartPos.x-touchPos.x);
+        distanceY=abs(dragStartPos.y-touchPos.y);
     }
     
-    float touchDistanceFromStart=sqrt(pow(distanceX,2)+pow(distanceY,2));
+    //float touchDistanceFromStart=sqrt(pow(distanceX,2)+pow(distanceY,2));
+    float touchDistanceFromStart=isVertical?distanceX:distanceY;//sqrt(pow(distanceX,2)+pow(distanceY,2));
     if (isVertical){
         float diff=touchPos.y-dragPosUpdated.y;
         float draggingVel=log(1+touchDistanceFromStart)+1;
@@ -199,13 +219,14 @@ void ItemSlider::SetThumbPosition()
         thumb->setPosition(Vec2(position,getContentSize().height/2.0));
 }
 
-void Knob::SetThumbPosition()
+void ItemKnob::SetThumbPosition()
 {
+    thumb->setPosition(Vec2(getContentSize().width/2,getContentSize().height/2));
     float rotation=(270.0f/(abs(max-min)))*value;
     thumb->setRotation(rotation);
 }
 
-void Knob::Create()
+void ItemKnob::Create()
 {
     slideBar=NULL;
     isVertical=true;
@@ -226,7 +247,56 @@ void ItemPad::Create()
     addChild(pad);
 }
 
+void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    ItemPad* pad=(ItemPad*)widget;
+    printf("Key %d pressed",pad->midiNote);
+}
+
 ItemPad::~ItemPad()
 {
+    pad->addTouchEventListener(nullptr);
     removeChild(pad);
+}
+
+void ItemKeyboard::Create()
+{
+    padSizeMultiply=1;
+    setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+    setBackGroundColor(Color3B::BLUE);
+    CreatePads();
+}
+
+void ItemKeyboard::ClearPads()
+{
+    for (int i=0;i<pads.size();++i)
+        removeChild(pads[i]);
+    pads.clear();
+}
+
+void ItemKeyboard::CreatePads()
+{
+    ClearPads();
+    float totalPadsMultiply=MainScene::GetGridBase()*padSizeMultiply;
+    float padsWidth=ItemPad::GetSize().width*totalPadsMultiply;
+    float padsHeight=ItemPad::GetSize().height*totalPadsMultiply;
+
+    int numPadsRow=getContentSize().width/padsWidth;
+    int numPadsColumn=getContentSize().height/padsHeight;
+    for (int column=0;column<numPadsColumn;++column)
+    {
+        for (int row=0;row<numPadsRow;++row)
+        {
+            Rect r(row*padsWidth,getContentSize().height-column*padsHeight,padsWidth,padsHeight);
+            ItemPad *pad=(ItemPad*)ItemBase::CreateItem(r, ITEM_PAD_ID);
+            pad->setAnchorPoint(Vec2(0,1));
+            addChild(pad);
+        }
+    }
+    
+}
+
+ItemKeyboard::~ItemKeyboard()
+{
+    ClearPads();
 }

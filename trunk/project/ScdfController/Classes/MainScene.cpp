@@ -2,6 +2,7 @@
 #include "SCDFCDefinitions.h"
 #include "SCDFCScrollView.h"
 #include "SCDFCWorkingPanel.h"
+#include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
 
@@ -57,14 +58,13 @@ void MainScene::OnDragging(Rect r)
     Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
     Rect rr=Rect::ZERO;
     
-    float scaledHeight=draggingImage->getContentSize().height;// ItemType::GetSize().width*GetGridDistance();
-    float scaledWidth=draggingImage->getContentSize().width;//ItemType::GetSize().height*GetGridDistance();
+    float scaledHeight=draggingImage->getContentSize().height;
+    float scaledWidth=draggingImage->getContentSize().width;
     if (r.origin.y<=workingSpaceRect.origin.y && (r.origin.x>=workingSpaceRect.origin.x)
         && (r.origin.x+scaledWidth)<=workingSpaceRect.size.width
         && (r.origin.y-scaledHeight)>=workingSpaceRect.origin.y-workingSpaceRect.size.height)
     {
         SnapToGrid(r);
-        //draggingImage->setContentSize(rr.size); //basta solo la position?
         draggingImage->setPosition(r.origin);
         r.size=draggingImage->getContentSize();
         rr=r;
@@ -105,7 +105,8 @@ void MainScene::AddToolbar(Rect r)
     button->setAnchorPoint(Vec2(0,1));
     button->setPosition(Vec2(r.origin.x, toolbar->getContentSize().height));
     button->setContentSize(Size(r.size.height, r.size.height));
-    button->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    //button->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
     auto button1 = Button::create();
     button1->setTouchEnabled(true);
     button1->setScale9Enabled(true);
@@ -113,7 +114,7 @@ void MainScene::AddToolbar(Rect r)
     button1->setAnchorPoint(Vec2(0,1));
     button1->setPosition(Vec2(button->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
     button1->setContentSize(Size(r.size.height, r.size.height));
-    button1->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
+    button1->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     auto button2 = Button::create();
     button2->setTouchEnabled(true);
     button2->setScale9Enabled(true);
@@ -121,7 +122,8 @@ void MainScene::AddToolbar(Rect r)
     button2->setAnchorPoint(Vec2(0,1));
     button2->setPosition(Vec2(button1->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
     button2->setContentSize(Size(r.size.height, r.size.height));
-    button2->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
+    button2->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+
     auto button3 = Button::create();
     button3->setTouchEnabled(true);
     button3->setScale9Enabled(true);
@@ -129,13 +131,22 @@ void MainScene::AddToolbar(Rect r)
     button3->setAnchorPoint(Vec2(0,1));
     button3->setPosition(Vec2(button2->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
     button3->setContentSize(Size(r.size.height, r.size.height));
-    button3->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
+    button3->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
+    auto button4 = Button::create();
+    button4->setTouchEnabled(true);
+    button4->setScale9Enabled(true);
+    button4->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
+    button4->setAnchorPoint(Vec2(0,1));
+    button4->setPosition(Vec2(button3->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
+    button4->setContentSize(Size(r.size.height, r.size.height));
+    button4->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
     toolbar->addChild(button,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
     toolbar->addChild(button1,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
     toolbar->addChild(button2,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(button3,0,TOOLBAR_BUTTON_ACTIVATE);
-
-    
+    toolbar->addChild(button4,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
 
 void MainScene::CalculateGrid()
@@ -190,23 +201,29 @@ bool MainScene::init()
     //    you may modify it.
     
 #define SCROLLVIEW_WIDTH (8*GetGridBase())
-#define TOOLBAR_HEIGHT   (4*GetGridBase())
+#define PROPERTIES_WIDTH  2*SCROLLVIEW_WIDTH
+#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/2)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,
-                          getContentSize().width-SCROLLVIEW_WIDTH,
+                          getContentSize().width,
                           TOOLBAR_HEIGHT);
     Rect workingPanelsize(0,
-                          getContentSize().height-toolbarPanelsize.size.height,
-                          getContentSize().width-SCROLLVIEW_WIDTH,
-                          getContentSize().height-toolbarPanelsize.size.height);
-    Rect scrollViewect(workingPanelsize.origin.x+workingPanelsize.size.width,
-                       getContentSize().height,
-                       getContentSize().width-workingPanelsize.size.width,
-                       getContentSize().height);
-    customScrollView.reset(SScrollView::CreateCustomScrollView((MainScene*)this, scrollViewect));
-    
+                          getContentSize().height,
+                          getContentSize().width,
+                          getContentSize().height);
+    Rect scrollViewect(getContentSize().width-SCROLLVIEW_WIDTH,
+                       getContentSize().height-toolbarPanelsize.size.height,
+                       SCROLLVIEW_WIDTH,
+                       getContentSize().height-toolbarPanelsize.size.height);
+    Rect propertiesRect(0,
+                       getContentSize().height-toolbarPanelsize.size.height,
+                       PROPERTIES_WIDTH,
+                       getContentSize().height-toolbarPanelsize.size.height);
+    customScrollView.reset(ItemScrollView::CreateCustomScrollView((MainScene*)this, scrollViewect));
     customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
+    propertiesPanel.reset(PropertiesPanel::CreatePropertiesPanel((MainScene*)this,propertiesRect));
+    
     AddToolbar(toolbarPanelsize);
     CalculateGrid();
     // add a "close" icon to exit the progress. it's an autorelease object
@@ -267,26 +284,58 @@ void MainScene::HideShowScrollview()
     CallFunc *callback=nullptr;
     if (customScrollView->getPositionX()!=getContentSize().width)
     {
-        customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
-        getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
-        CalculateGrid();
-        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width, getContentSize().height));
+        //Hide
+        //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
+     //   getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
+       // CalculateGrid();
+        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
     }
     else
     {
-        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height));
-        callback = CallFunc::create([this](){
-            customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
-            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
-            CalculateGrid();
-        });
+        //Show
+        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+//        callback = CallFunc::create([this](){
+//            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+//            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
+//       //     CalculateGrid();
+//        });
     }
-    if (nullptr!=callback){
-        auto seq = Sequence::create(actScrollview, callback, NULL);
-        customScrollView->runAction(seq);
+//    if (nullptr!=callback){
+//        auto seq = Sequence::create(actScrollview, callback, NULL);
+//        customScrollView->runAction(seq);
+//    }
+//    else
+        customScrollView->runAction(actScrollview);
+}
+
+void MainScene::HideShowPropertiesPanel()
+{
+    MoveTo *actScrollview;
+    CallFunc *callback=nullptr;
+    if (propertiesPanel->getPositionX()==0)
+    {
+        //Hide
+        //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
+        //getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
+        // CalculateGrid();
+        actScrollview = MoveTo::create(0.1f, Point(-PROPERTIES_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
     }
     else
-        customScrollView->runAction(actScrollview);
+    {
+        //Show
+        actScrollview = MoveTo::create(0.1f, Point(0, getContentSize().height-TOOLBAR_HEIGHT));
+//        callback = CallFunc::create([this](){
+//            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+//            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
+//            //     CalculateGrid();
+//        });
+    }
+//    if (nullptr!=callback){
+//        auto seq = Sequence::create(actScrollview, callback, NULL);
+//        customScrollView->runAction(seq);
+//    }
+//    else
+        propertiesPanel->runAction(actScrollview);
 }
 
 void MainScene::HideShowToolbar()
@@ -297,8 +346,8 @@ void MainScene::HideShowToolbar()
     if (toolbar->getPositionY()==getContentSize().height)
     {
         
-        customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height));
-        CalculateGrid();
+        //customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height));
+     //   CalculateGrid();
         Node *tB=toolbar->getChildByTag(TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
         if (NULL==tB) return;
         tB->retain();
@@ -311,8 +360,8 @@ void MainScene::HideShowToolbar()
     {
         actToolbar = MoveTo::create(0.1f, Point(0, getContentSize().height));
         callback = CallFunc::create([this,toolbar](){
-            customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height-TOOLBAR_HEIGHT));
-            CalculateGrid();
+         //   customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height-TOOLBAR_HEIGHT));
+        //    CalculateGrid();
             Node *tB=getChildByTag(TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
             if (NULL==tB) return;
             tB->retain();
@@ -336,12 +385,12 @@ void MainScene::OnGridButtonClick()
 
 int position=0;
 
-void MainScene::touchEvent(Ref *pSender, cocos2d::ui::TouchEventType type)
+void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     ui::Button* button = dynamic_cast<ui::Button*>(pSender);
     switch (type)
     {
-        case (int)Widget::TouchEventType::BEGAN:
+        case Widget::TouchEventType::BEGAN:
             if (TOOLBAR_BUTTON_GRID==button->getTag())
                 OnGridButtonClick();
             else if (TOOLBAR_BUTTON_ACTIVATE==button->getTag())
@@ -350,14 +399,16 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::TouchEventType type)
                 HideShowScrollview();
             else if (TOOLBAR_BUTTON_HIDESHOW_TOOLBAR==button->getTag())
                 HideShowToolbar();
+            else if (TOOLBAR_BUTTON_HIDESHOW_PROPERTIES==button->getTag())
+                HideShowPropertiesPanel();
             break;
-        case (int)ui::Widget::TouchEventType::MOVED:
+        case Widget::TouchEventType::MOVED:
             // TODO
           //  break;
-        case (int)ui::Widget::TouchEventType::ENDED:
+        case Widget::TouchEventType::ENDED:
             // TODO
            // break;
-        case (int)ui::Widget::TouchEventType::CANCELED:
+        case Widget::TouchEventType::CANCELED:
             // TODO
            // break;
         default:
@@ -382,12 +433,12 @@ void menuCloseCallback(Ref* pSender)
 
 template void MainScene::OnStartDragging<ItemSlider>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemPad>(Vec2 dragStartPoint);
-template void MainScene::OnStartDragging<Knob>(Vec2 dragStartPoint);
-template void MainScene::OnStartDragging<Sensor1>(Vec2 dragStartPoint);
-template void MainScene::OnStartDragging<Keyboard>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemKnob>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemSensor1>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemKeyboard>(Vec2 dragStartPoint);
 template void MainScene::OnEndDragging<ItemSlider>();
 template void MainScene::OnEndDragging<ItemPad>();
-template void MainScene::OnEndDragging<Knob>();
-template void MainScene::OnEndDragging<Sensor1>();
-template void MainScene::OnEndDragging<Keyboard>();
+template void MainScene::OnEndDragging<ItemKnob>();
+template void MainScene::OnEndDragging<ItemSensor1>();
+template void MainScene::OnEndDragging<ItemKeyboard>();
 
