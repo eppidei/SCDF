@@ -2,11 +2,14 @@
 # build_native.py
 # Build native codes
 
+#python ${ProjDirPath}/build_native.py -b debug
 
 import sys
 import os, os.path
 import shutil
 from optparse import OptionParser
+
+
 
 def get_num_of_cpu():
 	''' The build process can be accelerated by running multiple concurrent job processes using the -j-option.
@@ -42,7 +45,8 @@ def check_environment_variables():
     '''
 
     try:
-        NDK_ROOT = os.environ['NDK_ROOT']
+        #NDK_ROOT = os.environ['NDK_ROOT']
+	NDK_ROOT="/home/athos/Devel/android-ndk-r9d"
     except Exception:
         print "NDK_ROOT not defined. Please define NDK_ROOT in your environment"
         sys.exit(1)
@@ -78,6 +82,9 @@ def do_build(cocos_root, ndk_root, app_android_root,ndk_build_param,sdk_root,and
         command = '%s -j%d -C %s NDK_DEBUG=%d' % (ndk_path, num_of_cpu, app_android_root, build_mode=='debug')
     else:
         command = '%s -j%d -C %s NDK_DEBUG=%d %s' % (ndk_path, num_of_cpu, app_android_root, build_mode=='debug', ' '.join(str(e) for e in ndk_build_param))
+
+    print command
+
     if os.system(command) != 0:
         raise Exception("Build dynamic library for project [ " + app_android_root + " ] fails!")
     elif android_platform is not None:

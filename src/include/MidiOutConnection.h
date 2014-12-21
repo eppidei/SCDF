@@ -18,6 +18,7 @@ namespace Scdf  {
     public:
         class Listener
         {
+        public:
             virtual void OnConnectionLost(MidiOutConnection* connection) = 0;
         };
         
@@ -37,7 +38,7 @@ namespace Scdf  {
         
         void SetListener(Listener* _listener){listener = _listener;}
         
-    private:
+    protected:
         
         Listener* listener;
     };

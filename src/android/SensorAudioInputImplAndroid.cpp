@@ -12,6 +12,11 @@
 
 #define TEST_ANDROID_AUDIO_SEND_DIRECT
 
+#define POSITION_UPDATE_PERIOD 5000 // ms
+SLuint32 recEventsMask = SL_RECORDEVENT_HEADATLIMIT | SL_RECORDEVENT_HEADATMARKER
+						 | SL_RECORDEVENT_HEADATNEWPOS | SL_RECORDEVENT_HEADMOVING
+						 | SL_RECORDEVENT_HEADSTALLED | SL_RECORDEVENT_BUFFER_FULL;
+
 s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
 //SLAndroidSimpleBufferQueueState state;
@@ -131,14 +136,14 @@ void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void
 
     s_uint64 end = now_ns();
     s_double cb_time_ms = (end - now)/1000000.0;
-    LOGI("AUDIOIN");//%llu (%f) - drift: %s%f ms (%s - %f ms)",ai->callbacksCount,cb_time_ms,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
+    //LOGI("AUDIOIN");//%llu (%f) - drift: %s%f ms (%s - %f ms)",ai->callbacksCount,cb_time_ms,sign.c_str(),error,caseIs.c_str(),calc_bufflen);
 
 }
 
 /*********************** TEST CALLBACK ****************************/
 
 // MODIFY IP AND PORT ACCORDING TO YOUR NEEDS:
-std::string testIp("192.168.1.103");
+std::string testIp("10.12.209.117");
 int testport = 55555;
 
 scdf::UDPSender testSender;
@@ -190,6 +195,37 @@ void scdf::SensorAudioInputImpl::TestCallback(SLAndroidSimpleBufferQueueItf bq, 
 	(*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->GetBufferSize()*sizeof(short));
 }
 
+#define NUM_CB 3000
+s_int64 delta[NUM_CB];
+
+void scdf::SensorAudioInputImpl::TestCountCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
+{
+	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
+	ai->callbacksCount++;
+	SLAndroidSimpleBufferQueueState state;
+	(*ai->inBufferQueue)->GetState(ai->inBufferQueue,&state);
+	delta[(ai->callbacksCount-1)%NUM_CB] = (s_int64)state.index; //- (s_int64)ai->callbacksCount;
+
+	//if (0==ai->callbacksCount%21)
+	//	usleep(1000000);
+
+	if ( 0==(ai->callbacksCount%NUM_CB) )
+	{
+		LOGI("break");
+		//LOGI("Callbacks. Mycount: %llu, count: %u index: %u",ai->callbacksCount,state.count,state.index);
+		//usleep(1000000); // 500 ms
+		//(*ai->inBufferQueue)->GetState(ai->inBufferQueue,&state);
+		//LOGD("  After sleep. Mycount: %llu, count: %u index: %u",ai->callbacksCount,state.count,state.index);
+	}
+
+
+
+	(*ai->inBufferQueue)->Enqueue(ai->inBufferQueue, ai->inputBuffer[ai->currentBuff],ai->GetBufferSize()*sizeof(short));
+	ai->currentBuff = (ai->currentBuff +1) % ai->numBuffers;
+
+}
+
+
 bool dummyThreadActive = false;
 
 void* DummyThreadCallback(void* ctx)
@@ -220,6 +256,39 @@ void* DummyThreadCallback(void* ctx)
 
 }
 
+#define NUM_STALL 60
+SLmillisecond dstall[NUM_STALL];
+
+void scdf::SensorAudioInputImpl::RecordEventCallback
+									(SLRecordItf caller, void *thiz, SLuint32 recordEvent)
+{
+	SLmillisecond pos;
+	(*caller)->GetPosition(caller,&pos);
+	static SLmillisecond prev = pos;
+	static int i = 0;
+
+	switch(recordEvent)
+	{
+		case SL_RECORDEVENT_HEADATLIMIT: LOGD("SL record event HEAD AT LIMIT, %lu",pos); break;
+		case SL_RECORDEVENT_HEADATMARKER: LOGD("SL record event HEAD AT MARKER %lu",pos); break;
+		case SL_RECORDEVENT_HEADATNEWPOS: LOGD("SL record event HEAD AT NEW POS %lu",pos); break;
+		case SL_RECORDEVENT_HEADMOVING: LOGD("SL record event HEAD MOVING %lu",pos); break;
+		case SL_RECORDEVENT_HEADSTALLED:
+		{
+			LOGD("SL record event HEAD STALLED %lu",pos);
+			dstall[i] = pos - prev;
+			prev = pos;
+			if (i==(NUM_STALL-1)) {
+				i = 0; // break here!
+			} else {
+				i++;
+			}
+			break;
+		}
+		case SL_RECORDEVENT_BUFFER_FULL: LOGD("SL record event BUFFER FULL %lu",pos); break;
+		default: LOGE("SL record event Unknown!"); break;
+	}
+}
 
 scdf::SensorAudioInputImpl::SensorAudioInputImpl()
 {
@@ -366,6 +435,17 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 	 		return false;
 	 }
 
+	 /* Setup to receive position event callbacks */
+	 result = (*recordItf)->RegisterCallback(recordItf, RecordEventCallback,this);
+	 if (result == SL_RESULT_SUCCESS) {
+		 result = (*recordItf)->SetPositionUpdatePeriod( recordItf,POSITION_UPDATE_PERIOD);
+		 if (result != SL_RESULT_SUCCESS) LOGE("Error setting record update perdiod");
+		 result = (*recordItf)->SetCallbackEventsMask( recordItf,recEventsMask);
+		 if (result != SL_RESULT_SUCCESS) LOGE("Error setting record events mask");
+	 } else {
+		 LOGE("Error registering event callback.");
+	 }
+
 	 // get the buffer queue interface
 	 result = (*audioRecorderItf)->GetInterface(audioRecorderItf, SL_IID_ANDROIDSIMPLEBUFFERQUEUE,
 	                                                    &inBufferQueue);
@@ -378,7 +458,7 @@ s_bool scdf::SensorAudioInputImpl::Setup(SensorSettings& settings)
 
 	 // register callback on the buffer queue
 #ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
-	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, TestCallback,this);
+	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, TestCountCallback,this);
 #else
 	 result = (*inBufferQueue)->RegisterCallback(inBufferQueue, Callback,this);
 #endif
@@ -405,7 +485,7 @@ int scdf::SensorAudioInputImpl::GetBufferSize()
 
 s_bool scdf::SensorAudioInputImpl::Start()
 {
-#ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
+#ifdef TEST_ANDROID_FAKE_THREAD
 	ThreadUtils::CreateThread(DummyThreadCallback,this);
 #else
 
@@ -426,14 +506,16 @@ s_bool scdf::SensorAudioInputImpl::Start()
     	(*inBufferQueue)->Enqueue(inBufferQueue, inputBuffer[i],GetBufferSize()*sizeof(short));
 	}
     currentBuff = 0;
-    // set the recorder's state to rec:
-	result = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_RECORDING);
 
-	startTimeReference = now_ns();
-	lastCallbackTime = 	lastTimestamp = lastTimeId = startTimeReference;
-	callbacksCount = 0;
-	nGroupedCallbacks = 0;
-	lastCallbackWasGrouped = false;
+    startTimeReference = now_ns();
+   	lastCallbackTime = 	lastTimestamp = lastTimeId = startTimeReference;
+    callbacksCount = 0;
+    nGroupedCallbacks = 0;
+    lastCallbackWasGrouped = false;
+
+    // set the recorder's state to rec:
+    result = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_RECORDING);
+
 	//ReturnIfSLresultError(result,"Setting REC State");
 #endif
 	return true;
@@ -441,7 +523,7 @@ s_bool scdf::SensorAudioInputImpl::Start()
 
 s_bool scdf::SensorAudioInputImpl::Stop()
 {
-#ifdef TEST_ANDROID_AUDIO_SEND_DIRECT
+#ifdef TEST_ANDROID_FAKE_THREAD
 
 	dummyThreadActive = false;
 

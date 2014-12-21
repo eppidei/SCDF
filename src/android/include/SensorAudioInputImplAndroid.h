@@ -18,8 +18,6 @@
 
 namespace scdf {
 
-
-
     class SensorAudioInputImpl : public SensorAudioInput
     {
 
@@ -38,6 +36,8 @@ namespace scdf {
 
         static void Callback(SLAndroidSimpleBufferQueueItf bq, void *context);
         static void TestCallback(SLAndroidSimpleBufferQueueItf bq, void *context);
+        static void TestCountCallback(SLAndroidSimpleBufferQueueItf bq, void *context);
+        static void RecordEventCallback(SLRecordItf caller,	void *thiz, SLuint32 recordEvent);
 
         void Reset();
         int GetBufferSize();
