@@ -60,6 +60,8 @@ public:
 private:
 
 	Scdf::MidiOutConnection* midiConnection;
+	int lastOpenedMidiOutIndex; // TODO: ask directly to the midi connection
+
 	// osc sender
 
 	std::string oscIp;

@@ -26,7 +26,24 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.cpp;
 
+import it.scdf.framework.UsbHandler;
 import org.cocos2dx.lib.Cocos2dxActivity;
+import android.os.Bundle;
 
 public class AppActivity extends Cocos2dxActivity {
+	
+	static {
+		System.loadLibrary("usbcustom");
+		System.loadLibrary("scdfusbtest");
+	}
+	
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        UsbHandler.Setup(this);
+    }
+	
+	
+	
 }
