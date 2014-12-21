@@ -10,6 +10,7 @@
 #define __ScdfController__SCDFCItems__
 
 #include "SCDFCDefinitions.h"
+#include "Observer.h"
 
 namespace cocos2d
 {
@@ -21,10 +22,9 @@ namespace cocos2d
     }
 }
 namespace SCDFC {
-    class ItemBase : public cocos2d::ui::Layout
+    class ItemBase : public cocos2d::ui::Layout, public SubjectSimple
     {
         int sizeMultiply;
-        std::unique_ptr<cocos2d::ui::Button> propBtn;
     protected:
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         virtual void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
@@ -58,7 +58,7 @@ namespace SCDFC {
         virtual ~ItemSlider();
         CREATE_FUNC(ItemSlider);
     };
-    class Knob : public ItemSlider
+    class ItemKnob : public ItemSlider
     {
         void SetThumbPosition();
         bool IsKnob() { return true;}
@@ -66,33 +66,40 @@ namespace SCDFC {
         void Create();
         static cocos2d::Size GetSize() { return KNOB_SIZE_BASE;}
         static int GetID() { return ITEM_KNOB_ID;}
-        CREATE_FUNC(Knob);
+        CREATE_FUNC(ItemKnob);
     };
     class ItemPad : public ItemBase
     {
         cocos2d::ui::Button *pad;
+        void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     public:
+        int midiNote;
         void Create();
         static cocos2d::Size GetSize() { return PAD_SIZE_BASE;}
         static int GetID() { return ITEM_PAD_ID;}
         ~ItemPad();
         CREATE_FUNC(ItemPad);
     };
-    class Keyboard : public ItemBase
+    class ItemKeyboard : public ItemBase
     {
+        int padSizeMultiply;
+        std::vector<ItemPad*> pads;
+        void ClearPads();
+        void CreatePads();
     public:
-        void Create(){}
+        void Create();
         static cocos2d::Size GetSize() { return KEYBOARD_SIZE_BASE;}
         static int GetID() { return ITEM_KEYBOARD_ID;}
-        CREATE_FUNC(Keyboard);
+        ~ItemKeyboard();
+        CREATE_FUNC(ItemKeyboard);
     };
-    class Sensor1 : public ItemBase
+    class ItemSensor1 : public ItemBase
     {
     public:
         void Create(){}
         static cocos2d::Size GetSize() { return RECT_SENSOR_SIZE_BASE;}
         static int GetID() { return ITEM_SENSOR1_ID;}
-        CREATE_FUNC(Sensor1);
+        CREATE_FUNC(ItemSensor1);
     };
 }
 #endif /* defined(__ScdfController__SCDFCItems__) */

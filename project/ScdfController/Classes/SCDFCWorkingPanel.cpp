@@ -11,6 +11,7 @@
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
+#include "PropertiesPanel.h"
 
 using namespace SCDFC;
 using namespace cocos2d;

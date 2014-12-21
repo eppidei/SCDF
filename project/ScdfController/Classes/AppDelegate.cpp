@@ -4,6 +4,7 @@
 #include "MainScene.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
+#include "PropertiesPanel.h"
 
 using namespace SCDFC;
 USING_NS_CC;

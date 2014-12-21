@@ -9,6 +9,7 @@
 #include "SCDFCDefinitions.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
+#include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
 
@@ -16,7 +17,7 @@ using namespace SCDFC;
 using namespace cocos2d;
 using namespace ui;
 
-template <class ItemType> void SScrollView::AddButtonToScrollView(std::string image)
+template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string image)
 {
 #define SCROLLVIEW_ITEM_SIZE        (SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
 #define SCROLLVIEW_ITEM_DISTANCE    (2*parent->GetGridBase())
@@ -39,18 +40,18 @@ template <class ItemType> void SScrollView::AddButtonToScrollView(std::string im
     button->setScale9Enabled(true);
     button->setContentSize(Size(SCROLLVIEW_ITEM_SIZE, SCROLLVIEW_ITEM_SIZE));
     button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*SCROLLVIEW_ITEM_DISTANCE- button->getContentSize().height*numElements));
-    button->addTouchEventListener(this, toucheventselector(SScrollView::DragItemOnTouchEvent));
+    button->addTouchEventListener(this, toucheventselector(ItemScrollView::DragItemOnTouchEvent));
     addChild(button,0,ItemType::GetID());
 }
 
-SScrollView *SScrollView::CreateCustomScrollView(MainScene *main, Rect r)
+ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, Rect r)
 {
-    SScrollView *scrollView=(SScrollView*)SScrollView::create();
+    ItemScrollView *scrollView=(ItemScrollView*)ItemScrollView::create();
     scrollView->InitWithContent(main,r);
     return scrollView;
 }
 
-void SScrollView::InitWithContent(MainScene *main,Rect r)
+void ItemScrollView::InitWithContent(MainScene *main,Rect r)
 {
     parent=main;
     setContentSize(r.size);
@@ -64,18 +65,18 @@ void SScrollView::InitWithContent(MainScene *main,Rect r)
     
     AddButtonToScrollView<ItemSlider>("CloseNormal.png");
     AddButtonToScrollView<ItemPad>("CloseSelected.png");
-    AddButtonToScrollView<Knob>("CloseNormal.png");
-    AddButtonToScrollView<Keyboard>("CloseNormal.png");
-    AddButtonToScrollView<Sensor1>("CloseNormal.png");
+    AddButtonToScrollView<ItemKnob>("CloseNormal.png");
+    AddButtonToScrollView<ItemKeyboard>("CloseNormal.png");
+    AddButtonToScrollView<ItemSensor1>("CloseNormal.png");
 }
 
-float SScrollView::RetrieveButtonYCoordInScrollview(ui::Button* button)
+float ItemScrollView::RetrieveButtonYCoordInScrollview(ui::Button* button)
 {
     Rect r=getInnerContainer()->getBoundingBox();
     return button->getPosition().y+r.origin.y;
 }
 
-template <class ItemType> void SScrollView::DoDragItemOnTouchEvent(cocos2d::ui::TouchEventType type, Button *button)
+template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::ui::TouchEventType type, Button *button)
 {
     static Vec2 dragStartPoint;
     Rect buttonRect(button->getPositionX(), RetrieveButtonYCoordInScrollview(button), button->getContentSize().width, button->getContentSize().height);
@@ -113,7 +114,7 @@ template <class ItemType> void SScrollView::DoDragItemOnTouchEvent(cocos2d::ui::
     }
 }
 
-void SScrollView::DragItemOnTouchEvent(Ref *pSender, cocos2d::ui::TouchEventType type)
+void ItemScrollView::DragItemOnTouchEvent(Ref *pSender, cocos2d::ui::TouchEventType type)
 {
     ui::Button* button = dynamic_cast<ui::Button*>(pSender);
     switch(button->getTag())
@@ -125,21 +126,21 @@ void SScrollView::DragItemOnTouchEvent(Ref *pSender, cocos2d::ui::TouchEventType
             DoDragItemOnTouchEvent<ItemPad>(type, button);
             break;
         case ITEM_KEYBOARD_ID:
-            DoDragItemOnTouchEvent<Keyboard>(type, button);
+            DoDragItemOnTouchEvent<ItemKeyboard>(type, button);
             break;
         case ITEM_KNOB_ID:
-            DoDragItemOnTouchEvent<Knob>(type, button);
+            DoDragItemOnTouchEvent<ItemKnob>(type, button);
             break;
         case ITEM_SENSOR1_ID:
-            DoDragItemOnTouchEvent<Sensor1>(type, button);
+            DoDragItemOnTouchEvent<ItemSensor1>(type, button);
             break;
         default:
             break;
     }
 }
 
-template void SScrollView::AddButtonToScrollView<ItemSlider>(std::string image);
-template void SScrollView::AddButtonToScrollView<ItemPad>(std::string image);
-template void SScrollView::AddButtonToScrollView<Knob>(std::string image);
-template void SScrollView::AddButtonToScrollView<Sensor1>(std::string image);
-template void SScrollView::AddButtonToScrollView<Keyboard>(std::string image);
+template void ItemScrollView::AddButtonToScrollView<ItemSlider>(std::string image);
+template void ItemScrollView::AddButtonToScrollView<ItemPad>(std::string image);
+template void ItemScrollView::AddButtonToScrollView<ItemKnob>(std::string image);
+template void ItemScrollView::AddButtonToScrollView<ItemSensor1>(std::string image);
+template void ItemScrollView::AddButtonToScrollView<ItemKeyboard>(std::string image);

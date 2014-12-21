@@ -12,7 +12,7 @@
 namespace SCDFC {
     class MainScene;
     
-    class SScrollView : public cocos2d::ui::ScrollView
+    class ItemScrollView : public cocos2d::ui::ScrollView
     {
         MainScene *parent;
         template <class ItemType> void AddButtonToScrollView(std::string image);
@@ -21,8 +21,8 @@ namespace SCDFC {
         float RetrieveButtonYCoordInScrollview(cocos2d::ui::Button* button);
         template <class ItemType> void DoDragItemOnTouchEvent(cocos2d::ui::TouchEventType type, cocos2d::ui::Button* button);
     public:
-        static SScrollView *CreateCustomScrollView(MainScene *main, cocos2d::Rect r);
-        CREATE_FUNC(SScrollView);
+        static ItemScrollView *CreateCustomScrollView(MainScene *main, cocos2d::Rect r);
+        CREATE_FUNC(ItemScrollView);
     };
 }
 #endif /* defined(__ScdfController__SCDFCScollView__) */
