@@ -21,6 +21,10 @@ namespace cocos2d{
     }
 }
 
+namespace ScdfCtrl{
+class ControlUnit;
+}
+
 namespace SCDFC
 {
 #define PROP_OSC_INFO_ID 1
@@ -34,19 +38,23 @@ namespace SCDFC
         class OSCInfo : public cocos2d::ui::Layout
         {
             friend class PropertiesPanel;
-            cocos2d::ui::Text *toggleLabel, *portLabel, *ipLabel;
+            PropertiesPanel *parent;
+            cocos2d::ui::Text *toggleLabel, *portLabel, *ipLabel, *oscTagLabel, *oscTag;
             cocos2d::ui::CheckBox *oscToggle;
             cocos2d::ui::TextField* oscPort;
             cocos2d::ui::TextField* oscIP;
             static int GetID() { return PROP_OSC_INFO_ID;}
-            void CreateControls();
+            void CreateControls(PropertiesPanel *parent);
             void TextFieldEvent(Ref *pSender, cocos2d::ui::TextField::EventType type);
+            void SelectedEvent(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
+            void UpdateValues();
         public:
             bool init() override;
             CREATE_FUNC(OSCInfo);
-        } sectionOSCInfo;
+        } *sectionOSCInfo;
         
-        
+        friend class OSCInfo;
+        ScdfCtrl::ControlUnit *currentControlUnit;
         void InitWithContent(MainScene *main, cocos2d::Rect r);
     public:
         void Update(SubjectSimple* theChangedSubject);

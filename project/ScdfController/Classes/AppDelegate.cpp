@@ -4,6 +4,7 @@
 #include "MainScene.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
+#include "ControlUnit.h"
 #include "PropertiesPanel.h"
 
 using namespace SCDFC;

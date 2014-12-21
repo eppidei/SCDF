@@ -5,6 +5,7 @@
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
+#include "ControlUnit.h"
 
 using namespace SCDFC;
 USING_NS_CC;
@@ -79,6 +80,16 @@ template <class ItemType> void MainScene::OnEndDragging()
     customPanel->SetDraggingRect(Rect::ZERO);
     removeChild(draggingImage);
     draggingImage=NULL;
+}
+
+void MainScene::AttachItem(ItemBase *item)
+{
+    item->Attach(propertiesPanel.get());
+}
+
+void MainScene::DetachItem(ItemBase *item)
+{
+    item->Detach(propertiesPanel.get());
 }
 
 void MainScene::EnableScrollView(bool enable)

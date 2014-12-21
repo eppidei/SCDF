@@ -11,6 +11,8 @@
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
+#include "ControlUnit.h"
+
 using namespace SCDFC;
 USING_NS_CC;
 using namespace ui;
@@ -44,6 +46,10 @@ ItemBase *ItemBase::CreateItem(Rect r,  int itemID)
     return item;
 }
 
+ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit())
+{
+}
+
 void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     Widget* widget = dynamic_cast<Widget*>(pSender);
@@ -54,6 +60,8 @@ void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventT
         if (NULL!=item)
             item->ItemsTouchCallback(pSender,type);
     }
+    else if (type==Widget::TouchEventType::BEGAN)
+        Notify();
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:

@@ -12,6 +12,7 @@
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
 #include "PropertiesPanel.h"
+#include "ControlUnit.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
@@ -48,6 +49,8 @@ void WorkingPanel::CheckAddControl(int buttonTag)
     addChild(item);
     item->setAnchorPoint(Vec2(0,1));
     item->addTouchEventListener(CC_CALLBACK_2(WorkingPanel::OnControlTouch, this));
+    parent->AttachItem(item);
+    item->Notify();
     items.push_back(item);
 }
 
@@ -60,6 +63,7 @@ void WorkingPanel::CheckRemoveControl(Node *n)
     for (int i=0;i<items.size();++i){
         if (items[i]==n) items.erase(items.begin()+i);
     }
+    parent->DetachItem((ItemBase*)n);
     removeChild(n);
     printf("Control removed from working space\n");
 }

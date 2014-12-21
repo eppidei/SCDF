@@ -12,6 +12,10 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 
+namespace ScdfCtrl
+{
+    class ControlUnit;
+}
 namespace cocos2d
 {
     namespace ui
@@ -25,6 +29,7 @@ namespace SCDFC {
     class ItemBase : public cocos2d::ui::Layout, public SubjectSimple
     {
         int sizeMultiply;
+        std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
     protected:
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         virtual void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
@@ -33,6 +38,8 @@ namespace SCDFC {
     public:
         static ItemBase *CreateItem(cocos2d::Rect r, int itemID);
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        ScdfCtrl::ControlUnit *GetControlUnit() { return controlUnit.get();}
+        ItemBase();
         virtual void Create()=0;
         virtual ~ItemBase(){}
         
