@@ -9,6 +9,8 @@
 
 using namespace ScdfCtrl;
 
+static int controlCounter = 0;
+
 ControlUnit::ControlUnit()
 {
 	midiConnection = NULL;
@@ -27,7 +29,7 @@ ControlUnit::ControlUnit()
     //#ifdef _DEBUG
     midiMsgType = NoteOn;
     midiChannel = 0;
-    midiControl = 50;
+    midiControl = ++controlCounter%127;
     //#endif
 	lastOpenedMidiOutIndex = -1;
 }

@@ -51,4 +51,26 @@ namespace Scdf {
     {
         return midiImpl->SendNoteOff(note, velocity, channel);
     }
+    s_bool MidiOutConnectionIOS::SendControlChange(s_uint16 control, s_uint16 value, s_uint16 channel)
+    {
+        return midiImpl->SendControlChange(control, value, channel);
+    }
+    s_bool MidiOutConnectionIOS::SendProgramChange(s_uint16 program, s_uint16 channel)
+    {
+        return midiImpl->SendProgramChange(program, channel);
+    }
+    s_bool MidiOutConnectionIOS::SendAftertouch(s_uint16 value, s_uint16 channel)
+    {
+        return midiImpl->SendAftertouch(value,channel);
+    }
+    s_bool MidiOutConnectionIOS::SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel)
+    {
+        return midiImpl->SendPolyKeyPressure(note,value,channel);
+    }
+    s_bool MidiOutConnectionIOS::SendModWheel(s_uint16 value, s_uint16 channel)
+    {
+        return midiImpl->SendModWheel(value,channel);
+    }
+    
+    
 }

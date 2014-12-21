@@ -79,6 +79,7 @@ namespace SCDFC {
     {
         cocos2d::ui::Button *pad;
         void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     public:
         int midiNote;
         void Create();

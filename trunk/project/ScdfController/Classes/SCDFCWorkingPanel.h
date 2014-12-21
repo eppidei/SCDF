@@ -20,6 +20,7 @@ namespace SCDFC{
     
     class WorkingPanel : public cocos2d::ui::Layout
     {
+        bool drawGrid = false;
         MainScene *parent;
         cocos2d::Rect draggingRect;
         std::vector <ItemBase*> items;

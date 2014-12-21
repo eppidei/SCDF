@@ -118,8 +118,8 @@ void ItemSlider::CreateThumb()
     thumb = Layout::create();
     addChild(thumb);
     thumb->setTouchEnabled(true);
-//    thumb->setBackGroundImageScale9Enabled(true);
-//    thumb->setBackGroundImage("CloseNormal.png");
+    thumb->setBackGroundImageScale9Enabled(true);
+    thumb->setBackGroundImage("SliderHandle.png");
     thumb->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     thumb->setBackGroundColor(Color3B::RED);
     thumb->setAnchorPoint(Vec2(0.5,0.5));
@@ -143,8 +143,11 @@ void ItemSlider::Create()
     slideBar->setTouchEnabled(true);
     slideBar->setAnchorPoint(Vec2(0,1));
     slideBar->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    slideBar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    slideBar->setBackGroundColor(Color3B::GREEN);
+    //slideBar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+    //slideBar->setBackGroundColor(Color3B::GREEN);
+    slideBar->setBackGroundImageScale9Enabled(true);
+    slideBar->setBackGroundImage("SliderBack.png");
+    slideBar->setContentSize(getContentSize());
     addChild(slideBar);
     InitSliderLayout();
     CreateThumb();
@@ -155,6 +158,7 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     if (widget==slideBar) return;
     ItemBase::OnItemTouchBegan(widget, type);
 }
+
 
 void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
 {
@@ -199,6 +203,8 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     dragPosUpdated=touchPos;
     controlUnit->SendValue(value);
     SetThumbPosition();
+    
+
 }
 
 void ItemSlider::SetThumbPosition()
@@ -236,13 +242,24 @@ void ItemPad::Create()
     pad->setPosition(Vec2(0,getContentSize().height));
     pad->setContentSize(getContentSize());
     pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+    
+    Rect rc;
+    rc.origin = Vec2(16,16);
+    rc.size = Size(114,114);
+    pad->setCapInsets(rc);
     addChild(pad);
 }
 
 void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     ItemPad* pad=(ItemPad*)widget;
-    printf("Key %d pressed",pad->midiNote);
+    controlUnit->SendValue(127);
+}
+
+void ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    ItemPad* pad=(ItemPad*)widget;
+    controlUnit->SendValue(0);
 }
 
 ItemPad::~ItemPad()

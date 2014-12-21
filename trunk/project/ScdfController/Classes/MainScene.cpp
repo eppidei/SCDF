@@ -109,29 +109,54 @@ void MainScene::AddToolbar(Rect r)
     toolbar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     toolbar->setBackGroundColor(Color3B::MAGENTA);
     this->addChild(toolbar, -1, ID_TOOLBAR);
-    auto button = Button::create();
-    button->setTouchEnabled(true);
-    button->setScale9Enabled(true);
-    button->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-    button->setAnchorPoint(Vec2(0,1));
-    button->setPosition(Vec2(r.origin.x, toolbar->getContentSize().height));
-    button->setContentSize(Size(r.size.height, r.size.height));
-    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-    //button->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
-    auto button1 = Button::create();
-    button1->setTouchEnabled(true);
-    button1->setScale9Enabled(true);
-    button1->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-    button1->setAnchorPoint(Vec2(0,1));
-    button1->setPosition(Vec2(button->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
-    button1->setContentSize(Size(r.size.height, r.size.height));
-    button1->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
+//    auto buttonShow = Button::create();
+//    buttonShow->setTouchEnabled(true);
+//    buttonShow->setScale9Enabled(true);
+//    buttonShow->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
+//    buttonShow->setAnchorPoint(Vec2(0,1));
+//    buttonShow->setPosition(Vec2(r.origin.x, toolbar->getContentSize().height));
+//    buttonShow->setContentSize(Size(r.size.height, r.size.height));
+//    buttonShow->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+//    button->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
+    
+    int buttonWidth = r.size.height;
+    int marginOffset = 0;/*toolbar->getContentSize().height/8*/
+    int marginLeft = 12;
+    
+    auto buttonPanel = CheckBox::create();
+    buttonPanel->setTouchEnabled(true);
+    buttonPanel->loadTextures("TogglePannelOff.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOff.png");
+    buttonPanel->ignoreContentAdaptWithSize(false);
+    buttonPanel->setAnchorPoint(Vec2(0,1));
+    buttonPanel->setPosition(Vec2(marginLeft, toolbar->getContentSize().height-marginOffset));
+    buttonPanel->setContentSize(Size(r.size.height, r.size.height-2*marginOffset));
+    buttonPanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+
+   
+    auto buttonShowItems = CheckBox::create();
+    buttonShowItems->setTouchEnabled(true);
+    buttonShowItems->loadTextures("ToggleItemsOff.png",
+                                  "ToggleItemsOn.png",
+                                  "ToggleItemsOn.png",
+                                  "ToggleItemsOn.png",
+                                  "ToggleItemsOff.png");
+    buttonShowItems->ignoreContentAdaptWithSize(false);
+    buttonShowItems->setAnchorPoint(Vec2(0,1));
+    buttonShowItems->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth, toolbar->getContentSize().height- marginOffset));
+    buttonShowItems->setContentSize(Size(r.size.height, r.size.height-2*marginOffset));
+    buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
     auto button2 = Button::create();
     button2->setTouchEnabled(true);
     button2->setScale9Enabled(true);
     button2->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
     button2->setAnchorPoint(Vec2(0,1));
-    button2->setPosition(Vec2(button1->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
+    button2->setPosition(Vec2(buttonShowItems->getPosition().x+2*buttonWidth, toolbar->getContentSize().height));
     button2->setContentSize(Size(r.size.height, r.size.height));
     button2->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
@@ -140,24 +165,16 @@ void MainScene::AddToolbar(Rect r)
     button3->setScale9Enabled(true);
     button3->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
     button3->setAnchorPoint(Vec2(0,1));
-    button3->setPosition(Vec2(button2->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
+    button3->setPosition(Vec2(button2->getPosition().x+2*buttonWidth, toolbar->getContentSize().height));
     button3->setContentSize(Size(r.size.height, r.size.height));
     button3->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
-    auto button4 = Button::create();
-    button4->setTouchEnabled(true);
-    button4->setScale9Enabled(true);
-    button4->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-    button4->setAnchorPoint(Vec2(0,1));
-    button4->setPosition(Vec2(button3->getPosition().x+2*button->getContentSize().width, toolbar->getContentSize().height));
-    button4->setContentSize(Size(r.size.height, r.size.height));
-    button4->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
-    toolbar->addChild(button,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-    toolbar->addChild(button1,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
+    //toolbar->addChild(buttonShow,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
+    toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
     toolbar->addChild(button2,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(button3,0,TOOLBAR_BUTTON_ACTIVATE);
-    toolbar->addChild(button4,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
+    toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
 
 void MainScene::CalculateGrid()
@@ -213,7 +230,7 @@ bool MainScene::init()
     
 #define SCROLLVIEW_WIDTH (8*GetGridBase())
 #define PROPERTIES_WIDTH  2*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/2)
+#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/3)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,
@@ -398,7 +415,7 @@ int position=0;
 
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
-    ui::Button* button = dynamic_cast<ui::Button*>(pSender);
+    Node* button = dynamic_cast<Node*>(pSender);
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
