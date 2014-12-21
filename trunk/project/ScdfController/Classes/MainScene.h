@@ -8,6 +8,7 @@ namespace SCDFC{
     class WorkingPanel;
     class ItemScrollView;
     class PropertiesPanel;
+    class ItemBase;
 
     class MainScene : public cocos2d::Layer
     {
@@ -40,6 +41,8 @@ namespace SCDFC{
         int GetGridDistance();
         void SnapToGrid(cocos2d::Rect &r);
         void EnableScrollView(bool enable);
+        void AttachItem(ItemBase *item);
+        void DetachItem(ItemBase *item);
         // implement the "static create()" method manually
         CREATE_FUNC(MainScene);
     };
