@@ -15,6 +15,7 @@
 #include "UsbAudioEndpoint.h"
 #include <vector>
 #include <string>
+#include <list>
 
 namespace Usb {
 
@@ -60,6 +61,11 @@ class AudioInterface {
 
 public:
 
+	class Listener {
+	public:
+		virtual void OnUsbInterfaceDestroyed(AudioInterface* destroyedItf) = 0;
+	};
+
 	AudioInterface(AudioDevice* audioDev, libusb_interface itf);
 	int GetIndex();
 	bool DetachAndClaim();
@@ -75,6 +81,14 @@ public:
 	// This may not be true, but I don't know if it's even possible to have some alternate
 	// settings belonging to UAC1 and some to UAC2 in the same interface!!!! I guess, and HOPE, not!
 
+	void AddListener(Listener* list) { if (list) listeners.push_back(list); }
+	void RemoveListener(Listener* list) { listeners.remove(list); }
+	void OnInterfaceDestroyed()
+	{
+		for(auto it=listeners.begin(); it!=listeners.end(); it++)
+			(*it)->OnUsbInterfaceDestroyed(this);
+	}
+
 protected:
 
 	AudioDevice* aDev;
@@ -83,6 +97,7 @@ protected:
 	std::vector<AlternateSetting*> settings;
 	int currSetting;
 
+	std::list<Listener*> listeners;
 };
 
 

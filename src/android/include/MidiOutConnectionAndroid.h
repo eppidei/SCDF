@@ -3,14 +3,16 @@
 
 
 #include "MidiOutConnection.h"
+#include "../usb/UsbMidiInterface.h"
 
-namespace Usb { class MidiInterface; }
+//namespace Usb { class MidiInterface; }
 
 namespace Scdf  {
 
-    class MidiOutConnectionAndroid : public MidiOutConnection
+    class MidiOutConnectionAndroid : public MidiOutConnection, Usb::MidiInterface::Listener
     {
     	friend MidiOutConnection* MidiOutConnection::Create(s_int32 index);
+    	friend void MidiOutConnection::Destroy(MidiOutConnection* connection);
 
     	s_bool SendNoteOn(s_uint16 note, s_uint16 velocity, s_uint16 channel);
         s_bool SendNoteOff(s_uint16 note, s_uint16 velocity, s_uint16 channel);
@@ -20,11 +22,13 @@ namespace Scdf  {
         s_bool SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel);
         s_bool SendModWheel(s_uint16 value, s_uint16 channel);
 
+        void OnUsbInterfaceDestroyed(Usb::AudioInterface* destroyedItf);
+
     private:
 
-        void OnMidiInterfaceDisconnected(Usb::MidiInterface* itf);
-
         MidiOutConnectionAndroid(s_int32 index);
+        ~MidiOutConnectionAndroid();
+
         Usb::MidiInterface* itf;
 
     };

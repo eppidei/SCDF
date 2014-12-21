@@ -4,6 +4,7 @@
 
 using namespace Scdf;
 
+
 s_int32 MidiOutConnection::GetNumAvailableOutputs()
 {
 	return UsbHandler::GetNumMidiOutInterfaces();
@@ -30,16 +31,29 @@ void MidiOutConnection::Destroy(MidiOutConnection* connection)
 MidiOutConnectionAndroid::MidiOutConnectionAndroid(s_int32 index)
 {
 	itf = UsbHandler::GetMidiInterface(index);
-	if (itf!=NULL)
+	if (itf!=NULL) {
 		itf->DetachAndClaim();
+		itf->AddListener(this);
+	}
 }
 
 
-void MidiOutConnectionAndroid::OnMidiInterfaceDisconnected(Usb::MidiInterface* itf)
+MidiOutConnectionAndroid::~MidiOutConnectionAndroid()
 {
+	if (itf!=NULL) {
+		itf->RemoveListener(this);
+	}
+}
+
+void MidiOutConnectionAndroid::OnUsbInterfaceDestroyed(Usb::AudioInterface* destroyedItf)
+{
+	if (destroyedItf==itf)
+		itf = NULL;
+
 	if (listener)
 		listener->OnConnectionLost(this);
 }
+
 /*
  *  0x80     Note Off
    0x90     Note On
