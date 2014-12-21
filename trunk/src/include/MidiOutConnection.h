@@ -16,6 +16,7 @@ namespace Scdf  {
     class MidiOutConnection
     {
     public:
+
         class Listener
         {
         public:
@@ -37,7 +38,9 @@ namespace Scdf  {
         virtual s_bool SendModWheel(s_uint16 value, s_uint16 channel) = 0;
         
         void SetListener(Listener* _listener){listener = _listener;}
-        
+
+        //virtual ~MidiOutConnection() {}
+
     protected:
         
         Listener* listener;
