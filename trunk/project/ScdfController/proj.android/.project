@@ -123,5 +123,10 @@
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/cocos2d/cocos/2d/platform/android/java/src</locationURI>
 		</link>
+		<link>
+			<name>scdf_src</name>
+			<type>2</type>
+			<locationURI>SCDF_TRUNK/src/</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>

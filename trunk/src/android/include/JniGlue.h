@@ -5,7 +5,7 @@
 #include "Logging.h"
 #include <string>
 #include <map>
-
+#include <pthread.h>
 // You can get class members' signatures calling:
 // javap -classpath bin/classes -s com.ntrack.the.class.you.want
 // from android project's directory.

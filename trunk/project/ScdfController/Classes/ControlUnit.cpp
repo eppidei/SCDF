@@ -22,6 +22,8 @@ ControlUnit::ControlUnit()
 	midiMsgType = Invalid;
 	midiChannel = -1;
 	midiControl = -1;
+
+	lastOpenedMidiOutIndex = -1;
 }
 
 std::string ControlUnit::GetOscIp()
@@ -63,7 +65,7 @@ s_bool ControlUnit::IsOscEnabled()
 s_int32 ControlUnit::GetMidiOutIndex()
 {
 	if (NULL==midiConnection) return -1;
-	return 0; //midiConnection->GetOutIndex();
+	return lastOpenedMidiOutIndex; //midiConnection->GetOutIndex();
 }
 
 MidiMessageType ControlUnit::GetMidiMessageType()
@@ -101,8 +103,17 @@ s_bool ControlUnit::SetMidiOutIndex(s_int32 index)
 {
 	if (midiConnection)
 		Scdf::MidiOutConnection::Destroy(midiConnection);
+
+	if (index == -1) {
+		lastOpenedMidiOutIndex = -1;
+		return true;
+	}
+
 	midiConnection = Scdf::MidiOutConnection::Create(index);
 	midiConnection->SetListener(this);
+
+	lastOpenedMidiOutIndex = midiConnection ? index : -1;
+
 	return midiConnection != NULL;
 }
 
@@ -155,6 +166,7 @@ void ControlUnit::OnConnectionLost(Scdf::MidiOutConnection* connection)
 	if (connection==midiConnection) {
 		Scdf::MidiOutConnection::Destroy(midiConnection);
 		midiConnection = NULL;
+		lastOpenedMidiOutIndex = -1;
 	}
 }
 
