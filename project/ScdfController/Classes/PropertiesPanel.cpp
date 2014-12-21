@@ -79,10 +79,11 @@ void PropertiesPanel::OSCInfo::CreateControls(PropertiesPanel *_parent)
     parent=_parent;
     //Create toggle
     oscToggle=CheckBox::create();
-    oscToggle->loadTextures("CloseNormal.png", "CloseSelected.png",
-                            "CloseNormal.png",
-                            "CloseNormal.png",
-                            "CloseNormal.png");
+    oscToggle->loadTextures("ToggleOff.png",
+                            "ToggleOn.png",
+                            "ToggleOn.png",
+                            "ToggleOn.png",
+                            "ToggleOff.png");
     
     oscToggle->setTouchEnabled(true);
     oscToggle->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));

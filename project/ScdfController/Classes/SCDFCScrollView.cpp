@@ -12,6 +12,7 @@
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
+#include "ControlUnit.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
