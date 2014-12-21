@@ -156,11 +156,6 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     ItemBase::OnItemTouchBegan(widget, type);
 }
 
-//#define SIMPLE_TEST_MIDI_OUT
-#ifdef SIMPLE_TEST_MIDI_OUT
-#include "MIDIOutConnectionIOS.h"
-#endif
-
 void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (widget==slideBar) return;
@@ -202,19 +197,8 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     }
     value=fmax(min,fmin(max,value));
     dragPosUpdated=touchPos;
+    controlUnit->SendValue(value);
     SetThumbPosition();
-    
-#ifdef SIMPLE_TEST_MIDI_OUT
-    Scdf::MidiOutConnection *midi = Scdf::MidiOutConnection::Create(2);
-    int numberOfOutputs = Scdf::MidiOutConnection::GetNumAvailableOutputs();
-    for (int i = 0; i<numberOfOutputs; i++) {
-        std::string portName = Scdf::MidiOutConnection::GetOutputName(i);
-        std::cout << "Output MIDI port available: " << portName;
-    }
-    
-    midi->SendNoteOn(40, 127, 1);
-    Scdf::MidiOutConnection::Destroy(midi);
-#endif
 }
 
 void ItemSlider::SetThumbPosition()

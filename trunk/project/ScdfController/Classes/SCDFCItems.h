@@ -29,9 +29,9 @@ namespace SCDFC {
     class ItemBase : public cocos2d::ui::Layout, public SubjectSimple
     {
         int sizeMultiply;
-        std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
     protected:
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
+        std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
         virtual void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
