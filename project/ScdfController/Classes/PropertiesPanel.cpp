@@ -103,6 +103,7 @@ void PropertiesPanel::OSCInfo::CreateControls(PropertiesPanel *_parent)
     
     //Create oscPort control
     oscPort=TextField::create();
+    //oscIP->setPlaceHolder("No Port");
     oscPort->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     oscPort->setAnchorPoint(Vec2(0,1));
     oscPort->setTextVerticalAlignment(TextVAlignment::CENTER);
@@ -127,6 +128,7 @@ void PropertiesPanel::OSCInfo::CreateControls(PropertiesPanel *_parent)
     
     //Create oscIP control
     oscIP=TextField::create();
+    //oscIP->setPlaceHolder("No Ip");
     oscIP->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     oscIP->setAnchorPoint(Vec2(0,1));
     oscIP->setTextAreaSize(oscIP->getContentSize());
@@ -139,7 +141,7 @@ void PropertiesPanel::OSCInfo::CreateControls(PropertiesPanel *_parent)
     
     
     //Create oscIP label
-    ipLabel = Text::create("UDP IP address:","Arial",14);
+    ipLabel = Text::create("IP address:","Arial",18);
     ipLabel->ignoreContentAdaptWithSize(false);
     ipLabel->setAnchorPoint(Vec2(0,1));
     ipLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
