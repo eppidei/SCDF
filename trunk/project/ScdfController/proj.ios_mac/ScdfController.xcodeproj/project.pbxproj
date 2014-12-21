@@ -72,6 +72,10 @@
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
 		D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B0611A1803AB670077942B /* CoreMotion.framework */; };
+		DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */; };
+		DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */; };
+		DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */; };
+		DCE4BAFA1A4220C6006C14FE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE4BAF91A4220C6006C14FE /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -278,6 +282,10 @@
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D6B0611A1803AB670077942B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
+		DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MidiOutConnectionIOS.mm; path = ../../../src/MidiOutConnectionIOS.mm; sourceTree = "<group>"; };
+		DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MidiOutConnectionIOSImpl.mm; path = ../../../src/ios/MidiOutConnectionIOSImpl.mm; sourceTree = "<group>"; };
+		DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = DEVELOPER_DIR; };
+		DCE4BAF91A4220C6006C14FE /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -285,6 +293,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCE4BAFA1A4220C6006C14FE /* Accelerate.framework in Frameworks */,
+				DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */,
 				1AC6FB2E180E99EB004C840B /* libbox2d iOS.a in Frameworks */,
 				1AC6FB2F180E99EB004C840B /* libchipmunk iOS.a in Frameworks */,
 				1AC6FB30180E99EB004C840B /* libcocos2dx iOS.a in Frameworks */,
@@ -332,6 +342,7 @@
 		080E96DDFE201D6D7F000001 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				DCCA5A241A40DA920014FADE /* iOsClasses */,
 				5087E77117EB970100C73F5D /* Icons */,
 				503AE0FA17EB989F00D1A890 /* AppController.h */,
 				503AE0FB17EB989F00D1A890 /* AppController.mm */,
@@ -392,6 +403,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				DCCA5A2E1A40DB430014FADE /* MIDI */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -406,6 +418,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCE4BAF91A4220C6006C14FE /* Accelerate.framework */,
+				DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */,
 				D6B0611A1803AB670077942B /* CoreMotion.framework */,
 				503AE11A17EB9C5A00D1A890 /* IOKit.framework */,
 				503AE11117EB99EE00D1A890 /* libcurl.dylib */,
@@ -480,6 +494,22 @@
 			);
 			name = Resources;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		DCCA5A241A40DA920014FADE /* iOsClasses */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iOsClasses;
+			sourceTree = "<group>";
+		};
+		DCCA5A2E1A40DB430014FADE /* MIDI */ = {
+			isa = PBXGroup;
+			children = (
+				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
+				DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */,
+			);
+			name = MIDI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -692,7 +722,9 @@
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				9D82C2CF1A1C04EB00FF1243 /* SCDFCItems.cpp in Sources */,
+				DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
 			);
@@ -767,7 +799,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iOS Development: Flavio Antonioli (LE2RP52E3W)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -784,6 +816,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios",
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
+					"$(SRCROOT)/../../../src/include",
+					"$(SRCROOT)/../../../src/ios/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -798,7 +832,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iOS Development: Flavio Antonioli (LE2RP52E3W)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -813,6 +847,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios",
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
+					"$(SRCROOT)/../../../src/include",
+					"$(SRCROOT)/../../../src/ios/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
