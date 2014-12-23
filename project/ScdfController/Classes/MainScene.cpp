@@ -107,7 +107,7 @@ void MainScene::AddToolbar(Rect r)
     toolbar->setAnchorPoint(Vec2(0,1));
     toolbar->setPosition(r.origin);
     toolbar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    toolbar->setBackGroundColor(Color3B::MAGENTA);
+    toolbar->setBackGroundColor(Color3B(50,50,50));
     this->addChild(toolbar, -1, ID_TOOLBAR);
     
 //    auto buttonShow = Button::create();
@@ -122,7 +122,7 @@ void MainScene::AddToolbar(Rect r)
     
     int buttonWidth = r.size.height;
     int marginOffset = 0;/*toolbar->getContentSize().height/8*/
-    int marginLeft = 12;
+    int marginLeft = 24;
     
     auto buttonPanel = CheckBox::create();
     buttonPanel->setTouchEnabled(true);
@@ -151,29 +151,31 @@ void MainScene::AddToolbar(Rect r)
     buttonShowItems->setContentSize(Size(r.size.height, r.size.height-2*marginOffset));
     buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
-    auto button2 = Button::create();
-    button2->setTouchEnabled(true);
-    button2->setScale9Enabled(true);
-    button2->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-    button2->setAnchorPoint(Vec2(0,1));
-    button2->setPosition(Vec2(buttonShowItems->getPosition().x+2*buttonWidth, toolbar->getContentSize().height));
-    button2->setContentSize(Size(r.size.height, r.size.height));
-    button2->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
+    int buttonsWidth = 87;
+    auto buttonGrid = Button::create();
+    buttonGrid->setTouchEnabled(true);
+    buttonGrid->setScale9Enabled(true);
+    buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
+    buttonGrid->setAnchorPoint(Vec2(0,1));
+    buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
+    buttonGrid->setContentSize(Size(buttonsWidth, r.size.height));
+    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
-    auto button3 = Button::create();
-    button3->setTouchEnabled(true);
-    button3->setScale9Enabled(true);
-    button3->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-    button3->setAnchorPoint(Vec2(0,1));
-    button3->setPosition(Vec2(button2->getPosition().x+2*buttonWidth, toolbar->getContentSize().height));
-    button3->setContentSize(Size(r.size.height, r.size.height));
-    button3->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    auto buttonEdit = Button::create();
+    buttonEdit->setTouchEnabled(true);
+    buttonEdit->setScale9Enabled(true);
+    buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
+    buttonEdit->setAnchorPoint(Vec2(0,1));
+    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonsWidth +marginLeft, toolbar->getContentSize().height));
+    buttonEdit->setContentSize(Size(buttonsWidth, r.size.height));
+    buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
     //toolbar->addChild(buttonShow,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
     toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
-    toolbar->addChild(button2,0,TOOLBAR_BUTTON_GRID);
-    toolbar->addChild(button3,0,TOOLBAR_BUTTON_ACTIVATE);
+    toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
+    toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
     toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
 
@@ -228,9 +230,9 @@ bool MainScene::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
     
-#define SCROLLVIEW_WIDTH (8*GetGridBase())
-#define PROPERTIES_WIDTH  2*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/3)
+#define SCROLLVIEW_WIDTH 64//(8*GetGridBase())
+#define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
+#define TOOLBAR_HEIGHT   32//(SCROLLVIEW_WIDTH/3)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,
