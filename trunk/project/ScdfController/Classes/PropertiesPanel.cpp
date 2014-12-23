@@ -191,8 +191,8 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
-    setBackGroundColorType(Layout::BackGroundColorType::GRADIENT);
-    setBackGroundColor(Color3B::BLUE, Color3B::GREEN);
+    setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+    setBackGroundColor(Color3B(160,160,160));
     setBounceEnabled(true);
     setInertiaScrollEnabled(true);
     main->addChild(this);

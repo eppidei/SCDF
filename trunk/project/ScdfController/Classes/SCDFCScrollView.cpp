@@ -20,13 +20,13 @@ using namespace ui;
 
 template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string image)
 {
-#define SCROLLVIEW_ITEM_SIZE        (SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
-#define SCROLLVIEW_ITEM_DISTANCE    (2*parent->GetGridBase())
+#define SCROLLVIEW_ITEM_SIZE        64//(SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
+#define SCROLLVIEW_ITEM_DISTANCE    32//(2*parent->GetGridBase())
 #define SCROLLVIEW_ITEM_RECORD      (SCROLLVIEW_ITEM_SIZE+SCROLLVIEW_ITEM_DISTANCE)
     
     int numElements=getChildrenCount();
     float innerWidth = getContentSize().width;
-    setContentSize(Size(innerWidth, MIN(parent->getContentSize().height, (numElements+1)*SCROLLVIEW_ITEM_RECORD)));
+    setContentSize(Size(innerWidth, MAX(parent->getContentSize().height, (numElements+1)*SCROLLVIEW_ITEM_RECORD)));
     setInnerContainerSize(Size(innerWidth,(numElements+1)*SCROLLVIEW_ITEM_RECORD));
     float newInnerHeight = getInnerContainerSize().height;
     for (int i=0;i<numElements;++i)
@@ -58,17 +58,18 @@ void ItemScrollView::InitWithContent(MainScene *main,Rect r)
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
-    setBackGroundColorType(Layout::BackGroundColorType::GRADIENT);
-    setBackGroundColor(Color3B::YELLOW, Color3B::RED);
+    setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+    //setBackGroundColor(Color3B::YELLOW, Color3B::RED);
+    setBackGroundColor(Color3B(50,50,50));
     setBounceEnabled(true);
     setInertiaScrollEnabled(true);
     parent->addChild(this);
     
-    AddButtonToScrollView<ItemSlider>("CloseNormal.png");
-    AddButtonToScrollView<ItemPad>("CloseSelected.png");
-    AddButtonToScrollView<ItemKnob>("CloseNormal.png");
-    AddButtonToScrollView<ItemKeyboard>("CloseNormal.png");
-    AddButtonToScrollView<ItemSensor1>("CloseNormal.png");
+    AddButtonToScrollView<ItemSlider>("sliderIcon.png");
+    AddButtonToScrollView<ItemPad>("padIcon.png");
+    AddButtonToScrollView<ItemKnob>("knobIcon.png");
+    AddButtonToScrollView<ItemKeyboard>("fullPad.png");
+    AddButtonToScrollView<ItemSensor1>("sensorIcon.png");
 }
 
 float ItemScrollView::RetrieveButtonYCoordInScrollview(ui::Button* button)

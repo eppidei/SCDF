@@ -83,6 +83,13 @@
 		DC175EB71A475DD0009DCA73 /* ToggleItemsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */; };
 		DC175EBA1A475DD7009DCA73 /* TogglePannelOff.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */; };
 		DC175EBB1A475DD7009DCA73 /* TogglePannelOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */; };
+		DC9381A51A48E19D000F3EA2 /* ButtonGrid.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */; };
+		DC9381A61A48E19D000F3EA2 /* ButtonGridOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A41A48E19D000F3EA2 /* ButtonGridOverlay.png */; };
+		DC9381AA1A48EB9E000F3EA2 /* sliderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A91A48EB9E000F3EA2 /* sliderIcon.png */; };
+		DC9381AC1A48EF06000F3EA2 /* padIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AB1A48EF06000F3EA2 /* padIcon.png */; };
+		DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AD1A48F105000F3EA2 /* knobIcon.png */; };
+		DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AF1A48F3A2000F3EA2 /* fullPad.png */; };
+		DC9381B21A48F3A2000F3EA2 /* sensorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */; };
 		DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */; };
 		DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */; };
 		DCE4BAFA1A4220C6006C14FE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE4BAF91A4220C6006C14FE /* Accelerate.framework */; };
@@ -303,6 +310,13 @@
 		DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleItemsOn.png; sourceTree = "<group>"; };
 		DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOff.png; sourceTree = "<group>"; };
 		DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOn.png; sourceTree = "<group>"; };
+		DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGrid.png; sourceTree = "<group>"; };
+		DC9381A41A48E19D000F3EA2 /* ButtonGridOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGridOverlay.png; sourceTree = "<group>"; };
+		DC9381A91A48EB9E000F3EA2 /* sliderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sliderIcon.png; sourceTree = "<group>"; };
+		DC9381AB1A48EF06000F3EA2 /* padIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = padIcon.png; sourceTree = "<group>"; };
+		DC9381AD1A48F105000F3EA2 /* knobIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knobIcon.png; sourceTree = "<group>"; };
+		DC9381AF1A48F3A2000F3EA2 /* fullPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fullPad.png; sourceTree = "<group>"; };
+		DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sensorIcon.png; sourceTree = "<group>"; };
 		DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MidiOutConnectionIOSImpl.mm; path = ../../../src/ios/MidiOutConnectionIOSImpl.mm; sourceTree = "<group>"; };
 		DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = DEVELOPER_DIR; };
 		DCE4BAF91A4220C6006C14FE /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
@@ -509,6 +523,12 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DC9381AD1A48F105000F3EA2 /* knobIcon.png */,
+				DC9381AF1A48F3A2000F3EA2 /* fullPad.png */,
+				DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */,
+				DC9381AB1A48EF06000F3EA2 /* padIcon.png */,
+				DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */,
+				DC9381A41A48E19D000F3EA2 /* ButtonGridOverlay.png */,
 				DC175EAF1A4752AA009DCA73 /* ToggleOff.png */,
 				DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */,
 				DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */,
@@ -521,6 +541,7 @@
 				1AFAF8B916D35E4900DB1158 /* CloseNormal.png */,
 				1AFAF8BA16D35E4900DB1158 /* CloseSelected.png */,
 				1AFAF8BB16D35E4900DB1158 /* HelloWorld.png */,
+				DC9381A91A48EB9E000F3EA2 /* sliderIcon.png */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -710,11 +731,14 @@
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
+				DC9381A61A48E19D000F3EA2 /* ButtonGridOverlay.png in Resources */,
+				DC9381AA1A48EB9E000F3EA2 /* sliderIcon.png in Resources */,
 				DC175EB61A475DD0009DCA73 /* ToggleItemsOff.png in Resources */,
 				1AFAF8BC16D35E4900DB1158 /* CloseNormal.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				DC175EA91A473B70009DCA73 /* SliderBack.png in Resources */,
+				DC9381B21A48F3A2000F3EA2 /* sensorIcon.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				DC175EBB1A475DD7009DCA73 /* TogglePannelOn.png in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
@@ -728,12 +752,16 @@
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
+				DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */,
+				DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */,
 				DC175EAA1A473B70009DCA73 /* SliderHandle.png in Resources */,
 				DC175EB11A4752AA009DCA73 /* ToggleOff.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
+				DC9381AC1A48EF06000F3EA2 /* padIcon.png in Resources */,
 				DC175EB21A4752AA009DCA73 /* ToggleOn.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
+				DC9381A51A48E19D000F3EA2 /* ButtonGrid.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
