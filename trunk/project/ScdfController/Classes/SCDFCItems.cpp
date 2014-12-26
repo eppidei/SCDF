@@ -120,8 +120,8 @@ void ItemSlider::CreateThumb()
     thumb->setTouchEnabled(true);
     thumb->setBackGroundImageScale9Enabled(true);
     thumb->setBackGroundImage("SliderHandle.png");
-    thumb->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    thumb->setBackGroundColor(Color3B::RED);
+    thumb->setBackGroundColorType(Layout::BackGroundColorType::NONE);
+    //thumb->setBackGroundColor(Color3B::RED);
     thumb->setAnchorPoint(Vec2(0.5,0.5));
     float size=fmin(getContentSize().height,getContentSize().width);
     thumb->setContentSize(Size(size,size));
@@ -148,6 +148,14 @@ void ItemSlider::Create()
     slideBar->setBackGroundImageScale9Enabled(true);
     slideBar->setBackGroundImage("SliderBack.png");
     slideBar->setContentSize(getContentSize());
+    
+   // Rect rc;
+    //rc.origin = Vec2(0,20);
+    //rc.size = Size(20,20);
+    //slideBar->setBackGroundImageCapInsets(rc);
+    //slideBar->setBackGroundImageScale9Enabled(true);
+    
+    
     addChild(slideBar);
     InitSliderLayout();
     CreateThumb();
@@ -271,8 +279,8 @@ ItemPad::~ItemPad()
 void ItemKeyboard::Create()
 {
     padSizeMultiply=1;
-    setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    setBackGroundColor(Color3B::BLUE);
+    setBackGroundColorType(Layout::BackGroundColorType::NONE);
+    //setBackGroundColor(Color3B::BLUE);
     CreatePads();
 }
 

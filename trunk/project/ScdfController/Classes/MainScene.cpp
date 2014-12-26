@@ -152,23 +152,31 @@ void MainScene::AddToolbar(Rect r)
     buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
-    int buttonsWidth = 87;
+    //int buttonsWidth = 87;
     auto buttonGrid = Button::create();
     buttonGrid->setTouchEnabled(true);
-    buttonGrid->setScale9Enabled(true);
+    //buttonGrid->Sets
+    //buttonGrid->setScale9Enabled(true);
+    buttonGrid->ignoreContentAdaptWithSize(false);
     buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonGrid->setAnchorPoint(Vec2(0,1));
     buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
-    buttonGrid->setContentSize(Size(buttonsWidth, r.size.height));
+    buttonGrid->setContentSize(Size(buttonWidth, r.size.height));
     buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
-    auto buttonEdit = Button::create();
+    auto buttonEdit = CheckBox::create();
     buttonEdit->setTouchEnabled(true);
-    buttonEdit->setScale9Enabled(true);
-    buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
+    buttonEdit->loadTextures("ToggleEditOff.png",
+                                  "ToggleEditOn.png",
+                                  "ToggleEditOn.png",
+                                  "ToggleEditOn.png",
+                                  "ToggleEditOff.png");
+     buttonEdit->ignoreContentAdaptWithSize(false);
+    //buttonEdit->setScale9Enabled(true);
+    //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonEdit->setAnchorPoint(Vec2(0,1));
-    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonsWidth +marginLeft, toolbar->getContentSize().height));
-    buttonEdit->setContentSize(Size(buttonsWidth, r.size.height));
+    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
+    buttonEdit->setContentSize(Size(buttonWidth, r.size.height));
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
@@ -232,7 +240,7 @@ bool MainScene::init()
     
 #define SCROLLVIEW_WIDTH 64//(8*GetGridBase())
 #define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   32//(SCROLLVIEW_WIDTH/3)
+#define TOOLBAR_HEIGHT   36//(SCROLLVIEW_WIDTH/3)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,
@@ -242,11 +250,11 @@ bool MainScene::init()
                           getContentSize().height,
                           getContentSize().width,
                           getContentSize().height);
-    Rect scrollViewect(getContentSize().width-SCROLLVIEW_WIDTH,
+    Rect scrollViewect(getContentSize().width,
                        getContentSize().height-toolbarPanelsize.size.height,
                        SCROLLVIEW_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
-    Rect propertiesRect(0,
+    Rect propertiesRect(0-PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height,
                        PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
