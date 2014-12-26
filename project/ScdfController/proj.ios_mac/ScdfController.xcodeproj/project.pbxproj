@@ -83,6 +83,8 @@
 		DC175EB71A475DD0009DCA73 /* ToggleItemsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */; };
 		DC175EBA1A475DD7009DCA73 /* TogglePannelOff.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */; };
 		DC175EBB1A475DD7009DCA73 /* TogglePannelOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */; };
+		DC8BDAFA1A4DE22900690B01 /* ToggleEditOff.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */; };
+		DC8BDAFE1A4DE40F00690B01 /* ToggleEditOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */; };
 		DC9381A51A48E19D000F3EA2 /* ButtonGrid.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */; };
 		DC9381A61A48E19D000F3EA2 /* ButtonGridOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A41A48E19D000F3EA2 /* ButtonGridOverlay.png */; };
 		DC9381AA1A48EB9E000F3EA2 /* sliderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A91A48EB9E000F3EA2 /* sliderIcon.png */; };
@@ -310,6 +312,8 @@
 		DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleItemsOn.png; sourceTree = "<group>"; };
 		DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOff.png; sourceTree = "<group>"; };
 		DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOn.png; sourceTree = "<group>"; };
+		DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOff.png; sourceTree = "<group>"; };
+		DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOn.png; sourceTree = "<group>"; };
 		DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGrid.png; sourceTree = "<group>"; };
 		DC9381A41A48E19D000F3EA2 /* ButtonGridOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGridOverlay.png; sourceTree = "<group>"; };
 		DC9381A91A48EB9E000F3EA2 /* sliderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sliderIcon.png; sourceTree = "<group>"; };
@@ -523,6 +527,8 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */,
+				DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */,
 				DC9381AD1A48F105000F3EA2 /* knobIcon.png */,
 				DC9381AF1A48F3A2000F3EA2 /* fullPad.png */,
 				DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */,
@@ -730,6 +736,7 @@
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
+				DC8BDAFE1A4DE40F00690B01 /* ToggleEditOn.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				DC9381A61A48E19D000F3EA2 /* ButtonGridOverlay.png in Resources */,
 				DC9381AA1A48EB9E000F3EA2 /* sliderIcon.png in Resources */,
@@ -742,6 +749,7 @@
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				DC175EBB1A475DD7009DCA73 /* TogglePannelOn.png in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
+				DC8BDAFA1A4DE22900690B01 /* ToggleEditOff.png in Resources */,
 				DC175EB71A475DD0009DCA73 /* ToggleItemsOn.png in Resources */,
 				DC175EBA1A475DD7009DCA73 /* TogglePannelOff.png in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
