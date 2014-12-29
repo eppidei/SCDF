@@ -6,6 +6,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
+#include "PlatformInfo.h"
 
 using namespace SCDFC;
 USING_NS_CC;
@@ -238,9 +239,11 @@ bool MainScene::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
     
-#define SCROLLVIEW_WIDTH 64//(8*GetGridBase())
+
+    
+#define SCROLLVIEW_WIDTH 64*DPI//(8*GetGridBase())
 #define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   36//(SCROLLVIEW_WIDTH/3)
+#define TOOLBAR_HEIGHT   36*DPI//(SCROLLVIEW_WIDTH/3)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,

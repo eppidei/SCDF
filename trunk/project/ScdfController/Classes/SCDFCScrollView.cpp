@@ -13,6 +13,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
+#include "PlatformInfo.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
@@ -20,8 +21,8 @@ using namespace ui;
 
 template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string image)
 {
-#define SCROLLVIEW_ITEM_SIZE        64//(SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
-#define SCROLLVIEW_ITEM_DISTANCE    32//(2*parent->GetGridBase())
+#define SCROLLVIEW_ITEM_SIZE        (64*DPI)//(SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
+#define SCROLLVIEW_ITEM_DISTANCE    (32*DPI)//(2*parent->GetGridBase())
 #define SCROLLVIEW_ITEM_RECORD      (SCROLLVIEW_ITEM_SIZE+SCROLLVIEW_ITEM_DISTANCE)
     
     int numElements=getChildrenCount();
@@ -38,7 +39,8 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string
     Button* button = Button::create();
     button->loadTextureNormal(image);
     button->setAnchorPoint(Vec2(0,1));
-    button->setScale9Enabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    //button->setScale9Enabled(true);
     button->setContentSize(Size(SCROLLVIEW_ITEM_SIZE, SCROLLVIEW_ITEM_SIZE));
     button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*SCROLLVIEW_ITEM_DISTANCE- button->getContentSize().height*numElements));
     button->addTouchEventListener(this, toucheventselector(ItemScrollView::DragItemOnTouchEvent));

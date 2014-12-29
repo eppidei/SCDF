@@ -244,7 +244,8 @@ void ItemPad::Create()
 {
     pad = Button::create();
     pad->setTouchEnabled(true);
-    pad->setScale9Enabled(true);
+    //pad->setScale9Enabled(true);
+    pad->ignoreContentAdaptWithSize(false);
     pad->loadTextures("CloseNormal.png", "CloseSelected.png","CloseNormal.png");
     pad->setAnchorPoint(Vec2(0,1));
     pad->setPosition(Vec2(0,getContentSize().height));
