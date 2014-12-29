@@ -54,6 +54,21 @@ void DropDownMenu::SetCallback(DropDownMenuCallback *_callback)
     callback=_callback;
 }
 
+void DropDownMenu::SetMenuPosition(Vec2 pos)
+{
+    setPosition(pos);
+    ScrollToSelected();
+}
+
+void DropDownMenu::SetSelectedIndex(int selected)
+{
+    if (selected==selectedIndex) return;
+    selectedIndex=selected;
+    ScrollToSelected();
+    if (callback)
+        callback->OnSelectItem(this);
+}
+
 void DropDownMenu::updateTweenAction(float value, const std::string& key)
 {
     if ("height"==key){
@@ -75,6 +90,7 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
         default:
             break;
     }
+    SetSelectedIndex(getCurSelectedIndex());
 }
 
 DropDownMenu::DropDownMenu()
@@ -83,6 +99,7 @@ DropDownMenu::DropDownMenu()
     callback=NULL;
     resizeParent=true;
     showLabel=true;
+    selectedIndex=-1;
 }
 
 DropDownMenu *DropDownMenu::CreateMenu(Size s)
@@ -94,9 +111,12 @@ DropDownMenu *DropDownMenu::CreateMenu(Size s)
 
 void DropDownMenu::ScrollToSelected()
 {
-    float selIndex=getCurSelectedIndex();
-    float elementsHeight=getItem(selIndex)->getContentSize().height;
-    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+((selIndex)*elementsHeight)));
+    if (selectedIndex==-1)
+        selectedIndex=getCurSelectedIndex();
+    Node *item=getItem(selectedIndex);
+    if(NULL==item) return;
+    float elementsHeight=item->getContentSize().height;
+    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+((selectedIndex)*elementsHeight)));
 }
 
 DropDownMenu::~DropDownMenu()

@@ -22,6 +22,11 @@ void DropDownMenuCallbackPanel::OnSizeChanged(float oldSize, float newSize)
     parent->InitLayout();
 }
 
+void DropDownMenuCallbackPanel::OnSelectItem(DropDownMenu *menu)
+{
+    parent->OnSelectedDropDownItem(menu);
+}
+
 SubpanelBase::~SubpanelBase()
 {
     Vector<Node*> _childrens = getChildren();
@@ -210,16 +215,25 @@ void PropertiesPanel::MIDIDevices::CreateControls()
 
 void PropertiesPanel::MIDIDevices::UpdateValues()
 {
-    std::vector<std::string> dropDownData;
-    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
-    devices->InitData(dropDownData);
+//    std::vector<std::string> dropDownData;
+//    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
+//        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
+//    devices->InitData(dropDownData);
+    
+    devices->SetSelectedIndex(parent->currentControlUnit->GetMidiOutIndex());
 }
 
 void PropertiesPanel::MIDIDevices::PositionElements()
 {
     devicesLabel->setPosition(Vec2(0,getContentSize().height));
-    devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
+    devices->SetMenuPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
+}
+
+void PropertiesPanel::MIDIDevices::CheckForDropDownChanges(DropDownMenu *menu)
+{
+    int selectedIndex=menu->getCurSelectedIndex();
+    if (devices==menu)
+        parent->currentControlUnit->SetMidiOutIndex(selectedIndex);
 }
 
 void PropertiesPanel::OSCInfo::UpdateValues()
@@ -238,18 +252,36 @@ void PropertiesPanel::MIDIInfo::UpdateValues()
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
+    midiMessage->SetSelectedIndex(((int)parent->currentControlUnit->GetMidiMessageType())-1);
+    controlChange->SetSelectedIndex(parent->currentControlUnit->GetMidiControl());
+    channel->SetSelectedIndex(parent->currentControlUnit->GetMidiChannel());
+    //velocity->SetSelectedIndex(parent->currentControlUnit->Get());
 }
 
 void PropertiesPanel::MIDIInfo::PositionElements()
 {
     midiMessageLabel->setPosition(Vec2(0,getContentSize().height));
-    midiMessage->setPosition(Vec2(midiMessageLabel->getContentSize().width,getContentSize().height));
+    midiMessage->SetMenuPosition(Vec2(midiMessageLabel->getContentSize().width,getContentSize().height));
     controlChangeLabel->setPosition(Vec2(0,midiMessage->getPositionY()-midiMessage->getContentSize().height));
-    controlChange->setPosition(Vec2(controlChangeLabel->getContentSize().width,midiMessage->getPositionY()-midiMessage->getContentSize().height));
-    channelLabel->setPosition(Vec2(0,controlChangeLabel->getPositionY()-controlChangeLabel->getContentSize().height));
-    channel->setPosition(Vec2(channelLabel->getContentSize().width,controlChangeLabel->getPositionY()-controlChangeLabel->getContentSize().height));
-    velocityLabel->setPosition(Vec2(0,channelLabel->getPositionY()-channelLabel->getContentSize().height));
-    velocity->setPosition(Vec2(velocityLabel->getContentSize().width,channelLabel->getPositionY()-channelLabel->getContentSize().height));
+    controlChange->SetMenuPosition(Vec2(controlChangeLabel->getContentSize().width,midiMessage->getPositionY()-midiMessage->getContentSize().height));
+    channelLabel->setPosition(Vec2(0,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
+    channel->SetMenuPosition(Vec2(channelLabel->getContentSize().width,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
+    velocityLabel->setPosition(Vec2(0,channelLabel->getPositionY()-channel->getContentSize().height));
+    velocity->SetMenuPosition(Vec2(velocityLabel->getContentSize().width,channelLabel->getPositionY()-channel->getContentSize().height));
+}
+
+void PropertiesPanel::MIDIInfo::CheckForDropDownChanges(DropDownMenu *menu)
+{
+    int selectedIndex=menu->getCurSelectedIndex();
+    if (menu==midiMessage)
+        parent->currentControlUnit->SetMidiMessageType((MidiMessageType)(selectedIndex+1));
+    else if (menu==controlChange)
+        parent->currentControlUnit->SetMidiControl(selectedIndex);
+    else if (menu==channel)
+        parent->currentControlUnit->SetMidiChannel(selectedIndex);
+//    else if (menu==velocity)
+//        parent->currentControlUnit->Set(selectedIndex);
+    
 }
 
 void PropertiesPanel::MIDIInfo::CreateControls()
@@ -443,10 +475,19 @@ void PropertiesPanel::Update(SubjectSimple* subject)
         currentControlUnit=item->GetControlUnit();
     sectionOSCInfo->UpdateValues();
     sectionMIDIDevices->UpdateValues();
+    sectionMIDIInfo->UpdateValues();
     InitLayout();
 }
 
 DropDownMenuCallback *PropertiesPanel::GetDropDownCallback()
 {
     return dropDownCallback.get();
+}
+
+void PropertiesPanel::OnSelectedDropDownItem(DropDownMenu *menu)
+{
+    if (NULL==currentControlUnit) return;
+    Vector<Node*> _childrens = getChildren();
+    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
+        ((SubpanelBase*)(*it))->CheckForDropDownChanges(menu);
 }
