@@ -252,7 +252,20 @@ void PropertiesPanel::MIDIInfo::UpdateValues()
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
-    midiMessage->SetSelectedIndex(((int)parent->currentControlUnit->GetMidiMessageType())-1);
+    int selectedIndex=-1;
+    switch(parent->currentControlUnit->GetMidiMessageType())
+    {
+        case NoteOn: selectedIndex=0; break;
+        case NoteOff: selectedIndex=1; break;
+        case Aftertouch: selectedIndex=2; break;
+        case ControlChange: selectedIndex=3; break;
+        case ProgramChange: selectedIndex=4; break;
+        case PolyKeyPressure: selectedIndex=5; break;
+        case PitchBend: selectedIndex=6; break;
+        default: break;
+    }
+    if (-1!=selectedIndex)
+        midiMessage->SetSelectedIndex(selectedIndex);
     controlChange->SetSelectedIndex(parent->currentControlUnit->GetMidiControl());
     channel->SetSelectedIndex(parent->currentControlUnit->GetMidiChannel());
     //velocity->SetSelectedIndex(parent->currentControlUnit->Get());
@@ -274,7 +287,21 @@ void PropertiesPanel::MIDIInfo::CheckForDropDownChanges(DropDownMenu *menu)
 {
     int selectedIndex=menu->getCurSelectedIndex();
     if (menu==midiMessage)
-        parent->currentControlUnit->SetMidiMessageType((MidiMessageType)(selectedIndex+1));
+    {
+        MidiMessageType msg;
+        switch(selectedIndex)
+        {
+            case 0: msg=NoteOn; break;
+            case 1: msg=NoteOff; break;
+            case 2: msg=Aftertouch; break;
+            case 3: msg=ControlChange; break;
+            case 4: msg=ProgramChange; break;
+            case 5: msg=PolyKeyPressure; break;
+            case 6: msg=PitchBend; break;
+            default: return;
+        }
+        parent->currentControlUnit->SetMidiMessageType(msg);
+    }
     else if (menu==controlChange)
         parent->currentControlUnit->SetMidiControl(selectedIndex);
     else if (menu==channel)
