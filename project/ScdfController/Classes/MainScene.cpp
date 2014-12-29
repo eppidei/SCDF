@@ -42,7 +42,8 @@ void MainScene::SnapToGrid(Rect &r)
 template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStartPoint)
 {
     draggingImage=ImageView::create("CloseSelected.png");
-    draggingImage->setScale9Enabled(true);
+    //draggingImage->setScale9Enabled(true);
+    draggingImage->ignoreContentAdaptWithSize(false);
     draggingImage->setAnchorPoint(Vec2(0,1));
     float width=ItemType::GetSize().width;
     float height=ItemType::GetSize().height;

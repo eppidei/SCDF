@@ -83,6 +83,9 @@
 		DC175EB71A475DD0009DCA73 /* ToggleItemsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */; };
 		DC175EBA1A475DD7009DCA73 /* TogglePannelOff.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */; };
 		DC175EBB1A475DD7009DCA73 /* TogglePannelOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */; };
+		DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */; };
+		DC562A621A519600009C5C95 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC562A611A519600009C5C95 /* Images-2.xcassets */; };
+		DC562A641A5199F6009C5C95 /* ToggleBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC562A631A5199F6009C5C95 /* ToggleBackground.png */; };
 		DC8BDAFA1A4DE22900690B01 /* ToggleEditOff.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */; };
 		DC8BDAFE1A4DE40F00690B01 /* ToggleEditOn.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */; };
 		DC9381A51A48E19D000F3EA2 /* ButtonGrid.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */; };
@@ -314,6 +317,9 @@
 		DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOff.png; sourceTree = "<group>"; };
 		DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOn.png; sourceTree = "<group>"; };
 		DC562A541A516BFF009C5C95 /* PlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformInfo.h; path = ../../../src/include/PlatformInfo.h; sourceTree = "<group>"; };
+		DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DropDownMenu.cpp; path = ../Classes/DropDownMenu.cpp; sourceTree = "<group>"; };
+		DC562A611A519600009C5C95 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Images-2.xcassets"; path = "ScdfController iOS/Images-2.xcassets"; sourceTree = SOURCE_ROOT; };
+		DC562A631A5199F6009C5C95 /* ToggleBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleBackground.png; sourceTree = "<group>"; };
 		DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOff.png; sourceTree = "<group>"; };
 		DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOn.png; sourceTree = "<group>"; };
 		DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGrid.png; sourceTree = "<group>"; };
@@ -398,6 +404,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */,
 				DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */,
 				DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */,
 				9D64E9EA1A17935500B83274 /* SCDFCScrollView.cpp */,
@@ -530,6 +537,8 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DC562A611A519600009C5C95 /* Images-2.xcassets */,
+				DC562A631A5199F6009C5C95 /* ToggleBackground.png */,
 				DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */,
 				DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */,
 				DC9381AD1A48F105000F3EA2 /* knobIcon.png */,
@@ -761,8 +770,10 @@
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				9DA502281A40D7D90091ABC6 /* test_knob.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
+				DC562A641A5199F6009C5C95 /* ToggleBackground.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
+				DC562A621A519600009C5C95 /* Images-2.xcassets in Resources */,
 				DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */,
 				DCAEADCF1A505D7000513775 /* Info.plist in Resources */,
 				DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */,
@@ -804,6 +815,7 @@
 				DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */,
+				DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
 				DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
@@ -879,6 +891,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -914,6 +928,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;

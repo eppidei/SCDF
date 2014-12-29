@@ -83,9 +83,9 @@ void WorkingPanel::ToggleActiveState()
 
 void WorkingPanel::DrawGrid()
 {
-    Color4F c(0.6,0.6,0.6,1);
+    Color4F c(0.9,0.9,0.9,1);
     if (!active)
-        c=Color4F(0.9,0.9,0.9,1);
+        c=Color4F(0.6,0.6,0.6,1);
     DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), c);
     DrawPrimitives::setDrawColor4F(0.3, 0.3, 0.3, 0.6);
     

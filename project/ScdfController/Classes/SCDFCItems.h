@@ -12,6 +12,10 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 
+
+#define MAIN_BACK_COLOR Color3B(50,50,50)
+
+
 namespace ScdfCtrl
 {
     class ControlUnit;
