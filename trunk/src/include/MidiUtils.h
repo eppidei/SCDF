@@ -18,7 +18,7 @@ enum MidiMessageType {
 	ProgramChange = 0xC0,
 	PolyKeyPressure = 0xD0,
 	PitchBend = 0xE0,
-	NonMusical = 0xF0
+	NonMusical = 0xF0,
+    MidiMessageTypeCount
 };
-
 #endif /* MIDIUTILS_H_ */
