@@ -219,7 +219,7 @@ void PropertiesPanel::MIDIDevices::UpdateValues()
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
-    
+    if (NULL==parent->currentControlUnit) return;
     devices->SetSelectedIndex(parent->currentControlUnit->GetMidiOutIndex());
 }
 
@@ -231,6 +231,7 @@ void PropertiesPanel::MIDIDevices::PositionElements()
 
 void PropertiesPanel::MIDIDevices::CheckForDropDownChanges(DropDownMenu *menu)
 {
+    if (NULL==parent->currentControlUnit) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (devices==menu)
         parent->currentControlUnit->SetMidiOutIndex(selectedIndex);
@@ -238,6 +239,7 @@ void PropertiesPanel::MIDIDevices::CheckForDropDownChanges(DropDownMenu *menu)
 
 void PropertiesPanel::OSCInfo::UpdateValues()
 {
+    if (NULL==parent->currentControlUnit) return;
     oscToggle->setSelectedState(parent->currentControlUnit->IsOscEnabled());
     std::ostringstream os;
     os<<(parent->currentControlUnit->GetOscPort());
@@ -248,6 +250,7 @@ void PropertiesPanel::OSCInfo::UpdateValues()
 
 void PropertiesPanel::MIDIInfo::UpdateValues()
 {
+    if (NULL==parent->currentControlUnit) return;
 //    std::vector<std::string> dropDownData;
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
@@ -285,6 +288,7 @@ void PropertiesPanel::MIDIInfo::PositionElements()
 
 void PropertiesPanel::MIDIInfo::CheckForDropDownChanges(DropDownMenu *menu)
 {
+    if (NULL==parent->currentControlUnit) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (menu==midiMessage)
     {
@@ -496,7 +500,6 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
 
 void PropertiesPanel::Update(SubjectSimple* subject)
 {
-    currentControlUnit=NULL;
     ItemBase *item=(ItemBase*)subject;
     if (NULL!=item)
         currentControlUnit=item->GetControlUnit();
@@ -513,8 +516,8 @@ DropDownMenuCallback *PropertiesPanel::GetDropDownCallback()
 
 void PropertiesPanel::OnSelectedDropDownItem(DropDownMenu *menu)
 {
-    if (NULL==currentControlUnit) return;
     Vector<Node*> _childrens = getChildren();
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
         ((SubpanelBase*)(*it))->CheckForDropDownChanges(menu);
+    Update(NULL);
 }
