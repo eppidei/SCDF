@@ -209,6 +209,7 @@ void PropertiesPanel::MIDIDevices::CreateControls()
     devices->setAnchorPoint(Vec2(0,1));
     devices->SetCallback(parent->GetDropDownCallback());
     std::vector<std::string> dropDownData;
+    dropDownData.push_back("No MIDI connection");
     for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
         dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
     PositionElements();
@@ -223,7 +224,7 @@ void PropertiesPanel::MIDIDevices::UpdateValues()
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
     if (NULL==parent->currentControlUnit) return;
-    devices->SetSelectedIndex(parent->currentControlUnit->GetMidiOutIndex());
+    devices->SetSelectedIndex(parent->currentControlUnit->GetMidiOutIndex()+1);
 }
 
 void PropertiesPanel::MIDIDevices::PositionElements()
@@ -237,7 +238,7 @@ void PropertiesPanel::MIDIDevices::CheckForDropDownChanges(DropDownMenu *menu)
     if (NULL==parent->currentControlUnit) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (devices==menu)
-        parent->currentControlUnit->SetMidiOutIndex(selectedIndex);
+        parent->currentControlUnit->SetMidiOutIndex(selectedIndex-1);
 }
 
 void PropertiesPanel::OSCInfo::UpdateValues()
