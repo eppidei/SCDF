@@ -14,7 +14,7 @@ using namespace ui;
 
 #define DROPDOWNN_BACK_COLOR Color3B(120,120,120)
 
-#define OPENED_MENU_HEIGHT 200
+#define MAX_OPENED_MENU_HEIGHT 200.0
 void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 {
     parentHeightWithoutMenu=getParent()->getContentSize().height-getContentSize().height;
@@ -29,16 +29,18 @@ void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 
 void DropDownMenu::ToggleOpenMenu()
 {
+    if (getItems().size()<=1) return;
+    float itemHeight=getItem(0)->getContentSize().height;
     bool disableScrolling;
     float newHeight=getContentSize().height;
     if (opened)
     {
-        newHeight-=OPENED_MENU_HEIGHT;
+        newHeight-=fmin(itemHeight*(getItems().size()-1),MAX_OPENED_MENU_HEIGHT);
         disableScrolling=true;
     }
     else
     {
-        newHeight+=OPENED_MENU_HEIGHT;
+        newHeight+=fmin(itemHeight*(getItems().size()-1),MAX_OPENED_MENU_HEIGHT);
         disableScrolling=false;
     }
     opened=!opened;

@@ -24,8 +24,8 @@ ControlUnit::ControlUnit()
 	midiMsgType = Invalid;
 	midiChannel = -1;
 	midiControl = -1;
-    if (Scdf::MidiOutConnection::GetNumAvailableOutputs()!=0)
-        SetMidiOutIndex(0);
+//    if (Scdf::MidiOutConnection::GetNumAvailableOutputs()!=0)
+//        SetMidiOutIndex(0);
     //#ifdef _DEBUG
     midiMsgType = NoteOn;
     midiChannel = 0;
