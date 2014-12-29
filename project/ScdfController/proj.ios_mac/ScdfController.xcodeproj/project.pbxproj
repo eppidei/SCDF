@@ -92,6 +92,7 @@
 		DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AD1A48F105000F3EA2 /* knobIcon.png */; };
 		DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AF1A48F3A2000F3EA2 /* fullPad.png */; };
 		DC9381B21A48F3A2000F3EA2 /* sensorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */; };
+		DCAEADCF1A505D7000513775 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5087E77C17EB970100C73F5D /* Info.plist */; };
 		DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */; };
 		DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */; };
 		DCE4BAFA1A4220C6006C14FE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE4BAF91A4220C6006C14FE /* Accelerate.framework */; };
@@ -312,6 +313,7 @@
 		DC175EB51A475DD0009DCA73 /* ToggleItemsOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleItemsOn.png; sourceTree = "<group>"; };
 		DC175EB81A475DD7009DCA73 /* TogglePannelOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOff.png; sourceTree = "<group>"; };
 		DC175EB91A475DD7009DCA73 /* TogglePannelOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TogglePannelOn.png; sourceTree = "<group>"; };
+		DC562A541A516BFF009C5C95 /* PlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformInfo.h; path = ../../../src/include/PlatformInfo.h; sourceTree = "<group>"; };
 		DC8BDAF91A4DE22900690B01 /* ToggleEditOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOff.png; sourceTree = "<group>"; };
 		DC8BDAFD1A4DE40F00690B01 /* ToggleEditOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ToggleEditOn.png; sourceTree = "<group>"; };
 		DC9381A31A48E19D000F3EA2 /* ButtonGrid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ButtonGrid.png; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 				9D82C2CD1A1C04EB00FF1243 /* SCDFCItems.cpp */,
 				9D82C2CE1A1C04EB00FF1243 /* SCDFCItems.h */,
 				9D82C2D21A1C073100FF1243 /* SCDFCDefinitions.h */,
+				DC562A541A516BFF009C5C95 /* PlatformInfo.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -625,7 +628,7 @@
 				LastUpgradeCheck = 0500;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = MDDB52YB8L;
+						DevelopmentTeam = UP7D2B2KTF;
 					};
 				};
 			};
@@ -761,6 +764,7 @@
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */,
+				DCAEADCF1A505D7000513775 /* Info.plist in Resources */,
 				DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */,
 				DC175EAA1A473B70009DCA73 /* SliderHandle.png in Resources */,
 				DC175EB11A4752AA009DCA73 /* ToggleOff.png in Resources */,
@@ -875,7 +879,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iOS Development: Flavio Antonioli (LE2RP52E3W)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -886,6 +890,7 @@
 					CC_TARGET_OS_IPHONE,
 					"COCOS2D_DEBUG=1",
 					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
+					PLATF_IOS,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -898,6 +903,7 @@
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "";
+				PROVISIONING_PROFILE = "46fb6250-fe07-4486-a6fd-4bd1ace7e067";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -908,7 +914,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iOS Development: Flavio Antonioli (LE2RP52E3W)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -917,6 +923,7 @@
 					USE_FILE32API,
 					CC_TARGET_OS_IPHONE,
 					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
+					PLATF_IOS,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -929,6 +936,7 @@
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "";
+				PROVISIONING_PROFILE = "46fb6250-fe07-4486-a6fd-4bd1ace7e067";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
