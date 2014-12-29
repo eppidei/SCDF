@@ -12,6 +12,8 @@ using namespace SCDFC;
 using namespace cocos2d;
 using namespace ui;
 
+#define DROPDOWNN_BACK_COLOR Color3B(120,120,120)
+
 #define OPENED_MENU_HEIGHT 200
 void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 {
@@ -159,5 +161,5 @@ void DropDownMenu::InitData(std::vector<std::string> data)
     setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     setAnchorPoint(Vec2(0,1));
     setBackGroundColorType(BackGroundColorType::SOLID);
-    setBackGroundColor(Color3B::GREEN);
+    setBackGroundColor(DROPDOWNN_BACK_COLOR);
 }

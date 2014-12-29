@@ -12,6 +12,7 @@
 #include "MainScene.h"
 #include "ControlUnit.h"
 #include "SCDFCItems.h"
+#include "PlatformInfo.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
@@ -44,7 +45,7 @@ void SubpanelBase::InitWithContent(SCDFC::PropertiesPanel *_parent, cocos2d::Siz
     parent=_parent;
     setContentSize(s);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    setBackGroundColor(Color3B::YELLOW);
+    setBackGroundColor(MAIN_BACK_COLOR);
     setAnchorPoint(Vec2(0,1));
     CreateControls();
 }
@@ -90,18 +91,20 @@ void PropertiesPanel::OSCInfo::CreateControls()
 {
     //Create toggle
     oscToggle=CheckBox::create();
-    oscToggle->loadTextures("ToggleOff.png",
-                            "ToggleOn.png",
-                            "ToggleOn.png",
-                            "ToggleOn.png",
-                            "ToggleOff.png");
+    oscToggle->loadTextures("ToggleOn.png",
+                            "ToggleOff.png",
+                            "ToggleOff.png",
+                            "ToggleOff.png",
+                            "ToggleOn.png");
+
     
     oscToggle->setTouchEnabled(true);
-    oscToggle->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
+    oscToggle->setContentSize(Size(30*DPI,30*DPI));
     oscToggle->setAnchorPoint(Vec2(0,1));
     oscToggle->setPosition(Vec2(getContentSize().width/2+getContentSize().width/4-oscToggle->getContentSize().width/2,getContentSize().height));
     oscToggle->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::SelectedEvent, this));
     addChild(oscToggle);
+    oscToggle->ignoreContentAdaptWithSize(false);
     
     //Create toggle label
     toggleLabel = Text::create("Enable OSC","Arial",18);
@@ -111,7 +114,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     toggleLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
    // toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     toggleLabel->setPosition(Vec2(0,getContentSize().height));
-    toggleLabel->setColor(cocos2d::Color3B::BLACK);
+    toggleLabel->setColor(cocos2d::Color3B::WHITE);
     addChild(toggleLabel);
     
     //Create oscPort control
@@ -124,7 +127,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscPort->setFontSize(20);
     oscPort->setTouchEnabled(true);
     oscPort->setPosition(Vec2(getContentSize().width/2,getContentSize().height-getContentSize().height/4));
-    oscPort->setColor(cocos2d::Color3B::BLACK);
+    oscPort->setColor(cocos2d::Color3B::WHITE);
     oscPort->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::TextFieldEvent, this));
     addChild(oscPort);
     
@@ -136,7 +139,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     portLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     // toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     portLabel->setPosition(Vec2(0,getContentSize().height-getContentSize().height/4));
-    portLabel->setColor(cocos2d::Color3B::BLACK);
+    portLabel->setColor(cocos2d::Color3B::WHITE);
     addChild(portLabel);
     
     //Create oscIP control
@@ -148,7 +151,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscIP->setTextVerticalAlignment(TextVAlignment::CENTER);
     oscIP->setTouchEnabled(true);
     oscIP->setPosition(Vec2(getContentSize().width/2,getContentSize().height/2));
-    oscIP->setColor(cocos2d::Color3B::BLACK);
+    oscIP->setColor(cocos2d::Color3B::WHITE);
     oscIP->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::TextFieldEvent, this));
     addChild(oscIP);
     
@@ -161,7 +164,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     ipLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     // toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     ipLabel->setPosition(Vec2(0,getContentSize().height/2));
-    ipLabel->setColor(cocos2d::Color3B::BLACK);
+    ipLabel->setColor(cocos2d::Color3B::WHITE);
     addChild(ipLabel);
     
     //Create OSCtag label
@@ -172,7 +175,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscTagLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     // toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     oscTagLabel->setPosition(Vec2(0,getContentSize().height/4));
-    oscTagLabel->setColor(cocos2d::Color3B::BLACK);
+    oscTagLabel->setColor(cocos2d::Color3B::WHITE);
     addChild(oscTagLabel);
     
     //Create OSCtag label
@@ -184,7 +187,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscTag->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     // toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     oscTag->setPosition(Vec2(getContentSize().width/2,getContentSize().height/4));
-    oscTag->setColor(cocos2d::Color3B::BLACK);
+    oscTag->setColor(cocos2d::Color3B::WHITE);
     addChild(oscTag);
 }
 
@@ -196,7 +199,7 @@ void PropertiesPanel::MIDIDevices::CreateControls()
     devicesLabel->setAnchorPoint(Vec2(0,1));
     devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     devicesLabel->setContentSize(Size(getContentSize().width,getContentSize().height/2));
-    devicesLabel->setColor(cocos2d::Color3B::BLACK);
+    devicesLabel->setColor(cocos2d::Color3B::WHITE);
     addChild(devicesLabel);
     
     //Create dropDown
@@ -336,7 +339,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     midiMessageLabel->setAnchorPoint(Vec2(0,1));
     midiMessageLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     midiMessageLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
-    midiMessageLabel->setColor(cocos2d::Color3B::BLACK);
+    midiMessageLabel->setColor(cocos2d::Color3B::WHITE);
 
     
     //Create dropDown midiMessage
@@ -357,7 +360,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     controlChangeLabel->setAnchorPoint(Vec2(0,1));
     controlChangeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     controlChangeLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
-    controlChangeLabel->setColor(cocos2d::Color3B::BLACK);
+    controlChangeLabel->setColor(cocos2d::Color3B::WHITE);
 
 
     //Create dropDown
@@ -382,7 +385,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     channelLabel->setAnchorPoint(Vec2(0,1));
     channelLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     channelLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
-    channelLabel->setColor(cocos2d::Color3B::BLACK);
+    channelLabel->setColor(cocos2d::Color3B::WHITE);
 
 
     //Create dropDown
@@ -407,7 +410,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     velocityLabel->setAnchorPoint(Vec2(0,1));
     velocityLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     velocityLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
-    velocityLabel->setColor(cocos2d::Color3B::BLACK);
+    velocityLabel->setColor(cocos2d::Color3B::WHITE);
 
 
     //Create dropDown
@@ -478,7 +481,7 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    setBackGroundColor(Color3B(160,160,160));
+    setBackGroundColor(MAIN_BACK_COLOR);
     setBounceEnabled(true);
     setInertiaScrollEnabled(true);
     main->addChild(this);
