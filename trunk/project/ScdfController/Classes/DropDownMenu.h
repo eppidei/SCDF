@@ -37,7 +37,7 @@ namespace SCDFC
         bool opened, showLabel, resizeParent;
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
-        int selectedIndex;
+        int lastSelectedIndex;
         
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ScrollToSelected();
