@@ -64,8 +64,8 @@ void DropDownMenu::SetMenuPosition(Vec2 pos)
 
 void DropDownMenu::SetSelectedIndex(int selected)
 {
-    if (selected==selectedIndex) return;
-    selectedIndex=selected;
+    if (lastSelectedIndex==selected) return;
+    _curSelectedIndex=lastSelectedIndex=selected;
     ScrollToSelected();
     if (callback)
         callback->OnSelectItem(this);
@@ -101,7 +101,7 @@ DropDownMenu::DropDownMenu()
     callback=NULL;
     resizeParent=true;
     showLabel=true;
-    selectedIndex=-1;
+    lastSelectedIndex=-1;
 }
 
 DropDownMenu *DropDownMenu::CreateMenu(Size s)
@@ -113,12 +113,10 @@ DropDownMenu *DropDownMenu::CreateMenu(Size s)
 
 void DropDownMenu::ScrollToSelected()
 {
-    if (selectedIndex==-1)
-        selectedIndex=getCurSelectedIndex();
-    Node *item=getItem(selectedIndex);
+    Node *item=getItem(_curSelectedIndex);
     if(NULL==item) return;
     float elementsHeight=item->getContentSize().height;
-    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+((selectedIndex)*elementsHeight)));
+    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+((_curSelectedIndex)*elementsHeight)));
 }
 
 DropDownMenu::~DropDownMenu()
