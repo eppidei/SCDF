@@ -42,6 +42,7 @@ namespace SCDFC
     public:
         DropDownMenuCallbackPanel(PropertiesPanel *_parent) : parent(_parent) {}
         void OnSizeChanged(float oldSize, float newSize);
+        void OnSelectItem(DropDownMenu *menu);
     };
     
     class SubpanelBase : public cocos2d::ui::Layout
@@ -53,6 +54,7 @@ namespace SCDFC
         ~SubpanelBase();
        // void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags);
         virtual void PositionElements() {}
+        virtual void CheckForDropDownChanges(DropDownMenu *menu) {}
         virtual void UpdateValues() = 0;
         void InitWithContent(PropertiesPanel *parent, cocos2d::Size s);
     };
@@ -82,6 +84,7 @@ namespace SCDFC
             
             void CreateControls();
         public:
+            void CheckForDropDownChanges(DropDownMenu *menu);
             void PositionElements();
             void UpdateValues();
             CREATE_FUNC(MIDIDevices);
@@ -94,6 +97,7 @@ namespace SCDFC
             
             void CreateControls();
         public:
+            void CheckForDropDownChanges(DropDownMenu *menu);
             void PositionElements();
             void UpdateValues();
             CREATE_FUNC(MIDIInfo);
@@ -107,6 +111,7 @@ namespace SCDFC
     public:
         DropDownMenuCallback *GetDropDownCallback();
         void InitLayout();
+        void OnSelectedDropDownItem(DropDownMenu *menu);
         void Update(SubjectSimple* theChangedSubject);
         static PropertiesPanel *CreatePropertiesPanel(MainScene *main, cocos2d::Rect r);
         CREATE_FUNC(PropertiesPanel);
