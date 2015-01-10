@@ -55,12 +55,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     LOGD("DPI : %d\n", Device::getDPI() );
 
-    director->getOpenGLView()->setDesignResolutionSize(frameSize.width,frameSize.height,ResolutionPolicy::SHOW_ALL);
-    director->setContentScaleFactor(3.0);
-
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
-
+    
+    float scaleFactor=((float)Device::getDPI())/132.0;
+    Size s=director->getOpenGLView()->getFrameSize();
+    director->getOpenGLView()->setDesignResolutionSize((int)ceil(s.width/scaleFactor), (int)ceil(s.height/scaleFactor), ResolutionPolicy::SHOW_ALL);
+    
     // create a scene. it's an autorelease object
     auto scene = MainScene::createScene();
 

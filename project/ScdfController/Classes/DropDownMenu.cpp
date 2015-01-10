@@ -58,9 +58,9 @@ void DropDownMenu::SetCallback(DropDownMenuCallback *_callback)
     callback=_callback;
 }
 
-void DropDownMenu::SetMenuPosition(Vec2 pos)
+void DropDownMenu::setPosition(const Vec2 &pos)
 {
-    setPosition(pos);
+    Widget::setPosition(pos);
     ScrollToSelected();
 }
 
@@ -77,6 +77,7 @@ void DropDownMenu::updateTweenAction(float value, const std::string& key)
 {
     if ("height"==key){
         setContentSize(Size(getContentSize().width, value));
+        if (!resizeParent) return;
         getParent()->setContentSize(Size(getParent()->getContentSize().width,parentHeightWithoutMenu+value));
         if (this->callback)
             this->callback->OnSizeChanged(0,0);
@@ -90,11 +91,11 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
     {
         case ListView::EventType::ON_SELECTED_ITEM_END:
             ToggleOpenMenu();
+            SetSelectedIndex(getCurSelectedIndex());
             break;
         default:
             break;
     }
-    SetSelectedIndex(getCurSelectedIndex());
 }
 
 DropDownMenu::DropDownMenu()
@@ -102,7 +103,6 @@ DropDownMenu::DropDownMenu()
     opened=false;
     callback=NULL;
     resizeParent=true;
-    showLabel=true;
     lastSelectedIndex=-1;
 }
 

@@ -12,20 +12,20 @@
 #include "MainScene.h"
 #include "ControlUnit.h"
 #include "SCDFCItems.h"
-#include "PlatformInfo.h"
+//#include "PlatformInfo.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
 using namespace ui;
 
-void DropDownMenuCallbackPanel::OnSizeChanged(float oldSize, float newSize)
+void SubpanelBase::DropDownMenuCallbackSubPanel::OnSizeChanged(float oldSize, float newSize)
 {
-    parent->InitLayout();
+    parent->GetParent()->InitLayout();
 }
 
-void DropDownMenuCallbackPanel::OnSelectItem(DropDownMenu *menu)
+void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu)
 {
-    parent->OnSelectedDropDownItem(menu);
+    parent->OnDropDownSelectionChange(menu);
 }
 
 SubpanelBase::~SubpanelBase()
@@ -35,14 +35,31 @@ SubpanelBase::~SubpanelBase()
         removeChild(*it);
 }
 
-//void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+PropertiesPanel *SubpanelBase::GetParent()
+{
+    return parent.get();
+}
+
+//void SubpanelBase::onSizeChanged()
 //{
-//    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
-//        PositionElements();
+//    Layout::onSizeChanged();
+//    PositionElements();
+//    if(parent.get())
+//        parent->InitLayout();
 //}
+void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
+    {
+        PositionElements();
+       // parent->InitLayout();
+    }
+}
+
 void SubpanelBase::InitWithContent(SCDFC::PropertiesPanel *_parent, cocos2d::Size s)
 {
-    parent=_parent;
+    parent.reset(_parent);
+    dropDownCallback.reset(new DropDownMenuCallbackSubPanel(this));
     setContentSize(s);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     setBackGroundColor(MAIN_BACK_COLOR);
@@ -67,6 +84,13 @@ void PropertiesPanel::OSCInfo::TextFieldEvent(Ref *pSender, TextField::EventType
         default:
             break;
     }
+}
+
+PropertiesPanel::OSCInfo::OSCInfo()
+{
+    toggleLabel=portLabel=ipLabel=oscTagLabel=oscTag=NULL;
+    oscToggle=NULL;
+    oscPort=oscIP=NULL;
 }
 
 void PropertiesPanel::OSCInfo::SelectedEvent(Ref* pSender,CheckBox::EventType type)
@@ -99,7 +123,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
 
     
     oscToggle->setTouchEnabled(true);
-    oscToggle->setContentSize(Size(30*DPI,30*DPI));
+    oscToggle->setContentSize(Size(30,30));
     oscToggle->setAnchorPoint(Vec2(0,1));
     oscToggle->setPosition(Vec2(getContentSize().width/2+getContentSize().width/4-oscToggle->getContentSize().width/2,getContentSize().height));
     oscToggle->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::SelectedEvent, this));
@@ -147,13 +171,14 @@ void PropertiesPanel::OSCInfo::CreateControls()
     //oscIP->setPlaceHolder("No Ip");
     oscIP->setContentSize(Size(getContentSize().width/2,getContentSize().height/4));
     oscIP->setAnchorPoint(Vec2(0,1));
-    oscIP->setTextAreaSize(oscIP->getContentSize());
     oscIP->setTextVerticalAlignment(TextVAlignment::CENTER);
     oscIP->setTouchEnabled(true);
     oscIP->setPosition(Vec2(getContentSize().width/2,getContentSize().height/2));
     oscIP->setColor(cocos2d::Color3B::WHITE);
     oscIP->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::TextFieldEvent, this));
     addChild(oscIP);
+    oscIP->setFontName("Arial");
+    oscIP->setFontSize(18);
     
     
     //Create oscIP label
@@ -191,6 +216,12 @@ void PropertiesPanel::OSCInfo::CreateControls()
     addChild(oscTag);
 }
 
+PropertiesPanel::MIDIDevices::MIDIDevices()
+{
+    devices=NULL;
+    devicesLabel=NULL;
+}
+
 void PropertiesPanel::MIDIDevices::CreateControls()
 {
     //Create dropDown label
@@ -207,7 +238,7 @@ void PropertiesPanel::MIDIDevices::CreateControls()
     devices = DropDownMenu::CreateMenu(Size(getContentSize().width,getContentSize().height/2));
     devices->ignoreContentAdaptWithSize(false);
     devices->setAnchorPoint(Vec2(0,1));
-    devices->SetCallback(parent->GetDropDownCallback());
+    devices->SetCallback(dropDownCallback.get());
     std::vector<std::string> dropDownData;
     dropDownData.push_back("No MIDI connection");
     for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
@@ -229,11 +260,13 @@ void PropertiesPanel::MIDIDevices::UpdateValues()
 
 void PropertiesPanel::MIDIDevices::PositionElements()
 {
-    devicesLabel->setPosition(Vec2(0,getContentSize().height));
-    devices->SetMenuPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
+    if (devicesLabel)
+        devicesLabel->setPosition(Vec2(0,getContentSize().height));
+    if (devices)
+        devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
 }
 
-void PropertiesPanel::MIDIDevices::CheckForDropDownChanges(DropDownMenu *menu)
+void PropertiesPanel::MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     if (NULL==parent->currentControlUnit) return;
     int selectedIndex=menu->getCurSelectedIndex();
@@ -280,17 +313,25 @@ void PropertiesPanel::MIDIInfo::UpdateValues()
 
 void PropertiesPanel::MIDIInfo::PositionElements()
 {
-    midiMessageLabel->setPosition(Vec2(0,getContentSize().height));
-    midiMessage->SetMenuPosition(Vec2(midiMessageLabel->getContentSize().width,getContentSize().height));
-    controlChangeLabel->setPosition(Vec2(0,midiMessage->getPositionY()-midiMessage->getContentSize().height));
-    controlChange->SetMenuPosition(Vec2(controlChangeLabel->getContentSize().width,midiMessage->getPositionY()-midiMessage->getContentSize().height));
-    channelLabel->setPosition(Vec2(0,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
-    channel->SetMenuPosition(Vec2(channelLabel->getContentSize().width,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
-    velocityLabel->setPosition(Vec2(0,channelLabel->getPositionY()-channel->getContentSize().height));
-    velocity->SetMenuPosition(Vec2(velocityLabel->getContentSize().width,channelLabel->getPositionY()-channel->getContentSize().height));
+    if (midiMessageLabel)
+        midiMessageLabel->setPosition(Vec2(0,getContentSize().height));
+    if (midiMessage)
+        midiMessage->setPosition(Vec2(midiMessageLabel->getContentSize().width,getContentSize().height));
+    if (controlChangeLabel)
+        controlChangeLabel->setPosition(Vec2(0,midiMessage->getPositionY()-midiMessage->getContentSize().height));
+    if (controlChange)
+        controlChange->setPosition(Vec2(controlChangeLabel->getContentSize().width,midiMessage->getPositionY()-midiMessage->getContentSize().height));
+    if (channelLabel)
+        channelLabel->setPosition(Vec2(0,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
+    if (channel)
+        channel->setPosition(Vec2(channelLabel->getContentSize().width,controlChangeLabel->getPositionY()-controlChange->getContentSize().height));
+    if (velocityLabel)
+        velocityLabel->setPosition(Vec2(0,channelLabel->getPositionY()-channel->getContentSize().height));
+    if (velocity)
+        velocity->setPosition(Vec2(velocityLabel->getContentSize().width,channelLabel->getPositionY()-channel->getContentSize().height));
 }
 
-void PropertiesPanel::MIDIInfo::CheckForDropDownChanges(DropDownMenu *menu)
+void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     if (NULL==parent->currentControlUnit) return;
     int selectedIndex=menu->getCurSelectedIndex();
@@ -319,11 +360,14 @@ void PropertiesPanel::MIDIInfo::CheckForDropDownChanges(DropDownMenu *menu)
     
 }
 
+PropertiesPanel::MIDIInfo::MIDIInfo()
+{
+    midiMessage=controlChange=channel=velocity=NULL;
+    midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=NULL;
+}
+
 void PropertiesPanel::MIDIInfo::CreateControls()
 {
-//    DropDownMenu *midiMessage, *controlChange, *channel, *velocity;
-//    cocos2d::ui::Text *midiMessageLabel, *controlChangeLabel, *channel, *velocityLabel;
-
     std::vector<std::string> MidiMessageString;
     MidiMessageString.push_back("NoteOn");
     MidiMessageString.push_back("NoteOff");
@@ -348,7 +392,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     addChild(midiMessage);
     midiMessage->ignoreContentAdaptWithSize(false);
     midiMessage->setAnchorPoint(Vec2(0,1));
-    midiMessage->SetCallback(parent->GetDropDownCallback());
+    midiMessage->SetCallback(dropDownCallback.get());
     std::vector<std::string> dropDownData;
     for (int i=0;i<MidiMessageString.size();++i)
         dropDownData.push_back(MidiMessageString[i]);
@@ -369,7 +413,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     addChild(controlChange);
     controlChange->ignoreContentAdaptWithSize(false);
     controlChange->setAnchorPoint(Vec2(0,1));
-    controlChange->SetCallback(parent->GetDropDownCallback());
+    controlChange->SetCallback(dropDownCallback.get());
     dropDownData.clear();
     for (int i=0;i<120;++i)
     {
@@ -394,7 +438,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     addChild(channel);
     channel->ignoreContentAdaptWithSize(false);
     channel->setAnchorPoint(Vec2(0,1));
-    channel->SetCallback(parent->GetDropDownCallback());
+    channel->SetCallback(dropDownCallback.get());
     dropDownData.clear();
     for (int i=0;i<16;++i)
     {
@@ -419,7 +463,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     addChild(velocity);
     velocity->ignoreContentAdaptWithSize(false);
     velocity->setAnchorPoint(Vec2(0,1));
-    velocity->SetCallback(parent->GetDropDownCallback());
+    velocity->SetCallback(dropDownCallback.get());
     dropDownData.clear();
     for (int i=0;i<128;++i)
     {
@@ -451,9 +495,16 @@ void PropertiesPanel::PositionElements()
         lastPosY-=PROPERTIES_PADDING;
         (*it)->setPosition(Vec2(PROPERTIES_PADDING, lastPosY));
         lastPosY-=(*it)->getContentSize().height;
-        ((SubpanelBase*)(*it))->PositionElements();
+       // ((SubpanelBase*)(*it))->PositionElements();
     }
 }
+
+//void PropertiesPanel::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+//{
+//    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
+//        PositionElements();
+//}
+
 void PropertiesPanel::InitLayout()
 {
     CalculateInnerHeight();
@@ -475,7 +526,6 @@ void PropertiesPanel::CalculateInnerHeight()
 
 void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
-    dropDownCallback.reset(new DropDownMenuCallbackPanel(this));
     currentControlUnit=NULL;
     
     setContentSize(r.size);
@@ -510,18 +560,17 @@ void PropertiesPanel::Update(SubjectSimple* subject)
     sectionOSCInfo->UpdateValues();
     sectionMIDIDevices->UpdateValues();
     sectionMIDIInfo->UpdateValues();
-    InitLayout();
 }
 
-DropDownMenuCallback *PropertiesPanel::GetDropDownCallback()
-{
-    return dropDownCallback.get();
-}
-
-void PropertiesPanel::OnSelectedDropDownItem(DropDownMenu *menu)
-{
-    Vector<Node*> _childrens = getChildren();
-    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
-        ((SubpanelBase*)(*it))->CheckForDropDownChanges(menu);
-    Update(NULL);
-}
+//DropDownMenuCallback *PropertiesPanel::GetDropDownCallback()
+//{
+//    return dropDownCallback.get();
+//}
+//
+//void PropertiesPanel::OnSelectedDropDownItem(DropDownMenu *menu)
+//{
+//    Vector<Node*> _childrens = getChildren();
+//    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
+//        ((SubpanelBase*)(*it))->CheckForDropDownChanges(menu);
+//    Update(NULL);
+//}

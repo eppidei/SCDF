@@ -14,12 +14,6 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 
-namespace cocos2d{
-    namespace ui{
-        class ListView;
-        class Text;
-    }
-}
 
 namespace SCDFC
 {
@@ -34,7 +28,7 @@ namespace SCDFC
 
     class DropDownMenu : public cocos2d::ui::ListView, public cocos2d::ActionTweenDelegate
     {
-        bool opened, showLabel, resizeParent;
+        bool opened, resizeParent;
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
@@ -47,7 +41,8 @@ namespace SCDFC
     public:
         void SetSelectedIndex(int selected);
         void InitData(std::vector<std::string> data);
-        void SetMenuPosition(cocos2d::Vec2 pos);
+        virtual void setPosition(const cocos2d::Vec2 &pos) override;
+        //void SetMenuPosition(cocos2d::Vec2 pos);
         void SetCallback(DropDownMenuCallback *_callback);
         void updateTweenAction(float value, const std::string& key);
         ~DropDownMenu();

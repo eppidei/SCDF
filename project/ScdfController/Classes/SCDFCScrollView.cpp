@@ -13,7 +13,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
-#include "PlatformInfo.h"
+//#include "PlatformInfo.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
@@ -21,8 +21,8 @@ using namespace ui;
 
 template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string image)
 {
-#define SCROLLVIEW_ITEM_SIZE        (64*DPI)//(SCROLLBAR_ITEM_SIDE_BASE*parent->GetGridBase())
-#define SCROLLVIEW_ITEM_DISTANCE    (32*DPI)//(2*parent->GetGridBase())
+#define SCROLLVIEW_ITEM_SIZE        (SCROLLBAR_ITEM_SIDE_BASE*parent->GetUnityBase())
+#define SCROLLVIEW_ITEM_DISTANCE    (SCROLLVIEW_ITEM_SIZE/2)
 #define SCROLLVIEW_ITEM_RECORD      (SCROLLVIEW_ITEM_SIZE+SCROLLVIEW_ITEM_DISTANCE)
     
     int numElements=getChildrenCount();

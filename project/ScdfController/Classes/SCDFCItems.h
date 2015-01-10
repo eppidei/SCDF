@@ -75,6 +75,7 @@ namespace SCDFC {
         bool IsKnob() { return true;}
     public:
         void Create();
+        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         static cocos2d::Size GetSize() { return KNOB_SIZE_BASE;}
         static int GetID() { return ITEM_KNOB_ID;}
         CREATE_FUNC(ItemKnob);

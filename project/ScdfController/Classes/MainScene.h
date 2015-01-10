@@ -36,7 +36,7 @@ namespace SCDFC{
         template <class ItemType> void  OnStartDragging(cocos2d::Vec2 dragStartPoint);
         void OnDragging(cocos2d::Rect draggingRect);
         template <class ItemType> void  OnEndDragging();
-        static int GetGridBase();
+        static int GetUnityBase();
         
         int GetGridDistance();
         void SnapToGrid(cocos2d::Rect &r);

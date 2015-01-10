@@ -11,7 +11,7 @@
 
 
 
-#define DPI 2
+
 
 
 #endif
