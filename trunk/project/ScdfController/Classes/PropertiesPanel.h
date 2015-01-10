@@ -36,27 +36,31 @@ namespace SCDFC
     class MainScene;
     class PropertiesPanel;
     
-    class DropDownMenuCallbackPanel : public DropDownMenuCallback
-    {
-        PropertiesPanel *parent;
-    public:
-        DropDownMenuCallbackPanel(PropertiesPanel *_parent) : parent(_parent) {}
-        void OnSizeChanged(float oldSize, float newSize);
-        void OnSelectItem(DropDownMenu *menu);
-    };
-    
     class SubpanelBase : public cocos2d::ui::Layout
     {
+        class DropDownMenuCallbackSubPanel : public DropDownMenuCallback
+        {
+            SubpanelBase *parent;
+        public:
+            DropDownMenuCallbackSubPanel(SubpanelBase *_parent) : parent(_parent) {}
+            void OnSizeChanged(float oldSize, float newSize);
+            void OnSelectItem(DropDownMenu *menu);
+        };
         virtual void CreateControls() = 0;
     protected:
-        PropertiesPanel *parent;
+        std::unique_ptr<PropertiesPanel> parent;
+        std::unique_ptr<DropDownMenuCallbackSubPanel> dropDownCallback;
+       // virtual void onSizeChanged() override;
     public:
         ~SubpanelBase();
-       // void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags);
+        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         virtual void PositionElements() {}
-        virtual void CheckForDropDownChanges(DropDownMenu *menu) {}
+        virtual void OnDropDownSelectionChange(DropDownMenu *menu) {}
         virtual void UpdateValues() = 0;
+        PropertiesPanel *GetParent();
+        //DropDownMenuCallback *GetDropDownCallback();
         void InitWithContent(PropertiesPanel *parent, cocos2d::Size s);
+        //virtual bool init() override;
     };
     
     class PropertiesPanel : public cocos2d::ui::ScrollView, public ObserverSimple
@@ -73,6 +77,7 @@ namespace SCDFC
             void TextFieldEvent(Ref *pSender, cocos2d::ui::TextField::EventType type);
             void SelectedEvent(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
         public:
+            OSCInfo();
             void UpdateValues();
             CREATE_FUNC(OSCInfo);
         } *sectionOSCInfo;
@@ -84,7 +89,8 @@ namespace SCDFC
             
             void CreateControls();
         public:
-            void CheckForDropDownChanges(DropDownMenu *menu);
+            MIDIDevices();
+            void OnDropDownSelectionChange(DropDownMenu *menu);
             void PositionElements();
             void UpdateValues();
             CREATE_FUNC(MIDIDevices);
@@ -97,21 +103,21 @@ namespace SCDFC
             
             void CreateControls();
         public:
-            void CheckForDropDownChanges(DropDownMenu *menu);
+            MIDIInfo();
+            void OnDropDownSelectionChange(DropDownMenu *menu);
             void PositionElements();
             void UpdateValues();
             CREATE_FUNC(MIDIInfo);
         } *sectionMIDIInfo;
         
-        std::unique_ptr<DropDownMenuCallbackPanel> dropDownCallback;
         ScdfCtrl::ControlUnit *currentControlUnit;
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void PositionElements();
         void CalculateInnerHeight();
     public:
-        DropDownMenuCallback *GetDropDownCallback();
         void InitLayout();
-        void OnSelectedDropDownItem(DropDownMenu *menu);
+//        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+//        void OnSelectedDropDownItem(DropDownMenu *menu);
         void Update(SubjectSimple* theChangedSubject);
         static PropertiesPanel *CreatePropertiesPanel(MainScene *main, cocos2d::Rect r);
         CREATE_FUNC(PropertiesPanel);

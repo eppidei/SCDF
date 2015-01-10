@@ -27,7 +27,7 @@
 #define ITEM_KNOB_ID    ITEMS_ID_BASE+4
 #define ITEM_SENSOR1_ID ITEMS_ID_BASE+5
 
-#define SCROLLBAR_ITEM_SIDE_BASE    5
+#define SCROLLBAR_ITEM_SIDE_BASE    4
 #define SLIDER_SIZE_BASE            cocos2d::Size(2,8)
 #define PAD_SIZE_BASE               cocos2d::Size(4,4)
 #define KEYBOARD_SIZE_BASE           cocos2d::Size(12,8)

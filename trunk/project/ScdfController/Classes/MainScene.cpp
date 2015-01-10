@@ -6,7 +6,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
-#include "PlatformInfo.h"
+//#include "PlatformInfo.h"
 
 using namespace SCDFC;
 USING_NS_CC;
@@ -201,9 +201,11 @@ void MainScene::CalculateGrid()
             gridUnity.push_back(divisore);
         divisore=divisore+0.5f;
     }
+    if (0==gridUnity.size())
+        gridUnity.push_back(GetUnityBase());
 }
 
-int MainScene::GetGridBase()
+int MainScene::GetUnityBase()
 {
 //    if (0==gridUnity.size()){
 //        printf("Error creating grid\n");
@@ -242,9 +244,9 @@ bool MainScene::init()
     
 
     
-#define SCROLLVIEW_WIDTH 64*DPI//(8*GetGridBase())
+#define SCROLLVIEW_WIDTH (4*GetUnityBase())
 #define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   36*DPI//(SCROLLVIEW_WIDTH/3)
+#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/2)
     
     Rect toolbarPanelsize(0,
                           getContentSize().height,

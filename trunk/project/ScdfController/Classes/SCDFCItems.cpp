@@ -118,8 +118,6 @@ void ItemSlider::CreateThumb()
     thumb = Layout::create();
     addChild(thumb);
     thumb->setTouchEnabled(true);
-    thumb->setBackGroundImageScale9Enabled(true);
-    thumb->setBackGroundImage("SliderHandle.png");
     thumb->setBackGroundColorType(Layout::BackGroundColorType::NONE);
     //thumb->setBackGroundColor(Color3B::RED);
     thumb->setAnchorPoint(Vec2(0.5,0.5));
@@ -132,8 +130,8 @@ void ItemSlider::CreateThumb()
 ItemSlider::~ItemSlider()
 {
     if (slideBar)
-        removeChild(slideBar);
-    removeChild(thumb);
+        removeChild(slideBar,true);
+    removeChild(thumb,true);
 }
 
 void ItemSlider::Create()
@@ -159,6 +157,9 @@ void ItemSlider::Create()
     addChild(slideBar);
     InitSliderLayout();
     CreateThumb();
+    
+    thumb->setBackGroundImageScale9Enabled(true);
+    thumb->setBackGroundImage("SliderHandle.png");
 }
 
 void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -173,13 +174,6 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     if (widget==slideBar) return;
     Vec2 touchPos=widget->getTouchMovePosition();
     float distanceX=0, distanceY=0;
-    
-#ifdef DEBUG
-    float posY=getPositionY();
-    float posX=getPositionX();
-    //seems that SetPosition needs corrdinates referred to widget anchor point;
-    //GetPosition returns coordinates referred to GL space so that (0,0) is at bottom-left;
-#endif
     
     Rect rItem(getPositionX(), getPositionY()-getContentSize().height,getContentSize().width, getContentSize().height);
 
@@ -208,6 +202,7 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
         value+=(diff*(abs(max-min))/getContentSize().width);
     }
     value=fmax(min,fmin(max,value));
+    printf("KNOB VALUE %f\n", value);
     dragPosUpdated=touchPos;
     controlUnit->SendValue(value);
     SetThumbPosition();
@@ -232,12 +227,34 @@ void ItemKnob::SetThumbPosition()
     thumb->setRotation(rotation);
 }
 
+
 void ItemKnob::Create()
 {
     slideBar=NULL;
     isVertical=true;
     ItemSlider::CreateThumb();
-    thumb->setBackGroundImage("test_knob.png");
+   // thumb->setBackGroundImage("test_knob.png");
+}
+
+void ItemKnob::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    float degreesFromValue=(270.0/127.0)*value;
+    DrawPrimitives::setDrawColor4B(30, 30, 30, 255);
+    DrawPrimitives::drawSolidCircle(Vec2(getContentSize().width/2, getContentSize().height/2), getContentSize().width/2, CC_DEGREES_TO_RADIANS(180), 100);
+    DrawPrimitives::setDrawColor4B(200, 200, 200, 255);
+    GLfloat width;
+    glGetFloatv(GL_LINE_WIDTH,&width);
+    glLineWidth(2);
+    
+    GLfloat LineRange[2];
+    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE,LineRange);
+    
+    DrawPrimitives::drawCircle(Vec2(getContentSize().width/2, getContentSize().height/2), (getContentSize().width/2)-10, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), 100,true);
+    DrawPrimitives::setDrawColor4B(127, 200, 128, 255);
+    
+    glLineWidth(10);
+    DrawPrimitives::DrawArc(getContentSize().width/2, getContentSize().height/2, getContentSize().width/2-5, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), CC_DEGREES_TO_RADIANS(degreesFromValue), 50);
+    glLineWidth(width);
 }
 
 void ItemPad::Create()
@@ -295,7 +312,7 @@ void ItemKeyboard::ClearPads()
 void ItemKeyboard::CreatePads()
 {
     ClearPads();
-    float totalPadsMultiply=MainScene::GetGridBase()*padSizeMultiply;
+    float totalPadsMultiply=MainScene::GetUnityBase()*padSizeMultiply;
     float padsWidth=ItemPad::GetSize().width*totalPadsMultiply;
     float padsHeight=ItemPad::GetSize().height*totalPadsMultiply;
 
