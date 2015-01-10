@@ -50,6 +50,7 @@
 		DCE8BEAE194393B300D283E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE8BEAD194393B300D283E8 /* main.m */; };
 		DCE8BEC0194393B300D283E8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEBF194393B300D283E8 /* Images.xcassets */; };
 		DCE8BEE01943970100D283E8 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEDF1943970100D283E8 /* CoreMotion.framework */; };
+		DCF2E3FB1A61AADE00BA6AC5 /* GraphicViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCF2E3FA1A61AADE00BA6AC5 /* GraphicViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,6 +122,8 @@
 		DCE8BEBF194393B300D283E8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DCE8BEC6194393B300D283E8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		DCE8BEDF1943970100D283E8 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		DCF2E3F91A61AADE00BA6AC5 /* GraphicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicViewController.h; sourceTree = SOURCE_ROOT; };
+		DCF2E3FA1A61AADE00BA6AC5 /* GraphicViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GraphicViewController.mm; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +305,8 @@
 				DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */,
 				DC70A3C61944CD3C0057AED4 /* SecondViewController.h */,
 				DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */,
+				DCF2E3F91A61AADE00BA6AC5 /* GraphicViewController.h */,
+				DCF2E3FA1A61AADE00BA6AC5 /* GraphicViewController.mm */,
 				DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */,
 				DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */,
 				DC151391194487A100DC7BF7 /* src */,
@@ -397,6 +402,7 @@
 			files = (
 				9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */,
 				9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */,
+				DCF2E3FB1A61AADE00BA6AC5 /* GraphicViewController.mm in Sources */,
 				9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */,
 				9D56F87A19634F7F00AD182A /* PipesManager.cpp in Sources */,
 				9D5E223C194DE17200288DD2 /* ThreadUtils.cpp in Sources */,
