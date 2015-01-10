@@ -34,13 +34,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 
     Size designSize = director->getOpenGLView()->getDesignResolutionSize();
-    LOGD("Design resolution size: %f %f",designSize.width,designSize.height);
+    LOGD("Design resolution size: %f %f\n",designSize.width,designSize.height);
     Vec2 vOrigin = director->getVisibleOrigin();
-    LOGD("Visible origin: %f %f",vOrigin.x,vOrigin.y);
+    LOGD("Visible origin: %f %f\n",vOrigin.x,vOrigin.y);
     Size vSize = director->getVisibleSize();
-    LOGD("Visible size: %f %f",vSize.width,vSize.height);
+    LOGD("Visible size: %f %f\n",vSize.width,vSize.height);
     Size frameSize = director->getOpenGLView()->getFrameSize();
-    LOGD("FRAME size: %f %f",frameSize.width,frameSize.height);
+    LOGD("FRAME size: %f %f\n",frameSize.width,frameSize.height);
     //int orientation = director->getOpenGLView()->getDeviceOrientation();
     //LOGD("Orientation: %d",orientation);
     //float zoomfactor = director->getOpenGLView()->getFrameZoomFactor();
@@ -49,11 +49,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //LOGD("Retina factor: %d",retinafactor);
     float scaleX = director->getOpenGLView()->getScaleX();
     float scaleY = director->getOpenGLView()->getScaleY();
-    LOGD("Scale X: %f - Y: %f",scaleX,scaleY);
+    LOGD("Scale X: %f - Y: %f\n",scaleX,scaleY);
     Rect vRect = director->getOpenGLView()->getVisibleRect();
-    LOGD("Visible RECT X:%f Y:%f W:%f H:%f",vRect.origin.x, vRect.origin.y, vRect.size.width,vRect.size.width);
+    LOGD("Visible RECT X:%f Y:%f W:%f H:%f\n",vRect.origin.x, vRect.origin.y, vRect.size.width,vRect.size.width);
 
-    LOGD("DPI : %d", Device::getDPI() );
+    LOGD("DPI : %d\n", Device::getDPI() );
 
     director->getOpenGLView()->setDesignResolutionSize(frameSize.width,frameSize.height,ResolutionPolicy::SHOW_ALL);
     director->setContentScaleFactor(3.0);
