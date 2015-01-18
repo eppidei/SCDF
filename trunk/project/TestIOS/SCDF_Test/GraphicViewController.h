@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioWaveView.h"
 
 @interface GraphicViewController : UIViewController
 
 {
-    UIView      *graphicView;
+    AudioWaveView      *waveView;
+    UIView             *topView;
+    UIView             *bottomView;
 }
 
 @end

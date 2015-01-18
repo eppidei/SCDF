@@ -13,15 +13,18 @@
 #include "SensorsManager.h"
 #include "Receiver.h"
 
-#define USE_RECEIVER
+//#define USE_RECEIVER
 
 void InitFramework()
 {
+    
+#ifdef USE_RECEIVER
     SCDF_Receiver_T *p_receiver=NULL;
     size_t rx_pkt_size=1024;
     unsigned int audio_buf_len = 512;
     unsigned int sensor_buf_len = 64;
     unsigned int graph_buf_len = 4*audio_buf_len;
+#endif
     
     scdf::thePipesManager()->CreateReturnPipes();
     scdf::theSensorManager()->CreateAllSensors();
