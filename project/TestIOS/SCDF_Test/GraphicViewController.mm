@@ -12,15 +12,34 @@
 
 @end
 
+const int borderMargin = 200;
+
 @implementation GraphicViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    graphicView  = [[UIView alloc] initWithFrame:self.view.frame];
-    [graphicView setBackgroundColor:[UIColor greenColor]];
-    [self.view addSubview:graphicView];
+    topView = [[UIView alloc ]init];
+    [topView setBackgroundColor:[UIColor whiteColor]];
+    
+     waveView  = [[AudioWaveView alloc] initWithFrame:self.view.frame];
+    
+    bottomView = [[UIView alloc ]init];
+    [bottomView setBackgroundColor:[UIColor whiteColor]];
+   
     // Do any additional setup after loading the view.
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [topView setFrame:CGRectMake(0, 0, self.view.frame.size.width, borderMargin)];
+    [self.view addSubview:topView];
+    
+    [waveView setFrame:CGRectMake(0, borderMargin, self.view.frame.size.width, self.view.frame.size.height- (2*borderMargin))];
+    [self.view addSubview:waveView];
+    
+    [bottomView setFrame:CGRectMake(0, self.view.frame.size.height- borderMargin, self.view.frame.size.width, borderMargin)];
+    [self.view addSubview:waveView];
 }
 
 - (void)didReceiveMemoryWarning {

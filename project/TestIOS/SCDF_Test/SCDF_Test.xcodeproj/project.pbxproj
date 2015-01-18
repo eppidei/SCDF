@@ -28,6 +28,7 @@
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
 		9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
 		A71B7D8C1A6C292500BEC022 /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A71B7D8B1A6C292500BEC022 /* Receiver.cpp */; };
+		CC5DAC9D1A6C2C4300AFDF5A /* AudioWaveView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
 		DC299E5A197714DA007F430F /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC299E59197714DA007F430F /* SaveSettings.mm */; };
@@ -90,6 +91,8 @@
 		9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
 		9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
 		A71B7D8B1A6C292500BEC022 /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../../../src/Receiver.cpp; sourceTree = "<group>"; };
+		CC5DAC9B1A6C2C4300AFDF5A /* AudioWaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioWaveView.h; sourceTree = SOURCE_ROOT; };
+		CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioWaveView.mm; sourceTree = SOURCE_ROOT; };
 		DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorStandardIosImpl.mm; sourceTree = "<group>"; };
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
@@ -304,6 +307,8 @@
 		DCE8BEA7194393B300D283E8 /* SCDF_Test */ = {
 			isa = PBXGroup;
 			children = (
+				CC5DAC9B1A6C2C4300AFDF5A /* AudioWaveView.h */,
+				CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */,
 				DC70A3C41944CD3C0057AED4 /* FirstViewController.h */,
 				DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */,
 				DC70A3C61944CD3C0057AED4 /* SecondViewController.h */,
@@ -409,6 +414,7 @@
 				9D5E21E2194C6AE200288DD2 /* AppDelegate.mm in Sources */,
 				9D56F87A19634F7F00AD182A /* PipesManager.cpp in Sources */,
 				9D5E223C194DE17200288DD2 /* ThreadUtils.cpp in Sources */,
+				CC5DAC9D1A6C2C4300AFDF5A /* AudioWaveView.mm in Sources */,
 				A71B7D8C1A6C292500BEC022 /* Receiver.cpp in Sources */,
 				9D5E2239194DE15A00288DD2 /* NetworkingUtils.cpp in Sources */,
 				DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */,
