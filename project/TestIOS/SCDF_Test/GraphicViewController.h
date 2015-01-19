@@ -15,6 +15,8 @@
     AudioWaveView      *waveView;
     UIView             *topView;
     UIView             *bottomView;
+    
+    UILabel            *topLabel;
 }
 
 @end
