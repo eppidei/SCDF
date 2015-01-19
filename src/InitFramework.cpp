@@ -13,7 +13,7 @@
 #include "SensorsManager.h"
 #include "Receiver.h"
 
-//#define USE_RECEIVER
+#define USE_RECEIVER
 
 scdf::Receiver *audioReceiver = nullptr;
 
@@ -29,13 +29,13 @@ void InitFramework()
     unsigned int sensor_buf_len = 64;
     unsigned int graph_buf_len = 4*audio_buf_len;
 
-    scdf::Receiver p_receiver = scdf::Receiver::Receiver( rx_pkt_size,audio_buf_len,sensor_buf_len,graph_buf_len);
-    audioReceiver = &p_receiver;
+    scdf::Receiver *p_receiver = new scdf::Receiver( rx_pkt_size,audio_buf_len,sensor_buf_len,graph_buf_len);
+    audioReceiver = p_receiver;
     
-    p_receiver.SetRemoteIp(127,0,0,1);
-    p_receiver.SetLocalIp(127,0,0,1);
-    p_receiver.SetPort(50005);
-    p_receiver.Start();
+    p_receiver->SetRemoteIp(127,0,0,1);
+    p_receiver->SetLocalIp(127,0,0,1);
+    p_receiver->SetPort(50005);
+    p_receiver->Start();
 #endif
 }
 
