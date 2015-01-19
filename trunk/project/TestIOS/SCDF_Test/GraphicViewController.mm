@@ -8,21 +8,35 @@
 
 #import "GraphicViewController.h"
 
+
+#define TAB_BAR_SIZE 49
+
 @interface GraphicViewController ()
 
 @end
 
-const int borderMargin = 200;
+const int borderMargin = 160;
+extern scdf::Receiver *audioReceiver;
 
 @implementation GraphicViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    topLabel = [[UILabel alloc]init];
+    [topLabel setFont:[UIFont systemFontOfSize:20]];
+    [topLabel setText:@"Wave data:"];
+    
     topView = [[UIView alloc ]init];
     [topView setBackgroundColor:[UIColor whiteColor]];
     
      waveView  = [[AudioWaveView alloc] initWithFrame:self.view.frame];
+    
+    AudioWaveListener *listener = new AudioWaveListener();
+    listener->SetViewRef(waveView);
+    if(audioReceiver)
+        audioReceiver->SetListener(listener);
+    
     
     bottomView = [[UIView alloc ]init];
     [bottomView setBackgroundColor:[UIColor whiteColor]];
@@ -35,11 +49,19 @@ const int borderMargin = 200;
     [topView setFrame:CGRectMake(0, 0, self.view.frame.size.width, borderMargin)];
     [self.view addSubview:topView];
     
-    [waveView setFrame:CGRectMake(0, borderMargin, self.view.frame.size.width, self.view.frame.size.height- (2*borderMargin))];
+    [waveView setFrame:CGRectMake(0, borderMargin, self.view.frame.size.width, self.view.frame.size.height- (2*borderMargin)- TAB_BAR_SIZE)];
     [self.view addSubview:waveView];
     
-    [bottomView setFrame:CGRectMake(0, self.view.frame.size.height- borderMargin, self.view.frame.size.width, borderMargin)];
+    [bottomView setFrame:CGRectMake(0, self.view.frame.size.height- borderMargin-TAB_BAR_SIZE, self.view.frame.size.width, borderMargin)];
     [self.view addSubview:waveView];
+    
+    
+    int offsetLeftLabel = 10;
+    CGRect frameLabel = topView.frame;
+    frameLabel.origin.x = offsetLeftLabel;
+    frameLabel.size.width -= offsetLeftLabel;
+    [topView addSubview:topLabel];
+    [topLabel setFrame:frameLabel];
 }
 
 - (void)didReceiveMemoryWarning {

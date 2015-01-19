@@ -44,11 +44,12 @@ namespace scdf {
     {
         public :
         
-        class Listener
+        class ReceiverListener
         {
             public :
-            virtual void draw_buffer(s_sample *p_buff, unsigned int buff_len);
+                virtual void draw_buffer(s_sample *p_buff, unsigned int buff_len) = 0;
         };
+        Receiver(){}
         
         Receiver( size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len);
         ~Receiver();
@@ -59,12 +60,12 @@ namespace scdf {
         void SetLocalIp( unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4);
         void SetPort(unsigned int val1);
         
-        void SetListener(Listener* _listener){listener = _listener;}
+        void SetListener(ReceiverListener* _listener){listener = _listener;}
     
     
 protected:
     
-    Listener* listener;
+    ReceiverListener* listener;
 
     
         private :
