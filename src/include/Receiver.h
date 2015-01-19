@@ -35,55 +35,68 @@ typedef enum SensorType{
     AudioInput,
     NumTypes }SensorType_T ;
 
-//
-//#pragma pack(push)  /* push current alignment to stack */
-//#pragma pack(1)     /* set alignment to 1 byte boundary */
-//typedef struct SensorData {
-//    SensorType_T type;
-//    s_int32 rate;           /* time of the sensor reading as reported by the sensor*/
-//    s_uint64 timeid;                /* will be the same for all data harvested in the same call*/
-//    s_int32 num_frames;
-//    s_int32 numChannels;
-//    s_uint64 *ptimestamp;
-//    s_sample *pdata;
-//    s_sample data[MAX_BUFFER_LEN]; /*uint32 per nthol*/
-//    s_uint64 timestamp[MAX_BUFFER_TIMESTAMP];
-//} SensorData_T;
-//
-//#pragma pack(pop)
 
 
-typedef struct SCDF_Receiver_S SCDF_Receiver_T;
 
-struct SCDF_Receiver_S
-{
-    int Sock_sd;
-    fd_set fds;
-    struct sockaddr_in localport_info;
-    int port;
-    unsigned int local_ip1;
-    unsigned int local_ip2;
-    unsigned int local_ip3;
-    unsigned int local_ip4;
-    unsigned int remote_ip1;
-    unsigned int remote_ip2;
-    unsigned int remote_ip3;
-    unsigned int remote_ip4;
-    size_t rx_pkt_size;
-    unsigned int audio_buf_len;
-    unsigned int sensor_buf_len;
-    unsigned int graph_buf_len;
-    char *p_rx_buff;
-    s_sample *p_graph_buff;
-    scdf::ThreadUtils::ThreadHandle handle;
-};
+namespace scdf {
+    
+    class Receiver
+    {
+        public :
+        
+        class Listener
+        {
+            public :
+            virtual void draw_buffer(s_sample *p_buff, unsigned int buff_len);
+        };
+        
+        Receiver( size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len);
+        ~Receiver();
+        
+        void Start();
+        void Stop();
+        void SetRemoteIp( unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4);
+        void SetLocalIp( unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4);
+        void SetPort(unsigned int val1);
+        
+        void SetListener(Listener* _listener){listener = _listener;}
+    
+    
+protected:
+    
+    Listener* listener;
 
-int SCDF_Receiver_Init(SCDF_Receiver_T **p_receiver, size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len);
-void SCDF_Receiver_Release(SCDF_Receiver_T *p_receiver);
-void SCDF_Receiver_Start(SCDF_Receiver_T *p_receiver);
-void SCDF_Receiver_Stop(SCDF_Receiver_T *p_receiver);
-void SCDF_Receiver_SetRemoteIp(SCDF_Receiver_T *p_receiver, unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4);
-void SCDF_Receiver_SetLocalIp(SCDF_Receiver_T *p_receiver, unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4);
-void SCDF_Receiver_SetPort(SCDF_Receiver_T *p_receiver, unsigned int val1);
+    
+        private :
+        
+        
+            int Sock_sd;
+            fd_set fds;
+            struct sockaddr_in localport_info;
+            int port;
+            unsigned int local_ip1;
+            unsigned int local_ip2;
+            unsigned int local_ip3;
+            unsigned int local_ip4;
+            unsigned int remote_ip1;
+            unsigned int remote_ip2;
+            unsigned int remote_ip3;
+            unsigned int remote_ip4;
+            size_t rx_pkt_size;
+            unsigned int audio_buf_len;
+            unsigned int sensor_buf_len;
+            unsigned int graph_buf_len;
+            char *p_rx_buff;
+            s_sample *p_graph_buff;
+            scdf::ThreadUtils::ThreadHandle handle;
+            
+        
+        static void StartReceivingProcedure(void *param);
+        static void Init_socket(char* ip_local,char* ip_remote,int port_id,int* SOCK_sd,struct sockaddr_in *localport_info);
+        static int receive(char* line, int maxsize,char* ip_local_init,char* ip_remote_init,int port_id,int* SOCK_sd,fd_set *fds,struct sockaddr_in *localport_info,unsigned long *sock_buff_count);
+        
+    };
+
+}
 
 #endif /* defined(__SCDF_Test__Receiver__) */
