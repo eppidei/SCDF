@@ -19,66 +19,49 @@
 #include "SCDF_OSCListener.h"
 
 #define SENSORDATA_SIZE 2048 // 2 FIX
-
-static void StartReceivingProcedure(void *param);
-static void SCDF_Init_socket(char* ip_local,char* ip_remote,int port_id,int* SOCK_sd,struct sockaddr_in *localport_info);
-static int SCDF_receive(char* line, int maxsize,char* ip_local_init,char* ip_remote_init,int port_id,int* SOCK_sd,fd_set *fds,struct sockaddr_in *localport_info,unsigned long *sock_buff_count);
+namespace scdf {
 
 
-int SCDF_Receiver_Init(SCDF_Receiver_T **p_receiver, size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len)
+Receiver::Receiver( size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len)
 {
-    SCDF_Receiver_T *p_this;
     
-    if (p_this!=NULL)
-    {
-        p_this=(SCDF_Receiver_T *)calloc(1,sizeof(SCDF_Receiver_T));
-        p_this->rx_pkt_size=rx_pkt_size;
-        p_this->p_rx_buff=(char*)malloc(rx_pkt_size);
-        memset(p_this->p_rx_buff,0,rx_pkt_size);
-        p_this->audio_buf_len=audio_buf_len;
-        p_this->sensor_buf_len=sensor_buf_len;
-        p_this->graph_buf_len=graph_buf_len;
-        p_this->p_graph_buff=(s_sample*)calloc(graph_buf_len,sizeof(s_sample));
-        
-        *p_receiver=p_this;
-    }
-    else
-    {
-        return -1;
-    }
-    
-    
-    return 0;
+  
+        this->rx_pkt_size=rx_pkt_size;
+        this->p_rx_buff=(char*)malloc(rx_pkt_size);
+        memset(this->p_rx_buff,0,rx_pkt_size);
+        this->audio_buf_len=audio_buf_len;
+        this->sensor_buf_len=sensor_buf_len;
+        this->graph_buf_len=graph_buf_len;
+        this->p_graph_buff=(s_sample*)calloc(graph_buf_len,sizeof(s_sample));
+
 }
 
-void SCDF_Receiver_Release(SCDF_Receiver_T *p_receiver)
+Receiver::~Receiver()
 {
-    
-     free(p_receiver->p_rx_buff);
-   
-    free(p_receiver->p_graph_buff);
-    free(p_receiver);
+     free(this->p_rx_buff);
+    free(this->p_graph_buff);
+
     
 }
 
-void SCDF_Receiver_SetRemoteIp(SCDF_Receiver_T *p_receiver, unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4)
+    void Receiver::SetRemoteIp(unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4)
 {
-    p_receiver->remote_ip1=val1;
-    p_receiver->remote_ip2=val2;
-    p_receiver->remote_ip3=val3;
-    p_receiver->remote_ip4=val4;
+    this->remote_ip1=val1;
+    this->remote_ip2=val2;
+    this->remote_ip3=val3;
+    this->remote_ip4=val4;
 }
 
-void SCDF_Receiver_SetLocalIp(SCDF_Receiver_T *p_receiver, unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4)
+    void Receiver::SetLocalIp(unsigned int val1,unsigned int val2,unsigned int val3,unsigned int val4)
 {
-    p_receiver->local_ip1=val1;
-    p_receiver->local_ip2=val2;
-    p_receiver->local_ip3=val3;
-    p_receiver->local_ip4=val4;
+    this->local_ip1=val1;
+    this->local_ip2=val2;
+    this->local_ip3=val3;
+    this->local_ip4=val4;
 }
-void SCDF_Receiver_SetPort(SCDF_Receiver_T *p_receiver, unsigned int val1)
+void Receiver::SetPort( unsigned int val1)
 {
-    p_receiver->port=val1;
+    this->port=val1;
 }
 
 /*void SCDF_Receiver_SetBuff(SCDF_Receiver_T *p_receiver, s_sample *val1)
@@ -86,19 +69,20 @@ void SCDF_Receiver_SetPort(SCDF_Receiver_T *p_receiver, unsigned int val1)
     p_receiver->p_audio_buff=val1;
 }*/
 
-void SCDF_Receiver_Start(SCDF_Receiver_T *p_receiver)
+void Receiver::Start()
 {
-    p_receiver->handle=scdf::ThreadUtils::CreateThread((start_routine)StartReceivingProcedure, (void*)p_receiver);
+    
+    this->handle=scdf::ThreadUtils::CreateThread((start_routine)StartReceivingProcedure, this);
 }
 
-void SCDF_Receiver_Stop(SCDF_Receiver_T *p_receiver)
+void Receiver::Stop()
 {
-    scdf::ThreadUtils::TerminateThread(p_receiver->handle);
+    scdf::ThreadUtils::TerminateThread(this->handle);
 }
 
-static void StartReceivingProcedure(void *param)
+void Receiver::StartReceivingProcedure(void *param)
 {
-    SCDF_Receiver_T *p_receiver=((SCDF_Receiver_T*)param);
+    Receiver* p_receiver=((Receiver*)param);
     static SCDFPacketListener Rx_Listener(p_receiver->sensor_buf_len,p_receiver->audio_buf_len);
     //static SensorData_T SCDF_rx_pkt;
     static char local_ip[16];
@@ -111,13 +95,13 @@ static void StartReceivingProcedure(void *param)
     sprintf(local_ip,"%d.%d.%d.%d",p_receiver->local_ip1,p_receiver->local_ip2,p_receiver->local_ip3,p_receiver->local_ip4);
     sprintf(remote_ip,"%d.%d.%d.%d",p_receiver->remote_ip1,p_receiver->remote_ip2,p_receiver->remote_ip3,p_receiver->remote_ip4);
     
-    SCDF_Init_socket(local_ip,remote_ip,p_receiver->port,&(p_receiver->Sock_sd),&(p_receiver->localport_info));
+    Init_socket(local_ip,remote_ip,p_receiver->port,&(p_receiver->Sock_sd),&(p_receiver->localport_info));
     Rx_endpoint.address=( (p_receiver->remote_ip1 & 0xFF) <<24) | ( (p_receiver->remote_ip2 & 0xFF) <<16) | ( (p_receiver->remote_ip3 & 0xFF) <<8) | ( (p_receiver->remote_ip4 & 0xFF) <<0) ;//(remote_IP);
     Rx_endpoint.port=p_receiver->port;
     
     while(1)//(harvester->activated)
     {
-        ret=SCDF_receive(p_receiver->p_rx_buff, p_receiver->rx_pkt_size,local_ip,remote_ip,p_receiver->port,&(p_receiver->Sock_sd),&(p_receiver->fds),&(p_receiver->localport_info),&sock_buff_count);
+        ret=receive(p_receiver->p_rx_buff, p_receiver->rx_pkt_size,local_ip,remote_ip,p_receiver->port,&(p_receiver->Sock_sd),&(p_receiver->fds),&(p_receiver->localport_info),&sock_buff_count);
         
         if (ret>0)
         {
@@ -132,7 +116,7 @@ static void StartReceivingProcedure(void *param)
 
 
 
-static void SCDF_Init_socket(char* ip_local,char* ip_remote,int port_id,int* SOCK_sd,struct sockaddr_in *localport_info)
+  void  Receiver::Init_socket(char* ip_local,char* ip_remote,int port_id,int* SOCK_sd,struct sockaddr_in *localport_info)
 {
     
     static unsigned int iOptVal_pkt;
@@ -216,7 +200,7 @@ static void SCDF_Init_socket(char* ip_local,char* ip_remote,int port_id,int* SOC
     
 }
 
-static int SCDF_receive(char* line, int maxsize,char* ip_local_init,char* ip_remote_init,int port_id,int* SOCK_sd,fd_set *fds,struct sockaddr_in *localport_info,unsigned long *sock_buff_count)
+int Receiver::receive(char* line, int maxsize,char* ip_local_init,char* ip_remote_init,int port_id,int* SOCK_sd,fd_set *fds,struct sockaddr_in *localport_info,unsigned long *sock_buff_count)
 {
     int ret = 0,ret_val=0;
     socklen_t socketlen = sizeof(struct sockaddr_in);
@@ -275,3 +259,4 @@ static int SCDF_receive(char* line, int maxsize,char* ip_local_init,char* ip_rem
     return ret;
 }
 
+    }
