@@ -38,7 +38,13 @@ const int borderSize = 0;
         [self setBackgroundColor:[UIColor grayColor]];
         
         bufferData = (s_sample*)malloc(bufferSize*sizeof(s_sample));
-        memset(bufferData, 0.5, bufferSize*sizeof(s_sample));
+        for(int i = 0; i<bufferSize; i++)
+        {
+            s_sample value = (s_sample)i/bufferSize;
+            value = 0;
+            bufferData[i]=(value);
+        }
+
         currentBufferSize = bufferSize;
         bufferLock = [[NSObject alloc] init];
 
@@ -77,6 +83,12 @@ const int borderSize = 0;
     }
 }
 
+- (void) refresh
+{
+    [self setNeedsDisplay];
+    
+}
+
 - (void) OnNewBufferReady: (s_sample *) buff withSize: (int) size
 {
     @synchronized (bufferLock){
@@ -84,8 +96,11 @@ const int borderSize = 0;
         [self BufferSizeCheck:size];
         memcpy(bufferData, buff, size*sizeof(s_sample));
     }
-    [self setNeedsDisplay];
+   // [self setNeedsDisplay];
+    [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:NO];
 }
+
+
 //
 - (void) generateRandomBuffer
 {
@@ -112,7 +127,7 @@ const int borderSize = 0;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColor(context, CGColorGetComponents([[UIColor blueColor] CGColor]));
-    s_sample bufferStep = (s_sample)bufferSize/(s_sample)self.frame.size.width;
+    s_sample bufferStep = (s_sample)currentBufferSize/(s_sample)self.frame.size.width;
     
     @synchronized (bufferLock){
         for(int i = 0; i<frame.size.width - 1; i++)
