@@ -71,7 +71,7 @@ void Receiver::SetPort( unsigned int val1)
 
 void Receiver::Start()
 {
-    
+    printf("buffer size %d\n",this->sensor_buf_len);
     this->handle=scdf::ThreadUtils::CreateThread((start_routine)StartReceivingProcedure, this);
 }
 
@@ -83,18 +83,20 @@ void Receiver::Stop()
 void Receiver::StartReceivingProcedure(void *param)
 {
     Receiver* p_receiver=((Receiver*)param);
-    static SCDFPacketListener Rx_Listener(p_receiver->sensor_buf_len,p_receiver->audio_buf_len);
+    SCDFPacketListener Rx_Listener(p_receiver->sensor_buf_len,p_receiver->audio_buf_len);
     //static SensorData_T SCDF_rx_pkt;
     static char local_ip[16];
     static char remote_ip[16];
     unsigned long sock_buff_count=0;
     static IpEndpointName Rx_endpoint;
     int ret = 0;
+    unsigned int i=0;
     
         
     sprintf(local_ip,"%d.%d.%d.%d",p_receiver->local_ip1,p_receiver->local_ip2,p_receiver->local_ip3,p_receiver->local_ip4);
     sprintf(remote_ip,"%d.%d.%d.%d",p_receiver->remote_ip1,p_receiver->remote_ip2,p_receiver->remote_ip3,p_receiver->remote_ip4);
     
+    printf("porta settata %d\n",p_receiver->port);
     Init_socket(local_ip,remote_ip,p_receiver->port,&(p_receiver->Sock_sd),&(p_receiver->localport_info));
     Rx_endpoint.address=( (p_receiver->remote_ip1 & 0xFF) <<24) | ( (p_receiver->remote_ip2 & 0xFF) <<16) | ( (p_receiver->remote_ip3 & 0xFF) <<8) | ( (p_receiver->remote_ip4 & 0xFF) <<0) ;//(remote_IP);
     Rx_endpoint.port=p_receiver->port;
@@ -108,7 +110,15 @@ void Receiver::StartReceivingProcedure(void *param)
             Rx_Listener.ProcessPacket(p_receiver->p_rx_buff,ret,Rx_endpoint);
         }
         
-        //SCDF_Receiver_SetBuff(p_receiver, Test_endpoint.audio_data_buff_p);
+        //memcpy(p_receiver->p_graph_buff,Rx_Listener.audio_data_buff_p,Rx_Listener.n_audio_data*sizeof(s_sample));
+        //memset(p_receiver->p_graph_buff,0.5,p_receiver->graph_buf_len*sizeof(s_sample));
+        for (i=0;i<p_receiver->graph_buf_len;i++)
+        {
+            p_receiver->p_graph_buff[i]=static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        }
+        
+        p_receiver->listener->draw_buffer(p_receiver->p_graph_buff,p_receiver->graph_buf_len);
+        //printf("memset\n");
         
     }
 }
