@@ -7,6 +7,7 @@
 //
 
 #include "SCDFCDefinitions.h"
+#include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"

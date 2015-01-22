@@ -8,6 +8,7 @@
 #include "SCDFCDefinitions.h"
 
 #include "MainScene.h"
+#include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
@@ -47,10 +48,8 @@ void WorkingPanel::CheckAddControl(int buttonTag)
     
     auto item = ItemBase::CreateItem(draggingRect, buttonTag);
     addChild(item);
-    item->setAnchorPoint(Vec2(0,1));
-    item->addTouchEventListener(CC_CALLBACK_2(WorkingPanel::OnControlTouch, this));
+    //item->addTouchEventListener(CC_CALLBACK_2(WorkingPanel::OnControlTouch, this));
     parent->AttachItem(item);
-    item->Notify();
     items.push_back(item);
 }
 
@@ -104,82 +103,82 @@ void WorkingPanel::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &paren
     Layout::visit(renderer, parentTransform, parentFlags);
 }
 
-void WorkingPanel::OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
-{
-//    if (!active)
+//void WorkingPanel::OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
+//{
+////    if (!active)
+////    {
+////        OnControlMove(pSender, type);
+////        return;
+////    }
+//    ui::Button* button = dynamic_cast<ui::Button*>(pSender);
+//    static Vec2 dragStartPoint;
+//    switch (type)
 //    {
-//        OnControlMove(pSender, type);
-//        return;
+//        case Widget::TouchEventType::BEGAN:
+//        {
+////            ListView* lv = ListView::create();
+////            Button* model = Button::create();
+////            model->setTouchEnabled(true);
+////            model->setScale9Enabled(true);
+////            model->setContentSize(Size(100, 40));
+////            model->ignoreContentAdaptWithSize(true);
+////            model->setTitleText("Text Button");
+////            model->setTitleFontSize(20);
+////            model->setTitleColor(Color3B(255,0,0));
+////            model->setPressedActionEnabled(true);
+////            lv->setItemModel(model);
+////            
+////            for (int i=0; i<5; i++)
+////            {
+////                lv->pushBackDefaultItem();
+////            }
+////            addChild(lv);
+////            lv->setItemsMargin(5);
+////            lv->setGravity(ListView::Gravity::CENTER_VERTICAL);
+////            lv->setSize(Size(100,100));
+////            lv->setBackGroundColorType(LAYOUT_COLOR_SOLID);
+////            lv->setBackGroundColor(Color3B::GREEN);
+////            lv->setPosition(button->getPosition());
+////            lv->addEventListener(CC_CALLBACK_2(WorkingPanel::selectedItemEvent, this));
+//            break;
+//        }
+//        case Widget::TouchEventType::MOVED:
+//        {
+//        }
+//            break;
+//        case Widget::TouchEventType::ENDED:
+//            break;
+//        case Widget::TouchEventType::CANCELED:
+//            break;
+//        default:
+//            break;
 //    }
-    ui::Button* button = dynamic_cast<ui::Button*>(pSender);
-    static Vec2 dragStartPoint;
-    switch (type)
-    {
-        case Widget::TouchEventType::BEGAN:
-        {
-//            ListView* lv = ListView::create();
-//            Button* model = Button::create();
-//            model->setTouchEnabled(true);
-//            model->setScale9Enabled(true);
-//            model->setContentSize(Size(100, 40));
-//            model->ignoreContentAdaptWithSize(true);
-//            model->setTitleText("Text Button");
-//            model->setTitleFontSize(20);
-//            model->setTitleColor(Color3B(255,0,0));
-//            model->setPressedActionEnabled(true);
-//            lv->setItemModel(model);
-//            
-//            for (int i=0; i<5; i++)
-//            {
-//                lv->pushBackDefaultItem();
-//            }
-//            addChild(lv);
-//            lv->setItemsMargin(5);
-//            lv->setGravity(ListView::Gravity::CENTER_VERTICAL);
-//            lv->setSize(Size(100,100));
-//            lv->setBackGroundColorType(LAYOUT_COLOR_SOLID);
-//            lv->setBackGroundColor(Color3B::GREEN);
-//            lv->setPosition(button->getPosition());
-//            lv->addEventListener(CC_CALLBACK_2(WorkingPanel::selectedItemEvent, this));
-            break;
-        }
-        case Widget::TouchEventType::MOVED:
-        {
-        }
-            break;
-        case Widget::TouchEventType::ENDED:
-            break;
-        case Widget::TouchEventType::CANCELED:
-            break;
-        default:
-            break;
-    }
-}
+//}
 
-void WorkingPanel::selectedItemEvent(Ref *pSender, ListView::EventType type)
-{
-    switch (type)
-    {
-        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_START:
-        {
-            ListView* listView = static_cast<ListView*>(pSender);
-            CC_UNUSED_PARAM(listView);
-            CCLOG("select child start index = %ld", listView->getCurSelectedIndex());
-            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(0,0,255));
-            break;
-        }
-        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END:
-        {
-            ListView* listView = static_cast<ListView*>(pSender);
-            CC_UNUSED_PARAM(listView);
-            CCLOG("select child end index = %ld", listView->getCurSelectedIndex());
-            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(255,0,0));
-            break;
-        }
-        default:
-            break;
-    }
-}
+//void WorkingPanel::selectedItemEvent(Ref *pSender, ListView::EventType type)
+//{
+//    switch (type)
+//    {
+//        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_START:
+//        {
+//            ListView* listView = static_cast<ListView*>(pSender);
+//            CC_UNUSED_PARAM(listView);
+//            CCLOG("select child start index = %ld", listView->getCurSelectedIndex());
+//            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(0,0,255));
+//            break;
+//        }
+//        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END:
+//        {
+//            ListView* listView = static_cast<ListView*>(pSender);
+//            CC_UNUSED_PARAM(listView);
+//            CCLOG("select child end index = %ld", listView->getCurSelectedIndex());
+//            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(255,0,0));
+//            break;
+//        }
+//        default:
+//            break;
+//    }
+//}
 
 bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type)
 {

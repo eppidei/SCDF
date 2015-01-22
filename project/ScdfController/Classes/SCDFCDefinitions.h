@@ -35,4 +35,12 @@
 #define SQUARE_SENSOR_SIZE_BASE     PAD_SIZE_BASE_BASE
 #define RECT_SENSOR_SIZE_BASE       SLIDER_SIZE_BASE
 
+//Properties subpanel items ID
+
+#define PROPERTIES_ITEM_NAME    1
+#define PROPERTIES_ITEM_COLOR   2
+#define PROPERTIES_OSC_PORT     3
+#define PROPERTIES_OSC_IP       4
+#define PROPERTIES_OSC_TOGGLE   5
+
 #endif
