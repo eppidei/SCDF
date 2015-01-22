@@ -17,7 +17,16 @@ namespace cocos2d{
 namespace SCDFC{
     class MainScene;
     class ItemBase;
+    class ItemBaseCallback;
     
+    class WorkingPanelItemCallback : public ItemBaseCallback
+    {
+        std::unique_ptr<ScdfCtrl::ControlUnit> cUnit;
+    public:
+        void OnItemTouchBegan(){}
+        void OnItemTouchMoved(int value);
+        void OnItemTouchEnded(){}
+    };
     class WorkingPanel : public cocos2d::ui::Layout
     {
         bool drawGrid = false;
@@ -27,7 +36,7 @@ namespace SCDFC{
         bool active;
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void DrawGrid();
-        void OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+       // void OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         void CheckRemoveControl(Node *n);
     public:
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
@@ -35,7 +44,7 @@ namespace SCDFC{
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
-        void selectedItemEvent(Ref *pSender, cocos2d::ui::ListView::EventType type);
+      //  void selectedItemEvent(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ToggleActiveState();
         CREATE_FUNC(WorkingPanel);
     };

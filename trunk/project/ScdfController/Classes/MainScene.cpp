@@ -1,6 +1,7 @@
 
 #include "SCDFCDefinitions.h"
 #include "SCDFCScrollView.h"
+#include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
@@ -87,11 +88,13 @@ template <class ItemType> void MainScene::OnEndDragging()
 void MainScene::AttachItem(ItemBase *item)
 {
     item->Attach(propertiesPanel.get());
+    item->Notify();
 }
 
 void MainScene::DetachItem(ItemBase *item)
 {
     item->Detach(propertiesPanel.get());
+    propertiesPanel->Update(NULL);
 }
 
 void MainScene::EnableScrollView(bool enable)

@@ -6,6 +6,7 @@
 //
 //
 
+#include "SCDFCItems.h"
 #include "PropertiesPanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
@@ -28,6 +29,21 @@ void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu
     parent->OnDropDownSelectionChange(menu);
 }
 
+void SubpanelBase::SubPanelItemCallback::OnItemTouchBegan()
+{
+    parent->GetParent()->EnableScrolling(false);
+}
+void SubpanelBase::SubPanelItemCallback::OnItemTouchMoved(int value)
+{
+    ItemBase *item=parent->GetParent()->GetSelectedItem();
+    if (NULL==item) return;
+    item->SetItemMultiply(value);
+}
+void SubpanelBase::SubPanelItemCallback::OnItemTouchEnded()
+{
+    parent->GetParent()->EnableScrolling(true);
+}
+    
 SubpanelBase::~SubpanelBase()
 {
     Vector<Node*> _childrens = getChildren();
@@ -60,27 +76,84 @@ void SubpanelBase::InitWithContent(SCDFC::PropertiesPanel *_parent, cocos2d::Siz
 {
     parent.reset(_parent);
     dropDownCallback.reset(new DropDownMenuCallbackSubPanel(this));
+    itemCallback.reset(new SubPanelItemCallback(this));
     setContentSize(s);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     setBackGroundColor(MAIN_BACK_COLOR);
     setAnchorPoint(Vec2(0,1));
     CreateControls();
+    PositionElements();
 }
 
-void PropertiesPanel::OSCInfo::TextFieldEvent(Ref *pSender, TextField::EventType type)
+void SubpanelBase::TouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (NULL==parent->currentControlUnit) return;
+    if (NULL==parent->GetSelectedItem()) return;
+    Node* node = dynamic_cast<Node*>(pSender);
+    switch (type)
+    {
+        case Widget::TouchEventType::BEGAN:
+            switch (node->getTag())
+            {
+                case PROPERTIES_ITEM_COLOR:
+                    //call color picker first and set color from color picker callback?
+                    parent->GetSelectedItem()->SetColor(Color3B(255,0,0));
+                    UpdateValues();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case Widget::TouchEventType::MOVED:
+            // TODO
+            //  break;
+        case Widget::TouchEventType::ENDED:
+            // TODO
+            // break;
+        case Widget::TouchEventType::CANCELED:
+            // TODO
+            // break;
+        default:
+            // TODO
+            break;
+    }
+}
+void SubpanelBase::TextFieldEvent(Ref *pSender, TextField::EventType type)
+{
+    if (NULL==parent->GetSelectedItem()) return;
     TextField *text=dynamic_cast<TextField*>(pSender);
     switch (type)
     {
         case TextField::EventType::DETACH_WITH_IME:
-        {
-            if (oscPort==text)
-                 parent->currentControlUnit->SetOscPort(std::stoi(text->getStringValue()));
-            else if (oscIP==text)
-                 parent->currentControlUnit->SetOscIp(text->getStringValue());
-        }
-        break;
+            switch (text->getTag())
+            {
+                case PROPERTIES_ITEM_NAME:
+                    parent->GetSelectedItem()->SetName(text->getStringValue());
+                    break;
+                case PROPERTIES_OSC_PORT:
+                    parent->GetCurrentControlUnit()->SetOscPort(std::stoi(text->getStringValue()));
+                    break;
+                case PROPERTIES_OSC_IP:
+                    parent->GetCurrentControlUnit()->SetOscIp(text->getStringValue());
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void SubpanelBase::CheckBoxEvent(Ref* pSender,CheckBox::EventType type)
+{
+    if (NULL==parent->GetCurrentControlUnit()) return;
+    CheckBox *checkBox=dynamic_cast<CheckBox*>(pSender);
+    bool selected=type==CheckBox::EventType::SELECTED;
+    switch (checkBox->getTag())
+    {
+        case PROPERTIES_OSC_TOGGLE:
+            parent->GetCurrentControlUnit()->SetOscEnabled(selected);
+            break;
         default:
             break;
     }
@@ -91,24 +164,6 @@ PropertiesPanel::OSCInfo::OSCInfo()
     toggleLabel=portLabel=ipLabel=oscTagLabel=oscTag=NULL;
     oscToggle=NULL;
     oscPort=oscIP=NULL;
-}
-
-void PropertiesPanel::OSCInfo::SelectedEvent(Ref* pSender,CheckBox::EventType type)
-{
-    if (NULL==parent->currentControlUnit) return;
-    switch (type)
-    {
-        case CheckBox::EventType::SELECTED:{
-            parent->currentControlUnit->SetOscEnabled(true);
-            break;
-        }
-        case CheckBox::EventType::UNSELECTED:{
-             parent->currentControlUnit->SetOscEnabled(false);
-            break;
-        }
-        default:
-            break;
-    }
 }
 
 void PropertiesPanel::OSCInfo::CreateControls()
@@ -126,8 +181,8 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscToggle->setContentSize(Size(30,30));
     oscToggle->setAnchorPoint(Vec2(0,1));
     oscToggle->setPosition(Vec2(getContentSize().width/2+getContentSize().width/4-oscToggle->getContentSize().width/2,getContentSize().height));
-    oscToggle->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::SelectedEvent, this));
-    addChild(oscToggle);
+    oscToggle->addEventListener(CC_CALLBACK_2(SubpanelBase::CheckBoxEvent, this));
+    addChild(oscToggle,0,PROPERTIES_OSC_TOGGLE);
     oscToggle->ignoreContentAdaptWithSize(false);
     
     //Create toggle label
@@ -152,8 +207,8 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscPort->setTouchEnabled(true);
     oscPort->setPosition(Vec2(getContentSize().width/2,getContentSize().height-getContentSize().height/4));
     oscPort->setColor(cocos2d::Color3B::WHITE);
-    oscPort->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::TextFieldEvent, this));
-    addChild(oscPort);
+    oscPort->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEvent, this));
+    addChild(oscPort, 0, PROPERTIES_OSC_PORT);
     
     //Create oscPort label
     portLabel = Text::create("UDP port:","Arial",18);
@@ -175,8 +230,8 @@ void PropertiesPanel::OSCInfo::CreateControls()
     oscIP->setTouchEnabled(true);
     oscIP->setPosition(Vec2(getContentSize().width/2,getContentSize().height/2));
     oscIP->setColor(cocos2d::Color3B::WHITE);
-    oscIP->addEventListener(CC_CALLBACK_2(PropertiesPanel::OSCInfo::TextFieldEvent, this));
-    addChild(oscIP);
+    oscIP->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEvent, this));
+    addChild(oscIP, 0 , PROPERTIES_OSC_IP);
     oscIP->setFontName("Arial");
     oscIP->setFontSize(18);
     
@@ -226,16 +281,17 @@ void PropertiesPanel::MIDIDevices::CreateControls()
 {
     //Create dropDown label
     devicesLabel = Text::create("MIDI devices:","Arial",18);
+    addChild(devicesLabel);
     devicesLabel->ignoreContentAdaptWithSize(false);
     devicesLabel->setAnchorPoint(Vec2(0,1));
     devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     devicesLabel->setContentSize(Size(getContentSize().width,getContentSize().height/2));
     devicesLabel->setColor(cocos2d::Color3B::WHITE);
-    addChild(devicesLabel);
     
     //Create dropDown
 //    dropDownCallback.reset(new DropDownMenuCallbackSubPanel(parent));
     devices = DropDownMenu::CreateMenu(Size(getContentSize().width,getContentSize().height/2));
+    addChild(devices);
     devices->ignoreContentAdaptWithSize(false);
     devices->setAnchorPoint(Vec2(0,1));
     devices->SetCallback(dropDownCallback.get());
@@ -243,9 +299,7 @@ void PropertiesPanel::MIDIDevices::CreateControls()
     dropDownData.push_back("No MIDI connection");
     for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
         dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
-    PositionElements();
     devices->InitData(dropDownData);
-    addChild(devices);
 }
 
 void PropertiesPanel::MIDIDevices::UpdateValues()
@@ -254,8 +308,8 @@ void PropertiesPanel::MIDIDevices::UpdateValues()
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
-    if (NULL==parent->currentControlUnit) return;
-    devices->SetSelectedIndex(parent->currentControlUnit->GetMidiOutIndex()+1);
+    if (NULL==parent->GetCurrentControlUnit()) return;
+    devices->SetSelectedIndex(parent->GetCurrentControlUnit()->GetMidiOutIndex()+1);
 }
 
 void PropertiesPanel::MIDIDevices::PositionElements()
@@ -268,32 +322,32 @@ void PropertiesPanel::MIDIDevices::PositionElements()
 
 void PropertiesPanel::MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
 {
-    if (NULL==parent->currentControlUnit) return;
+    if (NULL==parent->GetCurrentControlUnit()) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (devices==menu)
-        parent->currentControlUnit->SetMidiOutIndex(selectedIndex-1);
+        parent->GetCurrentControlUnit()->SetMidiOutIndex(selectedIndex-1);
 }
 
 void PropertiesPanel::OSCInfo::UpdateValues()
 {
-    if (NULL==parent->currentControlUnit) return;
-    oscToggle->setSelectedState(parent->currentControlUnit->IsOscEnabled());
+    if (NULL==parent->GetCurrentControlUnit()) return;
+    oscToggle->setSelectedState(parent->GetCurrentControlUnit()->IsOscEnabled());
     std::ostringstream os;
-    os<<(parent->currentControlUnit->GetOscPort());
+    os<<(parent->GetCurrentControlUnit()->GetOscPort());
     oscPort->setText(os.str());
-    oscIP->setText(parent->currentControlUnit->GetOscIp());
-    oscTag->setString(parent->currentControlUnit->GetOscTag());
+    oscIP->setText(parent->GetCurrentControlUnit()->GetOscIp());
+    oscTag->setString(parent->GetCurrentControlUnit()->GetOscTag());
 }
 
 void PropertiesPanel::MIDIInfo::UpdateValues()
 {
-    if (NULL==parent->currentControlUnit) return;
+    if (NULL==parent->GetCurrentControlUnit()) return;
 //    std::vector<std::string> dropDownData;
 //    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
 //        dropDownData.push_back(Scdf::MidiOutConnection::GetOutputName(i));
 //    devices->InitData(dropDownData);
     int selectedIndex=-1;
-    switch(parent->currentControlUnit->GetMidiMessageType())
+    switch(parent->GetCurrentControlUnit()->GetMidiMessageType())
     {
         case NoteOn: selectedIndex=0; break;
         case NoteOff: selectedIndex=1; break;
@@ -306,8 +360,8 @@ void PropertiesPanel::MIDIInfo::UpdateValues()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-    controlChange->SetSelectedIndex(parent->currentControlUnit->GetMidiControl());
-    channel->SetSelectedIndex(parent->currentControlUnit->GetMidiChannel());
+    controlChange->SetSelectedIndex(parent->GetCurrentControlUnit()->GetMidiControl());
+    channel->SetSelectedIndex(parent->GetCurrentControlUnit()->GetMidiChannel());
     //velocity->SetSelectedIndex(parent->currentControlUnit->Get());
 }
 
@@ -333,7 +387,7 @@ void PropertiesPanel::MIDIInfo::PositionElements()
 
 void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
 {
-    if (NULL==parent->currentControlUnit) return;
+    if (NULL==parent->GetCurrentControlUnit()) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (menu==midiMessage)
     {
@@ -349,12 +403,12 @@ void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             case 6: msg=PitchBend; break;
             default: return;
         }
-        parent->currentControlUnit->SetMidiMessageType(msg);
+        parent->GetCurrentControlUnit()->SetMidiMessageType(msg);
     }
     else if (menu==controlChange)
-        parent->currentControlUnit->SetMidiControl(selectedIndex);
+        parent->GetCurrentControlUnit()->SetMidiControl(selectedIndex);
     else if (menu==channel)
-        parent->currentControlUnit->SetMidiChannel(selectedIndex);
+        parent->GetCurrentControlUnit()->SetMidiChannel(selectedIndex);
 //    else if (menu==velocity)
 //        parent->currentControlUnit->Set(selectedIndex);
     
@@ -472,13 +526,95 @@ void PropertiesPanel::MIDIInfo::CreateControls()
         dropDownData.push_back(os.str());
     }
     velocity->InitData(dropDownData);
-    
-    PositionElements();
-
-
 }
 
-#define PROPERTIES_PADDING 20
+PropertiesPanel::ItemSettings::ItemSettings()
+{
+    sizeControl=NULL;
+    color=NULL;
+    name=NULL;
+    sizeLabel=colorLabel=nameLabel=NULL;
+}
+
+void PropertiesPanel::ItemSettings::PositionElements()
+{
+    if (colorLabel)
+        colorLabel->setPosition(Vec2(0,getContentSize().height));
+    if (color)
+        color->setPosition(Vec2(getContentSize().width/2,getContentSize().height));
+    if (nameLabel)
+        nameLabel->setPosition(Vec2(0,colorLabel->getPositionY()-colorLabel->getContentSize().height));
+    if (name)
+        name->setPosition(Vec2(0,nameLabel->getPositionY()-nameLabel->getContentSize().height));
+    if (sizeLabel)
+        sizeLabel->setPosition(Vec2(0,name->getPositionY()-name->getContentSize().height));
+    if (sizeControl)
+        sizeControl->setPosition(Vec2(sizeControl->getContentSize().height/2,sizeLabel->getPositionY()-sizeLabel->getContentSize().height));
+}
+
+void PropertiesPanel::ItemSettings::CreateControls()
+{
+    sizeLabel = Text::create("Item Size:","Arial",18);
+    addChild(sizeLabel);
+    sizeLabel->ignoreContentAdaptWithSize(false);
+    sizeLabel->setAnchorPoint(Vec2(0,1));
+    sizeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
+    sizeLabel->setContentSize(Size(getContentSize().width,getContentSize().height/5));
+    sizeLabel->setColor(cocos2d::Color3B::WHITE);
+    
+    colorLabel = Text::create("Item Color:","Arial",18);
+    addChild(colorLabel);
+    colorLabel->ignoreContentAdaptWithSize(false);
+    colorLabel->setAnchorPoint(Vec2(0,1));
+    colorLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
+    colorLabel->setContentSize(Size(getContentSize().width/2,getContentSize().height/5));
+    colorLabel->setColor(cocos2d::Color3B::WHITE);
+    
+    nameLabel = Text::create("Item Name:","Arial",18);
+    addChild(nameLabel);
+    nameLabel->ignoreContentAdaptWithSize(false);
+    nameLabel->setAnchorPoint(Vec2(0,1));
+    nameLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
+    nameLabel->setContentSize(Size(getContentSize().width,getContentSize().height/5));
+    nameLabel->setColor(cocos2d::Color3B::WHITE);
+    
+    name=TextField::create();
+    addChild(name, 0, PROPERTIES_ITEM_NAME);
+    name->setContentSize(Size(getContentSize().width,getContentSize().height/5));
+    name->setAnchorPoint(Vec2(0,1));
+    name->setTextVerticalAlignment(TextVAlignment::CENTER);
+    name->setFontSize(20);
+    name->setTouchEnabled(true);
+    name->setColor(cocos2d::Color3B::WHITE);
+    name->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEvent, this));
+    
+    color = Layout::create();
+    addChild(color,0,PROPERTIES_ITEM_COLOR);
+    color->setTouchEnabled(true);
+    color->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+    color->ignoreContentAdaptWithSize(false);
+    color->setAnchorPoint(Vec2(0,1));
+    color->setContentSize(Size(getContentSize().width/2,getContentSize().height/5));
+    color->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEvent, this));
+    
+    sizeControl = dynamic_cast<ItemSlider*>(ItemBase::CreateItem(Rect(0,0,getContentSize().width-getContentSize().height/5, getContentSize().height/5), ITEM_SLIDER_ID));
+    addChild(sizeControl,9,3);
+    sizeControl->SetVertical(false);
+    sizeControl->SetRange(1, 5);
+    sizeControl->SetValue(1);
+    sizeControl->SetCallback(itemCallback.get());
+    sizeControl->SetColor(Color3B::WHITE);
+}
+
+void PropertiesPanel::ItemSettings::UpdateValues()
+{
+    if (NULL==parent->GetSelectedItem()) return;
+    sizeControl->SetValue(parent->GetSelectedItem()->GetSizeMultiply());
+    color->setBackGroundColor(parent->GetSelectedItem()->GetColor());
+    name->setText(parent->GetSelectedItem()->GetName());
+}
+
+#define SUBPANEL_DISTANCE 20
 PropertiesPanel *PropertiesPanel::CreatePropertiesPanel(MainScene *main, cocos2d::Rect r)
 {
     PropertiesPanel *panel=(PropertiesPanel*)PropertiesPanel::create();
@@ -492,8 +628,8 @@ void PropertiesPanel::PositionElements()
     float lastPosY=getInnerContainerSize().height;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
-        lastPosY-=PROPERTIES_PADDING;
-        (*it)->setPosition(Vec2(PROPERTIES_PADDING, lastPosY));
+        lastPosY-=SUBPANEL_DISTANCE;
+        (*it)->setPosition(Vec2(SUBPANEL_DISTANCE, lastPosY));
         lastPosY-=(*it)->getContentSize().height;
        // ((SubpanelBase*)(*it))->PositionElements();
     }
@@ -517,16 +653,16 @@ void PropertiesPanel::CalculateInnerHeight()
     int innerHeight=0;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
-        innerHeight+=PROPERTIES_PADDING;
+        innerHeight+=SUBPANEL_DISTANCE;
         innerHeight+=(*it)->getContentSize().height;
     }
-    innerHeight+=PROPERTIES_PADDING;
+    innerHeight+=SUBPANEL_DISTANCE;
     setInnerContainerSize(Size(getContentSize().width,innerHeight));
 }
 
 void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
-    currentControlUnit=NULL;
+    selectedItem=NULL;
     
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
@@ -538,39 +674,45 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
     main->addChild(this);
  
     sectionOSCInfo=OSCInfo::create();
-    sectionOSCInfo->InitWithContent(this, Size(getContentSize().width-2*PROPERTIES_PADDING,getContentSize().width));
+    sectionOSCInfo->InitWithContent(this, Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
     addChild(sectionOSCInfo);
     
     sectionMIDIDevices=MIDIDevices::create();
-    sectionMIDIDevices->InitWithContent(this, Size(getContentSize().width-2*PROPERTIES_PADDING,getContentSize().width/2));
+    sectionMIDIDevices->InitWithContent(this, Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width/2));
     addChild(sectionMIDIDevices);
     
     sectionMIDIInfo=MIDIInfo::create();
-    sectionMIDIInfo->InitWithContent(this, Size(getContentSize().width-2*PROPERTIES_PADDING,getContentSize().width));
+    sectionMIDIInfo->InitWithContent(this, Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
     addChild(sectionMIDIInfo);
+    
+    sectionItemSettings=ItemSettings::create();
+    sectionItemSettings->InitWithContent(this, Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
+    addChild(sectionItemSettings);
     
     InitLayout();
 }
 
 void PropertiesPanel::Update(SubjectSimple* subject)
 {
-    ItemBase *item=(ItemBase*)subject;
-    if (NULL!=item)
-        currentControlUnit=item->GetControlUnit();
+    selectedItem=(ItemBase*)subject;
     sectionOSCInfo->UpdateValues();
     sectionMIDIDevices->UpdateValues();
     sectionMIDIInfo->UpdateValues();
+    sectionItemSettings->UpdateValues();
 }
 
-//DropDownMenuCallback *PropertiesPanel::GetDropDownCallback()
-//{
-//    return dropDownCallback.get();
-//}
-//
-//void PropertiesPanel::OnSelectedDropDownItem(DropDownMenu *menu)
-//{
-//    Vector<Node*> _childrens = getChildren();
-//    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
-//        ((SubpanelBase*)(*it))->CheckForDropDownChanges(menu);
-//    Update(NULL);
-//}
+ItemBase *PropertiesPanel::GetSelectedItem()
+{
+    return selectedItem;
+}
+
+ScdfCtrl::ControlUnit *PropertiesPanel::GetCurrentControlUnit()
+{
+    if(NULL==selectedItem) return NULL;
+    return selectedItem->GetControlUnit();
+}
+
+void PropertiesPanel::EnableScrolling(bool enable)
+{
+    setDirection(enable?Direction::VERTICAL:Direction::NONE);
+}

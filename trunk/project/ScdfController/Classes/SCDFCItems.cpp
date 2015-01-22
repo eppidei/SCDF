@@ -40,14 +40,24 @@ ItemBase *ItemBase::CreateItem(Rect r,  int itemID)
         default:
             return NULL;
     }
+    item->setAnchorPoint(Vec2(0,1));
     item->setContentSize(r.size);
     item->setPosition(r.origin);
     item->Create();
     return item;
 }
 
-ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit())
+ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit()), sizeMultiply(1)
 {
+}
+
+void ItemBase::SetItemMultiply(int multiply)
+{
+    Size s=getContentSize();
+    Size baseSize=Size(getContentSize().width/sizeMultiply, getContentSize().height/sizeMultiply);
+    Size newSize=Size(baseSize.width*multiply, baseSize.height*multiply);
+    sizeMultiply=multiply;
+    setContentSize(newSize);
 }
 
 void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
@@ -95,9 +105,9 @@ void ItemSlider::InitSliderLayout()
 {
     bool nowIsVertical=getContentSize().height>getContentSize().width;
 
-    if ((nowIsVertical&&!isVertical) || (!nowIsVertical&&!isVertical))
-        setContentSize(Size(getContentSize().height,getContentSize().width));
-    
+//    if ((nowIsVertical&&!isVertical) || (!nowIsVertical&&!isVertical))
+//        setContentSize(Size(getContentSize().height,getContentSize().width));
+    if (NULL==slideBar) return;
     if (isVertical)
     {
         slideBar->setContentSize(Size(getContentSize().width/SLIDER_SIZE_BASE.width, getContentSize().height));
@@ -134,18 +144,37 @@ ItemSlider::~ItemSlider()
     removeChild(thumb,true);
 }
 
+void ItemSlider::SetVertical(bool vertical)
+{
+    isVertical=vertical;
+    InitSliderLayout();
+}
+
+void ItemSlider::SetValue(float _value)
+{
+    value=fmax(min,fmin(max,_value));
+    SetThumbPosition();
+}
+
+void ItemSlider::SetRange(float _min, float _max)
+{
+    min=_min;
+    max=_max;
+    SetValue(value);
+}
+
 void ItemSlider::Create()
 {
     isVertical=true;
-    slideBar = Layout::create();
-    slideBar->setTouchEnabled(true);
-    slideBar->setAnchorPoint(Vec2(0,1));
-    slideBar->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    //slideBar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    //slideBar->setBackGroundColor(Color3B::GREEN);
-    slideBar->setBackGroundImageScale9Enabled(true);
-    slideBar->setBackGroundImage("SliderBack.png");
-    slideBar->setContentSize(getContentSize());
+//    slideBar = Layout::create();
+//    slideBar->setTouchEnabled(true);
+//    slideBar->setAnchorPoint(Vec2(0,1));
+//    slideBar->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+//    slideBar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
+//    slideBar->setBackGroundColor(Color3B::BLACK);
+   // slideBar->setBackGroundImageScale9Enabled(true);
+   // slideBar->setBackGroundImage("SliderBack.png");
+    //slideBar->setContentSize(getContentSize());
     
    // Rect rc;
     //rc.origin = Vec2(0,20);
@@ -154,7 +183,7 @@ void ItemSlider::Create()
     //slideBar->setBackGroundImageScale9Enabled(true);
     
     
-    addChild(slideBar);
+   // addChild(slideBar);
     InitSliderLayout();
     CreateThumb();
     
@@ -166,8 +195,17 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
 {
     if (widget==slideBar) return;
     ItemBase::OnItemTouchBegan(widget, type);
+    if (callback.get())
+        callback->OnItemTouchBegan();
 }
 
+void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (widget==slideBar) return;
+    ItemBase::OnItemTouchEnded(widget, type);
+    if (callback.get())
+        callback->OnItemTouchEnded();
+}
 
 void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
 {
@@ -188,43 +226,73 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     if (isVertical){
         float diff=touchPos.y-dragPosUpdated.y;
         float draggingVel=log(1+touchDistanceFromStart)+1;
+        float sliderComp=thumb->getContentSize().height;
         if (IsKnob())
+        {
             draggingVel=2*log(1+touchDistanceFromStart)+1;
+            sliderComp=0;
+        }
         diff/=draggingVel;
-        value+=(diff*(abs(max-min))/getContentSize().height);
+        value+=(diff*(abs(max-min))/(getContentSize().height-sliderComp));
     }
     else{
         float diff=touchPos.x-dragPosUpdated.x;
         float draggingVel=log(1+touchDistanceFromStart)+1;
+        float sliderComp=thumb->getContentSize().width;
         if (IsKnob())
+        {
             draggingVel=2*log(1+touchDistanceFromStart)+1;
+            sliderComp=0;
+        }
         diff/=draggingVel;
-        value+=(diff*(abs(max-min))/getContentSize().width);
+        value+=(diff*(abs(max-min))/(getContentSize().width-sliderComp));
     }
-    value=fmax(min,fmin(max,value));
+    SetValue(value);
+#ifdef DEBUG
     printf("KNOB VALUE %f\n", value);
+#endif
     dragPosUpdated=touchPos;
-    controlUnit->SendValue(value);
-    SetThumbPosition();
-    
-
+    if (callback.get())
+        callback->OnItemTouchMoved(value);
+    else
+        controlUnit->SendValue(value);
 }
 
 void ItemSlider::SetThumbPosition()
 {
-    float size=isVertical?getContentSize().height:getContentSize().width;
-    float position=(size/(abs(max-min)))*value;
+    if (NULL==thumb) return;
+    float offset=isVertical?thumb->getContentSize().height:thumb->getContentSize().width;
+    if (IsKnob()) offset=0;
+    float size=isVertical?getContentSize().height-offset:getContentSize().width-offset;
+    float position=((size/(abs(max-min)))*(value-min))+offset/2;
     if (isVertical)
         thumb->setPosition(Vec2(getContentSize().width/2.0,position));
     else
         thumb->setPosition(Vec2(position,getContentSize().height/2.0));
 }
 
+void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
+{
+    Widget::setContentSize(contentSize);
+    float size=fmin(getContentSize().height,getContentSize().width);
+    if (thumb)
+        thumb->setContentSize(Size(size,size));
+    InitSliderLayout();
+    SetValue(value);
+}
+
+void ItemSlider::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    DrawPrimitives::drawSolidRect(Vec2(getContentSize().width*0.1, getContentSize().height), Vec2(getContentSize().width*0.9, 0), Color4F(0,0,0,255));
+    DrawPrimitives::drawSolidRect(Vec2(getContentSize().width*0.2, thumb->getPositionY()), Vec2(getContentSize().width*0.8, 0), Color4F(color.r/255,color.g/255,color.b/255,255));
+}
+
 void ItemKnob::SetThumbPosition()
 {
+    if (NULL==thumb) return;
     thumb->setPosition(Vec2(getContentSize().width/2,getContentSize().height/2));
-    float rotation=(270.0f/(abs(max-min)))*value;
-    thumb->setRotation(rotation);
+//    float rotation=(270.0f/(abs(max-min)))*(value-min);
+//    thumb->setRotation(rotation);
 }
 
 
@@ -250,7 +318,7 @@ void ItemKnob::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t
     glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE,LineRange);
     
     DrawPrimitives::drawCircle(Vec2(getContentSize().width/2, getContentSize().height/2), (getContentSize().width/2)-10, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), 100,true);
-    DrawPrimitives::setDrawColor4B(127, 200, 128, 255);
+    DrawPrimitives::setDrawColor4B(color.r,color.g,color.b,255);
     
     glLineWidth(10);
     DrawPrimitives::DrawArc(getContentSize().width/2, getContentSize().height/2, getContentSize().width/2-5, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), CC_DEGREES_TO_RADIANS(degreesFromValue), 50);
@@ -268,12 +336,25 @@ void ItemPad::Create()
     pad->setPosition(Vec2(0,getContentSize().height));
     pad->setContentSize(getContentSize());
     pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    
+    pad->setOpacity(230);
     Rect rc;
     rc.origin = Vec2(16,16);
     rc.size = Size(114,114);
     pad->setCapInsets(rc);
     addChild(pad);
+}
+
+void ItemPad::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    DrawPrimitives::drawSolidRect(Vec2(getContentSize().width*0.05, getContentSize().height*0.95), Vec2(getContentSize().width*0.95, getContentSize().height*0.05), Color4F(color.r/255,color.g/255,color.b/255,255));
+}
+
+void ItemPad::setContentSize(const cocos2d::Size &contentSize)
+{
+    Widget::setContentSize(contentSize);
+    if (NULL==pad) return;
+    pad->setContentSize(contentSize);
+    pad->setPosition(Vec2(0,contentSize.height));
 }
 
 void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)

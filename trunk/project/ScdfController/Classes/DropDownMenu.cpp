@@ -110,6 +110,7 @@ DropDownMenu *DropDownMenu::CreateMenu(Size s)
 {
     DropDownMenu *menu=DropDownMenu::create();
     menu->setContentSize(s);
+    menu->ScrollView::setDirection(Direction::NONE);
     return menu;
 }
 

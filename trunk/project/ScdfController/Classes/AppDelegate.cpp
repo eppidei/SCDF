@@ -2,6 +2,8 @@
 #include "SCDFCDefinitions.h"
 #include "AppDelegate.h"
 #include "MainScene.h"
+#include "ControlUnit.h"
+#include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "ControlUnit.h"
