@@ -1,0 +1,52 @@
+//da mettere in CCDrawingPrimitives.cpp
+
+***************************************************************************************************
+void DrawArc(float cx, float cy, float r, float start_angle, float arc_angle, int num_segments)
+{
+float theta = arc_angle / float(num_segments - 1);//theta is now calculated from the arc angle instead, the - 1 bit comes from the fact that the arc is open
+
+float tangetial_factor = tanf(theta);
+
+float radial_factor = cosf(theta);
+
+
+float x = r * cosf(start_angle);//we now start at the start angle
+float y = r * sinf(start_angle);
+
+Vec2* vertices = new Vec2[num_segments];
+
+for(int ii = 0; ii < num_segments; ii++)
+{
+vertices[ii].x = x + cx;
+vertices[ii].y = y + cy;
+
+float tx = -y;
+float ty = x;
+
+x += tx * tangetial_factor;
+y += ty * tangetial_factor;
+
+x *= radial_factor;
+y *= radial_factor;
+}
+
+s_shader->use();
+s_shader->setUniformsForBuiltins();
+s_shader->setUniformLocationWith4fv(s_colorLocation, (GLfloat*) &s_color.r, 1);
+
+GL::enableVertexAttribs( GL::VERTEX_ATTRIB_FLAG_POSITION );
+
+#ifdef EMSCRIPTEN
+setGLBufferData(vertices, (segments + 1) * sizeof(Vec2));
+glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_POSITION, 2, GL_FLOAT, GL_FALSE, 0, 0);
+#else
+glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_POSITION, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+#endif // EMSCRIPTEN
+glDrawArrays(GL_LINE_STRIP, 0, (GLsizei) num_segments);
+glDrawArrays(GL_POINTS, 0, (GLsizei) num_segments);
+
+CC_SAFE_DELETE_ARRAY(vertices);
+
+CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1,num_segments+1);
+}
+****************************************************************************************************
