@@ -39,7 +39,7 @@ namespace scdf
         
         void SetRate(SensorType type, s_int32 rate);
         void SetBufferSize(SensorType type, s_int32 size);
-
+    
         s_bool StopAllSensors();
         s_bool StartAllSensors();
         s_bool StartPrecActiveSensors();

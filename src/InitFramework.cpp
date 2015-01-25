@@ -13,7 +13,7 @@
 #include "SensorsManager.h"
 #include "Receiver.h"
 
-#define USE_RECEIVER
+//#define USE_RECEIVER
 
 scdf::Receiver *audioReceiver = nullptr;
 
