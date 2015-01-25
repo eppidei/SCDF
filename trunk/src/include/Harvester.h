@@ -14,6 +14,13 @@
 #include "ThreadUtils.h"
 
 namespace scdf{
+    
+    
+    class HarvesterListener
+    {
+    public:
+        virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
+    };
 
     class Harvester
     {
@@ -27,6 +34,7 @@ namespace scdf{
         SensorType requesterType;
         ThreadUtils::ThreadHandle handle;
         ThreadUtils::CustomSemaphore harvestReady;
+        HarvesterListener *harversterListener;
         
         struct HarvestInfo{
             std::vector<std::vector<int> > info;
@@ -50,6 +58,7 @@ namespace scdf{
         
         Harvester();
     public:
+        void SetHarvesterListener(HarvesterListener *listner){harversterListener = listner;}
         void SendingQueuePushBuffer(std::vector<SensorData*> *buffer);
         void WaitForHarvest();
         bool activated;

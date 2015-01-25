@@ -67,7 +67,9 @@ std::vector<SensorData*> *Harvester::AllocBufferHarvest()
 }
 
 Harvester::Harvester() : activated(false), requesterType(AudioInput)
-{}
+{
+
+}
 
 void Harvester::Start()
 {
@@ -277,6 +279,7 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
     std::vector<SensorData*> *b=BuildSensorsDataBuffers(masterData);
     SentDataRecyclingProcedure(&harvestData);
     SendingQueuePushBuffer(b);
+    harversterListener->OnHarvesterBufferReady(b);
 }
 
 void Harvester::Harvest(SensorData *masterData)
