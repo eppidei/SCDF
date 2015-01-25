@@ -76,9 +76,9 @@ void DropDownMenu::SetSelectedIndex(int selected)
 void DropDownMenu::updateTweenAction(float value, const std::string& key)
 {
     if ("height"==key){
-        setContentSize(Size(getContentSize().width, value));
+        setContentSize(cocos2d::Size(getContentSize().width, value));
         if (!resizeParent) return;
-        getParent()->setContentSize(Size(getParent()->getContentSize().width,parentHeightWithoutMenu+value));
+        getParent()->setContentSize(cocos2d::Size(getParent()->getContentSize().width,parentHeightWithoutMenu+value));
         if (this->callback)
             this->callback->OnSizeChanged(0,0);
     }
@@ -106,7 +106,7 @@ DropDownMenu::DropDownMenu()
     lastSelectedIndex=-1;
 }
 
-DropDownMenu *DropDownMenu::CreateMenu(Size s)
+DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s)
 {
     DropDownMenu *menu=DropDownMenu::create();
     menu->setContentSize(s);
@@ -135,12 +135,12 @@ void DropDownMenu::InitData(std::vector<std::string> data)
     if (0==data.size())
     {
         Text *model = Text::create("No data","Arial",20);
-        model->setContentSize(Size(getContentSize().width,getContentSize().height));
+        model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
         model->setTextHorizontalAlignment(TextHAlignment::LEFT);
         model->setColor(Color3B::BLACK);
-        setInnerContainerSize(Size(model->getContentSize()));
+        setInnerContainerSize(cocos2d::Size(model->getContentSize()));
         pushBackCustomItem(model);
     }
     else{
@@ -150,14 +150,14 @@ void DropDownMenu::InitData(std::vector<std::string> data)
 //            os<<"Pippo "<<i;
             Text *model = Text::create(data[i]/*os.str()*/,"Arial",20);
             model->setTouchEnabled(true);
-            model->setContentSize(Size(getContentSize().width,getContentSize().height));
+            model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
             model->ignoreContentAdaptWithSize(false);
             model->setTextVerticalAlignment(TextVAlignment::CENTER);
             model->setTextHorizontalAlignment(TextHAlignment::LEFT);
             model->setColor(Color3B::BLACK);
             pushBackCustomItem(model);
         } 
-        setInnerContainerSize(Size(getContentSize().width,data.size()*getContentSize().height));
+        setInnerContainerSize(cocos2d::Size(getContentSize().width,data.size()*getContentSize().height));
     }
     setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     setAnchorPoint(Vec2(0,1));

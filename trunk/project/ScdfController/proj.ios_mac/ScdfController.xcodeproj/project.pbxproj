@@ -68,6 +68,30 @@
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
+		CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */; };
+		CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28E1A7546F400C4B34C /* Harvester.cpp */; };
+		CCBBE2AE1A7547A400C4B34C /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */; };
+		CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2901A7546F400C4B34C /* PipesManager.cpp */; };
+		CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2911A7546F400C4B34C /* Receiver.cpp */; };
+		CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2851A7546D700C4B34C /* Sensor.cpp */; };
+		CCBBE2B21A7547A400C4B34C /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */; };
+		CCBBE2B31A7547A400C4B34C /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */; };
+		CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */; };
+		CCBBE2B51A7547A400C4B34C /* ThreadUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */; };
+		CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2801A7546C100C4B34C /* UDPSender.cpp */; };
+		CCBBE2B71A7547A400C4B34C /* UDPSendersManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */; };
+		CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE29D1A75474200C4B34C /* SaveSettings.mm */; };
+		CCBBE2BF1A7547A700C4B34C /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */; };
+		CCBBE2C01A7547A700C4B34C /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */; };
+		CCBBE2C11A7547A700C4B34C /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */; };
+		CCBBE2D01A754ACA00C4B34C /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */; };
+		CCBBE2D11A754ACA00C4B34C /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */; };
+		CCBBE2D21A754ACA00C4B34C /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */; };
+		CCBBE2D31A754ACA00C4B34C /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */; };
+		CCBBE2DA1A754ADE00C4B34C /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */; };
+		CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */; };
+		CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */; };
+		CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -246,7 +270,7 @@
 /* Begin PBXFileReference section */
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
-		1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
+		1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
 		1AFAF8B416D35DE700DB1158 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../Classes/AppDelegate.h; sourceTree = "<group>"; };
 		1AFAF8B916D35E4900DB1158 /* CloseNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseNormal.png; sourceTree = "<group>"; };
 		1AFAF8BA16D35E4900DB1158 /* CloseSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSelected.png; sourceTree = "<group>"; };
@@ -300,6 +324,44 @@
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadUtils.cpp; path = ../../../src/ThreadUtils.cpp; sourceTree = "<group>"; };
+		CCBBE2801A7546C100C4B34C /* UDPSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSender.cpp; path = ../../../src/UDPSender.cpp; sourceTree = "<group>"; };
+		CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSendersManager.cpp; path = ../../../src/UDPSendersManager.cpp; sourceTree = "<group>"; };
+		CCBBE2851A7546D700C4B34C /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../src/Sensor.cpp; sourceTree = "<group>"; };
+		CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
+		CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
+		CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
+		CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomPipe.cpp; path = ../../../src/CustomPipe.cpp; sourceTree = "<group>"; };
+		CCBBE28E1A7546F400C4B34C /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../../src/Harvester.cpp; sourceTree = "<group>"; };
+		CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitFramework.cpp; path = ../../../src/InitFramework.cpp; sourceTree = "<group>"; };
+		CCBBE2901A7546F400C4B34C /* PipesManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PipesManager.cpp; path = ../../../src/PipesManager.cpp; sourceTree = "<group>"; };
+		CCBBE2911A7546F400C4B34C /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../../src/Receiver.cpp; sourceTree = "<group>"; };
+		CCBBE29D1A75474200C4B34C /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaveSettings.mm; path = ../../../src/ios/SaveSettings.mm; sourceTree = "<group>"; };
+		CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorAudioInputIosImpl.mm; path = ../../../src/ios/SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
+		CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIos.mm; path = ../../../src/ios/SensorStandardIos.mm; sourceTree = "<group>"; };
+		CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIosImpl.mm; path = ../../../src/ios/SensorStandardIosImpl.mm; sourceTree = "<group>"; };
+		CCBBE2C41A754ACA00C4B34C /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../../../lib/oscpack_1_1_0/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
+		CCBBE2C51A754ACA00C4B34C /* OscException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = ../../../lib/oscpack_1_1_0/osc/OscException.h; sourceTree = "<group>"; };
+		CCBBE2C61A754ACA00C4B34C /* OscHostEndianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = ../../../lib/oscpack_1_1_0/osc/OscHostEndianness.h; sourceTree = "<group>"; };
+		CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscOutboundPacketStream.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.cpp; sourceTree = "<group>"; };
+		CCBBE2C81A754ACA00C4B34C /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscOutboundPacketStream.h; path = ../../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.h; sourceTree = "<group>"; };
+		CCBBE2C91A754ACA00C4B34C /* OscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = ../../../lib/oscpack_1_1_0/osc/OscPacketListener.h; sourceTree = "<group>"; };
+		CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscPrintReceivedElements.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.cpp; sourceTree = "<group>"; };
+		CCBBE2CB1A754ACA00C4B34C /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPrintReceivedElements.h; path = ../../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.h; sourceTree = "<group>"; };
+		CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscReceivedElements.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscReceivedElements.cpp; sourceTree = "<group>"; };
+		CCBBE2CD1A754ACA00C4B34C /* OscReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscReceivedElements.h; path = ../../../lib/oscpack_1_1_0/osc/OscReceivedElements.h; sourceTree = "<group>"; };
+		CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscTypes.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscTypes.cpp; sourceTree = "<group>"; };
+		CCBBE2CF1A754ACA00C4B34C /* OscTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscTypes.h; path = ../../../lib/oscpack_1_1_0/osc/OscTypes.h; sourceTree = "<group>"; };
+		CCBBE2D41A754ADE00C4B34C /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../../lib/oscpack_1_1_0/ip/IpEndpointName.h; sourceTree = "<group>"; };
+		CCBBE2D51A754ADE00C4B34C /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../../lib/oscpack_1_1_0/ip/NetworkingUtils.h; sourceTree = "<group>"; };
+		CCBBE2D61A754ADE00C4B34C /* PacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacketListener.h; path = ../../../lib/oscpack_1_1_0/ip/PacketListener.h; sourceTree = "<group>"; };
+		CCBBE2D71A754ADE00C4B34C /* TimerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerListener.h; path = ../../../lib/oscpack_1_1_0/ip/TimerListener.h; sourceTree = "<group>"; };
+		CCBBE2D81A754ADE00C4B34C /* UdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = ../../../lib/oscpack_1_1_0/ip/UdpSocket.h; sourceTree = "<group>"; };
+		CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = ../../../lib/oscpack_1_1_0/ip/IpEndpointName.cpp; sourceTree = "<group>"; };
+		CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkingUtils.cpp; sourceTree = "<group>"; };
+		CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UdpSocket.cpp; sourceTree = "<group>"; };
+		CCBBE2E21A754CC800C4B34C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.h"; sourceTree = "<group>"; };
+		CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.cpp"; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -451,6 +513,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				CCBBE27B1A75467F00C4B34C /* SCDF Framework */,
 				DCCA5A2E1A40DB430014FADE /* MIDI */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
@@ -560,6 +623,108 @@
 			);
 			name = Resources;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		CCBBE27B1A75467F00C4B34C /* SCDF Framework */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2E01A754CB000C4B34C /* Utility */,
+				CCBBE2C21A754AB000C4B34C /* Ext_UDP_OSC */,
+				CCBBE2971A75470200C4B34C /* ios */,
+				CCBBE27E1A75469500C4B34C /* src */,
+			);
+			name = "SCDF Framework";
+			sourceTree = "<group>";
+		};
+		CCBBE27E1A75469500C4B34C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */,
+				CCBBE28E1A7546F400C4B34C /* Harvester.cpp */,
+				CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */,
+				CCBBE2901A7546F400C4B34C /* PipesManager.cpp */,
+				CCBBE2911A7546F400C4B34C /* Receiver.cpp */,
+				CCBBE2851A7546D700C4B34C /* Sensor.cpp */,
+				CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */,
+				CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */,
+				CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */,
+				CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */,
+				CCBBE2801A7546C100C4B34C /* UDPSender.cpp */,
+				CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		CCBBE2971A75470200C4B34C /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE29D1A75474200C4B34C /* SaveSettings.mm */,
+				CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */,
+				CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */,
+				CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */,
+			);
+			name = ios;
+			sourceTree = "<group>";
+		};
+		CCBBE2C21A754AB000C4B34C /* Ext_UDP_OSC */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2DB1A754AE700C4B34C /* posix */,
+				CCBBE2D41A754ADE00C4B34C /* IpEndpointName.h */,
+				CCBBE2D51A754ADE00C4B34C /* NetworkingUtils.h */,
+				CCBBE2D61A754ADE00C4B34C /* PacketListener.h */,
+				CCBBE2D71A754ADE00C4B34C /* TimerListener.h */,
+				CCBBE2D81A754ADE00C4B34C /* UdpSocket.h */,
+				CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */,
+				CCBBE2C31A754ABD00C4B34C /* osc */,
+			);
+			name = Ext_UDP_OSC;
+			sourceTree = "<group>";
+		};
+		CCBBE2C31A754ABD00C4B34C /* osc */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2C41A754ACA00C4B34C /* MessageMappingOscPacketListener.h */,
+				CCBBE2C51A754ACA00C4B34C /* OscException.h */,
+				CCBBE2C61A754ACA00C4B34C /* OscHostEndianness.h */,
+				CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */,
+				CCBBE2C81A754ACA00C4B34C /* OscOutboundPacketStream.h */,
+				CCBBE2C91A754ACA00C4B34C /* OscPacketListener.h */,
+				CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */,
+				CCBBE2CB1A754ACA00C4B34C /* OscPrintReceivedElements.h */,
+				CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */,
+				CCBBE2CD1A754ACA00C4B34C /* OscReceivedElements.h */,
+				CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */,
+				CCBBE2CF1A754ACA00C4B34C /* OscTypes.h */,
+			);
+			name = osc;
+			sourceTree = "<group>";
+		};
+		CCBBE2DB1A754AE700C4B34C /* posix */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */,
+				CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */,
+			);
+			name = posix;
+			path = ../../../lib/oscpack_1_1_0/ip/posix;
+			sourceTree = "<group>";
+		};
+		CCBBE2E01A754CB000C4B34C /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2E11A754CB500C4B34C /* PublicUtility */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		CCBBE2E11A754CB500C4B34C /* PublicUtility */ = {
+			isa = PBXGroup;
+			children = (
+				CCBBE2E21A754CC800C4B34C /* CAStreamBasicDescription.h */,
+				CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */,
+			);
+			name = PublicUtility;
 			sourceTree = "<group>";
 		};
 		DCCA5A241A40DA920014FADE /* iOsClasses */ = {
@@ -802,19 +967,43 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCBBE2C01A7547A700C4B34C /* SensorStandardIos.mm in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				DC175EB31A475457009DCA73 /* ControlUnit.cpp in Sources */,
+				CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */,
 				9DC09E711A06922300997F04 /* MainScene.cpp in Sources */,
+				CCBBE2D11A754ACA00C4B34C /* OscPrintReceivedElements.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
+				CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */,
+				CCBBE2AE1A7547A400C4B34C /* InitFramework.cpp in Sources */,
+				CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */,
+				CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */,
+				CCBBE2B71A7547A400C4B34C /* UDPSendersManager.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
+				CCBBE2B21A7547A400C4B34C /* SensorAudioInput.cpp in Sources */,
 				9D82C2CF1A1C04EB00FF1243 /* SCDFCItems.cpp in Sources */,
+				CCBBE2BF1A7547A700C4B34C /* SensorAudioInputIosImpl.mm in Sources */,
+				CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */,
+				CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */,
+				CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */,
+				CCBBE2D21A754ACA00C4B34C /* OscReceivedElements.cpp in Sources */,
 				DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				CCBBE2B31A7547A400C4B34C /* SensorsManager.cpp in Sources */,
 				DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */,
+				CCBBE2D31A754ACA00C4B34C /* OscTypes.cpp in Sources */,
+				CCBBE2C11A7547A700C4B34C /* SensorStandardIosImpl.mm in Sources */,
 				DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */,
+				CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */,
+				CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
+				CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */,
+				CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */,
 				DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */,
+				CCBBE2B51A7547A400C4B34C /* ThreadUtils.cpp in Sources */,
+				CCBBE2D01A754ACA00C4B34C /* OscOutboundPacketStream.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
+				CCBBE2DA1A754ADE00C4B34C /* IpEndpointName.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -889,10 +1078,13 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -909,6 +1101,8 @@
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
 					"$(SRCROOT)/../../../src/include",
 					"$(SRCROOT)/../../../src/ios/include",
+					"$(SRCROOT)/../../../lib/oscpack_1_1_0",
+					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -926,9 +1120,12 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Flavio Antonioli (UP7D2B2KTF)";
 				COMPRESS_PNG_FILES = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -944,6 +1141,8 @@
 					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
 					"$(SRCROOT)/../../../src/include",
 					"$(SRCROOT)/../../../src/ios/include",
+					"$(SRCROOT)/../../../lib/oscpack_1_1_0",
+					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;

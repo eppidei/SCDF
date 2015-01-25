@@ -11,7 +11,7 @@
 
 #include <pthread.h>
 #ifndef ANDROID
-#import "dispatch/semaphore.h"
+#import "dispatch/dispatch.h"
 #else
 #include <semaphore.h>
 #endif

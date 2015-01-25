@@ -28,8 +28,8 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string
     
     int numElements=getChildrenCount();
     float innerWidth = getContentSize().width;
-    setContentSize(Size(innerWidth, MAX(parent->getContentSize().height, (numElements+1)*SCROLLVIEW_ITEM_RECORD)));
-    setInnerContainerSize(Size(innerWidth,(numElements+1)*SCROLLVIEW_ITEM_RECORD));
+    setContentSize(cocos2d::Size(innerWidth, MAX(parent->getContentSize().height, (numElements+1)*SCROLLVIEW_ITEM_RECORD)));
+    setInnerContainerSize(cocos2d::Size(innerWidth,(numElements+1)*SCROLLVIEW_ITEM_RECORD));
     float newInnerHeight = getInnerContainerSize().height;
     for (int i=0;i<numElements;++i)
     {
@@ -42,20 +42,20 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string
     button->setAnchorPoint(Vec2(0,1));
     button->ignoreContentAdaptWithSize(false);
     //button->setScale9Enabled(true);
-    button->setContentSize(Size(SCROLLVIEW_ITEM_SIZE, SCROLLVIEW_ITEM_SIZE));
+    button->setContentSize(cocos2d::Size(SCROLLVIEW_ITEM_SIZE, SCROLLVIEW_ITEM_SIZE));
     button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*SCROLLVIEW_ITEM_DISTANCE- button->getContentSize().height*numElements));
     button->addTouchEventListener(this, toucheventselector(ItemScrollView::DragItemOnTouchEvent));
     addChild(button,0,ItemType::GetID());
 }
 
-ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, Rect r)
+ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, cocos2d::Rect r)
 {
     ItemScrollView *scrollView=(ItemScrollView*)ItemScrollView::create();
     scrollView->InitWithContent(main,r);
     return scrollView;
 }
 
-void ItemScrollView::InitWithContent(MainScene *main,Rect r)
+void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
     parent=main;
     setContentSize(r.size);
@@ -77,14 +77,14 @@ void ItemScrollView::InitWithContent(MainScene *main,Rect r)
 
 float ItemScrollView::RetrieveButtonYCoordInScrollview(ui::Button* button)
 {
-    Rect r=getInnerContainer()->getBoundingBox();
+    cocos2d::Rect r=getInnerContainer()->getBoundingBox();
     return button->getPosition().y+r.origin.y;
 }
 
 template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::ui::TouchEventType type, Button *button)
 {
     static Vec2 dragStartPoint;
-    Rect buttonRect(button->getPositionX(), RetrieveButtonYCoordInScrollview(button), button->getContentSize().width, button->getContentSize().height);
+    cocos2d::Rect buttonRect(button->getPositionX(), RetrieveButtonYCoordInScrollview(button), button->getContentSize().width, button->getContentSize().height);
     
     switch (type)
     {
@@ -106,7 +106,7 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
             float diff_y=button->getTouchMovePosition().y-button->getTouchBeganPosition().y;
             float newX=dragStartPoint.x+diff_x;
             float newY=dragStartPoint.y+diff_y;
-            parent->OnDragging(Rect(newX,newY,button->getContentSize().width, button->getContentSize().height));
+            parent->OnDragging(cocos2d::Rect(newX,newY,button->getContentSize().width, button->getContentSize().height));
         }
             break;
         case (int)ui::Widget::TouchEventType::ENDED:

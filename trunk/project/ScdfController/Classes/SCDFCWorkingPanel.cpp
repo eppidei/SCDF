@@ -19,18 +19,18 @@ using namespace SCDFC;
 using namespace cocos2d;
 using namespace ui;
 
-WorkingPanel *WorkingPanel::CreateCustomPanel(MainScene *main, Rect r)
+WorkingPanel *WorkingPanel::CreateCustomPanel(MainScene *main, cocos2d::Rect r)
 {
     WorkingPanel *panel=(WorkingPanel*)WorkingPanel::create();
     panel->InitWithContent(main,r);
     return panel;
 }
 
-void WorkingPanel::InitWithContent(MainScene *main, Rect r)
+void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
 {
     parent=main;
     active=true;
-    draggingRect=Rect::ZERO;
+    draggingRect=cocos2d::Rect::ZERO;
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
@@ -201,7 +201,7 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
             float diff_y=touchPos.y-touchStartPos.y;
             float newX=dragStartPoint.x+diff_x;
             float newY=dragStartPoint.y+diff_y;
-            Rect r(newX, newY, button->getContentSize().width,button->getContentSize().height);
+            cocos2d::Rect r(newX, newY, button->getContentSize().width,button->getContentSize().height);
             parent->SnapToGrid(r);
             button->setPosition(r.origin);
         }
