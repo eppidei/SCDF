@@ -92,6 +92,7 @@
 		CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */; };
 		CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */; };
 		CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */; };
+		CCBBE3751A7561A500C4B34C /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -362,6 +363,7 @@
 		CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UdpSocket.cpp; sourceTree = "<group>"; };
 		CCBBE2E21A754CC800C4B34C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.h"; sourceTree = "<group>"; };
 		CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.cpp"; sourceTree = "<group>"; };
+		CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfSensorAPI.cpp; path = ../../../src/ScdfSensorAPI.cpp; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -639,6 +641,7 @@
 		CCBBE27E1A75469500C4B34C /* src */ = {
 			isa = PBXGroup;
 			children = (
+				CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */,
 				CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */,
 				CCBBE28E1A7546F400C4B34C /* Harvester.cpp */,
 				CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */,
@@ -997,6 +1000,7 @@
 				CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */,
 				CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
+				CCBBE3751A7561A500C4B34C /* ScdfSensorAPI.cpp in Sources */,
 				CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */,
 				CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */,
 				DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */,

@@ -10,6 +10,7 @@
 #include "PropertiesPanel.h"
 #include <platform/CCDevice.h>
 #include "Logging.h"
+#include "ScdfSensorAPI.h"
 
 using namespace SCDFC;
 USING_NS_CC;
@@ -69,6 +70,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
+    
+    scdf::theSensorAPI()->InitFramework();
 
     return true;
 }
