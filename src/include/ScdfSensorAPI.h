@@ -21,6 +21,7 @@ const int DEFAULT_SENSORS_RATE = 50;
 
 namespace scdf {
     
+    class HarvesterListener;
     
     class ScdfSensorAPI
     {
@@ -48,6 +49,9 @@ namespace scdf {
         void SetUDPMultiOutputActive(s_bool active);
         void SetRoutingType(s_bool useOscPackaging);
         void ActivateSender(s_bool activate);
+        
+         // *********** LISTNERS ******************* //
+        void SetHarvesterListener(HarvesterListener *listener);
     };
     
     ScdfSensorAPI *theSensorAPI();

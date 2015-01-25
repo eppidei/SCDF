@@ -12,10 +12,9 @@
 #include "SaveSettings.h"
 #include "UDPSendersManager.h"
 #include "UdpSender.h"
-
+#include "Harvester.h"
 
 const int max_number_ip_port = 65535;
-
 
 
 using namespace scdf;
@@ -28,6 +27,10 @@ ScdfSensorAPI *scdf::theSensorAPI()
 }
 
 
+// ********************************* Init API ****************************** //
+
+#pragma mark Init
+
 void ScdfSensorAPI::InitFramework()
 {
     scdf::thePipesManager()->CreateReturnPipes();
@@ -35,6 +38,7 @@ void ScdfSensorAPI::InitFramework()
     
     InitNetwork();
     InitSensors();
+    
 }
 
 void ScdfSensorAPI::InitSensors()
@@ -85,6 +89,12 @@ void ScdfSensorAPI::InitNetwork()
     SetRoutingType(routingType);
 }
 
+
+
+// ********************************* Network API ****************************** //
+
+#pragma mark Network API
+
 void ScdfSensorAPI::ActivateSender(s_bool activate)
 {
     scdf::UDPSendersManager::Instance()->GetSender()->Activate(activate);
@@ -114,6 +124,12 @@ void ScdfSensorAPI::SetUDPMultiOutputActive(s_bool active)
     scdf::UDPSendersManager::Instance()->SetMultiOutput(active);
 }
 
+
+
+// ********************************* Sensors API ****************************** //
+
+#pragma mark sensors API
+
 s_int32 ScdfSensorAPI::GetSensorRate(scdf::SensorType sensorType)
 {
     return scdf::theSensorManager()->GetRate(sensorType);
@@ -137,4 +153,13 @@ s_bool ScdfSensorAPI::StartSensor(SensorType sensorType)
 s_bool ScdfSensorAPI::StopSensor(SensorType sensorType)
 {
     return scdf::theSensorManager()->StopSensor(sensorType);
+}
+
+// ********************************* Listeners ****************************** //
+
+#pragma mark Listeners
+
+void ScdfSensorAPI::SetHarvesterListener(HarvesterListener *listener)
+{
+    Harvester::Instance()->SetHarvesterListener(listener);
 }
