@@ -35,13 +35,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setDisplayStats(true);
 
 
-    Size designSize = director->getOpenGLView()->getDesignResolutionSize();
+    cocos2d::Size designSize = director->getOpenGLView()->getDesignResolutionSize();
     LOGD("Design resolution size: %f %f\n",designSize.width,designSize.height);
     Vec2 vOrigin = director->getVisibleOrigin();
     LOGD("Visible origin: %f %f\n",vOrigin.x,vOrigin.y);
-    Size vSize = director->getVisibleSize();
+    cocos2d::Size vSize = director->getVisibleSize();
     LOGD("Visible size: %f %f\n",vSize.width,vSize.height);
-    Size frameSize = director->getOpenGLView()->getFrameSize();
+    cocos2d::Size frameSize = director->getOpenGLView()->getFrameSize();
     LOGD("FRAME size: %f %f\n",frameSize.width,frameSize.height);
     //int orientation = director->getOpenGLView()->getDeviceOrientation();
     //LOGD("Orientation: %d",orientation);
@@ -52,7 +52,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     float scaleX = director->getOpenGLView()->getScaleX();
     float scaleY = director->getOpenGLView()->getScaleY();
     LOGD("Scale X: %f - Y: %f\n",scaleX,scaleY);
-    Rect vRect = director->getOpenGLView()->getVisibleRect();
+    cocos2d::Rect vRect = director->getOpenGLView()->getVisibleRect();
     LOGD("Visible RECT X:%f Y:%f W:%f H:%f\n",vRect.origin.x, vRect.origin.y, vRect.size.width,vRect.size.width);
 
     LOGD("DPI : %d\n", Device::getDPI() );
@@ -61,7 +61,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
     
     float scaleFactor=((float)Device::getDPI())/132.0;
-    Size s=director->getOpenGLView()->getFrameSize();
+    cocos2d::Size s=director->getOpenGLView()->getFrameSize();
     director->getOpenGLView()->setDesignResolutionSize((int)ceil(s.width/scaleFactor), (int)ceil(s.height/scaleFactor), ResolutionPolicy::SHOW_ALL);
     
     // create a scene. it's an autorelease object

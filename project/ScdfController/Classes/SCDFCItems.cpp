@@ -17,7 +17,7 @@ using namespace SCDFC;
 USING_NS_CC;
 using namespace ui;
 
-ItemBase *ItemBase::CreateItem(Rect r,  int itemID)
+ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
 {
     ItemBase *item=NULL;
     switch (itemID)
@@ -53,9 +53,9 @@ ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit()), sizeMultiply(1)
 
 void ItemBase::SetItemMultiply(int multiply)
 {
-    Size s=getContentSize();
-    Size baseSize=Size(getContentSize().width/sizeMultiply, getContentSize().height/sizeMultiply);
-    Size newSize=Size(baseSize.width*multiply, baseSize.height*multiply);
+    cocos2d::Size s=getContentSize();
+    cocos2d::Size baseSize=cocos2d::Size(getContentSize().width/sizeMultiply, getContentSize().height/sizeMultiply);
+    cocos2d::Size newSize=cocos2d::Size(baseSize.width*multiply, baseSize.height*multiply);
     sizeMultiply=multiply;
     setContentSize(newSize);
 }
@@ -110,12 +110,12 @@ void ItemSlider::InitSliderLayout()
     if (NULL==slideBar) return;
     if (isVertical)
     {
-        slideBar->setContentSize(Size(getContentSize().width/SLIDER_SIZE_BASE.width, getContentSize().height));
+        slideBar->setContentSize(cocos2d::Size(getContentSize().width/SLIDER_SIZE_BASE.width, getContentSize().height));
         slideBar->setPosition(Vec2(getContentSize().width/2.0-slideBar->getContentSize().width/2.0,getContentSize().height));
     }
     else
     {
-        slideBar->setContentSize(Size(getContentSize().width, getContentSize().height/SLIDER_SIZE_BASE.width));
+        slideBar->setContentSize(cocos2d::Size(getContentSize().width, getContentSize().height/SLIDER_SIZE_BASE.width));
         slideBar->setPosition(Vec2(0,getContentSize().height/2.0+slideBar->getContentSize().height/2.0));
     }
 }
@@ -132,7 +132,7 @@ void ItemSlider::CreateThumb()
     //thumb->setBackGroundColor(Color3B::RED);
     thumb->setAnchorPoint(Vec2(0.5,0.5));
     float size=fmin(getContentSize().height,getContentSize().width);
-    thumb->setContentSize(Size(size,size));
+    thumb->setContentSize(cocos2d::Size(size,size));
     SetThumbPosition();
     thumb->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
 }
@@ -213,7 +213,7 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     Vec2 touchPos=widget->getTouchMovePosition();
     float distanceX=0, distanceY=0;
     
-    Rect rItem(getPositionX(), getPositionY()-getContentSize().height,getContentSize().width, getContentSize().height);
+    cocos2d::Rect rItem(getPositionX(), getPositionY()-getContentSize().height,getContentSize().width, getContentSize().height);
 
     if (!rItem.containsPoint(touchPos))
     {
@@ -276,7 +276,7 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
     Widget::setContentSize(contentSize);
     float size=fmin(getContentSize().height,getContentSize().width);
     if (thumb)
-        thumb->setContentSize(Size(size,size));
+        thumb->setContentSize(cocos2d::Size(size,size));
     InitSliderLayout();
     SetValue(value);
 }
@@ -337,9 +337,9 @@ void ItemPad::Create()
     pad->setContentSize(getContentSize());
     pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     pad->setOpacity(230);
-    Rect rc;
+    cocos2d::Rect rc;
     rc.origin = Vec2(16,16);
-    rc.size = Size(114,114);
+    rc.size = cocos2d::Size(114,114);
     pad->setCapInsets(rc);
     addChild(pad);
 }
@@ -403,7 +403,7 @@ void ItemKeyboard::CreatePads()
     {
         for (int row=0;row<numPadsRow;++row)
         {
-            Rect r(row*padsWidth,getContentSize().height-column*padsHeight,padsWidth,padsHeight);
+            cocos2d::Rect r(row*padsWidth,getContentSize().height-column*padsHeight,padsWidth,padsHeight);
             ItemPad *pad=(ItemPad*)ItemBase::CreateItem(r, ITEM_PAD_ID);
             pad->setAnchorPoint(Vec2(0,1));
             addChild(pad);

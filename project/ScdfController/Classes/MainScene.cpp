@@ -28,7 +28,7 @@ Scene* MainScene::createScene()
     return scene;
 }
 
-void MainScene::SnapToGrid(Rect &r)
+void MainScene::SnapToGrid(cocos2d::Rect &r)
 {
     int newx=r.origin.x/GetGridDistance();
     if (((int)r.origin.x%GetGridDistance())>GetGridDistance()/2)
@@ -48,19 +48,19 @@ template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStar
     draggingImage->setAnchorPoint(Vec2(0,1));
     float width=ItemType::GetSize().width;
     float height=ItemType::GetSize().height;
-    draggingImage->setContentSize(Size(width*GetGridDistance(),height*GetGridDistance()));
+    draggingImage->setContentSize(cocos2d::Size(width*GetGridDistance(),height*GetGridDistance()));
     draggingImage->setOpacity(50);
     draggingImage->setPosition(dragStartPoint);
     addChild(draggingImage);
 }
 
-void MainScene::OnDragging(Rect r)
+void MainScene::OnDragging(cocos2d::Rect r)
 {
     if (NULL==customPanel.get()) return;
     draggingImage->setPosition(r.origin);
     Vec2 coord(convertToNodeSpace(customPanel->getPosition()));
-    Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
-    Rect rr=Rect::ZERO;
+    cocos2d::Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
+    cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
     float scaledHeight=draggingImage->getContentSize().height;
     float scaledWidth=draggingImage->getContentSize().width;
@@ -80,7 +80,7 @@ template <class ItemType> void MainScene::OnEndDragging()
 {
     if (NULL==customPanel.get()) return;
     customPanel->CheckAddControl(ItemType::GetID());
-    customPanel->SetDraggingRect(Rect::ZERO);
+    customPanel->SetDraggingRect(cocos2d::Rect::ZERO);
     removeChild(draggingImage);
     draggingImage=NULL;
 }
@@ -105,7 +105,7 @@ void MainScene::EnableScrollView(bool enable)
         customScrollView->setDirection(ScrollView::Direction::NONE);
 }
 
-void MainScene::AddToolbar(Rect r)
+void MainScene::AddToolbar(cocos2d::Rect r)
 {
     auto toolbar=Layout::create();
     toolbar->setContentSize(r.size);
@@ -139,7 +139,7 @@ void MainScene::AddToolbar(Rect r)
     buttonPanel->ignoreContentAdaptWithSize(false);
     buttonPanel->setAnchorPoint(Vec2(0,1));
     buttonPanel->setPosition(Vec2(marginLeft, toolbar->getContentSize().height-marginOffset));
-    buttonPanel->setContentSize(Size(r.size.height, r.size.height-2*marginOffset));
+    buttonPanel->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
     buttonPanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
    
@@ -153,7 +153,7 @@ void MainScene::AddToolbar(Rect r)
     buttonShowItems->ignoreContentAdaptWithSize(false);
     buttonShowItems->setAnchorPoint(Vec2(0,1));
     buttonShowItems->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth, toolbar->getContentSize().height- marginOffset));
-    buttonShowItems->setContentSize(Size(r.size.height, r.size.height-2*marginOffset));
+    buttonShowItems->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
     buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
@@ -166,7 +166,7 @@ void MainScene::AddToolbar(Rect r)
     buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonGrid->setAnchorPoint(Vec2(0,1));
     buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
-    buttonGrid->setContentSize(Size(buttonWidth, r.size.height));
+    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
     buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
     auto buttonEdit = CheckBox::create();
@@ -181,7 +181,7 @@ void MainScene::AddToolbar(Rect r)
     //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonEdit->setAnchorPoint(Vec2(0,1));
     buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
-    buttonEdit->setContentSize(Size(buttonWidth, r.size.height));
+    buttonEdit->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
@@ -195,7 +195,7 @@ void MainScene::AddToolbar(Rect r)
 void MainScene::CalculateGrid()
 {
     gridUnity.clear();
-    Size s=customPanel->getContentSize();
+    cocos2d::Size s=customPanel->getContentSize();
     float divisore=10;
     float width=s.width;
     float height=s.height;
@@ -236,7 +236,7 @@ bool MainScene::init()
     }
     
     Director::getInstance()->setDisplayStats(false);
-    Size visibleSize = Director::getInstance()->getVisibleSize();
+    cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     gridIndex=0;
     draggingImage=NULL;
@@ -251,19 +251,19 @@ bool MainScene::init()
 #define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
 #define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/2)
     
-    Rect toolbarPanelsize(0,
+    cocos2d::Rect toolbarPanelsize(0,
                           getContentSize().height,
                           getContentSize().width,
                           TOOLBAR_HEIGHT);
-    Rect workingPanelsize(0,
+    cocos2d::Rect workingPanelsize(0,
                           getContentSize().height,
                           getContentSize().width,
                           getContentSize().height);
-    Rect scrollViewect(getContentSize().width,
+    cocos2d::Rect scrollViewect(getContentSize().width,
                        getContentSize().height-toolbarPanelsize.size.height,
                        SCROLLVIEW_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
-    Rect propertiesRect(0-PROPERTIES_WIDTH,
+    cocos2d::Rect propertiesRect(0-PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height,
                        PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
@@ -335,12 +335,12 @@ void MainScene::HideShowScrollview()
         //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
      //   getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
        // CalculateGrid();
-        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
     }
     else
     {
         //Show
-        actScrollview = MoveTo::create(0.1f, Point(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
 //        callback = CallFunc::create([this](){
 //            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
 //            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
@@ -365,12 +365,12 @@ void MainScene::HideShowPropertiesPanel()
         //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
         //getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
         // CalculateGrid();
-        actScrollview = MoveTo::create(0.1f, Point(-PROPERTIES_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(-PROPERTIES_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
     }
     else
     {
         //Show
-        actScrollview = MoveTo::create(0.1f, Point(0, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height-TOOLBAR_HEIGHT));
 //        callback = CallFunc::create([this](){
 //            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
 //            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
@@ -401,11 +401,11 @@ void MainScene::HideShowToolbar()
         toolbar->removeChild(tB);
         addChild(tB, 0, TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
         tB->setPosition(Vec2(0, customPanel->getContentSize().height));
-        actToolbar = MoveTo::create(0.1f, Point(0, getContentSize().height+TOOLBAR_HEIGHT));
+        actToolbar = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height+TOOLBAR_HEIGHT));
     }
     else
     {
-        actToolbar = MoveTo::create(0.1f, Point(0, getContentSize().height));
+        actToolbar = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height));
         callback = CallFunc::create([this,toolbar](){
          //   customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height-TOOLBAR_HEIGHT));
         //    CalculateGrid();
