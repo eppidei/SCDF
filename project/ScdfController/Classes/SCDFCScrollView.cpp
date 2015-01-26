@@ -64,7 +64,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     //setBackGroundColor(Color3B::YELLOW, Color3B::RED);
     setBackGroundColor(Color3B(50,50,50));
-    setBounceEnabled(true);
+//    setBounceEnabled(true);
     setInertiaScrollEnabled(true);
     parent->addChild(this);
     

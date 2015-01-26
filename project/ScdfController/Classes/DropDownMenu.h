@@ -28,11 +28,11 @@ namespace SCDFC
 
     class DropDownMenu : public cocos2d::ui::ListView, public cocos2d::ActionTweenDelegate
     {
+        cocos2d::CustomCommand cmd;
         bool opened, resizeParent;
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
-        
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ScrollToSelected();
         void ResizeAndScroll(float newHeight, bool disableScrolling);
@@ -40,9 +40,10 @@ namespace SCDFC
         DropDownMenu();
     public:
         void SetSelectedIndex(int selected);
-        void InitData(std::vector<std::string> data);
+        void InitData(std::vector<std::string> data, float itemHeight);
         virtual void setPosition(const cocos2d::Vec2 &pos) override;
-        //void SetMenuPosition(cocos2d::Vec2 pos);
+       // void visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         void SetCallback(DropDownMenuCallback *_callback);
         void updateTweenAction(float value, const std::string& key);
         ~DropDownMenu();

@@ -94,7 +94,7 @@ void MainScene::AttachItem(ItemBase *item)
 void MainScene::DetachItem(ItemBase *item)
 {
     item->Detach(propertiesPanel.get());
-    propertiesPanel->Update(NULL);
+    propertiesPanel->Update(NULL, SCDFC_EVENTS_Remove_Item);
 }
 
 void MainScene::EnableScrollView(bool enable)
@@ -376,6 +376,7 @@ void MainScene::HideShowPropertiesPanel()
 //            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
 //            //     CalculateGrid();
 //        });
+        propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
     }
 //    if (nullptr!=callback){
 //        auto seq = Sequence::create(actScrollview, callback, NULL);

@@ -12,10 +12,6 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 
-
-#define MAIN_BACK_COLOR Color3B(50,50,50)
-
-
 namespace ScdfCtrl
 {
     class ControlUnit;
@@ -40,8 +36,9 @@ namespace SCDFC {
     class ItemBase : public cocos2d::ui::Layout, public SubjectSimple
     {
         int sizeMultiply;
-        std::string name;
     protected:
+        int value;
+        std::string name;
         cocos2d::Color3B color;
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
@@ -59,14 +56,16 @@ namespace SCDFC {
         void SetCallback(ItemBaseCallback *c) {callback.reset(c);}
         void SetName(std::string _name) {name=_name;}
         virtual void SetColor(cocos2d::Color3B _color) {color=_color;}
+        void SetValue(int _value) {value=_value;}
         void SetItemMultiply(int multiply);
         std::string GetName() {return name;}
         cocos2d::Color3B GetColor() {return color;}
         int GetSizeMultiply() {return sizeMultiply;}
+        virtual int GetValue() {return value;}
     };
     class ItemSlider : public ItemBase
     {
-        void InitSliderLayout();
+        cocos2d::Size GetSizeConsideringOrientation(const cocos2d::Size resized);
         virtual void SetThumbPosition();
         virtual bool IsKnob() { return false;}
         void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
@@ -76,11 +75,11 @@ namespace SCDFC {
         Layout *thumb;
         Layout *slideBar;
         bool isVertical;
-        float min, max, value;
+        float min, max;
         void CreateThumb();
     public:
         void Create();
-        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags);
+        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         static cocos2d::Size GetSize() { return SLIDER_SIZE_BASE;}
         static int GetID() { return ITEM_SLIDER_ID;}
         virtual ~ItemSlider();
@@ -101,8 +100,10 @@ namespace SCDFC {
         static int GetID() { return ITEM_KNOB_ID;}
         CREATE_FUNC(ItemKnob);
     };
+    class ItemKeyboard;
     class ItemPad : public ItemBase
     {
+        friend class ItemKeyboard;
         cocos2d::ui::Button *pad;
         void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
@@ -120,9 +121,14 @@ namespace SCDFC {
     {
         int padSizeMultiply;
         std::vector<ItemPad*> pads;
+        int padIndex;
         void ClearPads();
         void CreatePads();
+        void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     public:
+        ItemPad *GetSelectedPad();
+        void UpdateSelectedPadIndex(ItemPad *pad);
         void Create();
         static cocos2d::Size GetSize() { return KEYBOARD_SIZE_BASE;}
         static int GetID() { return ITEM_KEYBOARD_ID;}

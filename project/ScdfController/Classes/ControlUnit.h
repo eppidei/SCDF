@@ -34,6 +34,7 @@ public:
 
 	s_int32 GetMidiControl();
 	s_int32 GetMidiPitch() { return GetMidiControl(); }
+    s_int32 GetValue() { return value;}
 
 	// Set Properties:
 
@@ -72,6 +73,7 @@ private:
 	MidiMessageType midiMsgType;
 	s_int32 midiChannel;
 	s_int32 midiControl; // when midiMsgType is noteon/off, this is the pitch
+    s_int32 value;
 
 
 };

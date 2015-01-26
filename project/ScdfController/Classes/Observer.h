@@ -11,13 +11,20 @@
 
 namespace SCDFC
 {
-
+    enum SCDFC_EVENTS
+    {
+        SCDFC_EVENTS_Update,
+        SCDFC_EVENTS_Add_Item,
+        SCDFC_EVENTS_Select_Item,
+        SCDFC_EVENTS_Remove_Item,
+        SCDFC_EVENTS_Move_Item
+    };
+    
     class SubjectSimple;
-
     class ObserverSimple {
     public:
         virtual ~ ObserverSimple() {};
-        virtual void Update(SubjectSimple* theChangedSubject) = 0;
+        virtual void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event) = 0;
     protected:
         ObserverSimple() {};
     };
@@ -46,9 +53,15 @@ namespace SCDFC
             std::list<ObserverSimple*> &theList=GetObservers();
             std::list<ObserverSimple*>::iterator endIterator=theList.end();
             for (std::list<ObserverSimple*>::iterator i=theList.begin(); i!=endIterator; ++i)
-                (*i)->Update(this);
+                (*i)->Update(this, SCDFC_EVENTS_Update);
         }
-        
+        virtual void NotifyEvent(SCDFC_EVENTS event)
+        {
+            std::list<ObserverSimple*> &theList=GetObservers();
+            std::list<ObserverSimple*>::iterator endIterator=theList.end();
+            for (std::list<ObserverSimple*>::iterator i=theList.begin(); i!=endIterator; ++i)
+                (*i)->Update(this, event);
+        }
         SubjectSimple() {};
     private:
         std::list<ObserverSimple *> _observers;
