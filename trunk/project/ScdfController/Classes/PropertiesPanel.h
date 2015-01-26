@@ -39,7 +39,7 @@ namespace SCDFC
     class ItemBase;
     class ItemBaseCallback;
     
-    class SubpanelBase : public cocos2d::ui::Layout
+    class SubpanelBase : public cocos2d::ui::Layout, public cocos2d::ActionTweenDelegate
     {
         friend class PropertiesPanel;
         class DropDownMenuCallbackSubPanel : public DropDownMenuCallback
@@ -59,6 +59,10 @@ namespace SCDFC
             void OnItemTouchMoved(int value);
             void OnItemTouchEnded();
         };
+        
+        void Resize(float newHeight);
+        void CalculateHeight();
+        void HideElement(Node *n, bool hide);
         virtual void CreateControls() = 0;
     protected:
         std::unique_ptr<PropertiesPanel> parent;
@@ -68,6 +72,7 @@ namespace SCDFC
         void TextFieldEvent(Ref *pSender, cocos2d::ui::TextField::EventType type);
         void TouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         void CheckBoxEvent(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
+        virtual void InitChildrensVisibilityAndPos();
     public:
         ~SubpanelBase();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
@@ -76,6 +81,7 @@ namespace SCDFC
         virtual void UpdateValues() = 0;
         PropertiesPanel *GetParent();
         //DropDownMenuCallback *GetDropDownCallback();
+        void updateTweenAction(float value, const std::string& key) override;
         void InitWithContent(PropertiesPanel *parent, cocos2d::Size s);
         //virtual bool init() override;
     };
@@ -90,13 +96,13 @@ namespace SCDFC
             cocos2d::ui::TextField* oscIP;
             
             void CreateControls();
-            
            // void TextFieldEvent(Ref *pSender, cocos2d::ui::TextField::EventType type);
-            
+        protected:
+            void InitChildrensVisibilityAndPos();
         public:
             OSCInfo();
             void UpdateValues();
-            void PositionElements() {}
+            void PositionElements();
             CREATE_FUNC(OSCInfo);
         } *sectionOSCInfo;
         
@@ -120,6 +126,7 @@ namespace SCDFC
             cocos2d::ui::Text *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel;
             
             void CreateControls();
+            void InitControlMenuValue();
         public:
             MIDIInfo();
             void OnDropDownSelectionChange(DropDownMenu *menu);
@@ -148,11 +155,12 @@ namespace SCDFC
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void PositionElements();
         void CalculateInnerHeight();
+        void UpdateAll();
     public:
         void InitLayout();
-//        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 //        void OnSelectedDropDownItem(DropDownMenu *menu);
-        void Update(SubjectSimple* theChangedSubject);
+        void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event);
         ScdfCtrl::ControlUnit *GetCurrentControlUnit();
         ItemBase *GetSelectedItem();
         static PropertiesPanel *CreatePropertiesPanel(MainScene *main, cocos2d::Rect r);

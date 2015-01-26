@@ -278,8 +278,8 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
 #endif
     std::vector<SensorData*> *b=BuildSensorsDataBuffers(masterData);
     SentDataRecyclingProcedure(&harvestData);
-    SendingQueuePushBuffer(b);
     harversterListener->OnHarvesterBufferReady(b);
+    SendingQueuePushBuffer(b);
 }
 
 void Harvester::Harvest(SensorData *masterData)

@@ -106,11 +106,21 @@ DropDownMenu::DropDownMenu()
     lastSelectedIndex=-1;
 }
 
+void DropDownMenu::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    DrawPrimitives::setDrawColor4B(255, 255, 255, 255);
+    DrawPrimitives::drawRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0));
+}
+
 DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s)
 {
     DropDownMenu *menu=DropDownMenu::create();
     menu->setContentSize(s);
     menu->ScrollView::setDirection(Direction::NONE);
+    menu->addEventListener(CC_CALLBACK_2(DropDownMenu::OnControlTouch, menu));
+    menu->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
+    menu->setAnchorPoint(Vec2(0,1));
+    menu->setBackGroundColorType(BackGroundColorType::NONE);
     return menu;
 }
 
@@ -128,39 +138,36 @@ DropDownMenu::~DropDownMenu()
 }
 
 
-void DropDownMenu::InitData(std::vector<std::string> data)
+void DropDownMenu::InitData(std::vector<std::string> data, float itemHeight)
 {
+    if (itemHeight!=getContentSize().height)
+        ResizeAndScroll(itemHeight, true);
     removeAllItems();
-    addEventListener(CC_CALLBACK_2(DropDownMenu::OnControlTouch, this));
+    
     if (0==data.size())
     {
         Text *model = Text::create("No data","Arial",20);
         model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::LEFT);
-        model->setColor(Color3B::BLACK);
+        model->setTextHorizontalAlignment(TextHAlignment::CENTER);
+        model->setColor(Color3B::WHITE);
         setInnerContainerSize(cocos2d::Size(model->getContentSize()));
         pushBackCustomItem(model);
     }
     else{
         for (int i=0; i<data.size(); i++)
         {
-//            std::ostringstream os;
-//            os<<"Pippo "<<i;
-            Text *model = Text::create(data[i]/*os.str()*/,"Arial",20);
+            Text *model = Text::create(data[i],"Arial",20);
             model->setTouchEnabled(true);
-            model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
+            model->setContentSize(cocos2d::Size(getContentSize().width-5,getContentSize().height));
             model->ignoreContentAdaptWithSize(false);
             model->setTextVerticalAlignment(TextVAlignment::CENTER);
-            model->setTextHorizontalAlignment(TextHAlignment::LEFT);
-            model->setColor(Color3B::BLACK);
+            model->setTextHorizontalAlignment(TextHAlignment::CENTER);
+            model->setColor(Color3B::WHITE);
             pushBackCustomItem(model);
         } 
         setInnerContainerSize(cocos2d::Size(getContentSize().width,data.size()*getContentSize().height));
     }
-    setGravity(ListView::Gravity::CENTER_HORIZONTAL);
-    setAnchorPoint(Vec2(0,1));
-    setBackGroundColorType(BackGroundColorType::SOLID);
-    setBackGroundColor(DROPDOWNN_BACK_COLOR);
+    SetSelectedIndex(0);
 }
