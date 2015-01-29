@@ -10,7 +10,7 @@
 
 @implementation AudioWaveView
 
-const int bufferSize = 8192;
+const int bufferSize = 256;
 const int borderSize = 0;
 #define ARC4RANDOM_MAX      0x100000000
 
@@ -33,16 +33,18 @@ const int borderSize = 0;
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        
+        audioListener = nil;
         
         [self setBackgroundColor:[UIColor grayColor]];
         
         bufferData = (s_sample*)malloc(bufferSize*sizeof(s_sample));
+        bufferDataTemp = (s_sample*)malloc(bufferSize*sizeof(s_sample));
         for(int i = 0; i<bufferSize; i++)
         {
             s_sample value = (s_sample)i/bufferSize;
             value = 0;
             bufferData[i]=(value);
+            bufferDataTemp[i]=(value);
         }
 
         currentBufferSize = bufferSize;
@@ -67,6 +69,7 @@ const int borderSize = 0;
     [super dealloc];
     
     free(bufferData);
+    free(bufferDataTemp);
     free(bufferDataTest);
     
     [bufferLock release];
@@ -79,6 +82,10 @@ const int borderSize = 0;
     {
         free(bufferData);
         bufferData = (s_sample*)malloc(size*sizeof(s_sample));
+        
+        free(bufferDataTemp);
+        bufferDataTemp = (s_sample*)malloc(size*sizeof(s_sample));
+        
         currentBufferSize = size;
     }
 }
@@ -130,23 +137,26 @@ const int borderSize = 0;
     s_sample bufferStep = (s_sample)currentBufferSize/(s_sample)self.frame.size.width;
     
     @synchronized (bufferLock){
-        for(int i = 0; i<frame.size.width - 1; i++)
+        memcpy(bufferDataTemp, bufferData, currentBufferSize*sizeof(s_sample));
+     }
+    
+   
+    for(int i = 0; i<frame.size.width - 1; i++)
         {
             
             CGPoint pt1;
             pt1.x = i;
-            pt1.y =  borderSize + ((frame.size.height - (2*borderSize))*bufferData[(int)(i*bufferStep)]);
+            pt1.y =  borderSize + ((frame.size.height - (2*borderSize))*bufferDataTemp[(int)(i*bufferStep)]);
             
             CGPoint pt2;
             pt2.x = i;
-            pt2.y =  borderSize + ((frame.size.height-(2*borderSize))*bufferData[(int)((i+1)*bufferStep)]);
+            pt2.y =  borderSize + ((frame.size.height-(2*borderSize))*bufferDataTemp[(int)((i+1)*bufferStep)]);
             
             
             CGContextMoveToPoint(context,pt1.x,pt1.y);
             CGContextAddLineToPoint(context,pt2.x,pt2.y);
             CGContextStrokePath(context);
         }
-    }
 }
 
 

@@ -25,7 +25,7 @@ namespace scdf {
 Receiver::Receiver( size_t rx_pkt_size,unsigned int audio_buf_len,unsigned int sensor_buf_len,unsigned int graph_buf_len)
 {
     
-  
+        listener = NULL;
         this->rx_pkt_size=rx_pkt_size;
         this->p_rx_buff=(char*)malloc(rx_pkt_size);
         memset(this->p_rx_buff,0,rx_pkt_size);
@@ -117,7 +117,9 @@ void Receiver::StartReceivingProcedure(void *param)
             p_receiver->p_graph_buff[i]=static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         }
         
-        p_receiver->listener->draw_buffer(p_receiver->p_graph_buff,p_receiver->graph_buf_len);
+        if(NULL!=p_receiver)
+            if(NULL!=p_receiver->listener)
+                p_receiver->listener->draw_buffer(p_receiver->p_graph_buff,p_receiver->graph_buf_len);
         //printf("memset\n");
         
     }
@@ -217,7 +219,7 @@ int Receiver::receive(char* line, int maxsize,char* ip_local_init,char* ip_remot
     static bool stopped= true;
     static int last_byte_received=0;
     /*static fd_set          fds;*/
-    struct timeval  tv  = {5,0};
+    struct timeval  tv  = {1,00};
     
     FD_ZERO(fds);
     FD_SET( *SOCK_sd, fds );
