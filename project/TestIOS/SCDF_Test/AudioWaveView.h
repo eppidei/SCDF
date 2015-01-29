@@ -25,6 +25,7 @@ public:
 
 {
     s_sample *bufferData;
+    s_sample *bufferDataTemp;
     NSObject *bufferLock;
     
     s_sample *bufferDataTest;
