@@ -91,7 +91,10 @@ void Receiver::StartReceivingProcedure(void *param)
     static IpEndpointName Rx_endpoint;
     int ret = 0;
     unsigned int i=0;
-    
+    static unsigned int k=0,m=0;
+    unsigned int audio_buff_len=256;
+    unsigned int audio_graph_ratio=4;
+
         
     sprintf(local_ip,"%d.%d.%d.%d",p_receiver->local_ip1,p_receiver->local_ip2,p_receiver->local_ip3,p_receiver->local_ip4);
     sprintf(remote_ip,"%d.%d.%d.%d",p_receiver->remote_ip1,p_receiver->remote_ip2,p_receiver->remote_ip3,p_receiver->remote_ip4);
@@ -114,7 +117,11 @@ void Receiver::StartReceivingProcedure(void *param)
         //memset(p_receiver->p_graph_buff,0.5,p_receiver->graph_buf_len*sizeof(s_sample));
         for (i=0;i<p_receiver->graph_buf_len;i++)
         {
-            p_receiver->p_graph_buff[i]=static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            m=k%audio_graph_ratio;
+            
+            p_receiver->p_graph_buff[m*audio_buff_len+i]=p_receiver->p_rx_buff[i];//static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            
+            k++;
         }
         
         if(NULL!=p_receiver)
