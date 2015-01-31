@@ -11,6 +11,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved)
 
 	bool somethingWrong = false;
 	if ( ! Jni::CacheClass("it/scdf/framework/UsbHandler")) somethingWrong = true;
+	if ( ! Jni::CacheClass("it/scdf/framework/ForegroundActivity")) somethingWrong = true;
 
 	// ADD HERE ALL CLASSES YOU WANT TO CACHE
 
