@@ -27,6 +27,8 @@ THE SOFTWARE.
 package org.cocos2dx.cpp;
 
 import it.scdf.framework.UsbHandler;
+import it.scdf.framework.ForegroundActivity;
+
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
@@ -39,8 +41,8 @@ public class AppActivity extends Cocos2dxActivity {
 	{
 		System.loadLibrary("usbcustom");
 		Log.d("sc","usbcustom loaded");
-		System.loadLibrary("scdfusb");
-		Log.d("sc","scdfusb loaded");
+		//System.loadLibrary("scdfusb");
+		//Log.d("sc","scdfusb loaded");
 		System.loadLibrary("scdf");
 		Log.d("sc","SCDF loaded");
 	}
@@ -49,7 +51,15 @@ public class AppActivity extends Cocos2dxActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ForegroundActivity.Set(this);
         UsbHandler.Setup(this);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        ForegroundActivity.Detach(this);
     }
 	
     @Override

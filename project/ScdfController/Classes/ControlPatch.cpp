@@ -9,7 +9,7 @@
 #include "ControlPatch.h"
 #include <sstream>
 #include "Logging.h"
-
+#include "OsUtilities.h"
 
 ScdfCtrl::ControlPatch::ControlPatch()
 {
@@ -20,6 +20,12 @@ ScdfCtrl::ControlPatch::ControlPatch()
 
 void TestSerialization()
 {
+	std::string path1 = Scdf::GetAppDataDirectory();
+	std::string path2 = Scdf::GetUserDataDirectory();
+
+	LOGD("App: %s",path1.c_str());
+	LOGD("App: %s",path2.c_str());
+
 	std::stringstream ss; // any stream can be used
 	{
 		cereal::XMLOutputArchive oarchive(ss);
@@ -39,7 +45,6 @@ void TestSerialization()
 		LOGD("m3 %i, %f, %f",m3.i,m3.f[0],m3.f[1]);
 
 		LOGD("YO: %s",ss.str().c_str());
-
 	}
 }
 

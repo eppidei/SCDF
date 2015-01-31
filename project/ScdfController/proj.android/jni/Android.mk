@@ -37,11 +37,20 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := usbcustom
+LOCAL_PATH:=$(LIBUSB_SRC)
+LOCAL_C_INCLUDES := $(LIBUSB_INCLUDES)
+LOCAL_SRC_FILES := core.c descriptor.c io.c sync.c os/linux_usbfs.c os/threads_posix.c
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
 LOCAL_MODULE 	 := scdf
 LOCAL_PATH 		 := $(SCDF_SRC)
-LOCAL_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
+LOCAL_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES) $(LIBUSB_INCLUDES)
 LOCAL_EXPORT_C_INCLUDES := $(OSCPACK_INCLUDES) $(SCDF_INCLUDES)
-LOCAL_STATIC_LIBRARIES := oscpack
+LOCAL_STATIC_LIBRARIES := oscpack 
+LOCAL_SHARED_LIBRARIES += usbcustom
 LOCAL_LDLIBS += -landroid -llog -lOpenSLES
 LOCAL_SRC_FILES := 	Sensor.cpp \
 					SensorStandard.cpp \
@@ -58,33 +67,31 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					PipesManager.cpp \
 					android/FrameworkJniGlue.cpp \
 					android/SaveSettings.cpp \
-					ScdfSensorAPI.cpp
+					android/OsUtilitiesAndroid.cpp \
+					ScdfSensorAPI.cpp \
+					android/JniGlue.cpp \
+					android/UsbHandler.cpp \
+					android/usb/UsbHelper.cpp \
+					android/usb/UsbAudioEndpoint.cpp \
+					android/usb/UsbAudioInterfaces.cpp \
+					android/usb/UsbMidiInterface.cpp \
+					android/usb/UsbAudioDevice.cpp \
+					android/MidiOutConnectionAndroid.cpp
 					
 include $(BUILD_SHARED_LIBRARY)
 
-
-
-
-
 # USB AND COCOS2D APP:
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := usbcustom
-LOCAL_PATH:=$(LIBUSB_SRC)
-LOCAL_C_INCLUDES := $(LIBUSB_INCLUDES)
-LOCAL_SRC_FILES := core.c descriptor.c io.c sync.c os/linux_usbfs.c os/threads_posix.c
-include $(BUILD_SHARED_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := scdfusb
-LOCAL_PATH := $(SCDF_SRC_PATH)/android
-LOCAL_C_INCLUDES += $(SCDF_SRC_PATH)/android/include \
+#include $(CLEAR_VARS)
+#LOCAL_MODULE    := scdfusb
+#LOCAL_PATH := $(SCDF_SRC_PATH)/android
+#LOCAL_C_INCLUDES += $(SCDF_SRC_PATH)/android/include \
 					$(SCDF_SRC_PATH)/include \
 					$(LIBUSB_INCLUDES)
 					 
-LOCAL_SHARED_LIBRARIES += usbcustom
-LOCAL_LDLIBS += -landroid -llog
-LOCAL_SRC_FILES := 	JniGlue.cpp \
+#LOCAL_SHARED_LIBRARIES += usbcustom
+#LOCAL_LDLIBS += -landroid -llog
+#LOCAL_SRC_FILES := 	JniGlue.cpp \
 					UsbHandler.cpp \
 					usb/UsbHelper.cpp \
 					usb/UsbAudioEndpoint.cpp \
@@ -93,7 +100,7 @@ LOCAL_SRC_FILES := 	JniGlue.cpp \
 					usb/UsbAudioDevice.cpp \
 					MidiOutConnectionAndroid.cpp
 
-include $(BUILD_SHARED_LIBRARY)
+#include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
