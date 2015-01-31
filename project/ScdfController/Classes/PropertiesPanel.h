@@ -157,6 +157,7 @@ namespace SCDFC
         void CalculateInnerHeight();
         void UpdateAll();
     public:
+        void UpdateOSCInfo();
         void InitLayout();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 //        void OnSelectedDropDownItem(DropDownMenu *menu);

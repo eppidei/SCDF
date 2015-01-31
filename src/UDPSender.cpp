@@ -83,7 +83,14 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
     ThreadUtils::AutoLock kk(&endpointsChanger);
 
     //LOGD("UDP SENDER - actually send %d bytes to %s [%d]",size,address.c_str(),portBase);
-    transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
+    try {
+        transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
+    }
+    catch (const std::runtime_error& error)
+    {
+        LOGD("\nUDP SendTo failed with error: %s\n",error.what());
+    }
+    
 }
 
 void UDPSender::SendData(const s_char* data, s_int32 size)
