@@ -1,4 +1,4 @@
-#N canvas 507 138 588 604 10;
+#N canvas 505 141 588 604 10;
 #X declare -lib mrpeach;
 #X obj 16 10 import mrpeach;
 #X obj 439 108 udpsend;
@@ -8,13 +8,13 @@
 #X msg 439 11 connect localhost 9000;
 #X obj 22 87 unpackOSC;
 #X obj 22 66 spigot;
-#X obj 70 66 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+#X obj 70 66 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
 #X obj 29 170 routeOSC /Accelerometer /AudioInput;
 #X obj 81 403 routeOSC /Rate /Channels /Frames /TimeID /Data /Timestamps
 ;
 #X obj 108 377 spigot;
-#X obj 158 378 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 158 378 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X floatatom 150 455 15 0 0 0 - - -;
 #X floatatom 152 431 5 0 0 0 - - -;
@@ -23,7 +23,7 @@
 #X obj 101 241 routeOSC /Rate /Channels /Frames /TimeID /Data /Timestamps
 ;
 #X obj 100 215 spigot;
-#X obj 150 216 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 150 216 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X floatatom 41 269 15 0 0 0 - - -;
 #X floatatom 144 269 5 0 0 0 - - -;
@@ -37,7 +37,6 @@
 #X obj 346 452 sig~;
 #X obj 243 547 dac~;
 #X obj 27 490 tabwrite \$0-buffer;
-#X obj 18 456 tabadd sdf;
 #X connect 2 0 1 0;
 #X connect 3 0 1 0;
 #X connect 4 0 3 0;

@@ -8,7 +8,8 @@
 
 #ifndef __ScdfController__SCDFCWorkingPanel__
 #define __ScdfController__SCDFCWorkingPanel__
-
+#include "ControlUnit.h"
+#include "SCDFCItems.h"
 namespace cocos2d{
     namespace ui{
         class ListView;
@@ -16,8 +17,8 @@ namespace cocos2d{
 }
 namespace SCDFC{
     class MainScene;
-    class ItemBase;
-    class ItemBaseCallback;
+    //class ItemBase;
+    //class ItemBaseCallback;
     
     class WorkingPanelItemCallback : public ItemBaseCallback
     {

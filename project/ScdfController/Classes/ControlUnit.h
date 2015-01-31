@@ -12,6 +12,7 @@
 #include "MidiUtils.h"
 #include "MidiOutConnection.h"
 #include <string>
+#include "UDPSender.h"
 
 namespace ScdfCtrl {
 
@@ -65,10 +66,15 @@ private:
 
 	// osc sender
 
-	std::string oscIp;
-	s_int32 oscPort;
+	scdf::UDPSender udpSender;
+	//std::string oscIp;
+	//s_int32 oscPort;
 	std::string oscTag;
 	s_bool oscEnabled;
+
+	static osc::OutboundPacketStream PackOSCValue(s_int32 ctrl, s_int32 value, std::string tag);
+
+	// midi parameters:
 
 	MidiMessageType midiMsgType;
 	s_int32 midiChannel;

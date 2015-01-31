@@ -14,6 +14,7 @@
 #include "SCDFCItems.h"
 #include "PropertiesPanel.h"
 #include "ControlUnit.h"
+#include "Logging.h"
 
 using namespace SCDFC;
 using namespace cocos2d;
@@ -67,6 +68,8 @@ void WorkingPanel::CheckRemoveControl(Node *n)
     printf("Control removed from working space\n");
 }
 
+void TestSerialization();
+
 void WorkingPanel::ToggleActiveState()
 {
     active=!active;
@@ -78,6 +81,8 @@ void WorkingPanel::ToggleActiveState()
 //            it->setOpacity(255);
 //    }
     
+    TestSerialization();
+
 }
 
 void WorkingPanel::DrawGrid()

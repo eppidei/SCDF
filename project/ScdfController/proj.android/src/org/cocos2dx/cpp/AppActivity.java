@@ -28,13 +28,21 @@ package org.cocos2dx.cpp;
 
 import it.scdf.framework.UsbHandler;
 import org.cocos2dx.lib.Cocos2dxActivity;
+import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+
 import android.os.Bundle;
+import android.util.Log;
 
 public class AppActivity extends Cocos2dxActivity {
 	
-	static {
+	static
+	{
 		System.loadLibrary("usbcustom");
-		System.loadLibrary("scdfusbtest");
+		Log.d("sc","usbcustom loaded");
+		System.loadLibrary("scdfusb");
+		Log.d("sc","scdfusb loaded");
+		System.loadLibrary("scdf");
+		Log.d("sc","SCDF loaded");
 	}
 	
     @Override
@@ -44,6 +52,12 @@ public class AppActivity extends Cocos2dxActivity {
         UsbHandler.Setup(this);
     }
 	
-	
+    @Override
+    public Cocos2dxGLSurfaceView onCreateView()
+    {
+    	Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+    	glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
+    	return glSurfaceView;
+    } 
 	
 }

@@ -10,7 +10,7 @@ s_int32 MidiOutConnection::GetNumAvailableOutputs()
 	return UsbHandler::GetNumMidiOutInterfaces();
 }
 
-std::string GetOutputName(s_int32 index)
+std::string MidiOutConnection::GetOutputName(s_int32 index)
 {
 	return UsbHandler::GetMidiInterfaceName(index);
 }

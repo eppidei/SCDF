@@ -245,7 +245,6 @@ bool MainScene::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
     
-
     
 #define SCROLLVIEW_WIDTH (4*GetUnityBase())
 #define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
@@ -267,12 +266,28 @@ bool MainScene::init()
                        getContentSize().height-toolbarPanelsize.size.height,
                        PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
+
+
     customScrollView.reset(ItemScrollView::CreateCustomScrollView((MainScene*)this, scrollViewect));
+
+
+
+    LOGD("Created custom scrollview");
+
     customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
+
+    LOGD("Created custom panel");
+
     propertiesPanel.reset(PropertiesPanel::CreatePropertiesPanel((MainScene*)this,propertiesRect));
-    
+
     AddToolbar(toolbarPanelsize);
+
+    LOGD("Added toolbar");
+
     CalculateGrid();
+
+    LOGD("Calculated grid");
+
     // add a "close" icon to exit the progress. it's an autorelease object
     /*auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
@@ -319,7 +334,7 @@ bool MainScene::init()
     uButton->setPosition(Vec2(widgetSize.width-150, widgetSize.height-150));
     uButton->setContentSize(Size(50, 50));
     uButton->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
-//    uButton->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+//  uButton->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     this->addChild(uButton);*/
     
     return true;

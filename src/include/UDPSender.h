@@ -11,6 +11,7 @@
 
 #include "ThreadUtils.h"
 #include "Sensor.h"
+#include "osc/OscOutboundPacketStream.h"
 
 class UdpSocket;
 class IpEndpointName;
@@ -32,9 +33,15 @@ namespace scdf
     public:
         UDPSender();
         void SendData(const s_char* data, s_int32 size, s_int32 endpointIndex);
+        void SendData(const s_char* data, s_int32 size);
+
         void InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::string IP_address);
         s_int32 GetPort();
         std::string GetAddress();
+
+        void SetPort(s_int32 p);
+        void SetAddress(std::string addr);
+        void SetNumEndpoints(s_int32 numEp);
     };
     
     class UDPSenderHelperBase

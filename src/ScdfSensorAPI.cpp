@@ -11,7 +11,7 @@
 #include "SensorsManager.h"
 #include "SaveSettings.h"
 #include "UDPSendersManager.h"
-#include "UdpSender.h"
+#include "UDPSender.h"
 #include "Harvester.h"
 
 const int max_number_ip_port = 65535;
