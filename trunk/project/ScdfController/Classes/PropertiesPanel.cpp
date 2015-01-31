@@ -546,6 +546,7 @@ void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
         parent->GetCurrentControlUnit()->SetMidiChannel(selectedIndex);
     else if (menu==velocity)
         parent->GetSelectedItem()->SetValue(selectedIndex);
+    parent->UpdateOSCInfo();
     
 }
 
@@ -838,6 +839,11 @@ void PropertiesPanel::UpdateAll()
     sectionMIDIInfo->UpdateValues();
     sectionItemSettings->UpdateValues();
     InitLayout();
+}
+
+void PropertiesPanel::UpdateOSCInfo()
+{
+    sectionOSCInfo->UpdateValues();
 }
 
 void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
