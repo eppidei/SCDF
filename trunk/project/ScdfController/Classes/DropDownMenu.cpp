@@ -100,6 +100,7 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
 
 DropDownMenu::DropDownMenu()
 {
+
     opened=false;
     callback=NULL;
     resizeParent=true;

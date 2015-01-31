@@ -50,30 +50,46 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView(std::string
 
 ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, cocos2d::Rect r)
 {
-    ItemScrollView *scrollView=(ItemScrollView*)ItemScrollView::create();
+    ItemScrollView *scrollView = (ItemScrollView*)ItemScrollView::create();
     scrollView->InitWithContent(main,r);
     return scrollView;
 }
 
 void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
-    parent=main;
+
+	parent=main;
+	parent->addChild(this);
+
+	LOGD("ITEM SCROLL ORIG %f,%f SIZE %f,%f",r.origin.x,r.origin.y,r.size.width,r.size.height);
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
+    //setClippingEnabled(false);
     setPosition(r.origin);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     //setBackGroundColor(Color3B::YELLOW, Color3B::RED);
     setBackGroundColor(Color3B(50,50,50));
 //    setBounceEnabled(true);
     setInertiaScrollEnabled(true);
-    parent->addChild(this);
-    
-    AddButtonToScrollView<ItemSlider>("sliderIcon.png");
-    AddButtonToScrollView<ItemPad>("padIcon.png");
-    AddButtonToScrollView<ItemKnob>("knobIcon.png");
-    AddButtonToScrollView<ItemKeyboard>("fullPad.png");
-    AddButtonToScrollView<ItemSensor1>("sensorIcon.png");
+
+    LOGD("Add slider button");
+
+ AddButtonToScrollView<ItemSlider>("sliderIcon.png");
+
+ 	 LOGD("Add pad button");
+
+ AddButtonToScrollView<ItemPad>("padIcon.png");
+
+ 	 LOGD("Add knob button");
+
+ AddButtonToScrollView<ItemKnob>("knobIcon.png");
+ LOGD("Add full pad button");
+ AddButtonToScrollView<ItemKeyboard>("fullPad.png");
+ LOGD("Add sensor button");
+ AddButtonToScrollView<ItemSensor1>("sensorIcon.png");
+    LOGD("Init with content over");
 }
+
 
 float ItemScrollView::RetrieveButtonYCoordInScrollview(ui::Button* button)
 {

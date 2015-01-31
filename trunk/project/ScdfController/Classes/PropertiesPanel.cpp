@@ -802,6 +802,7 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
     selectedItem=NULL;
     
+    //setClippingEnabled(false);
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
@@ -810,7 +811,7 @@ void PropertiesPanel::InitWithContent(MainScene *main,cocos2d::Rect r)
    // setBounceEnabled(true);
     setInertiaScrollEnabled(true);
     main->addChild(this);
- 
+
     sectionOSCInfo=OSCInfo::create();
     sectionOSCInfo->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
     addChild(sectionOSCInfo);

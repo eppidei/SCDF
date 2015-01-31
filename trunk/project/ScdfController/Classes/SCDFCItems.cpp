@@ -358,8 +358,11 @@ void ItemKnob::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t
     DrawPrimitives::setDrawColor4B(color.r,color.g,color.b,255);
     
     glLineWidth(10);
-    // DrawPrimitives::DrawArc(getContentSize().width/2, getContentSize().height/2, getContentSize().width/2-5, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), CC_DEGREES_TO_RADIANS(degreesFromValue), 50);
+
+#ifndef ANDROID
+    DrawPrimitives::DrawArc(getContentSize().width/2, getContentSize().height/2, getContentSize().width/2-5, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), CC_DEGREES_TO_RADIANS(degreesFromValue), 50);
     glLineWidth(width);
+#endif
 }
 
 void ItemPad::Create()
@@ -482,6 +485,7 @@ ItemPad *ItemKeyboard::GetSelectedPad()
     if (-1==padIndex) return NULL;
     return pads[padIndex];
 }
+
 void ItemKeyboard::UpdateSelectedPadIndex(ItemPad *pad)
 {
     for (int i=0;i<pads.size();++i)

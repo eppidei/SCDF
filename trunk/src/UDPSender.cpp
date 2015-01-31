@@ -8,7 +8,6 @@
 
 #include "UdpSocket.h"
 #include "UDPSender.h"
-#include "osc/OscOutboundPacketStream.h"
 #include "CustomPipe.h"
 #include "PipesManager.h"
 #include "Harvester.h"
@@ -59,6 +58,21 @@ std::string UDPSender::GetAddress()
     return address;
 }
 
+void UDPSender::SetPort(s_int32 port)
+{
+    InitEndpoints(port,endPoints.size(),address);
+}
+
+void UDPSender::SetAddress(std::string addr)
+{
+	InitEndpoints(portBase,endPoints.size(),addr);
+}
+
+void UDPSender::SetNumEndpoints(s_int32 numEp)
+{
+	InitEndpoints(portBase,numEp,address);
+}
+
 void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex)
 {
 #ifdef LOG_UDP_SEND
@@ -71,6 +85,13 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
     //LOGD("UDP SENDER - actually send %d bytes to %s [%d]",size,address.c_str(),portBase);
     transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
 }
+
+void UDPSender::SendData(const s_char* data, s_int32 size)
+{
+	SendData(data,size,0);
+}
+
+
 
 void UDPSenderHelperBase::SendData(std::vector<SensorData*> &senderData)
 {

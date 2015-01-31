@@ -16,8 +16,9 @@ ControlUnit::ControlUnit()
 	midiConnection = NULL;
 	// init osc sender
 
-	oscIp = "127.0.0.1";
-	oscPort = 5555;
+	//oscIp = "127.0.0.1";
+	//oscPort = 5555;
+	udpSender.InitEndpoints(5555,1,"192.168.1.100");
 	oscTag = "";
 	oscEnabled = false;
 
@@ -36,12 +37,12 @@ ControlUnit::ControlUnit()
 
 std::string ControlUnit::GetOscIp()
 {
-	return oscIp;
+	return udpSender.GetAddress();
 }
 
 s_int32 ControlUnit::GetOscPort()
 {
-	return oscPort;
+	return udpSender.GetPort();
 }
 
 std::string ControlUnit::GetOscTag()
@@ -52,7 +53,7 @@ std::string ControlUnit::GetOscTag()
 	ss << "/";
 	switch (midiMsgType)
 	{
-		case NoteOn: ss<<"note[on|off]/"; break;
+		case NoteOn: ss<<"noteon/"; break;
 		case ControlChange: ss<<"control/"; break;
 		case ProgramChange: ss<<"program/"; break;
 		case PitchBend: ss<<"pitchbend/"; break;
@@ -94,17 +95,33 @@ s_int32 ControlUnit::GetMidiControl()
 
 void ControlUnit::SetOscIp(std::string ip)
 {
-	oscIp = ip;
+	udpSender.SetAddress(ip);
 }
 
 void ControlUnit::SetOscPort(s_int32 port)
 {
-	oscPort = port;
+	udpSender.SetPort(port);
 }
 
 void ControlUnit::SetOscEnabled(s_bool enabled)
 {
 	oscEnabled = enabled;
+}
+
+osc::OutboundPacketStream ControlUnit::PackOSCValue(s_int32 ctrl, s_int32 value, std::string tag)
+{
+	s_char oscBuff[1000]; // check lifespan of this (will be copied on return?)
+	//osc::OutboundPacketStream oscData;
+	osc::OutboundPacketStream oscData( oscBuff, 1000 );
+    oscData << osc::BeginBundle()
+    		<< osc::BeginMessage( tag.c_str() )
+    		<< ctrl << value
+    		<< osc::EndMessage
+    		<< osc::EndBundle;
+
+    LOGD("OSC - %s",tag.c_str());
+
+    return oscData;
 }
 
 s_bool ControlUnit::SetMidiOutIndex(s_int32 index)
@@ -149,7 +166,8 @@ s_bool ControlUnit::SendValue(s_int32 number, s_int32 value)
 s_bool ControlUnit::SendValue(s_int32 value)
 {
 	if (oscEnabled) {
-		// send via osc
+		osc::OutboundPacketStream oscData = PackOSCValue(GetMidiControl(),value,GetOscTag());
+		udpSender.SendData(oscData.Data(), oscData.Size(),0);
 	}
 
 	if (!midiConnection)
