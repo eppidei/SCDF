@@ -12,7 +12,7 @@
 #include "Logging.h"
 #include "ScdfSensorAPI.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {

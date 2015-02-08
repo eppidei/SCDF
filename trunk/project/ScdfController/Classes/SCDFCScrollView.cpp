@@ -16,7 +16,7 @@
 #include "ControlUnit.h"
 //#include "PlatformInfo.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
@@ -64,12 +64,9 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
 	LOGD("ITEM SCROLL ORIG %f,%f SIZE %f,%f",r.origin.x,r.origin.y,r.size.width,r.size.height);
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
-    //setClippingEnabled(false);
     setPosition(r.origin);
     setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    //setBackGroundColor(Color3B::YELLOW, Color3B::RED);
     setBackGroundColor(Color3B(50,50,50));
-//    setBounceEnabled(true);
     setInertiaScrollEnabled(true);
 
     LOGD("Add slider button");

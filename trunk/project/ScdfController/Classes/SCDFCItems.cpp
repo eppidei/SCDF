@@ -13,7 +13,7 @@
 #include "MainScene.h"
 #include "ControlUnit.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
@@ -123,6 +123,8 @@ cocos2d::Size ItemSlider::GetSizeConsideringOrientation(const cocos2d::Size resi
 
 void ItemSlider::CreateThumb()
 {
+    thumb=NULL;
+//    return;
     min=0;
     max=127;
     value=64;
@@ -142,7 +144,8 @@ ItemSlider::~ItemSlider()
 {
     if (slideBar)
         removeChild(slideBar,true);
-    removeChild(thumb,true);
+    if (thumb)
+        removeChild(thumb,true);
 }
 
 void ItemSlider::SetVertical(bool vertical)
@@ -171,7 +174,6 @@ void ItemSlider::SetRange(float _min, float _max)
 void ItemSlider::Create()
 {
     DEFAULT_NAME("Slider")
-    isVertical=true;
 //    slideBar = Layout::create();
 //    slideBar->setTouchEnabled(true);
 //    slideBar->setAnchorPoint(Vec2(0,1));
@@ -190,10 +192,11 @@ void ItemSlider::Create()
     
     
    // addChild(slideBar);
-    setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
+    //setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
     //InitSliderLayout();
+    SetVertical(true);
     CreateThumb();
-    
+    if (!thumb) return;
     thumb->setBackGroundImageScale9Enabled(true);
     thumb->setBackGroundImage("SliderHandle.png");
 }
@@ -219,7 +222,7 @@ void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
 void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (widget==slideBar) return;
-    Vec2 limits=getWorldPosition();
+    Vec2 limits=convertToWorldSpace(Vec2(_anchorPoint.x * _contentSize.width, _anchorPoint.y * _contentSize.height));//getWorldPosition();
     Vec2 touchPos=widget->getTouchMovePosition();
     
     if (!IsKnob())
@@ -305,7 +308,8 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
         thumb->setContentSize(cocos2d::Size(size,size));
     if (!IsKnob())
         temp=GetSizeConsideringOrientation(contentSize);
-    Widget::setContentSize(temp);
+
+    Node::setContentSize(temp);
     SetValue(value);
 }
 
@@ -331,18 +335,35 @@ void ItemKnob::SetThumbPosition()
 //    thumb->setRotation(rotation);
 }
 
+void ItemKnob::SetColor(cocos2d::Color3B _color)
+{
+    ItemBase::SetColor(_color);
+    setColor(_color);
+}
 
 void ItemKnob::Create()
 {
     DEFAULT_NAME("Knob")
     slideBar=NULL;
+    thumb=NULL;
     isVertical=true;
     ItemSlider::CreateThumb();
+    
+//    auto sprite=Sprite::create("test_knob.png");
+//    sprite->setAnchorPoint(Vec2(0.5,0.5));
+//    sprite->setPosition(Vec2(GetSize().width/2 ,-10));
+//    addChild(sprite);
+//    sprite=Sprite::create("test_knob.png");
+//    sprite->setAnchorPoint(Vec2(0.5,0.5));
+//    sprite->setPosition(Vec2(GetSize().width/2 ,GetSize().height+10));
+//    addChild(sprite);
+//    initWithFile();
    // thumb->setBackGroundImage("test_knob.png");
 }
 
 void ItemKnob::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
+    //Sprite::draw(renderer, transform, flags);return;
     float degreesFromValue=(270.0/127.0)*value;
     DrawPrimitives::setDrawColor4B(30, 30, 30, 255);
     DrawPrimitives::drawSolidCircle(Vec2(getContentSize().width/2, getContentSize().height/2), getContentSize().width/2, CC_DEGREES_TO_RADIANS(180), 100);
@@ -393,7 +414,7 @@ void ItemPad::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t 
 
 void ItemPad::setContentSize(const cocos2d::Size &contentSize)
 {
-    Widget::setContentSize(contentSize);
+    Node::setContentSize(contentSize);
     if (NULL==pad) return;
     pad->setContentSize(contentSize);
     pad->setPosition(Vec2(0,contentSize.height));
@@ -415,7 +436,7 @@ void ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventTy
 ItemPad::~ItemPad()
 {
     pad->addTouchEventListener(nullptr);
-    removeChild(pad);
+    removeChild(pad,true);
 }
 
 void ItemKeyboard::Create()
@@ -423,7 +444,7 @@ void ItemKeyboard::Create()
     DEFAULT_NAME("Keyboard")
     padSizeMultiply=1;
     padIndex=-1;
-    setBackGroundColorType(Layout::BackGroundColorType::NONE);
+  //  setBackGroundColorType(Layout::BackGroundColorType::NONE);
     //setBackGroundColor(Color3B::BLUE);
     CreatePads();
 }
@@ -431,7 +452,7 @@ void ItemKeyboard::Create()
 void ItemKeyboard::ClearPads()
 {
     for (int i=0;i<pads.size();++i)
-        removeChild(pads[i]);
+        removeChild(pads[i],true);
     pads.clear();
 }
 
