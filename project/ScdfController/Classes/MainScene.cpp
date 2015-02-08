@@ -7,9 +7,10 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
+
 //#include "PlatformInfo.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
@@ -158,16 +159,16 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     
     
     //int buttonsWidth = 87;
-    auto buttonGrid = Button::create();
-    buttonGrid->setTouchEnabled(true);
-    //buttonGrid->Sets
-    //buttonGrid->setScale9Enabled(true);
-    buttonGrid->ignoreContentAdaptWithSize(false);
-    buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
-    buttonGrid->setAnchorPoint(Vec2(0,1));
-    buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
-    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
-    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+//    auto buttonGrid = Button::create();
+//    buttonGrid->setTouchEnabled(true);
+//    //buttonGrid->Sets
+//    //buttonGrid->setScale9Enabled(true);
+//    buttonGrid->ignoreContentAdaptWithSize(false);
+//    buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
+//    buttonGrid->setAnchorPoint(Vec2(0,1));
+//    buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
+//    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
+//    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
     auto buttonEdit = CheckBox::create();
     buttonEdit->setTouchEnabled(true);
@@ -180,14 +181,14 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     //buttonEdit->setScale9Enabled(true);
     //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonEdit->setAnchorPoint(Vec2(0,1));
-    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
+    buttonEdit->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
     buttonEdit->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
     //toolbar->addChild(buttonShow,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
     toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
-    toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
+   // toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
     toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
@@ -278,7 +279,7 @@ bool MainScene::init()
 
     LOGD("Created custom panel");
 
-    propertiesPanel.reset(PropertiesPanel::CreatePropertiesPanel((MainScene*)this,propertiesRect));
+    propertiesPanel.reset(dynamic_cast<PropertiesPanel*>(PanelBase::CreatePanel<PropertiesPanel>((MainScene*)this,propertiesRect)));
 
     AddToolbar(toolbarPanelsize);
 
@@ -372,33 +373,8 @@ void MainScene::HideShowScrollview()
 
 void MainScene::HideShowPropertiesPanel()
 {
-    MoveTo *actScrollview;
-    CallFunc *callback=nullptr;
-    if (propertiesPanel->getPositionX()==0)
-    {
-        //Hide
-        //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
-        //getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
-        // CalculateGrid();
-        actScrollview = MoveTo::create(0.1f, cocos2d::Point(-PROPERTIES_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
-    }
-    else
-    {
-        //Show
-        actScrollview = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height-TOOLBAR_HEIGHT));
-//        callback = CallFunc::create([this](){
-//            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
-//            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
-//            //     CalculateGrid();
-//        });
-        propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
-    }
-//    if (nullptr!=callback){
-//        auto seq = Sequence::create(actScrollview, callback, NULL);
-//        customScrollView->runAction(seq);
-//    }
-//    else
-        propertiesPanel->runAction(actScrollview);
+    propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
+    propertiesPanel->HideShow();
 }
 
 void MainScene::HideShowToolbar()

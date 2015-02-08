@@ -16,7 +16,7 @@
 #include "ControlUnit.h"
 #include "Logging.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
@@ -87,10 +87,6 @@ void WorkingPanel::ToggleActiveState()
 
 void WorkingPanel::DrawGrid()
 {
-    Color4F c(0.9,0.9,0.9,1);
-    if (!active)
-        c=Color4F(0.6,0.6,0.6,1);
-    DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), c);
     DrawPrimitives::setDrawColor4F(0.3, 0.3, 0.3, 0.6);
     
     for(int i=0;i<getContentSize().width;i+=parent->GetGridDistance())
@@ -100,12 +96,15 @@ void WorkingPanel::DrawGrid()
     
 }
 
-void WorkingPanel::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
+void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
 {
-    DrawGrid();
+    Color4F panelBackgroud = active ? Color4F(0.9,0.9,0.9,1) : Color4F(0.8,0.8,0.8,1);
+    DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), panelBackgroud);
+    if (!active)
+        DrawGrid();
+    
     if (0!=draggingRect.size.width)
         DrawPrimitives::drawSolidRect(draggingRect.origin, Vec2(draggingRect.origin.x+draggingRect.size.width,draggingRect.origin.y-draggingRect.size.height),Color4F(1.0f,20.0f/255.0f,20.0f/255.0f, 0.2f));
-    Layout::visit(renderer, parentTransform, parentFlags);
 }
 
 //void WorkingPanel::OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)

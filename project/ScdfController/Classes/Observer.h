@@ -9,7 +9,7 @@
 #ifndef ScdfController_Observer_h
 #define ScdfController_Observer_h
 
-namespace SCDFC
+namespace ScdfCtrl
 {
     enum SCDFC_EVENTS
     {

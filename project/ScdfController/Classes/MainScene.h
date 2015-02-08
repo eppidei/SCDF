@@ -1,10 +1,10 @@
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 
-namespace cocos2d{
-    class Layer;
-}
-namespace SCDFC{
+#include "SCDFCDefinitions.h"
+
+namespace ScdfCtrl
+{
     class WorkingPanel;
     class ItemScrollView;
     class PropertiesPanel;

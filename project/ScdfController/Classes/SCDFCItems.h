@@ -15,17 +15,7 @@
 namespace ScdfCtrl
 {
     class ControlUnit;
-}
-namespace cocos2d
-{
-    namespace ui
-    {
-        class Layout;
-        class Button;
-        class Widget;
-    }
-}
-namespace SCDFC {
+    
     class ItemBaseCallback
     {
     public:
@@ -33,7 +23,7 @@ namespace SCDFC {
         virtual void OnItemTouchMoved(int value) = 0;
         virtual void OnItemTouchEnded() = 0;
     };
-    class ItemBase : public cocos2d::ui::Layout, public SubjectSimple
+    class ItemBase : public cocos2d::Sprite, public SubjectSimple
     {
         int sizeMultiply;
     protected:
@@ -43,9 +33,9 @@ namespace SCDFC {
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
         std::unique_ptr<ItemBaseCallback> callback;
-        virtual void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
+        virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
     public:
         static ItemBase *CreateItem(cocos2d::Rect r, int itemID);
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
@@ -68,12 +58,12 @@ namespace SCDFC {
         cocos2d::Size GetSizeConsideringOrientation(const cocos2d::Size resized);
         virtual void SetThumbPosition();
         virtual bool IsKnob() { return false;}
-        void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     protected:
-        Layout *thumb;
-        Layout *slideBar;
+        cocos2d::ui::Layout *thumb;
+        cocos2d::ui::Layout *slideBar;
         bool isVertical;
         float min, max;
         void CreateThumb();
@@ -94,6 +84,7 @@ namespace SCDFC {
         void SetThumbPosition();
         bool IsKnob() { return true;}
     public:
+        void SetColor(cocos2d::Color3B _color);
         void Create();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         static cocos2d::Size GetSize() { return KNOB_SIZE_BASE;}
@@ -105,8 +96,8 @@ namespace SCDFC {
     {
         friend class ItemKeyboard;
         cocos2d::ui::Button *pad;
-        void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     public:
         int midiNote;
         void Create();
@@ -124,8 +115,8 @@ namespace SCDFC {
         int padIndex;
         void ClearPads();
         void CreatePads();
-        void OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
     public:
         ItemPad *GetSelectedPad();
         void UpdateSelectedPadIndex(ItemPad *pad);

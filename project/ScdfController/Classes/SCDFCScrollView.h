@@ -9,7 +9,7 @@
 #ifndef __ScdfController__SCDFCScollView__
 #define __ScdfController__SCDFCScollView__
 
-namespace SCDFC {
+namespace ScdfCtrl {
     class MainScene;
     
     class ItemScrollView : public cocos2d::ui::ScrollView

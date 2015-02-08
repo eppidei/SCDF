@@ -8,7 +8,7 @@
 
 #include "DropDownMenu.h"
 
-using namespace SCDFC;
+using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
@@ -64,6 +64,16 @@ void DropDownMenu::setPosition(const Vec2 &pos)
     ScrollToSelected();
 }
 
+DropDownMenuData DropDownMenu::GetSelectedItemInfo()
+{
+    if (_curSelectedIndex>=itemsData.size()){
+        printf("\nError retrieving item info\n");
+        return DropDownMenuData("",Color3B::YELLOW);
+    }
+    return itemsData[_curSelectedIndex];
+    
+}
+
 void DropDownMenu::SetSelectedIndex(int selected)
 {
     if (lastSelectedIndex==selected) return;
@@ -113,11 +123,14 @@ void DropDownMenu::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint
     DrawPrimitives::drawRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0));
 }
 
-DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s)
+template  DropDownMenu *DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size s);
+template  DropDownMenu *DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size s);
+
+template <class DropDownType> DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s)
 {
-    DropDownMenu *menu=DropDownMenu::create();
+    DropDownMenu *menu=DropDownType::create();
     menu->setContentSize(s);
-    menu->ScrollView::setDirection(Direction::NONE);
+    menu->ScrollView::setDirection(Direction::VERTICAL);
     menu->addEventListener(CC_CALLBACK_2(DropDownMenu::OnControlTouch, menu));
     menu->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     menu->setAnchorPoint(Vec2(0,1));
@@ -130,7 +143,7 @@ void DropDownMenu::ScrollToSelected()
     Node *item=getItem(_curSelectedIndex);
     if(NULL==item) return;
     float elementsHeight=item->getContentSize().height;
-    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+((_curSelectedIndex)*elementsHeight)));
+    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+(-(getItemsMargin()/2)+(_curSelectedIndex)*(elementsHeight+getItemsMargin()))));
 }
 
 DropDownMenu::~DropDownMenu()
@@ -138,13 +151,22 @@ DropDownMenu::~DropDownMenu()
     removeAllItems();
 }
 
-
-void DropDownMenu::InitData(std::vector<std::string> data, float itemHeight)
+void DropDownMenu::BeforeInitData(float itemHeight)
 {
     if (itemHeight!=getContentSize().height)
         ResizeAndScroll(itemHeight, true);
     removeAllItems();
-    
+}
+
+void DropDownMenu::AfterInitData(int numElements)
+{
+    updateInnerContainerSize();
+    SetSelectedIndex(0);
+    ScrollView::setDirection(Direction::NONE);
+}
+
+bool DropDownMenu::CheckDataSize(std::vector<DropDownMenuData> data)
+{
     if (0==data.size())
     {
         Text *model = Text::create("No data","Arial",20);
@@ -153,22 +175,53 @@ void DropDownMenu::InitData(std::vector<std::string> data, float itemHeight)
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
         model->setTextHorizontalAlignment(TextHAlignment::CENTER);
         model->setColor(Color3B::WHITE);
-        setInnerContainerSize(cocos2d::Size(model->getContentSize()));
+        pushBackCustomItem(model);
+        return false;
+    }
+    return true;
+}
+
+void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
+{
+    for (int i=0; i<data.size(); i++)
+    {
+        Text *model = Text::create(data[i].text,"Arial",20);
+        model->setTouchEnabled(true);
+        model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height));
+        model->ignoreContentAdaptWithSize(false);
+        model->setTextVerticalAlignment(TextVAlignment::CENTER);
+        model->setTextHorizontalAlignment(TextHAlignment::CENTER);
+        model->setColor(data[i].color);
         pushBackCustomItem(model);
     }
-    else{
-        for (int i=0; i<data.size(); i++)
-        {
-            Text *model = Text::create(data[i],"Arial",20);
-            model->setTouchEnabled(true);
-            model->setContentSize(cocos2d::Size(getContentSize().width-5,getContentSize().height));
-            model->ignoreContentAdaptWithSize(false);
-            model->setTextVerticalAlignment(TextVAlignment::CENTER);
-            model->setTextHorizontalAlignment(TextHAlignment::CENTER);
-            model->setColor(Color3B::WHITE);
-            pushBackCustomItem(model);
-        } 
-        setInnerContainerSize(cocos2d::Size(getContentSize().width,data.size()*getContentSize().height));
+}
+
+void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
+{
+    setItemsMargin(getContentSize().height/2);
+            setGravity(cocos2d::ui::ListView::Gravity::CENTER_HORIZONTAL);
+    for (int i=0; i<data.size(); i++)
+    {
+        Layout *model = Layout::create();
+        model->setTouchEnabled(true);
+        model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height/2));
+        //model->setPosition(Vec2(3,getContentSize().height-getItemsMargin()-(model->getContentSize().height+getItemsMargin())));
+        model->ignoreContentAdaptWithSize(false);
+        model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+        model->setBackGroundColor(data[i].color);
+        pushBackCustomItem(model);
     }
-    SetSelectedIndex(0);
+}
+
+void DropDownMenu::InitData(std::vector<DropDownMenuData> data, float itemHeight)
+{
+    itemsData=data;
+    BeforeInitData(itemHeight);
+    int numElements=1;
+    if (CheckDataSize(data))
+    {
+        DoInitData(data);
+        numElements=data.size();
+    }
+    AfterInitData(numElements);
 }
