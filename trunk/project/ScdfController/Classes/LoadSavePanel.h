@@ -15,39 +15,48 @@
 
 namespace ScdfCtrl
 {
+    class LoadSavePanel;
+    
+    class SavePatch : public SubpanelBase
+    {
+        friend class LoadSavePanel;
+        cocos2d::ui::Text *saveButton;
+        cocos2d::ui::TextField* saveFile;
+        
+        void CreateControls() override;
+        SavePatch();
+        void PositionElements() override;
+        CREATE_FUNC(SavePatch);
+    protected:
+        void OnTouchEventBegan(Node *widget) override;
+    };
+    
+    class LoadPatch : public SubpanelBase
+    {
+        friend class LoadSavePanel;
+        cocos2d::ui::ListView *loadFiles;
+        cocos2d::ui::Text *loadButton;
+        
+        void CreateControls() override;
+        LoadPatch();
+        void PositionElements() override;
+        CREATE_FUNC(LoadPatch);
+        void InitChildrensVisibilityAndPos() override {}
+        void InitFilesListView();
+        void HighLightCurrentItem();
+        void Update() override;
+    protected:
+        void OnTouchEventBegan(Node *widget) override;
+        void OnTouchEventEnded(Node *widget) override;
+    };
     
     class LoadSavePanel : public PanelBase
     {
-        class SavePatch : public SubpanelBase
-        {
-            cocos2d::ui::Button *save;
-            cocos2d::ui::TextField* saveFile;
-            
-            void CreateControls();
-        protected:
-            void InitChildrensVisibilityAndPos();
-            void OnTouchEventBegan(cocos2d::ui::Button *widget);
-        public:
-            SavePatch();
-            void UpdateValues();
-            void PositionElements();
-            CREATE_FUNC(SavePatch);
-        } *sectionSave;
+        SavePatch *sectionSave;
+        LoadPatch *sectionLoad;
         
-        class LoadPatch : public SubpanelBase
-        {
-            cocos2d::ui::ListView *files;
-            cocos2d::ui::Button *load;
-            
-            void CreateControls();
-        public:
-            LoadPatch();
-            void PositionElements();
-            void UpdateValues();
-            CREATE_FUNC(LoadPatch);
-        } *sectionLoad;
-        
-        void InitPanel();
+        void UpdateSubpanels() override;
+        void InitPanel() override;
     public:
         CREATE_FUNC(LoadSavePanel);
     };

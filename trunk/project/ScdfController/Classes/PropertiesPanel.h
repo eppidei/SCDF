@@ -22,81 +22,90 @@ namespace ScdfCtrl
     class ItemSlider;
     class ItemBase;
     class ItemBaseCallback;
+    class PropertiesPanel;
+    
+    class OSCInfo : public SubpanelBase
+    {
+        friend class PropertiesPanel;
+        
+        cocos2d::ui::Text *toggleLabel, *portLabel, *ipLabel, *oscTagLabel, *oscTag;
+        cocos2d::ui::CheckBox *oscToggle;
+        cocos2d::ui::TextField* oscPort;
+        cocos2d::ui::TextField* oscIP;
+        
+        void CreateControls() override;
+        void Update() override;
+        void PositionElements() override;
+        void InitChildrensVisibilityAndPos() override;
+        void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected) override;
+        void OnTextInput(cocos2d::ui::TextField *widget) override;
+        OSCInfo();
+        CREATE_FUNC(OSCInfo);
+    };
+    
+    class MIDIDevices : public SubpanelBase
+    {
+        friend class PropertiesPanel;
+        
+        DropDownMenu *devices;
+        cocos2d::ui::Text *devicesLabel;
+        
+        void CreateControls() override;
+        void OnDropDownSelectionChange(DropDownMenu *menu) override;
+        void PositionElements() override;
+        void Update() override;
+        MIDIDevices();
+        CREATE_FUNC(MIDIDevices);
+    };
+    
+    class MIDIInfo : public SubpanelBase
+    {
+        friend class PropertiesPanel;
+        
+        DropDownMenu *midiMessage, *controlChange, *channel, *velocity;
+        cocos2d::ui::Text *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel;
+        
+        void CreateControls() override;
+        void InitControlMenuValue();
+        void OnDropDownSelectionChange(DropDownMenu *menu) override;
+        void PositionElements() override;
+        void Update() override;
+        MIDIInfo();
+        CREATE_FUNC(MIDIInfo);
+    };
+    
+    class ItemSettings : public SubpanelBase
+    {
+        friend class PropertiesPanel;
+        
+        ItemSlider *sizeControl;
+        DropDownMenu *color;
+        cocos2d::ui::TextField* name;
+        cocos2d::ui::Text *sizeLabel, *colorLabel, *nameLabel;
+        
+        void CreateControls() override;
+        void OnDropDownSelectionChange(DropDownMenu *menu) override;
+        void PositionElements() override;
+        void Update() override;
+        void OnTextInput(cocos2d::ui::TextField *widget) override;
+        ItemSettings();
+        CREATE_FUNC(ItemSettings);
+    };
     
     class PropertiesPanel : public PanelBase, public ObserverSimple
     {
-        class OSCInfo : public SubpanelBase
-        {
-            cocos2d::ui::Text *toggleLabel, *portLabel, *ipLabel, *oscTagLabel, *oscTag;
-            cocos2d::ui::CheckBox *oscToggle;
-            cocos2d::ui::TextField* oscPort;
-            cocos2d::ui::TextField* oscIP;
-            
-            void CreateControls();
-        protected:
-            void InitChildrensVisibilityAndPos();
-            void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected);
-            void OnTextInput(cocos2d::ui::TextField *widget);
-        public:
-            OSCInfo();
-            void UpdateValues();
-            void PositionElements();
-            CREATE_FUNC(OSCInfo);
-        } *sectionOSCInfo;
-        
-        class MIDIDevices : public SubpanelBase
-        {
-            DropDownMenu *devices;
-            cocos2d::ui::Text *devicesLabel;
-            
-            void CreateControls();
-        public:
-            MIDIDevices();
-            void OnDropDownSelectionChange(DropDownMenu *menu);
-            void PositionElements();
-            void UpdateValues();
-            CREATE_FUNC(MIDIDevices);
-        } *sectionMIDIDevices;
-        
-        class MIDIInfo : public SubpanelBase
-        {
-            DropDownMenu *midiMessage, *controlChange, *channel, *velocity;
-            cocos2d::ui::Text *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel;
-            
-            void CreateControls();
-            void InitControlMenuValue();
-        public:
-            MIDIInfo();
-            void OnDropDownSelectionChange(DropDownMenu *menu);
-            void PositionElements();
-            void UpdateValues();
-            CREATE_FUNC(MIDIInfo);
-        } *sectionMIDIInfo;
-        
-        class ItemSettings : public SubpanelBase
-        {
-            ItemSlider *sizeControl;
-            DropDownMenu *color;
-            cocos2d::ui::TextField* name;
-            cocos2d::ui::Text *sizeLabel, *colorLabel, *nameLabel;
-            
-            void CreateControls();
-        protected:
-            void OnTextInput(cocos2d::ui::TextField *widget);
-        public:
-            ItemSettings();
-            void OnDropDownSelectionChange(DropDownMenu *menu);
-            void PositionElements();
-            void UpdateValues();
-            CREATE_FUNC(ItemSettings);
-        } *sectionItemSettings;
-        
+
+        OSCInfo *sectionOSCInfo;
+        MIDIDevices *sectionMIDIDevices;
+        MIDIInfo *sectionMIDIInfo;
+        ItemSettings *sectionItemSettings;
         ItemBase *selectedItem;
-        void InitPanel();
-        void UpdateAll();
+        
+        void InitPanel() override;
+        void UpdateSubpanels() override;
     public:
         void UpdateOSCInfo();
-        void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event);
+        void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event) override;
         ScdfCtrl::ControlUnit *GetCurrentControlUnit();
         ItemBase *GetSelectedItem();
         CREATE_FUNC(PropertiesPanel);

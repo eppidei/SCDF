@@ -25,11 +25,11 @@ namespace ScdfCtrl
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void PlaceSubPanels();
         void CalculateInnerHeight();
-        void UpdateAll();
+        virtual void UpdateSubpanels(){}
         virtual void InitPanel(){}
     public:
         void InitLayout();
-        void HideShow();
+        void HideShow(PanelBase *substitute=NULL);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         template <class PanelType> static PanelBase *CreatePanel(MainScene *main, cocos2d::Rect r);
         void EnableScrolling(bool enable);
@@ -39,7 +39,6 @@ namespace ScdfCtrl
     
     class SubpanelBase : public cocos2d::ui::Layout, public cocos2d::ActionTweenDelegate
     {
-        friend class PropertiesPanel;
         class DropDownMenuCallbackSubPanel : public DropDownMenuCallback
         {
             SubpanelBase *parent;
@@ -60,30 +59,32 @@ namespace ScdfCtrl
         
         std::unique_ptr<PanelBase> parent;
         void Resize(float newHeight);
-        void CalculateHeight();
-        void HideElement(Node *n, bool hide);
+        void CalculateHeight(bool realSize=false);
         virtual void CreateControls() = 0;
     protected:
         std::unique_ptr<DropDownMenuCallbackSubPanel> dropDownCallback;
        // std::unique_ptr<SubPanelItemCallback> itemCallback;
-        
-        void TextFieldEventCallback(Ref *pSender, cocos2d::ui::TextField::EventType type);
-        void TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
-        void CheckBoxEventCallback(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
+        void HideElement(Node *n, bool hide);
         virtual void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected){}
         virtual void OnTextInput(cocos2d::ui::TextField *widget){}
-        virtual void OnTouchEventBegan(cocos2d::ui::Button *widget){}
-        
+        virtual void OnTouchEventBegan(cocos2d::Node *widget){}
+        virtual void OnTouchEventEnded(cocos2d::Node *widget){}
+        virtual void OnListViewItemSelected(cocos2d::ui::ListView *widget){}
         virtual void InitChildrensVisibilityAndPos();
     public:
         ~SubpanelBase();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         virtual void PositionElements() = 0;
         virtual void OnDropDownSelectionChange(DropDownMenu *menu) {}
-        virtual void UpdateValues() = 0;
+        virtual void Update() {}
         PanelBase *GetParent();
         void updateTweenAction(float value, const std::string& key) override;
         void InitWithContent(PanelBase *parent, cocos2d::Size s);
+        
+        void TextFieldEventCallback(Ref *pSender, cocos2d::ui::TextField::EventType type);
+        void TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        void CheckBoxEventCallback(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
+        void ListviewItemEvent(Ref *pSender, cocos2d::ui::ListView::EventType type);
     };
 };
 
