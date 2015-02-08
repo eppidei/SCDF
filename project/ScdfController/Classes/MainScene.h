@@ -9,6 +9,7 @@ namespace ScdfCtrl
     class ItemScrollView;
     class PropertiesPanel;
     class ItemBase;
+    class LoadSavePanel;
 
     class MainScene : public cocos2d::Layer
     {
@@ -16,6 +17,8 @@ namespace ScdfCtrl
         std::unique_ptr<ItemScrollView> customScrollView;
         std::unique_ptr<WorkingPanel> customPanel;
         std::unique_ptr<PropertiesPanel> propertiesPanel;
+        std::unique_ptr<LoadSavePanel> loadSavePanel;
+        
         cocos2d::ui::ImageView *draggingImage;
         void AddToolbar(cocos2d::Rect r);
         void CalculateGrid();
@@ -24,6 +27,7 @@ namespace ScdfCtrl
         void HideShowToolbar();
         void HideShowScrollview();
         void HideShowPropertiesPanel();
+        void HideShowLoadSavePanel();
     public:
         // there's no 'id' in cpp, so we recommend returning the class instance pointer
         static cocos2d::Scene* createScene();

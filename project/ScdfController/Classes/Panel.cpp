@@ -11,13 +11,14 @@
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
+#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
 template PanelBase *PanelBase::CreatePanel<PropertiesPanel>(MainScene *main, cocos2d::Rect r);
-//template Panel *Panel::CreatePanel<LoadSavePanel>(MainScene *main, cocos2d::Rect r);
+template PanelBase *PanelBase::CreatePanel<LoadSavePanel>(MainScene *main, cocos2d::Rect r);
 
 template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, cocos2d::Rect r)
 {
@@ -80,14 +81,36 @@ void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
     InitPanel();
 }
 
-void PanelBase::HideShow()
+void PanelBase::HideShow(PanelBase *substitute)
 {
-    MoveBy *action;
+    MoveBy *action=NULL;
+    CallFunc *callback=nullptr;
+    if (NULL!=substitute)
+        callback = CallFunc::create([substitute](){
+            substitute->HideShow();
+        });
+    
     if (getPositionX()==0)
         action = MoveBy::create(0.1f, cocos2d::Vec2(-getContentSize().width, 0));
-    else
+    else if (NULL==substitute)
         action = MoveBy::create(0.1f, cocos2d::Vec2(getContentSize().width, 0));
-    runAction(action);
+    
+    if (NULL==action)
+    {
+        //Substitution case when panel to substitude is closed
+        if (NULL!=substitute)
+            substitute->HideShow();
+        return;
+    }
+    
+    if (nullptr!=callback){
+        //Substitution case when panel to substitude is opened
+        auto seq = Sequence::create(action, callback, NULL);
+        runAction(seq);
+    }
+    else
+        //No Substitution
+        runAction(action);
 }
 
 
@@ -117,14 +140,17 @@ void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu
 //    parent->GetParent()->EnableScrolling(true);
 //}
 
-void SubpanelBase::CalculateHeight()
+void SubpanelBase::CalculateHeight(bool realSize)
 {
     int height=0;
     Vector<Node*> _childrens = getChildren();
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
         if (!(*it)->isVisible() || (*it)->getPositionX()>getContentSize().width/2.0) continue;
-        height+=SUBPANEL_ITEM_HEIGHT;//(*it)->getContentSize().height;
+       // if (realSize)
+            height+=(*it)->getContentSize().height;
+//        else
+//            height+=SUBPANEL_ITEM_HEIGHT;//(*it)->getContentSize().height;
     }
     Resize(height);
 }
@@ -189,13 +215,14 @@ void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
     //    setBackGroundColor(MAIN_BACK_COLOR);
     setAnchorPoint(Vec2(0,1));
     CreateControls();
+   // CalculateHeight(true);
     PositionElements();
     InitChildrensVisibilityAndPos();
 }
 
 void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
-    Button* node = dynamic_cast<Button*>(pSender);
+    Node* node = dynamic_cast<Node*>(pSender);
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
@@ -205,13 +232,33 @@ void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEv
             //OnTouchMoved(node);
             break;
         case Widget::TouchEventType::ENDED:
+            OnTouchEventEnded(node);
+            break;
         case Widget::TouchEventType::CANCELED:
-            //OnTouchEnded(node);
             break;
         default:
             break;
     }
 }
+
+void SubpanelBase::ListviewItemEvent(Ref *pSender, ListView::EventType type)
+{
+    ListView *list=dynamic_cast<ListView*>(pSender);
+    switch (type)
+    {
+        case ListView::EventType::ON_SELECTED_ITEM_START:
+            list->getItem(list->getCurSelectedIndex())->setHighlighted(true);
+            OnListViewItemSelected(list);
+            break;
+        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END:
+            list->getItem(list->getCurSelectedIndex())->setHighlighted(true);
+            
+            break;
+        default:
+            break;
+    }
+}
+
 void SubpanelBase::TextFieldEventCallback(Ref *pSender, TextField::EventType type)
 {
     TextField *text=dynamic_cast<TextField*>(pSender);

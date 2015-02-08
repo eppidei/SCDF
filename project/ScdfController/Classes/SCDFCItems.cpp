@@ -12,6 +12,7 @@
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "ControlUnit.h"
+#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;

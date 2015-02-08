@@ -13,6 +13,7 @@
 #include "MainScene.h"
 #include "ControlUnit.h"
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 //#include "PlatformInfo.h"
 
 using namespace ScdfCtrl;
@@ -30,7 +31,7 @@ using namespace ui;
             setVisible(true); \
 
 
-void PropertiesPanel::OSCInfo::InitChildrensVisibilityAndPos()
+void OSCInfo::InitChildrensVisibilityAndPos()
 {
     bool hideItem=!oscToggle->getSelectedState();
     HideElement(portLabel,hideItem);
@@ -42,14 +43,14 @@ void PropertiesPanel::OSCInfo::InitChildrensVisibilityAndPos()
     SubpanelBase::InitChildrensVisibilityAndPos();
 }
 
-PropertiesPanel::OSCInfo::OSCInfo()
+OSCInfo::OSCInfo()
 {
     toggleLabel=portLabel=ipLabel=oscTagLabel=oscTag=NULL;
     oscToggle=NULL;
     oscPort=oscIP=NULL;
 }
 
-void PropertiesPanel::OSCInfo::CreateControls()
+void OSCInfo::CreateControls()
 {
     //Create toggle
     oscToggle=CheckBox::create();
@@ -152,7 +153,7 @@ void PropertiesPanel::OSCInfo::CreateControls()
     InitChildrensVisibilityAndPos();
 }
 
-void PropertiesPanel::OSCInfo::PositionElements()
+void OSCInfo::PositionElements()
 {
     float yPos=getContentSize().height;
     
@@ -197,7 +198,7 @@ void PropertiesPanel::OSCInfo::PositionElements()
         oscTag->setPosition(Vec2(0,yPos));
 }
 
-void PropertiesPanel::OSCInfo::OnCheckEvent(CheckBox *widget, bool selected)
+void OSCInfo::OnCheckEvent(CheckBox *widget, bool selected)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetCurrentControlUnit()) return;
@@ -212,7 +213,7 @@ void PropertiesPanel::OSCInfo::OnCheckEvent(CheckBox *widget, bool selected)
     InitChildrensVisibilityAndPos();
 }
 
-void PropertiesPanel::OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
+void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetSelectedItem()) return;
@@ -230,13 +231,13 @@ void PropertiesPanel::OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
     }
 }
 
-PropertiesPanel::MIDIDevices::MIDIDevices()
+MIDIDevices::MIDIDevices()
 {
     devices=NULL;
     devicesLabel=NULL;
 }
 
-void PropertiesPanel::MIDIDevices::CreateControls()
+void MIDIDevices::CreateControls()
 {
     //Create dropDown label
     devicesLabel = Text::create("MIDI DEVICES","Arial",16);
@@ -260,7 +261,7 @@ void PropertiesPanel::MIDIDevices::CreateControls()
     devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
 
-void PropertiesPanel::MIDIDevices::UpdateValues()
+void MIDIDevices::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
@@ -268,7 +269,7 @@ void PropertiesPanel::MIDIDevices::UpdateValues()
     devices->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiOutIndex()+1);
 }
 
-void PropertiesPanel::MIDIDevices::PositionElements()
+void MIDIDevices::PositionElements()
 {
     if (devicesLabel)
         devicesLabel->setPosition(Vec2(0,getContentSize().height));
@@ -276,7 +277,7 @@ void PropertiesPanel::MIDIDevices::PositionElements()
         devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
 }
 
-void PropertiesPanel::MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
+void MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetCurrentControlUnit()) return;
@@ -285,7 +286,7 @@ void PropertiesPanel::MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
         panel->GetCurrentControlUnit()->SetMidiOutIndex(selectedIndex-1);
 }
 
-void PropertiesPanel::OSCInfo::UpdateValues()
+void OSCInfo::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
@@ -299,7 +300,7 @@ void PropertiesPanel::OSCInfo::UpdateValues()
     InitChildrensVisibilityAndPos();
 }
 
-void PropertiesPanel::MIDIInfo::UpdateValues()
+void MIDIInfo::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     VISIBILITY_CHECK
@@ -324,7 +325,7 @@ void PropertiesPanel::MIDIInfo::UpdateValues()
     velocity->setEnabled(dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL);
 }
 
-void PropertiesPanel::MIDIInfo::PositionElements()
+void MIDIInfo::PositionElements()
 {
     if (midiMessageLabel)
         midiMessageLabel->setPosition(Vec2(0,getContentSize().height));
@@ -344,7 +345,7 @@ void PropertiesPanel::MIDIInfo::PositionElements()
         velocity->setPosition(Vec2(0,velocityLabel->getPositionY()-velocityLabel->getContentSize().height));
 }
 
-void PropertiesPanel::MIDIInfo::InitControlMenuValue()
+void MIDIInfo::InitControlMenuValue()
 {
     std::vector<DropDownMenuData> dropDownData;
     if (midiMessage->getCurSelectedIndex()<2)
@@ -374,7 +375,7 @@ void PropertiesPanel::MIDIInfo::InitControlMenuValue()
     controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
 
-void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
+void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetCurrentControlUnit()) return;
@@ -406,13 +407,13 @@ void PropertiesPanel::MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
     
 }
 
-PropertiesPanel::MIDIInfo::MIDIInfo()
+MIDIInfo::MIDIInfo()
 {
     midiMessage=controlChange=channel=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=NULL;
 }
 
-void PropertiesPanel::MIDIInfo::CreateControls()
+void MIDIInfo::CreateControls()
 {
     std::vector<std::string> MidiMessageString;
     MidiMessageString.push_back("Note On");
@@ -518,7 +519,7 @@ void PropertiesPanel::MIDIInfo::CreateControls()
     velocity->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
 
-PropertiesPanel::ItemSettings::ItemSettings()
+ItemSettings::ItemSettings()
 {
     sizeControl=NULL;
     color=NULL;
@@ -526,7 +527,7 @@ PropertiesPanel::ItemSettings::ItemSettings()
     sizeLabel=colorLabel=nameLabel=NULL;
 }
 
-void PropertiesPanel::ItemSettings::PositionElements()
+void ItemSettings::PositionElements()
 {
     if (nameLabel)
         nameLabel->setPosition(Vec2(0,getContentSize().height));
@@ -543,7 +544,7 @@ void PropertiesPanel::ItemSettings::PositionElements()
         sizeControl->setPosition(Vec2(0,sizeLabel->getPositionY()-sizeLabel->getContentSize().height));
 }
 
-void PropertiesPanel::ItemSettings::CreateControls()
+void ItemSettings::CreateControls()
 {
     sizeLabel = Text::create("ITEM SIZE","Arial",16);
     addChild(sizeLabel);
@@ -615,7 +616,7 @@ void PropertiesPanel::ItemSettings::CreateControls()
     sizeControl->SetColor(MAIN_BACK_COLOR_LIGHT);
 }
 
-void PropertiesPanel::ItemSettings::UpdateValues()
+void ItemSettings::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     VISIBILITY_CHECK
@@ -626,18 +627,18 @@ void PropertiesPanel::ItemSettings::UpdateValues()
     
 }
 
-void PropertiesPanel::ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
+void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetSelectedItem()) return;
     if (color==menu)
     {
         panel->GetSelectedItem()->SetColor(menu->GetSelectedItemInfo().color);
-        UpdateValues();
+        Update();
     }
 }
 
-void PropertiesPanel::ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
+void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetSelectedItem()) return;
@@ -671,21 +672,21 @@ void PropertiesPanel::InitPanel()
     sectionItemSettings->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
     addChild(sectionItemSettings);
     
-    UpdateAll();
+    UpdateSubpanels();
 }
 
-void PropertiesPanel::UpdateAll()
+void PropertiesPanel::UpdateSubpanels()
 {
-    sectionOSCInfo->UpdateValues();
-    sectionMIDIDevices->UpdateValues();
-    sectionMIDIInfo->UpdateValues();
-    sectionItemSettings->UpdateValues();
+    sectionOSCInfo->Update();
+    sectionMIDIDevices->Update();
+    sectionMIDIInfo->Update();
+    sectionItemSettings->Update();
     InitLayout();
 }
 
 void PropertiesPanel::UpdateOSCInfo()
 {
-    sectionOSCInfo->UpdateValues();
+    sectionOSCInfo->Update();
 }
 
 void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
@@ -706,12 +707,12 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
 //        case SCDFC_EVENTS_Add_Item_Slider:
 //            sectionMIDIInfo->InitForSlider();
         case SCDFC_EVENTS_Move_Item:
-            sectionMIDIInfo->UpdateValues();
+            sectionMIDIInfo->Update();
             break;
         case SCDFC_EVENTS_Remove_Item:
             selectedItem=NULL;
         default:
-            UpdateAll();
+            UpdateSubpanels();
             break;
     }
 }

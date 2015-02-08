@@ -42,6 +42,9 @@
 #define PROPERTIES_OSC_PORT     3
 #define PROPERTIES_OSC_IP       4
 #define PROPERTIES_OSC_TOGGLE   5
+#define PATCH_LOAD              6
+#define PATCH_SAVE              7
+
 
 #define MAIN_BACK_COLOR Color3B(50,50,50)
 #define MAIN_BACK_COLOR_LIGHT Color3B(1,80,80)

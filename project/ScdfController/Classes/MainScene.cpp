@@ -7,6 +7,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "ControlUnit.h"
+#include "LoadSavePanel.h"
 
 //#include "PlatformInfo.h"
 
@@ -186,9 +187,22 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
-    //toolbar->addChild(buttonShow,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
+    auto buttonLoadSavePanel = CheckBox::create();
+    buttonLoadSavePanel->setTouchEnabled(true);
+    buttonLoadSavePanel->loadTextures("TogglePannelOff.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOn.png",
+                              "TogglePannelOff.png");
+    buttonLoadSavePanel->ignoreContentAdaptWithSize(false);
+    buttonLoadSavePanel->setAnchorPoint(Vec2(0,1));
+    buttonLoadSavePanel->setPosition(Vec2(buttonEdit->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
+    buttonLoadSavePanel->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
+    buttonLoadSavePanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    
+    toolbar->addChild(buttonLoadSavePanel,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
     toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
-   // toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
+  // toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
     toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
@@ -280,6 +294,7 @@ bool MainScene::init()
     LOGD("Created custom panel");
 
     propertiesPanel.reset(dynamic_cast<PropertiesPanel*>(PanelBase::CreatePanel<PropertiesPanel>((MainScene*)this,propertiesRect)));
+    loadSavePanel.reset(dynamic_cast<LoadSavePanel*>(PanelBase::CreatePanel<LoadSavePanel>((MainScene*)this,propertiesRect)));
 
     AddToolbar(toolbarPanelsize);
 
@@ -341,6 +356,11 @@ bool MainScene::init()
     return true;
 }
 
+void MainScene::HideShowLoadSavePanel()
+{
+    propertiesPanel->HideShow(loadSavePanel.get());
+}
+
 void MainScene::HideShowScrollview()
 {
     MoveTo *actScrollview;
@@ -373,8 +393,9 @@ void MainScene::HideShowScrollview()
 
 void MainScene::HideShowPropertiesPanel()
 {
+    loadSavePanel->HideShow(propertiesPanel.get());
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
-    propertiesPanel->HideShow();
+//    propertiesPanel->HideShow();
 }
 
 void MainScene::HideShowToolbar()
@@ -437,7 +458,8 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             else if (TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW==button->getTag())
                 HideShowScrollview();
             else if (TOOLBAR_BUTTON_HIDESHOW_TOOLBAR==button->getTag())
-                HideShowToolbar();
+               // HideShowToolbar();
+                HideShowLoadSavePanel();
             else if (TOOLBAR_BUTTON_HIDESHOW_PROPERTIES==button->getTag())
                 HideShowPropertiesPanel();
             break;
