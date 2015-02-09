@@ -1,0 +1,1 @@
+LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/api $(LOCAL_PATH)/dft $(LOCAL_PATH)/dft/scalar $(LOCAL_PATH)/kernel $(LOCAL_PATH)/libbench2 $(LOCAL_PATH)/rdft $(LOCAL_PATH)/rdft/scalar $(LOCAL_PATH)/reodft $(LOCAL_PATH)/threads
