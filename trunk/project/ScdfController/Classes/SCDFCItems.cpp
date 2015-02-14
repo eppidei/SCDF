@@ -55,17 +55,81 @@ ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
     return item;
 }
 
-ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit()), sizeMultiply(1)
+ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit()), inflateVValue(0), inflateHValue(0), colorIndex(Colors::ItemsColorsId::Gray)
 {
 }
 
-void ItemBase::SetItemMultiply(int multiply)
+void ItemBase::CalculateItemSize(float gridBase)
 {
-    cocos2d::Size s=getContentSize();
-    cocos2d::Size baseSize=cocos2d::Size(getContentSize().width/sizeMultiply, getContentSize().height/sizeMultiply);
-    cocos2d::Size newSize=cocos2d::Size(baseSize.width*multiply, baseSize.height*multiply);
-    sizeMultiply=multiply;
-    setContentSize(newSize);
+    cocos2d::Size baseSize=GetStaticBaseSize();
+    baseSize.width+=inflateHValue;
+    baseSize.height+=inflateVValue;
+    setContentSize(cocos2d::Size(baseSize.width*gridBase, baseSize.height*gridBase));
+}
+
+void ItemBase::IncrementInflate(bool isHeight)
+{
+    cocos2d::Size baseSize=GetStaticBaseSize();
+    float gridUnity=getContentSize().width/(baseSize.width+inflateHValue);
+    
+    cocos2d::Size parentSize=getParent()->getContentSize();
+    if (baseSize.width>baseSize.height)
+    {
+        if (isHeight)
+        {
+            float diff=baseSize.width-baseSize.height;
+            inflateVValue=fmin(inflateVValue+1,inflateHValue+diff-1);
+        }
+        else
+            inflateHValue=fmin(inflateHValue+1,parentSize.width/gridUnity);
+    }
+    else if(baseSize.width<baseSize.height)
+    {
+        if (isHeight)
+            inflateVValue=fmin(inflateVValue+1,parentSize.height/gridUnity);
+        else
+        {
+            float diff=baseSize.height-baseSize.width;
+            inflateHValue=fmin(inflateHValue+1,inflateVValue+diff-1);
+        }
+    }
+    else
+    {   float size=fmin(parentSize.height/gridUnity,parentSize.width/gridUnity);
+        if (isHeight)
+            inflateVValue=fmin(inflateVValue+1,size);
+        else
+            inflateHValue=fmin(inflateHValue+1,size);
+    }
+    
+    CalculateItemSize(gridUnity);
+}
+
+void ItemBase::DecrementInflate(bool isHeight)
+{
+    cocos2d::Size baseSize=GetStaticBaseSize();
+    float gridUnity=getContentSize().width/(baseSize.width+inflateHValue);
+    if (baseSize.width>baseSize.height)
+    {
+        if (isHeight)
+            inflateVValue=fmax(inflateVValue-1,1-baseSize.height);
+        else
+            inflateHValue=fmax(inflateHValue-1,1-baseSize.height);
+    }
+    else if (baseSize.width<baseSize.height)
+    {
+        if (isHeight)
+            inflateVValue=fmax(inflateVValue-1,1-baseSize.width);
+        else
+            inflateHValue=fmax(inflateHValue-1,1-baseSize.width);
+    }
+    else
+    {
+        if (isHeight)
+            inflateVValue=fmax(inflateVValue-1,-1);
+        else
+            inflateHValue=fmax(inflateHValue-1,-1);
+    }
+    CalculateItemSize(gridUnity);
 }
 
 void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
@@ -301,6 +365,13 @@ void ItemSlider::SetThumbPosition()
         thumb->setPosition(Vec2(position,getContentSize().height/2.0));
 }
 
+cocos2d::Size ItemSlider::GetStaticBaseSize()
+{
+    if (isVertical)
+        return GetBaseSize();
+    return SLIDER_HORZ_SIZE_BASE;
+}
+
 void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 {
     float size=fmin(contentSize.height,contentSize.width);
@@ -316,8 +387,10 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 
 void ItemSlider::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
-    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)MAIN_BACK_COLOR.r)/255.f,((float)MAIN_BACK_COLOR.g)/255.f,((float)MAIN_BACK_COLOR.b)/255.f,1.0));
-    Color4F c(((float)color.r)/255.f,((float)color.g)/255.f,((float)color.b)/255.f,1.0);
+    Color3B cc=Colors::Instance()->GetItemsColor(colorIndex);
+    Color3B main_cc=Colors::Instance()->GetUIColor(Colors::Main_Background);
+    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)main_cc.r)/255.f,((float)main_cc.g)/255.f,((float)main_cc.b)/255.f,1.0));
+    Color4F c(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0);
     if (isVertical)
         DrawPrimitives::drawSolidRect(Vec2(0, thumb->getPositionY()+thumb->getContentSize().width/2), Vec2(getContentSize().width, 0), c);
     else
@@ -336,10 +409,10 @@ void ItemKnob::SetThumbPosition()
 //    thumb->setRotation(rotation);
 }
 
-void ItemKnob::SetColor(cocos2d::Color3B _color)
+void ItemKnob::SetColor(Colors::ItemsColorsId colorIndex)
 {
-    ItemBase::SetColor(_color);
-    setColor(_color);
+    ItemBase::SetColor(colorIndex);
+    setColor(Colors::Instance()->GetItemsColor(colorIndex));
 }
 
 void ItemKnob::Create()
@@ -376,8 +449,9 @@ void ItemKnob::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t
     GLfloat LineRange[2];
     glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE,LineRange);
     
+    Color3B cc=Colors::Instance()->GetItemsColor(colorIndex);
     DrawPrimitives::drawCircle(Vec2(getContentSize().width/2, getContentSize().height/2), (getContentSize().width/2)-10, CC_DEGREES_TO_RADIANS((225-degreesFromValue)), 100,true);
-    DrawPrimitives::setDrawColor4B(color.r,color.g,color.b,255);
+    DrawPrimitives::setDrawColor4B(cc.r,cc.g,cc.b,255);
     
     glLineWidth(10);
 
@@ -410,7 +484,8 @@ void ItemPad::Create()
 
 void ItemPad::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
-    DrawPrimitives::drawSolidRect(Vec2(getContentSize().width*0.05, getContentSize().height*0.95), Vec2(getContentSize().width*0.95, getContentSize().height*0.05), Color4F(color.r/255,color.g/255,color.b/255,255));
+    Color3B cc=Colors::Instance()->GetItemsColor(colorIndex);
+    DrawPrimitives::drawSolidRect(Vec2(getContentSize().width*0.05, getContentSize().height*0.95), Vec2(getContentSize().width*0.95, getContentSize().height*0.05), Color4F(cc.r/255,cc.g/255,cc.b/255,255));
 }
 
 void ItemPad::setContentSize(const cocos2d::Size &contentSize)
@@ -461,8 +536,8 @@ void ItemKeyboard::CreatePads()
 {
     ClearPads();
     float totalPadsMultiply=MainScene::GetUnityBase()*padSizeMultiply;
-    float padsWidth=ItemPad::GetSize().width*totalPadsMultiply;
-    float padsHeight=ItemPad::GetSize().height*totalPadsMultiply;
+    float padsWidth=ItemPad::GetBaseSize().width*totalPadsMultiply;
+    float padsHeight=ItemPad::GetBaseSize().height*totalPadsMultiply;
 
     int numPadsRow=getContentSize().width/padsWidth;
     int numPadsColumn=getContentSize().height/padsHeight;

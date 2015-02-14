@@ -59,7 +59,7 @@ namespace ScdfCtrl
         
         std::unique_ptr<PanelBase> parent;
         void Resize(float newHeight);
-        void CalculateHeight(bool realSize=false);
+        void CalculateHeight();
         virtual void CreateControls() = 0;
     protected:
         std::unique_ptr<DropDownMenuCallbackSubPanel> dropDownCallback;

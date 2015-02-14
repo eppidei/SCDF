@@ -15,6 +15,7 @@
 #include "PropertiesPanel.h"
 #include "ControlUnit.h"
 #include "Logging.h"
+#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -187,7 +188,7 @@ void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parent
 bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type)
 {
     if (active) return false;
-    Widget* button = dynamic_cast<Widget*>(pSender);
+    Node* button = dynamic_cast<Node*>(pSender);
     static Vec2 dragStartPoint;
     static Vec2 touchStartPos;
     switch (type)

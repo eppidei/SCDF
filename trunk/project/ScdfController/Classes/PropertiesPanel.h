@@ -78,7 +78,9 @@ namespace ScdfCtrl
     {
         friend class PropertiesPanel;
         
-        ItemSlider *sizeControl;
+        float itemMultiply;
+        cocos2d::ui::Button *h_plus, *h_minus, *w_plus, *w_minus;
+        cocos2d::ui::Text *sizeText;
         DropDownMenu *color;
         cocos2d::ui::TextField* name;
         cocos2d::ui::Text *sizeLabel, *colorLabel, *nameLabel;
@@ -88,6 +90,7 @@ namespace ScdfCtrl
         void PositionElements() override;
         void Update() override;
         void OnTextInput(cocos2d::ui::TextField *widget) override;
+        void OnTouchEventBegan(cocos2d::Node *widget) override;
         ItemSettings();
         CREATE_FUNC(ItemSettings);
     };

@@ -62,7 +62,7 @@ void OSCInfo::CreateControls()
 
     
     oscToggle->setTouchEnabled(true);
-    oscToggle->setContentSize(cocos2d::Size(30,30));
+    oscToggle->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT,SUBPANEL_ITEM_HEIGHT));
     oscToggle->setAnchorPoint(Vec2(0,1));
     oscToggle->setSelectedState(false);
     oscToggle->addEventListener(CC_CALLBACK_2(SubpanelBase::CheckBoxEventCallback, this));
@@ -255,9 +255,9 @@ void MIDIDevices::CreateControls()
     devices->setAnchorPoint(Vec2(0,1));
     devices->SetCallback(dropDownCallback.get());
     std::vector<DropDownMenuData> dropDownData;
-    dropDownData.push_back(DropDownMenuData("No MIDI connection",Color3B::WHITE));
+    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Color3B::WHITE));
+        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
 
@@ -356,7 +356,7 @@ void MIDIInfo::InitControlMenuValue()
         {
             std::ostringstream os;
             os<<note[i%12]<<octave;
-            dropDownData.push_back(DropDownMenuData(os.str(),Color3B::WHITE));
+            dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
             if (i>0&&0==i%12)
                 octave++;
         }
@@ -368,7 +368,7 @@ void MIDIInfo::InitControlMenuValue()
         {
             std::ostringstream os;
             os<<"CC: "<<i;
-            dropDownData.push_back(DropDownMenuData(os.str(),Color3B::WHITE));
+            dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
         }
         controlChangeLabel->setString("CONTROL CHANGE");
     }
@@ -443,7 +443,7 @@ void MIDIInfo::CreateControls()
     midiMessage->SetCallback(dropDownCallback.get());
     std::vector<DropDownMenuData> dropDownData;
     for (int i=0;i<MidiMessageString.size();++i)
-        dropDownData.push_back(DropDownMenuData(MidiMessageString[i],Color3B::WHITE));
+        dropDownData.push_back(DropDownMenuData(MidiMessageString[i],Colors::Instance()->GetUIColor(Colors::DropDownText)));
     midiMessage->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create dropDown label
@@ -488,7 +488,7 @@ void MIDIInfo::CreateControls()
     {
         std::ostringstream os;
         os<<i;
-        dropDownData.push_back(DropDownMenuData(os.str(),Color3B::WHITE));
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     }
     channel->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
@@ -514,14 +514,15 @@ void MIDIInfo::CreateControls()
     {
         std::ostringstream os;
         os<<i;
-        dropDownData.push_back(DropDownMenuData(os.str(),Color3B::WHITE));
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     }
     velocity->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
 
 ItemSettings::ItemSettings()
 {
-    sizeControl=NULL;
+    h_minus=h_plus=w_minus=w_plus=NULL;
+    sizeText=NULL;
     color=NULL;
     name=NULL;
     sizeLabel=colorLabel=nameLabel=NULL;
@@ -540,8 +541,14 @@ void ItemSettings::PositionElements()
 
     if (sizeLabel)
         sizeLabel->setPosition(Vec2(0,color->getPositionY()-color->getContentSize().height));
-    if (sizeControl)
-        sizeControl->setPosition(Vec2(0,sizeLabel->getPositionY()-sizeLabel->getContentSize().height));
+    if (h_plus)
+    {
+        h_plus->setPosition(Vec2(getContentSize().width/2.0-h_plus->getContentSize().width/2.0,sizeLabel->getPositionY()-sizeLabel->getContentSize().height));
+        sizeText->setPosition(Vec2(getContentSize().width/2.0-sizeText->getContentSize().width/2.0,h_plus->getPositionY()-h_plus->getContentSize().height));
+        w_minus->setPosition(Vec2(sizeText->getPositionX()-w_minus->getContentSize().width,h_plus->getPositionY()-h_plus->getContentSize().height));
+        w_plus->setPosition(Vec2(sizeText->getPositionX()+sizeText->getContentSize().width,h_plus->getPositionY()-h_plus->getContentSize().height));
+        h_minus->setPosition(Vec2(getContentSize().width/2.0-h_minus->getContentSize().width/2.0,w_plus->getPositionY()-w_plus->getContentSize().height));
+    }
 }
 
 void ItemSettings::CreateControls()
@@ -593,27 +600,56 @@ void ItemSettings::CreateControls()
     color->SetCallback(dropDownCallback.get());
     
     std::vector<DropDownMenuData> dropDownData;
-    dropDownData.push_back(DropDownMenuData("",Color3B::MAGENTA));
-    dropDownData.push_back(DropDownMenuData("",Color3B::YELLOW));
-    dropDownData.push_back(DropDownMenuData("",Color3B::ORANGE));
-    dropDownData.push_back(DropDownMenuData("",Color3B::BLUE));
-    dropDownData.push_back(DropDownMenuData("",Color3B::GRAY));
-    dropDownData.push_back(DropDownMenuData("",Color3B::GREEN));
-    dropDownData.push_back(DropDownMenuData("",Color3B::RED));
-    dropDownData.push_back(DropDownMenuData("",Color3B::WHITE));
-    dropDownData.push_back(DropDownMenuData("",Color3B::BLACK));
+    for (int i=0;i<Colors::Instance()->CountItemsColor();++i)
+        dropDownData.push_back(DropDownMenuData("",Colors::Instance()->GetItemsColor((Colors::ItemsColorsId)i)));
     
     color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
     
-    sizeControl = dynamic_cast<ItemSlider*>(ItemBase::CreateItem(cocos2d::Rect(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT), ITEM_SLIDER_ID));
-    addChild(sizeControl,0,3);
-    sizeControl->SetVertical(false);
-    sizeControl->setAnchorPoint(Vec2(0,1));
-    sizeControl->SetRange(1, 5);
-    sizeControl->SetValue(1);
-   // sizeControl->SetCallback(itemCallback.get());
-    sizeControl->SetColor(MAIN_BACK_COLOR_LIGHT);
+    h_minus = ui::Button::create();
+    addChild(h_minus, 0, PROPERTIES_ITEM_HEIGHT_MINUS);
+    h_minus->setTouchEnabled(true);
+    h_minus->ignoreContentAdaptWithSize(false);
+    h_minus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    h_minus->setAnchorPoint(Vec2(0,1));
+    h_minus->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT, SUBPANEL_ITEM_HEIGHT));
+    h_minus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    
+    h_plus = ui::Button::create();
+    addChild(h_plus, 0, PROPERTIES_ITEM_HEIGHT_PLUS);
+    h_plus->ignoreContentAdaptWithSize(false);
+    h_plus->setTouchEnabled(true);
+    h_plus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    h_plus->setAnchorPoint(Vec2(0,1));
+    h_plus->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT, SUBPANEL_ITEM_HEIGHT));
+    h_plus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+
+    w_minus = ui::Button::create();
+    addChild(w_minus, 0, PROPERTIES_ITEM_WIDTH_MINUS);
+    w_minus->setTouchEnabled(true);
+    w_minus->ignoreContentAdaptWithSize(false);
+    w_minus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    w_minus->setAnchorPoint(Vec2(0,1));
+    w_minus->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT, SUBPANEL_ITEM_HEIGHT));
+    w_minus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    
+    w_plus = ui::Button::create();
+    addChild(w_plus, 0, PROPERTIES_ITEM_WIDTH_PLUS);
+    w_plus->ignoreContentAdaptWithSize(false);
+    w_plus->setTouchEnabled(true);
+    w_plus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    w_plus->setAnchorPoint(Vec2(0,1));
+    w_plus->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT, SUBPANEL_ITEM_HEIGHT));
+    w_plus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    
+    sizeText = Text::create("","Arial",16);
+    addChild(sizeText);
+    sizeText->ignoreContentAdaptWithSize(false);
+    sizeText->setAnchorPoint(Vec2(0,1));
+    sizeText->setTextVerticalAlignment(TextVAlignment::CENTER);
+    sizeText->setTextHorizontalAlignment(TextHAlignment::CENTER);
+    sizeText->setContentSize(cocos2d::Size(getContentSize().width/3,SUBPANEL_ITEM_HEIGHT));
+    sizeText->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 }
 
 void ItemSettings::Update()
@@ -621,8 +657,13 @@ void ItemSettings::Update()
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     VISIBILITY_CHECK
     
-    sizeControl->SetValue(panel->GetSelectedItem()->GetSizeMultiply());
-    color->setBackGroundColor(panel->GetSelectedItem()->GetColor());
+    ItemBase *item=panel->GetSelectedItem();
+    if(NULL==item) return;
+    std::ostringstream os;
+    char str[256];
+    sprintf(str,"(%d,%d)",(int)(item->GetStaticBaseSize().width+item->GetInflateValue(false)),(int)(item->GetStaticBaseSize().height+item->GetInflateValue(true)));
+    sizeText->setString(str);
+    color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
     name->setText(panel->GetSelectedItem()->GetName());
     
 }
@@ -633,9 +674,34 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
     if (NULL==panel->GetSelectedItem()) return;
     if (color==menu)
     {
-        panel->GetSelectedItem()->SetColor(menu->GetSelectedItemInfo().color);
+        panel->GetSelectedItem()->SetColor((Colors::ItemsColorsId)menu->GetSelectedIndex());
         Update();
     }
+}
+
+void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel->GetSelectedItem()) return;
+    
+    switch (widget->getTag())
+    {
+        case PROPERTIES_ITEM_HEIGHT_MINUS:
+            panel->GetSelectedItem()->DecrementInflate(true);
+            break;
+        case PROPERTIES_ITEM_HEIGHT_PLUS:
+            panel->GetSelectedItem()->IncrementInflate(true);
+            break;
+        case PROPERTIES_ITEM_WIDTH_MINUS:
+            panel->GetSelectedItem()->DecrementInflate(false);
+            break;
+        case PROPERTIES_ITEM_WIDTH_PLUS:
+            panel->GetSelectedItem()->IncrementInflate(false);
+            break;
+        default:
+            break;
+    }
+    Update();
 }
 
 void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)

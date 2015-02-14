@@ -29,7 +29,8 @@ template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, co
 
 void PanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
-    DrawPrimitives::drawSolidRect(Vec2(0, getInnerContainerSize().height), Vec2(getInnerContainerSize().width, 0), Color4F(((float)MAIN_BACK_COLOR.r)/255.f,((float)MAIN_BACK_COLOR.g)/255.f,((float)MAIN_BACK_COLOR.b)/255.f,1.0));
+    Color3B cc=Colors::Instance()->GetUIColor(Colors::Main_Background);
+    DrawPrimitives::drawSolidRect(Vec2(0, getInnerContainerSize().height), Vec2(getInnerContainerSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
 }
 
 void PanelBase::EnableScrolling(bool enable)
@@ -140,17 +141,16 @@ void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu
 //    parent->GetParent()->EnableScrolling(true);
 //}
 
-void SubpanelBase::CalculateHeight(bool realSize)
+void SubpanelBase::CalculateHeight()
 {
     int height=0;
     Vector<Node*> _childrens = getChildren();
+    float lastChildrenYCoord=-1;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
-        if (!(*it)->isVisible() || (*it)->getPositionX()>getContentSize().width/2.0) continue;
-       // if (realSize)
-            height+=(*it)->getContentSize().height;
-//        else
-//            height+=SUBPANEL_ITEM_HEIGHT;//(*it)->getContentSize().height;
+        if (!(*it)->isVisible() || (*it)->getPositionY()==lastChildrenYCoord) continue;
+        height+=(*it)->getContentSize().height;
+        lastChildrenYCoord=(*it)->getPositionY();
     }
     Resize(height);
 }
@@ -196,7 +196,8 @@ void SubpanelBase::updateTweenAction(float value, const std::string& key)
 
 void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
-    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)MAIN_BACK_COLOR_LIGHT.r)/255.f,((float)MAIN_BACK_COLOR_LIGHT.g)/255.f,((float)MAIN_BACK_COLOR_LIGHT.b)/255.f,1.0));
+    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
+    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
     if (flags&FLAGS_CONTENT_SIZE_DIRTY)
     {
         PositionElements();

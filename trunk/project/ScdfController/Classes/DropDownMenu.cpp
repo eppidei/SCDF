@@ -12,8 +12,6 @@ using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
-#define DROPDOWNN_BACK_COLOR Color3B(120,120,120)
-
 #define MAX_OPENED_MENU_HEIGHT 200.0
 void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 {
@@ -64,13 +62,14 @@ void DropDownMenu::setPosition(const Vec2 &pos)
     ScrollToSelected();
 }
 
-DropDownMenuData DropDownMenu::GetSelectedItemInfo()
+int DropDownMenu::GetSelectedIndex()
 {
-    if (_curSelectedIndex>=itemsData.size()){
-        printf("\nError retrieving item info\n");
-        return DropDownMenuData("",Color3B::YELLOW);
-    }
-    return itemsData[_curSelectedIndex];
+//    if (_curSelectedIndex>=itemsData.size()){
+//        printf("\nError retrieving item info\n");
+//        return DropDownMenuData("",0);
+//    }
+//    return itemsData[_curSelectedIndex];
+    return _curSelectedIndex;
     
 }
 
@@ -191,7 +190,7 @@ void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
         model->setTextHorizontalAlignment(TextHAlignment::CENTER);
-        model->setColor(data[i].color);
+        model->setColor(data[i].c);
         pushBackCustomItem(model);
     }
 }
@@ -208,14 +207,14 @@ void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
         //model->setPosition(Vec2(3,getContentSize().height-getItemsMargin()-(model->getContentSize().height+getItemsMargin())));
         model->ignoreContentAdaptWithSize(false);
         model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-        model->setBackGroundColor(data[i].color);
+        model->setBackGroundColor(data[i].c);
         pushBackCustomItem(model);
     }
 }
 
 void DropDownMenu::InitData(std::vector<DropDownMenuData> data, float itemHeight)
 {
-    itemsData=data;
+//    itemsData=data;
     BeforeInitData(itemHeight);
     int numElements=1;
     if (CheckDataSize(data))
