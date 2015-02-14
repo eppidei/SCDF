@@ -48,8 +48,8 @@ template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStar
     //draggingImage->setScale9Enabled(true);
     draggingImage->ignoreContentAdaptWithSize(false);
     draggingImage->setAnchorPoint(Vec2(0,1));
-    float width=ItemType::GetSize().width;
-    float height=ItemType::GetSize().height;
+    float width=ItemType::GetBaseSize().width;
+    float height=ItemType::GetBaseSize().height;
     draggingImage->setContentSize(cocos2d::Size(width*GetGridDistance(),height*GetGridDistance()));
     draggingImage->setOpacity(50);
     draggingImage->setPosition(dragStartPoint);

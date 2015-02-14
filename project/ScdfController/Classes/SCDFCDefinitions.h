@@ -29,6 +29,7 @@
 
 #define SCROLLBAR_ITEM_SIDE_BASE    4
 #define SLIDER_SIZE_BASE            cocos2d::Size(2,8)
+#define SLIDER_HORZ_SIZE_BASE       cocos2d::Size(8,2)
 #define PAD_SIZE_BASE               cocos2d::Size(4,4)
 #define KEYBOARD_SIZE_BASE           cocos2d::Size(12,8)
 #define KNOB_SIZE_BASE              cocos2d::Size(4,4)
@@ -39,14 +40,14 @@
 
 #define PROPERTIES_ITEM_NAME    1
 #define PROPERTIES_ITEM_COLOR   2
-#define PROPERTIES_OSC_PORT     3
-#define PROPERTIES_OSC_IP       4
-#define PROPERTIES_OSC_TOGGLE   5
-#define PATCH_LOAD              6
-#define PATCH_SAVE              7
-
-
-#define MAIN_BACK_COLOR Color3B(50,50,50)
-#define MAIN_BACK_COLOR_LIGHT Color3B(1,80,80)
+#define PROPERTIES_ITEM_HEIGHT_MINUS    3
+#define PROPERTIES_ITEM_HEIGHT_PLUS    4
+#define PROPERTIES_ITEM_WIDTH_MINUS    5
+#define PROPERTIES_ITEM_WIDTH_PLUS    6
+#define PROPERTIES_OSC_TOGGLE   7
+#define PROPERTIES_OSC_PORT     8
+#define PROPERTIES_OSC_IP       9
+#define PATCH_LOAD              10
+#define PATCH_SAVE              11
 
 #endif

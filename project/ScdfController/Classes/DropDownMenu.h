@@ -13,15 +13,15 @@
 
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
-
+#include "Colors.h"
 
 namespace ScdfCtrl
 {
     struct DropDownMenuData
     {
+        cocos2d::Color3B c;
         std::string text;
-        cocos2d::Color3B color;
-        DropDownMenuData(std::string _text, cocos2d::Color3B _color) : text(_text), color(_color) {}
+        DropDownMenuData(std::string _text, cocos2d::Color3B _c) : text(_text), c(_c) {}
     };
     
     class DropDownMenu;
@@ -39,7 +39,7 @@ namespace ScdfCtrl
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
-        std::vector<DropDownMenuData> itemsData;
+        //std::vector<DropDownMenuDataBase> itemsData;
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ScrollToSelected();
         void ResizeAndScroll(float newHeight, bool disableScrolling);
@@ -51,7 +51,7 @@ namespace ScdfCtrl
         DropDownMenu();
         virtual void DoInitData(std::vector<DropDownMenuData> data);
     public:
-        DropDownMenuData GetSelectedItemInfo();
+        int GetSelectedIndex();
         void SetSelectedIndex(int selected);
         void InitData(std::vector<DropDownMenuData> data, float itemHeight);
         void setPosition(const cocos2d::Vec2 &pos) override;

@@ -11,6 +11,7 @@
 
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
+#include "Colors.h"
 
 namespace ScdfCtrl
 {
@@ -25,11 +26,14 @@ namespace ScdfCtrl
     };
     class ItemBase : public cocos2d::Sprite, public SubjectSimple
     {
-        int sizeMultiply;
+        int inflateHValue;
+        int inflateVValue;
+        void CalculateItemSize(float gridBase);
     protected:
         int value;
         std::string name;
-        cocos2d::Color3B color;
+        //cocos2d::Color3B color;
+        Colors::ItemsColorsId colorIndex;
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
         std::unique_ptr<ItemBaseCallback> callback;
@@ -45,13 +49,15 @@ namespace ScdfCtrl
         virtual ~ItemBase(){}
         void SetCallback(ItemBaseCallback *c) {callback.reset(c);}
         void SetName(std::string _name) {name=_name;}
-        virtual void SetColor(cocos2d::Color3B _color) {color=_color;}
+        virtual void SetColor(Colors::ItemsColorsId _colorIndex) {colorIndex=_colorIndex;}
         void SetValue(int _value) {value=_value;}
-        void SetItemMultiply(int multiply);
+        void IncrementInflate(bool isHeight);
+        void DecrementInflate(bool isHeight);
         std::string GetName() {return name;}
-        cocos2d::Color3B GetColor() {return color;}
-        int GetSizeMultiply() {return sizeMultiply;}
+        int GetColor() {return colorIndex;}
+        int GetInflateValue(bool height) {if (height) return inflateVValue; return inflateHValue;}
         virtual int GetValue() {return value;}
+        virtual cocos2d::Size GetStaticBaseSize()=0;
     };
     class ItemSlider : public ItemBase
     {
@@ -61,6 +67,7 @@ namespace ScdfCtrl
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        cocos2d::Size GetStaticBaseSize() override;
     protected:
         cocos2d::ui::Layout *thumb;
         cocos2d::ui::Layout *slideBar;
@@ -70,7 +77,7 @@ namespace ScdfCtrl
     public:
         void Create();
         void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
-        static cocos2d::Size GetSize() { return SLIDER_SIZE_BASE;}
+        static cocos2d::Size GetBaseSize() { return SLIDER_SIZE_BASE;}
         static int GetID() { return ITEM_SLIDER_ID;}
         virtual ~ItemSlider();
         void SetVertical(bool vertical);
@@ -83,11 +90,12 @@ namespace ScdfCtrl
     {
         void SetThumbPosition();
         bool IsKnob() { return true;}
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
-        void SetColor(cocos2d::Color3B _color);
+        void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
-        static cocos2d::Size GetSize() { return KNOB_SIZE_BASE;}
+        static cocos2d::Size GetBaseSize() { return KNOB_SIZE_BASE;}
         static int GetID() { return ITEM_KNOB_ID;}
         CREATE_FUNC(ItemKnob);
     };
@@ -98,10 +106,11 @@ namespace ScdfCtrl
         cocos2d::ui::Button *pad;
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
         int midiNote;
         void Create();
-        static cocos2d::Size GetSize() { return PAD_SIZE_BASE;}
+        static cocos2d::Size GetBaseSize() { return PAD_SIZE_BASE;}
         static int GetID() { return ITEM_PAD_ID;}
         ~ItemPad();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
@@ -117,20 +126,22 @@ namespace ScdfCtrl
         void CreatePads();
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
         ItemPad *GetSelectedPad();
         void UpdateSelectedPadIndex(ItemPad *pad);
         void Create();
-        static cocos2d::Size GetSize() { return KEYBOARD_SIZE_BASE;}
+        static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}
         static int GetID() { return ITEM_KEYBOARD_ID;}
         ~ItemKeyboard();
         CREATE_FUNC(ItemKeyboard);
     };
     class ItemSensor1 : public ItemBase
     {
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
         void Create(){}
-        static cocos2d::Size GetSize() { return RECT_SENSOR_SIZE_BASE;}
+        static cocos2d::Size GetBaseSize() { return RECT_SENSOR_SIZE_BASE;}
         static int GetID() { return ITEM_SENSOR1_ID;}
         CREATE_FUNC(ItemSensor1);
     };
