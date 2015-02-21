@@ -17,6 +17,12 @@
 
 namespace ScdfCtrl {
 
+
+
+
+
+
+
 class ControlPatch {
 
 public:
@@ -25,20 +31,44 @@ public:
 
 	int i;
 	std::vector<float> f;
+	char* c;
+	uint32_t vers;
+
+	std::vector<double*> pvec;
 
 	ControlPatch();
+	~ControlPatch();
 
-	template<class Archive>	void serialize(Archive & archive)
+	/*template<class Archive>	void serialize(Archive & archiv, std::uint32_t const version)
 	{
-		archive( i, f );
+		archiv(CEREAL_NVP(i));
+		archiv(CEREAL_NVP(f), CEREAL_NVP(*c) );
+		vers = version;
+	}*/
+
+
+	template <class Archive>
+	void save( Archive & ar, std::uint32_t const version ) const
+	{
+		ar(CEREAL_NVP(i));
+		ar(CEREAL_NVP(f), CEREAL_NVP(*c) );
+	}
+
+	template <class Archive>
+	void load( Archive & ar, std::uint32_t const version )
+	{
+		ar(CEREAL_NVP(i));
+		ar(CEREAL_NVP(f), CEREAL_NVP(*c) );
+		vers = version;
 	}
 
 };
 
-
-
-
-
 } // namespace end
+
+CEREAL_CLASS_VERSION(ScdfCtrl::ControlPatch,1); // change version when you modify struct
+// Object versioning, more at:
+// http://uscilab.github.io/cereal/assets/doxygen/group__Utility.html
+// http://uscilab.github.io/cereal/serialization_functions.html
 
 #endif /* CONTROLPATCH_H_ */

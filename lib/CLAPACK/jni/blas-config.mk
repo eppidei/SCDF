@@ -14,7 +14,7 @@ CB1AUX = isamax.c sasum.c saxpy.c scopy.c snrm2.c sscal.c
 
 ZB1AUX = idamax.c dasum.c daxpy.c dcopy.c dnrm2.c dscal.c
 
-ALLBLAS  = lsame.c #xerbla.c xerbla_array.c
+ALLBLAS  = lsame.c xerbla.c xerbla_array.c
 
 SBLAS2 = sgemv.c sgbmv.c ssymv.c ssbmv.c sspmv.c \
 	strmv.c stbmv.c stpmv.c strsv.c stbsv.c stpsv.c \
@@ -44,6 +44,31 @@ ZBLAS3 = zgemm.c zsymm.c zsyrk.c zsyr2k.c ztrmm.c ztrsm.c \
 
 LEVMAR = lm.c Axb.c misc.c lmlec.c lmbc.c lmblec.c lmbleic.c
 
+# athos add:
+WRAP = ../WRAP/cblaswr.c ../WRAP/fblaswr.c
+
+DIRF2C = ../../F2CLIBS/libf2c
+F2CLIB = $(DIRF2C)/r_cnjg.c \
+		 $(DIRF2C)/r_imag.c \
+		 $(DIRF2C)/r_sign.c \
+		 $(DIRF2C)/d_sign.c \
+		 $(DIRF2C)/c_abs.c \
+		 $(DIRF2C)/c_div.c \
+		 $(DIRF2C)/d_imag.c \
+		 $(DIRF2C)/d_cnjg.c \
+		 $(DIRF2C)/z_abs.c \
+		 $(DIRF2C)/z_div.c \
+		 $(DIRF2C)/s_copy.c \
+		 $(DIRF2C)/i_len.c \
+		 $(DIRF2C)/sig_die.c \
+		 $(DIRF2C)/cabs.c \
+		 $(DIRF2C)/close.c \
+		 
+		 
+		 
+		 
+		 
+
 ALLOBJ= $(DBLAS3) $(SBLAS1) $(SBLAS2) $(SBLAS3) $(DBLAS1) $(DBLAS2) \
 	$(CBLAS1) $(CBLAS2) $(CBLAS3) $(ZBLAS1) \
-	$(ZBLAS2) $(ZBLAS3) $(ALLBLAS) 
+	$(ZBLAS2) $(ZBLAS3) $(ALLBLAS) #$(F2CLIB)
