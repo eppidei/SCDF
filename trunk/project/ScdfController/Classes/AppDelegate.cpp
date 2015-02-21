@@ -11,6 +11,7 @@
 #include <platform/CCDevice.h>
 #include "Logging.h"
 #include "ScdfSensorAPI.h"
+#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;

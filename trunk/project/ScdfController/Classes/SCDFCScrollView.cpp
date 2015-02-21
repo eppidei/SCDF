@@ -107,8 +107,8 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
             setDirection(ScrollView::Direction::NONE);
             Vec2 parentScreenCoord=parent->convertToWorldSpace(getPosition());
             dragStartPoint=Vec2(parentScreenCoord.x+buttonRect.origin.x,parentScreenCoord.y-(getContentSize().height-buttonRect.origin.y));
-            int diffX=ItemType::GetSize().width*parent->GetGridDistance()-buttonRect.size.width;
-            int diffY=ItemType::GetSize().height*parent->GetGridDistance()-buttonRect.size.height;
+            int diffX=ItemType::GetBaseSize().width*parent->GetGridDistance()-buttonRect.size.width;
+            int diffY=ItemType::GetBaseSize().height*parent->GetGridDistance()-buttonRect.size.height;
             dragStartPoint.x=dragStartPoint.x-(diffX/2.0f);
             dragStartPoint.y=dragStartPoint.y+(diffY/2.0f);
             parent->OnStartDragging<ItemType>(dragStartPoint);
