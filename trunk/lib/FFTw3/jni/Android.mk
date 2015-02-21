@@ -2,7 +2,6 @@ JNI_DIR := $(call my-dir)
 FFTW3_VERSION = 3.3.4
 FFTW3_BASE_PATH := $(JNI_DIR)/../fftw-$(FFTW3_VERSION)
 
-# TODO: call configure here according to target platform and other requests
 # --enable-float generates a float-based fftw
 # --enable-long-double generates a long double based fft
 # NB: neon only works with --enable-float (not with double neither with long double!)
@@ -41,9 +40,9 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := fftw3
 LOCAL_PATH   := $(FFTW3_BASE_PATH)
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
 include $(JNI_DIR)/src.mk
 include $(JNI_DIR)/inc.mk
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
 
 ifeq ($(FFTW3_BUILD_SHARED),true)
  include $(BUILD_SHARED_LIBRARY)

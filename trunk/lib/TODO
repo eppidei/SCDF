@@ -1,0 +1,5 @@
+make a script to checkout fftw3 git repo
+https://github.com/FFTW/fftw3
+
+cblas taken from:
+https://github.com/3deggi/levmar-ndk
