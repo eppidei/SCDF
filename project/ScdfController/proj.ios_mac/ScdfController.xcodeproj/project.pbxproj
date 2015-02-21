@@ -70,7 +70,6 @@
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */; };
 		CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28E1A7546F400C4B34C /* Harvester.cpp */; };
-		CCBBE2AE1A7547A400C4B34C /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */; };
 		CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2901A7546F400C4B34C /* PipesManager.cpp */; };
 		CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2911A7546F400C4B34C /* Receiver.cpp */; };
 		CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2851A7546D700C4B34C /* Sensor.cpp */; };
@@ -119,6 +118,11 @@
 		DC9381AE1A48F105000F3EA2 /* knobIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AD1A48F105000F3EA2 /* knobIcon.png */; };
 		DC9381B11A48F3A2000F3EA2 /* fullPad.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381AF1A48F3A2000F3EA2 /* fullPad.png */; };
 		DC9381B21A48F3A2000F3EA2 /* sensorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */; };
+		DCA9F4751A989B3E006B2EF2 /* ControlPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4721A989B3E006B2EF2 /* ControlPatch.cpp */; };
+		DCA9F4761A989B3E006B2EF2 /* LoadSavePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */; };
+		DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4741A989B3E006B2EF2 /* Panel.cpp */; };
+		DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */; };
+		DCA9F47E1A989C9F006B2EF2 /* Colors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47D1A989C9F006B2EF2 /* Colors.cpp */; };
 		DCAEADCF1A505D7000513775 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5087E77C17EB970100C73F5D /* Info.plist */; };
 		DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */; };
 		DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */; };
@@ -391,6 +395,11 @@
 		DC9381AD1A48F105000F3EA2 /* knobIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knobIcon.png; sourceTree = "<group>"; };
 		DC9381AF1A48F3A2000F3EA2 /* fullPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fullPad.png; sourceTree = "<group>"; };
 		DC9381B01A48F3A2000F3EA2 /* sensorIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sensorIcon.png; sourceTree = "<group>"; };
+		DCA9F4721A989B3E006B2EF2 /* ControlPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlPatch.cpp; path = ../Classes/ControlPatch.cpp; sourceTree = "<group>"; };
+		DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadSavePanel.cpp; path = ../Classes/LoadSavePanel.cpp; sourceTree = "<group>"; };
+		DCA9F4741A989B3E006B2EF2 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Panel.cpp; path = ../Classes/Panel.cpp; sourceTree = "<group>"; };
+		DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UtilitiesiOs.mm; path = ../../../src/ios/UtilitiesiOs.mm; sourceTree = "<group>"; };
+		DCA9F47D1A989C9F006B2EF2 /* Colors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Colors.cpp; path = ../Classes/Colors.cpp; sourceTree = "<group>"; };
 		DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MidiOutConnectionIOSImpl.mm; path = ../../../src/ios/MidiOutConnectionIOSImpl.mm; sourceTree = "<group>"; };
 		DCCA5A2F1A40DD150014FADE /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = DEVELOPER_DIR; };
 		DCE4BAF91A4220C6006C14FE /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
@@ -466,6 +475,10 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DCA9F47D1A989C9F006B2EF2 /* Colors.cpp */,
+				DCA9F4721A989B3E006B2EF2 /* ControlPatch.cpp */,
+				DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */,
+				DCA9F4741A989B3E006B2EF2 /* Panel.cpp */,
 				DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */,
 				DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */,
 				DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */,
@@ -481,6 +494,7 @@
 				9D82C2CE1A1C04EB00FF1243 /* SCDFCItems.h */,
 				9D82C2D21A1C073100FF1243 /* SCDFCDefinitions.h */,
 				DC562A541A516BFF009C5C95 /* PlatformInfo.h */,
+				DCA9F47A1A989BBC006B2EF2 /* iOs */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -730,6 +744,14 @@
 			name = PublicUtility;
 			sourceTree = "<group>";
 		};
+		DCA9F47A1A989BBC006B2EF2 /* iOs */ = {
+			isa = PBXGroup;
+			children = (
+				DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */,
+			);
+			name = iOs;
+			sourceTree = "<group>";
+		};
 		DCCA5A241A40DA920014FADE /* iOsClasses */ = {
 			isa = PBXGroup;
 			children = (
@@ -970,15 +992,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */,
+				DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */,
 				CCBBE2C01A7547A700C4B34C /* SensorStandardIos.mm in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				DC175EB31A475457009DCA73 /* ControlUnit.cpp in Sources */,
 				CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */,
 				9DC09E711A06922300997F04 /* MainScene.cpp in Sources */,
 				CCBBE2D11A754ACA00C4B34C /* OscPrintReceivedElements.cpp in Sources */,
+				DCA9F4751A989B3E006B2EF2 /* ControlPatch.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */,
-				CCBBE2AE1A7547A400C4B34C /* InitFramework.cpp in Sources */,
 				CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */,
 				CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */,
 				CCBBE2B71A7547A400C4B34C /* UDPSendersManager.cpp in Sources */,
@@ -986,6 +1010,8 @@
 				CCBBE2B21A7547A400C4B34C /* SensorAudioInput.cpp in Sources */,
 				9D82C2CF1A1C04EB00FF1243 /* SCDFCItems.cpp in Sources */,
 				CCBBE2BF1A7547A700C4B34C /* SensorAudioInputIosImpl.mm in Sources */,
+				DCA9F4761A989B3E006B2EF2 /* LoadSavePanel.cpp in Sources */,
+				DCA9F47E1A989C9F006B2EF2 /* Colors.cpp in Sources */,
 				CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */,
 				CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */,
 				CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */,
@@ -1098,6 +1124,7 @@
 					"COCOS2D_DEBUG=1",
 					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
 					PLATF_IOS,
+					_DEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1108,6 +1135,7 @@
 					"$(SRCROOT)/../../../src/ios/include",
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0",
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
+					"$(SRCROOT)/../../../lib/cereal-1.1.0/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1149,6 +1177,7 @@
 					"$(SRCROOT)/../../../src/ios/include",
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0",
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
+					"$(SRCROOT)/../../../lib/cereal-1.1.0/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
