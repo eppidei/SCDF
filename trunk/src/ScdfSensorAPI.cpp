@@ -33,12 +33,28 @@ ScdfSensorAPI *scdf::theSensorAPI()
 
 void ScdfSensorAPI::InitFramework()
 {
+   
     scdf::thePipesManager()->CreateReturnPipes();
     scdf::theSensorManager()->CreateAllSensors();
     
     InitNetwork();
     InitSensors();
     
+    scdf::Harvester::Instance()->Start();
+    
+    StartAllSensors();
+    
+
+}
+
+void ScdfSensorAPI::StartAllSensors()
+{
+    //scdf::theSensorManager()->StartSensor(scdf::SensorType::AudioInput);
+    scdf::theSensorManager()->StartSensor(scdf::SensorType::Accelerometer);
+    scdf::theSensorManager()->StartSensor(scdf::SensorType::Magnetometer);
+    scdf::theSensorManager()->StartSensor(scdf::SensorType::Gyroscope);
+    scdf::theSensorManager()->StartSensor(scdf::SensorType::Proximity);
+
 }
 
 void ScdfSensorAPI::InitSensors()
@@ -56,6 +72,7 @@ void ScdfSensorAPI::InitSensors()
     settingsAudio.bufferSize = DEFAULT_BUFER_SIZE;
     settingsAudio.numChannels = DEFAULT_NUMBER_OF_CHANNEL;
     scdf::theSensorManager()->InitSensor(scdf::AudioInput, settingsAudio);
+    
     
 }
 
@@ -153,6 +170,11 @@ s_bool ScdfSensorAPI::StartSensor(SensorType sensorType)
 s_bool ScdfSensorAPI::StopSensor(SensorType sensorType)
 {
     return scdf::theSensorManager()->StopSensor(sensorType);
+}
+
+s_bool ScdfSensorAPI::IsSensorActive(SensorType sensorType)
+{
+    return scdf::theSensorManager()->IsSensorActive(sensorType);
 }
 
 // ********************************* Listeners ****************************** //

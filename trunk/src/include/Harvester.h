@@ -35,6 +35,7 @@ namespace scdf{
         ThreadUtils::ThreadHandle handle;
         ThreadUtils::CustomSemaphore harvestReady;
         HarvesterListener *harversterListener;
+        int uptateIntervalMs;
         
         struct HarvestInfo{
             std::vector<std::vector<int> > info;
@@ -57,7 +58,11 @@ namespace scdf{
         };
         
         Harvester();
+        void CheckMaxQueueDim();
     public:
+        int GetUpdateInterval(){return uptateIntervalMs;}
+        s_bool IsAudioSyncActive();
+        void SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs);
         void SetHarvesterListener(HarvesterListener *listner){harversterListener = listner;}
         void SendingQueuePushBuffer(std::vector<SensorData*> *buffer);
         void WaitForHarvest();

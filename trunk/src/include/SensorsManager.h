@@ -43,6 +43,8 @@ namespace scdf
         s_bool StopAllSensors();
         s_bool StartAllSensors();
         s_bool StartPrecActiveSensors();
+        
+        s_bool IsSensorActive(SensorType type);
        
     private:
 

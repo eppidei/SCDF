@@ -32,6 +32,7 @@
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
 		DC299E5A197714DA007F430F /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC299E59197714DA007F430F /* SaveSettings.mm */; };
+		DC2DEC1D1AA9083900C2AC66 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2DEC1C1AA9083900C2AC66 /* Accelerate.framework */; };
 		DC373895198823B3003BA42D /* closeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = DC373893198823B3003BA42D /* closeButton.png */; };
 		DC373896198823B3003BA42D /* closeButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC373894198823B3003BA42D /* closeButton@2x.png */; };
 		DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF56194CD2A10051E311 /* AVFoundation.framework */; };
@@ -100,6 +101,7 @@
 		DC299E5819771346007F430F /* SaveSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SaveSettings.h; path = ../../../../src/include/SaveSettings.h; sourceTree = "<group>"; };
 		DC299E59197714DA007F430F /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSettings.mm; sourceTree = "<group>"; };
 		DC2BC2C2195C283A0011521F /* SensorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorsManager.h; path = ../../../../src/include/SensorsManager.h; sourceTree = "<group>"; };
+		DC2DEC1C1AA9083900C2AC66 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		DC373893198823B3003BA42D /* closeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = closeButton.png; path = ../../../res/graphics/closeButton.png; sourceTree = "<group>"; };
 		DC373894198823B3003BA42D /* closeButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "closeButton@2x.png"; path = "../../../res/graphics/closeButton@2x.png"; sourceTree = "<group>"; };
 		DC4DFF56194CD2A10051E311 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -136,6 +138,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC2DEC1D1AA9083900C2AC66 /* Accelerate.framework in Frameworks */,
 				9D2E7D9119573A1B001DB7D2 /* QuartzCore.framework in Frameworks */,
 				DC4DFF59194CD2A80051E311 /* AudioToolbox.framework in Frameworks */,
 				DC4DFF57194CD2A10051E311 /* AVFoundation.framework in Frameworks */,
@@ -292,6 +295,7 @@
 		DCE8BEA0194393B300D283E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DC2DEC1C1AA9083900C2AC66 /* Accelerate.framework */,
 				9D2E7D9019573A1B001DB7D2 /* QuartzCore.framework */,
 				DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */,
 				DC4DFF56194CD2A10051E311 /* AVFoundation.framework */,
@@ -555,7 +559,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -565,9 +569,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$HOME/Documents/SCDF/trunk/src/include,
-					$HOME/Documents/SCDF/trunk/src/ios/include,
-					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					$HOME/Documents/SCDF/src/include,
+					$HOME/Documents/SCDF/src/ios/include,
+					$HOME/Documents/SCDF/lib/oscpack_1_1_0,
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -584,7 +588,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -594,9 +598,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$HOME/Documents/SCDF/trunk/src/include,
-					$HOME/Documents/SCDF/trunk/src/ios/include,
-					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					$HOME/Documents/SCDF/src/include,
+					$HOME/Documents/SCDF/src/ios/include,
+					$HOME/Documents/SCDF/lib/oscpack_1_1_0,
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;

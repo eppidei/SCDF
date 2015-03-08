@@ -13,6 +13,9 @@
 #include "SensorsManager.h"
 #include "Receiver.h"
 
+
+s_uint64 now_ns(){return 0;}
+
 #undef USE_RECEIVER
 //#ifdef USE_RECEIVER
 scdf::Receiver *audioReceiver = NULL;

@@ -36,7 +36,9 @@ s_bool scdf::SensorAudioInput::Start()
 	if (ret)
     {
         if (Harvester::Instance()->GetType()==GetType())
+        {
             Harvester::Instance()->Start();
+        }
         SetActive(true);
     }
 	return ret;

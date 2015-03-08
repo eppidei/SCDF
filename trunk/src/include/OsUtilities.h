@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace Scdf {
+namespace scdf {
 
 	std::string GetAppDataDirectory();
 	std::string GetUserDataDirectory();
