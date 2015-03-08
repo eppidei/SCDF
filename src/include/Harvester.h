@@ -15,12 +15,31 @@
 
 namespace scdf{
     
-    
     class HarvesterListener
     {
     public:
         virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
     };
+    
+    class HarvesterListenerContainer
+    {
+        std::map <SensorType, int> listenersRefCount;
+        std::map <HarvesterListener*, std::vector<SensorType>> listenersMap;
+        
+        int GetTotalRefCount();
+        void CheckRefCountForToStartAndStopHarvester();
+        
+    public:
+        HarvesterListenerContainer();
+        
+        void Attach(HarvesterListener* _listener,std::vector<SensorType> _typeList );
+        void Detach(HarvesterListener* _listener);
+        
+        void OnHarvesterBufferReady(std::vector<SensorData*> *buffer);
+    };
+    
+    
+  
 
     class Harvester
     {
@@ -59,13 +78,18 @@ namespace scdf{
         
         Harvester();
         void CheckMaxQueueDim();
+        
+        HarvesterListenerContainer listenersContainer;
     public:
+        HarvesterListenerContainer *GetListeners(){return &listenersContainer;}
+        
         int GetUpdateInterval(){return uptateIntervalMs;}
         s_bool IsAudioSyncActive();
         void SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs);
         void SetHarvesterListener(HarvesterListener *listner){harversterListener = listner;}
         void SendingQueuePushBuffer(std::vector<SensorData*> *buffer);
         void WaitForHarvest();
+        bool IsActive(){return activated;}
         bool activated;
         SensorType GetType() { return requesterType; }
         void SetType(SensorType type);
@@ -84,7 +108,7 @@ namespace scdf{
     {
         bool startMachine;
     public:
-        StopRestartMachine() : startMachine(Harvester::Instance()->activated)
+        StopRestartMachine() : startMachine(Harvester::Instance()->IsActive())
         {
             Harvester::Instance()->Stop();
         }
