@@ -34,7 +34,7 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
 {
     // add data to the queue that has been passed at creation time...
     if (data->type>=thePipesManager()->NumPipes()) {
-        LOGE( "Cannot write on pipe for sensor type %d",data->type);
+        LOGE( "Cannot write on pipe for sensor type %d\n",data->type);
 		delete data;
         return;
 	}

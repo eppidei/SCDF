@@ -35,6 +35,7 @@ namespace scdf {
         friend ScdfSensorAPI *theSensorAPI();
         
         void InitFramework();
+        void StartAllSensors();
         
         // *********** SENSORS API ******************* //
         s_int32 GetSensorRate(scdf::SensorType sensorType);
@@ -42,6 +43,7 @@ namespace scdf {
         void SetAudioInputBufferSize(s_int32 bufferSize);
         s_bool StartSensor(SensorType sensorType);
         s_bool StopSensor(SensorType sensorType);
+        s_bool IsSensorActive(SensorType sensorType);
         
         // *********** NETWORK API ******************* //
         void SetUDPOutputPort(s_int32 outputUdpPort);

@@ -8,6 +8,7 @@
 #ifndef LOGGING_H_
 #define LOGGING_H_
 
+#ifdef  _DEBUG
 #ifdef ANDROID
 #include <android/log.h>
 #define  LOG_TAG    "SCDF"
@@ -18,6 +19,15 @@
 #define LOGD(...) printf(__VA_ARGS__);
 #define LOGE(...) printf(__VA_ARGS__);
 #define LOGI(...) printf(__VA_ARGS__);
+//#define LOGD(...)
+//#define LOGE(...)
+//#define LOGI(...)
 #endif
+#else
+#define LOGD(...)
+#define LOGE(...) 
+#define LOGI(...) 
+#endif
+
 
 #endif /* LOGGING_H_ */

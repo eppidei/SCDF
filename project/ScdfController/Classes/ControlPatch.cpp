@@ -27,8 +27,8 @@ ScdfCtrl::ControlPatch::~ControlPatch()
 
 void TestSerialization()
 {
-	std::string path1 = Scdf::GetAppDataDirectory();
-	std::string path2 = Scdf::GetUserDataDirectory();
+	std::string path1 = scdf::GetAppDataDirectory();
+	std::string path2 = scdf::GetUserDataDirectory();
 	LOGD("App: %s",path1.c_str());
 	LOGD("App: %s",path2.c_str());
 

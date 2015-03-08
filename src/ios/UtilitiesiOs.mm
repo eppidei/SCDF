@@ -7,10 +7,20 @@
 //
 
 #include <string>
+#include <mach/mach_time.h>
+#include "TypeDefinitions.h"
 
 using std::string;
 
-namespace Scdf {
+
+s_uint64 now_ns()
+{
+    return  mach_absolute_time();
+    
+}
+
+namespace scdf {
+
     
     string GetAppDataDirectory()
     {

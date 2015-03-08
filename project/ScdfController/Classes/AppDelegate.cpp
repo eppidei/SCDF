@@ -10,8 +10,8 @@
 #include "PropertiesPanel.h"
 #include <platform/CCDevice.h>
 #include "Logging.h"
-#include "ScdfSensorAPI.h"
 #include "LoadSavePanel.h"
+#include "ScdfSensorAPI.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;

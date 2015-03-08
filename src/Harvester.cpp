@@ -13,63 +13,128 @@
 #include "UDPSendersManager.h"
 #include "PipesManager.h"
 #include "SensorsManager.h"
+#include "ScdfSensorAPI.h"
+
+#include <chrono>
+#include <thread>
+
+
+s_uint64 now_ns();
+
 
 using namespace scdf;
 
+
+
 Harvester *Harvester::_instance=NULL;
-
-s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
-
 s_bool Harvester::Compare::operator()(const SensorData* s1, const SensorData* s2) const
 {
     return s1->timestamp < s2->timestamp;
 }
 
-s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
-
 static void StartHarvestingProcedure(void *param)
 {
     Harvester *harvester=((Harvester*)param);
+    s_uint64 startTime = now_ns();
+   
     while(harvester->activated)
     {
-    	//s_uint64 start = now_ns();
-    	//LOGD("Read master pipe");
-        SensorData *data=thePipesManager()->ReadFromPipe(harvester->GetType());
-        //s_uint64 elap = now_ns() - start;
-        //LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
+        
+    	s_uint64 start = now_ns();
+    	LOGD("Read master pipe");
+        SensorData *data = NULL;
+        
+        if(harvester->IsAudioSyncActive())
+        {
+            //LOGD("StartHarvestingProcedure with Audio Synch ON\n")
+            data=thePipesManager()->ReadFromPipe(harvester->GetType());
+        }
+        else
+        {
+            LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(harvester->GetUpdateInterval()));
+            data = new SensorData(AudioInput);
+            
+            s_uint64 actualTime = now_ns();
+            data->timestamp = new s_uint64[2];
+            data->timestamp[0] = startTime;
+            data->timestamp[1] = actualTime;
+            data->timeid = startTime;
+            
+            startTime = actualTime;
+        }
+        s_uint64 elap = now_ns() - start;
+        LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
         if (NULL!=data)
             harvester->HarvestingProcedure(data);
+        
     }
 }
 
 std::vector<SensorData*> *Harvester::AllocBufferHarvest()
 {
-    std::vector<SensorData*> *buffer=new std::vector<SensorData*>();
-    for(int i=0;i<NumTypes;++i)
+    
+    std::vector<SensorData*> *bufferTemp;
+    
+    if (harversterListener!=NULL)
     {
-        SensorData *s=new SensorData((SensorType)i);
-        s_int32 bufferSize;
-        s_int32 timestampSize;
-        s_int32 numChannels=theSensorManager()->GetNumChannels((SensorType)i);
-        if (i==AudioInput)
-        {
-            bufferSize = numChannels*MAX_AUDIO_BUF_LENGTH;
-            timestampSize = 2; //start, end
-        }else
-            bufferSize = timestampSize = numChannels*MAX_SENSOR_BUF_LENGTH;
-
-        s->data= new s_sample[bufferSize];
-        s->timestamp= new s_uint64[timestampSize];
-        buffer->push_back(s);
+        static std::vector<SensorData*> *buffer=new std::vector<SensorData*>();
+        bufferTemp=buffer;
     }
-    return buffer;
+    else
+    {
+        std::vector<SensorData*> *buffer=new std::vector<SensorData*>();
+        bufferTemp=buffer;
+    }
+    
+    if (bufferTemp->size()==0)
+    {
+        for(int i=0;i<NumTypes;++i)
+        {
+            SensorData *s=new SensorData((SensorType)i);
+            s_int32 bufferSize;
+            s_int32 timestampSize;
+            s_int32 numChannels=theSensorManager()->GetNumChannels((SensorType)i);
+            if (i==AudioInput)
+            {
+                bufferSize = numChannels*MAX_AUDIO_BUF_LENGTH;
+                timestampSize = 2; //start, end
+            }else
+                bufferSize = timestampSize = numChannels*MAX_SENSOR_BUF_LENGTH;
+            
+            s->data= new s_sample[bufferSize];
+            s->timestamp= new s_uint64[timestampSize];
+            bufferTemp->push_back(s);
+        }
+    }
+    return bufferTemp;
+
     
 }
 
-Harvester::Harvester() : activated(false), requesterType(AudioInput)
+Harvester::Harvester() : activated(false), requesterType(AudioInput), harversterListener(NULL),uptateIntervalMs(40)
 {
-
+    
 }
+
+void Harvester::CheckMaxQueueDim()
+{
+    static const int MaxQueueDim = 100;
+    if (syncDataQueue.size()<MaxQueueDim) return;
+    
+    harvestReady.Wait();
+    std::vector<SensorData*> *buffer=syncDataQueue.front();
+    syncDataQueue.pop();
+#ifdef LOG_SEM
+    LOGD("Sender data queue size :%d\n",syncDataQueue.size());
+#endif
+    if (NULL==buffer) return;
+    for(int i=0;i<buffer->size();++i)
+        delete (*buffer)[i];
+    delete buffer;
+}
+
 
 void Harvester::Start()
 {
@@ -87,7 +152,8 @@ void Harvester::Stop()
     activated=false;
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to unlock harvester
-    thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
+    if(IsAudioSyncActive())
+        thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
     ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
@@ -95,10 +161,11 @@ void Harvester::Stop()
 
 void Harvester::SetType(SensorType type)
 {
-    /*bool activate=activated || theSensorManager()->SensorActivated(type);
-    if (activated) Stop();
     requesterType=type;
-    if (activate) Start();*/
+    //bool activate=activated || theSensorManager()->SensorActivated(type);
+    //if (activated) Stop();
+    //requesterType=type;
+    //if (activate) Start();
 }
 
 /*void Harvester::Sort()
@@ -209,6 +276,8 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 {
     for (int i=0;i<sData->size();++i)
     {
+        //assert((*sData)[i]->data!=NULL);
+        
         if (0==thePipesManager()->WriteOnReturnPipe((*sData)[i]->type,(*sData)[i]))
             delete (*sData)[i];
 #ifdef LOG_PIPES_STATUS
@@ -220,15 +289,18 @@ void Harvester::SentDataRecyclingProcedure(std::vector<SensorData*> *sData)
 
 void Harvester::SendingQueuePushBuffer(std::vector<SensorData*> *buffer)
 {
-	//LOGD("UDP SENDER - Harvester SendingQueuePushBUffer");
-
-	UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetSender();
+    //LOGD("UDP SENDER - Harvester SendingQueuePushBUffer");
+    
+    UDPSenderHelperBase *sender=UDPSendersManager::Instance()->GetSender();
     if (NULL==sender) return;
+    
+    CheckMaxQueueDim();
+    
     syncDataQueue.push(buffer);
 #ifdef LOG_SEM
     LOGD("Sender data queue size :%d\n",syncDataQueue.size());
 #endif
-
+    
     //LOGD("UDP SENDER - Harvester setting harvestReady...");
     harvestReady.Set();
 }
@@ -277,9 +349,25 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
     }
 #endif
     std::vector<SensorData*> *b=BuildSensorsDataBuffers(masterData);
+    
     SentDataRecyclingProcedure(&harvestData);
-    harversterListener->OnHarvesterBufferReady(b);
-    SendingQueuePushBuffer(b);
+    
+    if (NULL!=harversterListener)
+        harversterListener->OnHarvesterBufferReady(b);
+    else
+        SendingQueuePushBuffer(b);
+
+//    Harvest(masterData);
+//#ifdef LOG_DATA
+//    for (int i = 0; i< masterData->num_samples; i ++) {
+//        printf("Harvested data %d from %s: %.4f\n",i,SensorTypeString[masterData->type].c_str(), ((s_sample*)masterData->data)[i]);
+//    }
+//#endif
+//    std::vector<SensorData*> *b=BuildSensorsDataBuffers(masterData);
+//    SentDataRecyclingProcedure(&harvestData);
+//    if(harversterListener)
+//        harversterListener->OnHarvesterBufferReady(b);
+//    SendingQueuePushBuffer(b);
 }
 
 void Harvester::Harvest(SensorData *masterData)
@@ -287,10 +375,23 @@ void Harvester::Harvest(SensorData *masterData)
 #ifdef LOG_TIMESTAMP
     printf("Master sensor: %s; Harvesting starts: %llu; Harvesting ends: %llu; Harvesting ms interval: %llu;\n",SensorTypeString[masterData->type].c_str(),masterData->timeid,masterData->timestamp,getUptimeInMilliseconds(masterData->timestamp-masterData->timeid));
 #endif
+    harversterListener = NULL;
     myHarvestInfo.CleanUp();
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp[0]);
     PipesHarvesting(masterData->timeid, masterData->timestamp[0], masterData->type);
     //Sort();
     harvestData.push_back(masterData);
     myHarvestInfo.info[masterData->type].push_back(harvestData.size()-1);
+}
+
+void Harvester::SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs)
+{
+    assert(_uptateIntervalMs);
+    uptateIntervalMs = _uptateIntervalMs;
+}
+
+
+s_bool Harvester::IsAudioSyncActive()
+{
+    return scdf::theSensorAPI()->IsSensorActive(AudioInput);
 }
