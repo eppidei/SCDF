@@ -338,7 +338,6 @@
 		CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
 		CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomPipe.cpp; path = ../../../src/CustomPipe.cpp; sourceTree = "<group>"; };
 		CCBBE28E1A7546F400C4B34C /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../../src/Harvester.cpp; sourceTree = "<group>"; };
-		CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitFramework.cpp; path = ../../../src/InitFramework.cpp; sourceTree = "<group>"; };
 		CCBBE2901A7546F400C4B34C /* PipesManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PipesManager.cpp; path = ../../../src/PipesManager.cpp; sourceTree = "<group>"; };
 		CCBBE2911A7546F400C4B34C /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../../src/Receiver.cpp; sourceTree = "<group>"; };
 		CCBBE29D1A75474200C4B34C /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaveSettings.mm; path = ../../../src/ios/SaveSettings.mm; sourceTree = "<group>"; };
@@ -658,7 +657,6 @@
 				CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */,
 				CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */,
 				CCBBE28E1A7546F400C4B34C /* Harvester.cpp */,
-				CCBBE28F1A7546F400C4B34C /* InitFramework.cpp */,
 				CCBBE2901A7546F400C4B34C /* PipesManager.cpp */,
 				CCBBE2911A7546F400C4B34C /* Receiver.cpp */,
 				CCBBE2851A7546D700C4B34C /* Sensor.cpp */,

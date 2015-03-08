@@ -46,18 +46,20 @@ static void StartHarvestingProcedure(void *param)
         
         if(harvester->IsAudioSyncActive())
         {
-            //LOGD("StartHarvestingProcedure with Audio Synch ON\n")
+            LOGD("StartHarvestingProcedure with Audio Synch ON\n")
+            
             data=thePipesManager()->ReadFromPipe(harvester->GetType());
         }
         else
         {
-            LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
-            
             std::this_thread::sleep_for(std::chrono::milliseconds(harvester->GetUpdateInterval()));
-            data = new SensorData(AudioInput);
+            
+            LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
+           
+            data=thePipesManager()->ReadFromReturnPipe(AudioInput);
             
             s_uint64 actualTime = now_ns();
-            data->timestamp = new s_uint64[2];
+            
             data->timestamp[0] = startTime;
             data->timestamp[1] = actualTime;
             data->timeid = startTime;
@@ -65,7 +67,9 @@ static void StartHarvestingProcedure(void *param)
             startTime = actualTime;
         }
         s_uint64 elap = now_ns() - start;
+        
         LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
+        
         if (NULL!=data)
             harvester->HarvestingProcedure(data);
         
@@ -394,4 +398,67 @@ void Harvester::SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs)
 s_bool Harvester::IsAudioSyncActive()
 {
     return scdf::theSensorAPI()->IsSensorActive(AudioInput);
+}
+
+
+HarvesterListenerContainer::HarvesterListenerContainer()
+{
+     for(int i=0;i<NumTypes;++i)
+     {
+         listenersRefCount.insert(std::pair<SensorType,int>((SensorType)i,0));
+     }
+}
+
+void HarvesterListenerContainer::OnHarvesterBufferReady(std::vector<SensorData*> *buffer)
+{
+    
+    for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
+        it->first->OnHarvesterBufferReady(buffer);
+
+}
+
+void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vector<SensorType> _typeList  )
+{
+    listenersMap.insert(std::pair<HarvesterListener*,std::vector<SensorType>>(_listener,_typeList));
+    
+    for(int i = 0; i<_typeList.size(); i++)
+        listenersRefCount[_typeList[i]]++;
+    
+    CheckRefCountForToStartAndStopHarvester();
+}
+
+void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
+{
+    
+    std::vector<SensorType> sensorTypeListForListener = listenersMap[_listener];
+    
+    for(int i = 0; i<sensorTypeListForListener.size(); i++)
+        listenersRefCount[sensorTypeListForListener[i]]--;
+   
+    listenersMap.erase(_listener);
+    
+    
+    CheckRefCountForToStartAndStopHarvester();
+}
+
+int HarvesterListenerContainer::GetTotalRefCount()
+{
+    int count = 0;
+    for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
+        count += it->second.size();
+    
+    return count;
+}
+
+void HarvesterListenerContainer::CheckRefCountForToStartAndStopHarvester()
+{
+    if (!GetTotalRefCount()) {
+         if(Harvester::Instance()->IsActive())
+            scdf::Harvester::Instance()->Stop();
+    } else
+    {
+        if(!Harvester::Instance()->IsActive())
+            scdf::Harvester::Instance()->Stop();
+    }
+    
 }

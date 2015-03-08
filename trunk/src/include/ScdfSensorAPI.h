@@ -35,7 +35,7 @@ namespace scdf {
         friend ScdfSensorAPI *theSensorAPI();
         
         void InitFramework();
-        void StartAllSensors();
+        void StartAllSensors(bool excludeAudio = false);
         
         // *********** SENSORS API ******************* //
         s_int32 GetSensorRate(scdf::SensorType sensorType);
@@ -53,8 +53,10 @@ namespace scdf {
         void ActivateSender(s_bool activate);
         
          // *********** LISTNERS ******************* //
-        void SetHarvesterListener(HarvesterListener *listener);
+        void AttachHarvesterLinstern(HarvesterListener* _listener,std::vector<SensorType> _typeList );
+        void DetachHarvesterLinstern(HarvesterListener* _listener);
     };
+
     
     ScdfSensorAPI *theSensorAPI();
 }

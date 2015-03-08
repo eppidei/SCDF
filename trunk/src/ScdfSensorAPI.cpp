@@ -14,6 +14,11 @@
 #include "UDPSender.h"
 #include "Harvester.h"
 
+
+#ifdef _DEBUG
+//#define TEST_SENSOR_ON_INIT
+#endif
+
 const int max_number_ip_port = 65535;
 
 
@@ -40,16 +45,17 @@ void ScdfSensorAPI::InitFramework()
     InitNetwork();
     InitSensors();
     
+#ifdef TEST_SENSOR_ON_INIT
     scdf::Harvester::Instance()->Start();
-    
-    StartAllSensors();
-    
+    StartAllSensors(true);
+#endif
 
 }
 
-void ScdfSensorAPI::StartAllSensors()
+void ScdfSensorAPI::StartAllSensors(bool excludeAudio)
 {
-    //scdf::theSensorManager()->StartSensor(scdf::SensorType::AudioInput);
+    if(!excludeAudio)
+        scdf::theSensorManager()->StartSensor(scdf::SensorType::AudioInput);
     scdf::theSensorManager()->StartSensor(scdf::SensorType::Accelerometer);
     scdf::theSensorManager()->StartSensor(scdf::SensorType::Magnetometer);
     scdf::theSensorManager()->StartSensor(scdf::SensorType::Gyroscope);
@@ -181,7 +187,13 @@ s_bool ScdfSensorAPI::IsSensorActive(SensorType sensorType)
 
 #pragma mark Listeners
 
-void ScdfSensorAPI::SetHarvesterListener(HarvesterListener *listener)
+
+void ScdfSensorAPI::AttachHarvesterLinstern(HarvesterListener* _listener,std::vector<SensorType> _typeList )
 {
-    Harvester::Instance()->SetHarvesterListener(listener);
+    Harvester::Instance()->GetListeners()->Attach(_listener, _typeList);
+    
+}
+void ScdfSensorAPI::DetachHarvesterLinstern(HarvesterListener* _listener)
+{
+    Harvester::Instance()->GetListeners()->Detach(_listener);
 }
