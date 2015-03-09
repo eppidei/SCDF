@@ -102,9 +102,9 @@ void MainScene::DetachItem(ItemBase *item)
 void MainScene::EnableScrollView(bool enable)
 {
     if (enable)
-        customScrollView->setDirection(ScrollView::Direction::VERTICAL);
+        customScrollView->SetDirection(ScrollView::Direction::VERTICAL);
     else
-        customScrollView->setDirection(ScrollView::Direction::NONE);
+        customScrollView->SetDirection(ScrollView::Direction::NONE);
 }
 
 void MainScene::AddToolbar(cocos2d::Rect r)
@@ -115,7 +115,10 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     toolbar->setPosition(r.origin);
     toolbar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
     toolbar->setBackGroundColor(Color3B(50,50,50));
-    this->addChild(toolbar, -1, ID_TOOLBAR);
+  //  toolbar->setClippingEnabled(true);
+    //toolbar->setClippingType(cocos2d::ui::Layout::ClippingType::SCISSOR);
+    toolbar->setOpacity(100);
+    this->addChild(toolbar, 10, ID_TOOLBAR);
     
 //    auto buttonShow = Button::create();
 //    buttonShow->setTouchEnabled(true);
@@ -201,10 +204,10 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     buttonLoadSavePanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     toolbar->addChild(buttonLoadSavePanel,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-    toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
+   // toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
   // toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
-    toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
+    //toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
 
 void MainScene::CalculateGrid()
@@ -261,9 +264,9 @@ bool MainScene::init()
     //    you may modify it.
     
     
-#define SCROLLVIEW_WIDTH (4*GetUnityBase())
-#define PROPERTIES_WIDTH  4*SCROLLVIEW_WIDTH
-#define TOOLBAR_HEIGHT   (SCROLLVIEW_WIDTH/2)
+#define SCROLLVIEW_WIDTH (11*GetUnityBase())
+#define PROPERTIES_WIDTH (18*GetUnityBase())
+#define TOOLBAR_HEIGHT   (2*GetUnityBase())
     
     cocos2d::Rect toolbarPanelsize(0,
                           getContentSize().height,
@@ -273,27 +276,24 @@ bool MainScene::init()
                           getContentSize().height,
                           getContentSize().width,
                           getContentSize().height);
-    cocos2d::Rect scrollViewect(getContentSize().width,
+    cocos2d::Rect scrollViewect(getContentSize().width-80,
                        getContentSize().height-toolbarPanelsize.size.height,
                        SCROLLVIEW_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
-    cocos2d::Rect propertiesRect(0-PROPERTIES_WIDTH,
+    cocos2d::Rect propertiesRect(0-PROPERTIES_WIDTH+80,
                        getContentSize().height-toolbarPanelsize.size.height,
                        PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
 
-
+    customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
+    
+        LOGD("Created custom panel");
     customScrollView.reset(ItemScrollView::CreateCustomScrollView((MainScene*)this, scrollViewect));
-
-
-
     LOGD("Created custom scrollview");
 
-    customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
-
-    LOGD("Created custom panel");
 
     propertiesPanel.reset(dynamic_cast<PropertiesPanel*>(PanelBase::CreatePanel<PropertiesPanel>((MainScene*)this,propertiesRect)));
+
     loadSavePanel.reset(dynamic_cast<LoadSavePanel*>(PanelBase::CreatePanel<LoadSavePanel>((MainScene*)this,propertiesRect)));
 
     AddToolbar(toolbarPanelsize);
@@ -361,27 +361,30 @@ void MainScene::HideShowLoadSavePanel()
     propertiesPanel->HideShow(loadSavePanel.get());
 }
 
-void MainScene::HideShowScrollview()
+bool MainScene::HideShowScrollview()
 {
     MoveTo *actScrollview;
     CallFunc *callback=nullptr;
-    if (customScrollView->getPositionX()!=getContentSize().width)
+    bool opened=false;
+    if (customScrollView->getPositionX()!=getContentSize().width-80)
     {
+        customScrollView->HideAllSubPanels();
         //Hide
         //customPanel->setContentSize(Size(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
      //   getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width, TOOLBAR_HEIGHT));
        // CalculateGrid();
-        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width-80, getContentSize().height-TOOLBAR_HEIGHT));
     }
     else
     {
         //Show
-        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getContentSize().width-SCROLLVIEW_WIDTH+25, getContentSize().height-TOOLBAR_HEIGHT));
 //        callback = CallFunc::create([this](){
 //            //customPanel->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, getContentSize().height-TOOLBAR_HEIGHT));
 //            getChildByTag(ID_TOOLBAR)->setContentSize(Size(getContentSize().width-SCROLLVIEW_WIDTH, TOOLBAR_HEIGHT));
 //       //     CalculateGrid();
 //        });
+        opened=true;
     }
 //    if (nullptr!=callback){
 //        auto seq = Sequence::create(actScrollview, callback, NULL);
@@ -389,13 +392,15 @@ void MainScene::HideShowScrollview()
 //    }
 //    else
         customScrollView->runAction(actScrollview);
+    return opened;
 }
 
-void MainScene::HideShowPropertiesPanel()
+bool MainScene::HideShowPropertiesPanel()
 {
-    loadSavePanel->HideShow(propertiesPanel.get());
+    bool opened=loadSavePanel->HideShow(propertiesPanel.get());
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 //    propertiesPanel->HideShow();
+    return opened;
 }
 
 void MainScene::HideShowToolbar()
@@ -445,6 +450,15 @@ void MainScene::OnGridButtonClick()
 
 int position=0;
 
+void ChangeBitmap(Ref *pSender, bool selected)
+{
+    Button *b=dynamic_cast<Button*>(pSender);
+    if (selected)
+        b->loadTextureNormal("btnON.png");
+    else
+        b->loadTextureNormal("btnOFF.png");
+}
+
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     Node* button = dynamic_cast<Node*>(pSender);
@@ -456,12 +470,11 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             else if (TOOLBAR_BUTTON_ACTIVATE==button->getTag())
                 customPanel->ToggleActiveState();
             else if (TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW==button->getTag())
-                HideShowScrollview();
+                ChangeBitmap(pSender,HideShowScrollview());
             else if (TOOLBAR_BUTTON_HIDESHOW_TOOLBAR==button->getTag())
-               // HideShowToolbar();
                 HideShowLoadSavePanel();
             else if (TOOLBAR_BUTTON_HIDESHOW_PROPERTIES==button->getTag())
-                HideShowPropertiesPanel();
+                ChangeBitmap(pSender,HideShowPropertiesPanel());
             break;
         case Widget::TouchEventType::MOVED:
             // TODO
@@ -495,11 +508,13 @@ void menuCloseCallback(Ref* pSender)
 template void MainScene::OnStartDragging<ItemSlider>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemPad>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemKnob>(Vec2 dragStartPoint);
-template void MainScene::OnStartDragging<ItemSensor1>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemSwitch>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemKeyboard>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemMultipad>(Vec2 dragStartPoint);
 template void MainScene::OnEndDragging<ItemSlider>();
 template void MainScene::OnEndDragging<ItemPad>();
 template void MainScene::OnEndDragging<ItemKnob>();
-template void MainScene::OnEndDragging<ItemSensor1>();
+template void MainScene::OnEndDragging<ItemSwitch>();
 template void MainScene::OnEndDragging<ItemKeyboard>();
+template void MainScene::OnEndDragging<ItemMultipad>();
 

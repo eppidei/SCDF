@@ -25,8 +25,8 @@ namespace ScdfCtrl
         int gridIndex;
         void OnGridButtonClick();
         void HideShowToolbar();
-        void HideShowScrollview();
-        void HideShowPropertiesPanel();
+        bool HideShowScrollview();
+        bool HideShowPropertiesPanel();
         void HideShowLoadSavePanel();
     public:
         // there's no 'id' in cpp, so we recommend returning the class instance pointer

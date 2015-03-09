@@ -20,7 +20,7 @@ namespace ScdfCtrl
 {
     class MainScene;
     
-    class PanelBase : public cocos2d::ui::ScrollView
+    class PanelBase : public cocos2d::ui::Layout
     {
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void PlaceSubPanels();
@@ -29,11 +29,14 @@ namespace ScdfCtrl
         virtual void InitPanel(){}
     public:
         void InitLayout();
-        void HideShow(PanelBase *substitute=NULL);
-        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+        bool HideShow(PanelBase *substitute=NULL);
+     //   virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         template <class PanelType> static PanelBase *CreatePanel(MainScene *main, cocos2d::Rect r);
         void EnableScrolling(bool enable);
         CREATE_FUNC(PanelBase);
+    protected:
+        cocos2d::ui::ScrollView *scrollView;
+        MainScene *parent;
     };
     
     

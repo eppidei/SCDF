@@ -133,7 +133,8 @@ template <class DropDownType> DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Si
     menu->addEventListener(CC_CALLBACK_2(DropDownMenu::OnControlTouch, menu));
     menu->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     menu->setAnchorPoint(Vec2(0,1));
-    menu->setBackGroundColorType(BackGroundColorType::NONE);
+    menu->setBackGroundColorType(BackGroundColorType::SOLID);
+    menu->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::Main_Background));
     return menu;
 }
 

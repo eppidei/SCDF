@@ -76,7 +76,7 @@ void OSCInfo::CreateControls()
     toggleLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     toggleLabel->setContentSize(cocos2d::Size(getContentSize().width/2,SUBPANEL_ITEM_HEIGHT));
-    toggleLabel->setColor(cocos2d::Color3B::WHITE);
+    toggleLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     addChild(toggleLabel);
     
     //Create oscPort control
@@ -89,7 +89,7 @@ void OSCInfo::CreateControls()
     oscPort->setTextHorizontalAlignment(TextHAlignment::CENTER);
     oscPort->setFontSize(20);
     oscPort->setTouchEnabled(true);
-    oscPort->setColor(cocos2d::Color3B::WHITE);
+    oscPort->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     oscPort->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     addChild(oscPort, 0, PROPERTIES_OSC_PORT);
     
@@ -100,7 +100,7 @@ void OSCInfo::CreateControls()
     portLabel->setAnchorPoint(Vec2(0,1));
     portLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     portLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    portLabel->setColor(cocos2d::Color3B::WHITE);
+    portLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     addChild(portLabel);
     
     //Create oscIP control
@@ -112,7 +112,7 @@ void OSCInfo::CreateControls()
     oscIP->setTextHorizontalAlignment(TextHAlignment::CENTER);
     oscIP->setTextVerticalAlignment(TextVAlignment::CENTER);
     oscIP->setTouchEnabled(true);
-    oscIP->setColor(cocos2d::Color3B::WHITE);
+    oscIP->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     oscIP->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     addChild(oscIP, 0 , PROPERTIES_OSC_IP);
     oscIP->setFontName("Arial");
@@ -126,7 +126,7 @@ void OSCInfo::CreateControls()
     ipLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     ipLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     ipLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    ipLabel->setColor(cocos2d::Color3B::WHITE);
+    ipLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     addChild(ipLabel);
     
     //Create OSCtag label
@@ -136,7 +136,7 @@ void OSCInfo::CreateControls()
     oscTagLabel->setAnchorPoint(Vec2(0,1));
     oscTagLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     oscTagLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscTagLabel->setColor(cocos2d::Color3B::WHITE);
+    oscTagLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     addChild(oscTagLabel);
     
     //Create OSCtag label
@@ -147,7 +147,7 @@ void OSCInfo::CreateControls()
     oscTag->setTextHorizontalAlignment(TextHAlignment::CENTER);
     oscTag->setTextVerticalAlignment(TextVAlignment::CENTER);
     oscTag->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscTag->setColor(cocos2d::Color3B::WHITE);
+    oscTag->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     addChild(oscTag);
     PositionElements();
     InitChildrensVisibilityAndPos();
@@ -247,7 +247,7 @@ void MIDIDevices::CreateControls()
     devicesLabel->setAnchorPoint(Vec2(0,1));
     devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     devicesLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    devicesLabel->setColor(cocos2d::Color3B::WHITE);
+    devicesLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
     devices = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
     addChild(devices);
@@ -300,6 +300,14 @@ void OSCInfo::Update()
     InitChildrensVisibilityAndPos();
 }
 
+void MIDIInfo::UpdateVelocity()
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel) return; 
+    velocity->SetSelectedIndex(panel->GetSelectedItem()->GetValue());
+    velocity->setEnabled(dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+}
+
 void MIDIInfo::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
@@ -319,10 +327,19 @@ void MIDIInfo::Update()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-    controlChange->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiControl());
-    channel->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiChannel());
-    velocity->SetSelectedIndex(panel->GetSelectedItem()->GetValue());
-    velocity->setEnabled(dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL);
+    InitControlMenuValue();
+    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
+    {
+        midiMessage->setEnabled(false);
+        controlChange->SetSelectedIndex(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave());
+    }
+    else
+    {
+        midiMessage->setEnabled(true);
+        controlChange->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiControl());
+        channel->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiChannel());
+    }
+    UpdateVelocity();
 }
 
 void MIDIInfo::PositionElements()
@@ -348,29 +365,43 @@ void MIDIInfo::PositionElements()
 void MIDIInfo::InitControlMenuValue()
 {
     std::vector<DropDownMenuData> dropDownData;
-    if (midiMessage->getCurSelectedIndex()<2)
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
     {
-        static std::string note[12]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-        int octave=-1;
-        for (int i=0;i<127;++i)
+        if (midiMessage->getCurSelectedIndex()<2)
         {
-            std::ostringstream os;
-            os<<note[i%12]<<octave;
-            dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-            if (i>0&&0==i%12)
-                octave++;
+            static std::string note[12]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+            int octave=-1;
+            for (int i=0;i<127;++i)
+            {
+                std::ostringstream os;
+                os<<note[i%12]<<octave;
+                dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+                if (i>0&&0==i%12)
+                    octave++;
+            }
+            controlChangeLabel->setString("MIDI NOTE");
         }
-        controlChangeLabel->setString("MIDI NOTE");
+        else
+        {
+            for (int i=0;i<120;++i)
+            {
+                std::ostringstream os;
+                os<<"CC: "<<i;
+                dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+            }
+            controlChangeLabel->setString("CONTROL CHANGE");
+        }
     }
     else
     {
-        for (int i=0;i<120;++i)
+        for (int i=0;i<11;++i)
         {
             std::ostringstream os;
-            os<<"CC: "<<i;
+            os<<i-1;
             dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
         }
-        controlChangeLabel->setString("CONTROL CHANGE");
+        controlChangeLabel->setString("OCTAVE");
     }
     controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
@@ -398,7 +429,12 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
         InitControlMenuValue();
     }
     else if (menu==controlChange)
-        panel->GetCurrentControlUnit()->SetMidiControl(selectedIndex);
+    {
+        if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
+            panel->GetCurrentControlUnit()->SetMidiControl(selectedIndex);
+        else
+            dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
+    }
     else if (menu==channel)
         panel->GetCurrentControlUnit()->SetMidiChannel(selectedIndex);
     else if (menu==velocity)
@@ -432,7 +468,7 @@ void MIDIInfo::CreateControls()
     midiMessageLabel->setAnchorPoint(Vec2(0,1));
     midiMessageLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     midiMessageLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    midiMessageLabel->setColor(cocos2d::Color3B::WHITE);
+    midiMessageLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
     
     //Create dropDown midiMessage
@@ -454,7 +490,7 @@ void MIDIInfo::CreateControls()
     controlChangeLabel->setAnchorPoint(Vec2(0,1));
     controlChangeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     controlChangeLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    controlChangeLabel->setColor(cocos2d::Color3B::WHITE);
+    controlChangeLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
 
     //Create dropDown
@@ -474,7 +510,7 @@ void MIDIInfo::CreateControls()
     channelLabel->setAnchorPoint(Vec2(0,1));
     channelLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     channelLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    channelLabel->setColor(cocos2d::Color3B::WHITE);
+    channelLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
 
     //Create dropDown
@@ -500,7 +536,7 @@ void MIDIInfo::CreateControls()
     velocityLabel->setAnchorPoint(Vec2(0,1));
     velocityLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     velocityLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    velocityLabel->setColor(cocos2d::Color3B::WHITE);
+    velocityLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
 
     //Create dropDown
@@ -560,7 +596,7 @@ void ItemSettings::CreateControls()
     sizeLabel->setAnchorPoint(Vec2(0,1));
     sizeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     sizeLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    sizeLabel->setColor(cocos2d::Color3B::WHITE);
+    sizeLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
     colorLabel = Text::create("ITEM COLOR","Arial",16);
     addChild(colorLabel);
@@ -569,7 +605,7 @@ void ItemSettings::CreateControls()
     colorLabel->setAnchorPoint(Vec2(0,1));
     colorLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     colorLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    colorLabel->setColor(cocos2d::Color3B::WHITE);
+    colorLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
     nameLabel = Text::create("ITEM NAME","Arial",16);
     addChild(nameLabel);
@@ -578,7 +614,7 @@ void ItemSettings::CreateControls()
     nameLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
     nameLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
     nameLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    nameLabel->setColor(cocos2d::Color3B::WHITE);
+    nameLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
     name=TextField::create();
     addChild(name, 0, PROPERTIES_ITEM_NAME);
@@ -590,7 +626,7 @@ void ItemSettings::CreateControls()
     name->setAnchorPoint(Vec2(0,1));
     name->setFontSize(20);
     name->setTouchEnabled(true);
-    name->setColor(cocos2d::Color3B::WHITE);
+    name->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     name->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
     color = DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
@@ -721,24 +757,47 @@ void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
 
 void PropertiesPanel::InitPanel()
 {
+//            cocos2d::Rect rr(0, 0,     getContentSize().width/*, getBackGroundImageTextureSize().width-0*/,     /*getBackGroundImageTextureSize()*/getContentSize().height-0);
+//    auto jacket = Sprite::create("leftPanel.png",rr);
+//    addChild(jacket);
+    setBackGroundImage("leftPanel.png");
+    const int rightPadding=60;
     selectedItem=NULL;
     sectionOSCInfo=OSCInfo::create();
-    sectionOSCInfo->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
-    addChild(sectionOSCInfo);
+    sectionOSCInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
+    scrollView->addChild(sectionOSCInfo);
     
     sectionMIDIDevices=MIDIDevices::create();
-    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width/2));
-    addChild(sectionMIDIDevices);
+    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width/2));
+    scrollView->addChild(sectionMIDIDevices);
     
     sectionMIDIInfo=MIDIInfo::create();
-    sectionMIDIInfo->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
-    addChild(sectionMIDIInfo);
+    sectionMIDIInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
+    scrollView->addChild(sectionMIDIInfo);
     
     sectionItemSettings=ItemSettings::create();
-    sectionItemSettings->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
-    addChild(sectionItemSettings);
+    sectionItemSettings->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
+    scrollView->addChild(sectionItemSettings);
     
+    
+    auto button = Button::create();
+    button->loadTextureNormal("btnOFF.png");
+    button->loadTexturePressed("btnON.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(cocos2d::Size(30, 60));
+    button->setPosition(Vec2(getContentSize().width-80, getContentSize().height-28));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
     UpdateSubpanels();
+//    cocos2d::Rect rr(0, 0, getContentSize().width, getContentSize().height);
+//    auto backGroundImage = Sprite::create("leftPanel.png");
+//    addChild(backGroundImage);
+//    cocos2d::Size s=backGroundImage->getContentSize();
+//    backGroundImage->setAnchorPoint(Vec2(0,1));
+//    backGroundImage->setScale(getContentSize().width/s.width, getInnerContainerSize().height/s.height);
+//    backGroundImage->setPosition(0,getContentSize().height);
 }
 
 void PropertiesPanel::UpdateSubpanels()
@@ -759,8 +818,8 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
 {
     if (NULL==subject)
         selectedItem=GetSelectedItem();
-    else if (NULL!=dynamic_cast<ItemKeyboard*>(subject))
-        selectedItem=dynamic_cast<ItemKeyboard*>(subject)->GetSelectedPad();
+    else if (NULL!=dynamic_cast<ItemMultipad*>(subject))
+        selectedItem=dynamic_cast<ItemMultipad*>(subject)->GetSelectedPad();
     else if (selectedItem==(ItemBase*)subject && event!=SCDFC_EVENTS_Move_Item)
         return;
     else
@@ -773,7 +832,7 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
 //        case SCDFC_EVENTS_Add_Item_Slider:
 //            sectionMIDIInfo->InitForSlider();
         case SCDFC_EVENTS_Move_Item:
-            sectionMIDIInfo->Update();
+            sectionMIDIInfo->UpdateVelocity();
             break;
         case SCDFC_EVENTS_Remove_Item:
             selectedItem=NULL;
