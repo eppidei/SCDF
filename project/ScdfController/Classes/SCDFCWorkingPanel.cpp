@@ -36,7 +36,12 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
-    parent->addChild(this);
+    parent->addChild(this,-2);
+    cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
+     auto backGroundImage = Sprite::create("background.jpg",rr);
+    backGroundImage->setAnchorPoint(Vec2(0,1));
+    backGroundImage->setPosition(0,r.size.height);
+    addChild(backGroundImage);
 }
 
 void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
@@ -74,16 +79,7 @@ void TestSerialization();
 void WorkingPanel::ToggleActiveState()
 {
     active=!active;
-//    for (auto it=items.begin();it!=items.end();++it)
-//    {
-//        if (!active)
-//            it->setOpacity(80);
-//        else
-//            it->setOpacity(255);
-//    }
-    
     TestSerialization();
-
 }
 
 void WorkingPanel::DrawGrid()
@@ -94,13 +90,12 @@ void WorkingPanel::DrawGrid()
         DrawPrimitives::drawLine(Vec2(i,getContentSize().height), Vec2(i,0));
     for(int i=0;i<getContentSize().height;i+=parent->GetGridDistance())
         DrawPrimitives::drawLine(Vec2(0,i), Vec2(getContentSize().width,i));
-    
 }
 
 void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
 {
-    Color4F panelBackgroud = active ? Color4F(0.9,0.9,0.9,1) : Color4F(0.8,0.8,0.8,1);
-    DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), panelBackgroud);
+//    Color4F panelBackgroud = active ? Color4F(0.9,0.9,0.9,1) : Color4F(0.8,0.8,0.8,1);
+//    DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), panelBackgroud);
     if (!active)
         DrawGrid();
     

@@ -24,7 +24,7 @@ namespace ScdfCtrl
         virtual void OnItemTouchMoved(int value) = 0;
         virtual void OnItemTouchEnded() = 0;
     };
-    class ItemBase : public cocos2d::Sprite, public SubjectSimple
+    class ItemBase : public cocos2d::Sprite/*ui::Layout*/, public SubjectSimple
     {
         int inflateHValue;
         int inflateVValue;
@@ -68,15 +68,20 @@ namespace ScdfCtrl
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override;
+        virtual void DoCreateThumb();
+        virtual cocos2d::Size GetThumbSize(cocos2d::Size currentSize);
+        virtual cocos2d::Vec2 OnMove(cocos2d::ui::Widget *widget);
     protected:
         cocos2d::ui::Layout *thumb;
         cocos2d::ui::Layout *slideBar;
+        cocos2d::ui::Layout *slideBarOff;
         bool isVertical;
         float min, max;
         void CreateThumb();
+        void LinearMode(cocos2d::Vec2 touchPos);
     public:
+        virtual void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
-        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         static cocos2d::Size GetBaseSize() { return SLIDER_SIZE_BASE;}
         static int GetID() { return ITEM_SLIDER_ID;}
         virtual ~ItemSlider();
@@ -91,33 +96,38 @@ namespace ScdfCtrl
         void SetThumbPosition();
         bool IsKnob() { return true;}
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
+        void DoCreateThumb() override;
+        cocos2d::Size GetThumbSize(cocos2d::Size currentSize) override;
+        std::vector<cocos2d::ui::Layout*> onPoints;
+        void CreateONPoints();
+        void UpdateOnPointVisibility();
+        void AngularMode(cocos2d::Vec2 touchPos);
+        cocos2d::Vec2 OnMove(cocos2d::ui::Widget *widget) override;
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
-        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         static cocos2d::Size GetBaseSize() { return KNOB_SIZE_BASE;}
         static int GetID() { return ITEM_KNOB_ID;}
         CREATE_FUNC(ItemKnob);
     };
-    class ItemKeyboard;
     class ItemPad : public ItemBase
     {
-        friend class ItemKeyboard;
+        friend class ItemMultipad;
         cocos2d::ui::Button *pad;
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
+        void SetColor(Colors::ItemsColorsId colorIndex) override;
         int midiNote;
         void Create();
         static cocos2d::Size GetBaseSize() { return PAD_SIZE_BASE;}
         static int GetID() { return ITEM_PAD_ID;}
         ~ItemPad();
-        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         virtual void setContentSize(const cocos2d::Size &contentSize) override;
         CREATE_FUNC(ItemPad);
     };
-    class ItemKeyboard : public ItemBase
+    class ItemMultipad: public ItemBase
     {
         int padSizeMultiply;
         std::vector<ItemPad*> pads;
@@ -131,19 +141,45 @@ namespace ScdfCtrl
         ItemPad *GetSelectedPad();
         void UpdateSelectedPadIndex(ItemPad *pad);
         void Create();
+        static cocos2d::Size GetBaseSize() { return MULTIPAD_SIZE_BASE;}
+        static int GetID() { return ITEM_MULTIPAD_ID;}
+        ~ItemMultipad();
+        CREATE_FUNC(ItemMultipad);
+    };
+    class ItemKeyboard : public ItemBase
+    {
+        cocos2d::ui::Layout *keysHandle;
+        cocos2d::Sprite *blackKeyPressed;
+        cocos2d::Sprite *whiteKeyPressed;
+        int selectedKey;
+        int currentOctave;
+        
+        float topBitmapOffsetPercentageForPressedKey;
+        float leftBitmapOffsetPercentageForPressedKey;
+        
+        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
+        void UpdateSelectedKey();
+    public:
+        //void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+        void SetCurrentOctave(int octave) { currentOctave=octave; }
+        int GetCurrentOctave() {return currentOctave;}
+        void Create();
         static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}
         static int GetID() { return ITEM_KEYBOARD_ID;}
         ~ItemKeyboard();
         CREATE_FUNC(ItemKeyboard);
     };
-    class ItemSensor1 : public ItemBase
+    class ItemSwitch : public ItemBase
     {
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
         void Create(){}
         static cocos2d::Size GetBaseSize() { return RECT_SENSOR_SIZE_BASE;}
-        static int GetID() { return ITEM_SENSOR1_ID;}
-        CREATE_FUNC(ItemSensor1);
+        static int GetID() { return ITEM_SWITCH_ID;}
+        CREATE_FUNC(ItemSwitch);
     };
 }
 #endif /* defined(__ScdfController__SCDFCItems__) */

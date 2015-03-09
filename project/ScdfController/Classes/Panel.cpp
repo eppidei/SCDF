@@ -27,27 +27,28 @@ template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, co
     return panel;
 }
 
-void PanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-{
-    Color3B cc=Colors::Instance()->GetUIColor(Colors::Main_Background);
-    DrawPrimitives::drawSolidRect(Vec2(0, getInnerContainerSize().height), Vec2(getInnerContainerSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
-}
+//void PanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+//{
+//    Color3B cc=Colors::Instance()->GetUIColor(Colors::Main_Background);
+//    DrawPrimitives::drawSolidRect(Vec2(0, getInnerContainerSize().height), Vec2(getInnerContainerSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
+//}
 
 void PanelBase::EnableScrolling(bool enable)
 {
-    setDirection(enable?Direction::VERTICAL:Direction::NONE);
+    scrollView->setDirection(enable?cocos2d::ui::ScrollView::Direction::VERTICAL:cocos2d::ui::ScrollView::Direction::NONE);
 }
 
 void PanelBase::PlaceSubPanels()
 {
-    Vector<Node*> _childrens = getChildren();
-    float lastPosY=getInnerContainerSize().height;
+//    const int offsety=100;
+    Vector<Node*> _childrens = scrollView->getChildren();
+    float lastPosY=scrollView->getInnerContainerSize().height;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
         if (!(*it)->isVisible()) continue;
-        lastPosY-=SUBPANEL_DISTANCE;
-        (*it)->setPosition(Vec2(SUBPANEL_DISTANCE, lastPosY));
+        (*it)->setPosition(Vec2(0, lastPosY));
         lastPosY-=(*it)->getContentSize().height;
+        lastPosY-=SUBPANEL_DISTANCE;
     }
 }
 
@@ -59,49 +60,69 @@ void PanelBase::InitLayout()
 
 void PanelBase::CalculateInnerHeight()
 {
-    Vector<Node*> _childrens = getChildren();
+    Vector<Node*> _childrens = scrollView->getChildren();
     int innerHeight=0;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
+        if (dynamic_cast<SubpanelBase*>(*it)==NULL) continue;
         if (!(*it)->isVisible()) continue;
         innerHeight+=SUBPANEL_DISTANCE;
         innerHeight+=(*it)->getContentSize().height;
     }
     innerHeight+=SUBPANEL_DISTANCE;
-    setInnerContainerSize(cocos2d::Size(getContentSize().width,innerHeight));
+    scrollView->setInnerContainerSize(cocos2d::Size(getContentSize().width,fmax(getContentSize().height,innerHeight)));
 }
 
 void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
+//    cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
+//    auto backGroundImage = Sprite::create("leftPanel.png",rr);
+//    backGroundImage->setAnchorPoint(Vec2(0,1));
+//    backGroundImage->setPosition(0,r.size.height);
+//    addChild(backGroundImage);
+    parent=main;
+    scrollView=cocos2d::ui::ScrollView::create();
+    addChild(scrollView);
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
-    setBackGroundColorType(Layout::BackGroundColorType::NONE);
-    setInertiaScrollEnabled(true);
+
+    scrollView->setBackGroundColorType(Layout::BackGroundColorType::NONE);
+    scrollView->setInertiaScrollEnabled(true);
+    const int bitmapPading=30;
+    scrollView->setContentSize(cocos2d::Size(r.size.width-90-SUBPANEL_DISTANCE, r.size.height-80));
+    scrollView->setAnchorPoint(Vec2(0,1));
+    scrollView->setPosition(Vec2(SUBPANEL_DISTANCE,r.size.height-bitmapPading));
     main->addChild(this);
     InitPanel();
+    const int bitmapcapInsetOffset=20;
+    cocos2d::Rect rr(0, 31, getBackGroundImageTextureSize().width-57, getBackGroundImageTextureSize().height-31-54);
+    setBackGroundImageScale9Enabled(true);
+    setBackGroundImageCapInsets(rr);
 }
 
-void PanelBase::HideShow(PanelBase *substitute)
+bool PanelBase::HideShow(PanelBase *substitute)
 {
-    MoveBy *action=NULL;
+    MoveTo *action=NULL;
     CallFunc *callback=nullptr;
     if (NULL!=substitute)
         callback = CallFunc::create([substitute](){
             substitute->HideShow();
         });
-    
+    bool opened=false;
     if (getPositionX()==0)
-        action = MoveBy::create(0.1f, cocos2d::Vec2(-getContentSize().width, 0));
+        action = MoveTo::create(0.1f, cocos2d::Vec2(-getContentSize().width+80, getPositionY()));
     else if (NULL==substitute)
-        action = MoveBy::create(0.1f, cocos2d::Vec2(getContentSize().width, 0));
+    {
+        action = MoveTo::create(0.1f, cocos2d::Vec2(0, getPositionY()));
+        opened=true;
+    }
     
     if (NULL==action)
     {
         //Substitution case when panel to substitude is closed
         if (NULL!=substitute)
-            substitute->HideShow();
-        return;
+            return substitute->HideShow();
     }
     
     if (nullptr!=callback){
@@ -112,6 +133,7 @@ void PanelBase::HideShow(PanelBase *substitute)
     else
         //No Substitution
         runAction(action);
+    return opened;
 }
 
 
@@ -183,12 +205,16 @@ void SubpanelBase::Resize(float newHeight)
 {
     auto modifyHeight = ActionTween::create(0.1, "height", getContentSize().height, newHeight);
     runAction(modifyHeight);
+//    cocos2d::Size s=cocos2d::Size(getContentSize().width, newHeight);
+//    setContentSize(s);
+//    parent->InitLayout();
 }
 
 void SubpanelBase::updateTweenAction(float value, const std::string& key)
 {
     if ("height"==key){
-        setContentSize(cocos2d::Size(getContentSize().width, value));
+        cocos2d::Size s=cocos2d::Size(getContentSize().width, value);
+        setContentSize(s);
         parent->InitLayout();
     }
     
@@ -196,8 +222,8 @@ void SubpanelBase::updateTweenAction(float value, const std::string& key)
 
 void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
-    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
-    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
+//    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
+//    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
     if (flags&FLAGS_CONTENT_SIZE_DIRTY)
     {
         PositionElements();
@@ -219,6 +245,11 @@ void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
    // CalculateHeight(true);
     PositionElements();
     InitChildrensVisibilityAndPos();
+
+    setBackGroundImage("leftMenuPanel.png");
+    cocos2d::Rect rr(20, 20, getBackGroundImageTextureSize().width-40, getBackGroundImageTextureSize().height-40);
+    setBackGroundImageScale9Enabled(true);
+    setBackGroundImageCapInsets(rr);
 }
 
 void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)

@@ -70,6 +70,7 @@ namespace ScdfCtrl
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
         void Update() override;
+        void UpdateVelocity();
         MIDIInfo();
         CREATE_FUNC(MIDIInfo);
     };

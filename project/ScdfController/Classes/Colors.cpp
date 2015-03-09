@@ -40,8 +40,8 @@ void Colors::InitUIColors()
     cocos2d::Color3B scdfc_ui_Colors[]={
         Color3B(50,50,50),      //Main_Background
         Color3B(1,80,80),       //SubPanel
-        Color3B(220,220,220),   //DropDownText
-        Color3B::WHITE          //LabelText
+        Color3B::WHITE,         //DropDownText
+        Color3B::BLACK          //LabelText
     };
     
     for(int i=0; i<UIColorsId_Count; ++i)
