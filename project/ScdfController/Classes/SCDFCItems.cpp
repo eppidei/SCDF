@@ -260,7 +260,7 @@ void ItemSlider::SetRange(float _min, float _max)
 void ItemSlider::Create()
 {
     DEFAULT_NAME("Slider")
-    SetVertical(false);
+    SetVertical(true);
     slideBar = Layout::create();
     addChild(slideBar);
     slideBar->setTouchEnabled(true);
