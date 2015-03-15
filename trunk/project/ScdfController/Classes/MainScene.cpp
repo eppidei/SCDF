@@ -44,37 +44,42 @@ void MainScene::SnapToGrid(cocos2d::Rect &r)
 
 template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStartPoint)
 {
-    draggingImage=ImageView::create("CloseSelected.png");
-    //draggingImage->setScale9Enabled(true);
-    draggingImage->ignoreContentAdaptWithSize(false);
-    draggingImage->setAnchorPoint(Vec2(0,1));
-    float width=ItemType::GetBaseSize().width;
-    float height=ItemType::GetBaseSize().height;
-    draggingImage->setContentSize(cocos2d::Size(width*GetGridDistance(),height*GetGridDistance()));
-    draggingImage->setOpacity(50);
-    draggingImage->setPosition(dragStartPoint);
-    addChild(draggingImage);
+//    draggingImage=ImageView::create("CloseSelected.png");
+//    draggingImage->ignoreContentAdaptWithSize(false);
+//    draggingImage->setAnchorPoint(Vec2(0,1));
+//    float width=ItemType::GetBaseSize().width;
+//    float height=ItemType::GetBaseSize().height;
+//    draggingImage->setContentSize(cocos2d::Size(width*GetGridDistance(),height*GetGridDistance()));
+//    draggingImage->setOpacity(50);
+//    draggingImage->setPosition(dragStartPoint);
+//    addChild(draggingImage);
 }
 
-void MainScene::OnDragging(cocos2d::Rect r)
+template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
 {
     if (NULL==customPanel.get()) return;
-    draggingImage->setPosition(r.origin);
+//    draggingImage->setPosition(r.origin);
     Vec2 coord(convertToNodeSpace(customPanel->getPosition()));
     cocos2d::Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
-    float scaledHeight=draggingImage->getContentSize().height;
-    float scaledWidth=draggingImage->getContentSize().width;
+//    float scaledHeight=draggingImage->getContentSize().height;
+//    float scaledWidth=draggingImage->getContentSize().width;
+    
+    float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance();
+    float scaledWidth=ItemType::GetBaseSize().width*GetGridDistance();
+    
     if (r.origin.y<=workingSpaceRect.origin.y && (r.origin.x>=workingSpaceRect.origin.x)
         && (r.origin.x+scaledWidth)<=workingSpaceRect.size.width
         && (r.origin.y-scaledHeight)>=workingSpaceRect.origin.y-workingSpaceRect.size.height)
     {
         SnapToGrid(r);
-        draggingImage->setPosition(r.origin);
-        r.size=draggingImage->getContentSize();
+        //draggingImage->setPosition(r.origin);
+//        r.size=draggingImage->getContentSize();
+        r.size=cocos2d::Size(scaledWidth, scaledHeight);
         rr=r;
     }
+    customPanel->DetectCollisions(rr);
     customPanel->SetDraggingRect(rr);
 }
 
@@ -83,8 +88,8 @@ template <class ItemType> void MainScene::OnEndDragging()
     if (NULL==customPanel.get()) return;
     customPanel->CheckAddControl(ItemType::GetID());
     customPanel->SetDraggingRect(cocos2d::Rect::ZERO);
-    removeChild(draggingImage);
-    draggingImage=NULL;
+//    removeChild(draggingImage);
+//    draggingImage=NULL;
 }
 
 void MainScene::AttachItem(ItemBase *item)
@@ -148,18 +153,18 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     buttonPanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
    
-    auto buttonShowItems = CheckBox::create();
-    buttonShowItems->setTouchEnabled(true);
-    buttonShowItems->loadTextures("ToggleItemsOff.png",
-                                  "ToggleItemsOn.png",
-                                  "ToggleItemsOn.png",
-                                  "ToggleItemsOn.png",
-                                  "ToggleItemsOff.png");
-    buttonShowItems->ignoreContentAdaptWithSize(false);
-    buttonShowItems->setAnchorPoint(Vec2(0,1));
-    buttonShowItems->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth, toolbar->getContentSize().height- marginOffset));
-    buttonShowItems->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
-    buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+//    auto buttonShowItems = CheckBox::create();
+//    buttonShowItems->setTouchEnabled(true);
+//    buttonShowItems->loadTextures("ToggleItemsOff.png",
+//                                  "ToggleItemsOn.png",
+//                                  "ToggleItemsOn.png",
+//                                  "ToggleItemsOn.png",
+//                                  "ToggleItemsOff.png");
+//    buttonShowItems->ignoreContentAdaptWithSize(false);
+//    buttonShowItems->setAnchorPoint(Vec2(0,1));
+//    buttonShowItems->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth, toolbar->getContentSize().height- marginOffset));
+//    buttonShowItems->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
+//    buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
     
     //int buttonsWidth = 87;
@@ -185,7 +190,7 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     //buttonEdit->setScale9Enabled(true);
     //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonEdit->setAnchorPoint(Vec2(0,1));
-    buttonEdit->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
+    buttonEdit->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
     buttonEdit->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
@@ -257,7 +262,7 @@ bool MainScene::init()
     cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     gridIndex=0;
-    draggingImage=NULL;
+    //draggingImage=NULL;
 
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
@@ -517,4 +522,10 @@ template void MainScene::OnEndDragging<ItemKnob>();
 template void MainScene::OnEndDragging<ItemSwitch>();
 template void MainScene::OnEndDragging<ItemKeyboard>();
 template void MainScene::OnEndDragging<ItemMultipad>();
+template void MainScene::OnDragging<ItemSlider>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemPad>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemKnob>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemSwitch>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemKeyboard>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemMultipad>(cocos2d::Rect r);
 

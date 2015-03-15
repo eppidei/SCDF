@@ -469,8 +469,8 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
     if (!IsKnob())
         temp=GetSizeConsideringOrientation(contentSize);
 
-    //Layout::setContentSize(temp);
-    Node::setContentSize(temp);
+    Layout::setContentSize(temp);
+    //Node::setContentSize(temp);
     SetValue(value);
 }
 
@@ -635,18 +635,14 @@ void ItemPad::Create()
     pad->setTouchEnabled(true);
     //pad->setScale9Enabled(true);
     pad->ignoreContentAdaptWithSize(false);
-//    setTexture->
     pad->loadTextures("padDefault.png", "padHover.png","padDefault.png");
     pad->setAnchorPoint(Vec2(0,1));
     pad->setPosition(Vec2(0,getContentSize().height));
     pad->setContentSize(getContentSize());
     pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    pad->setOpacity(230);
-    cocos2d::Rect rc;
-    rc.origin = Vec2(16,16);
-    rc.size = cocos2d::Size(114,114);
+    cocos2d::Rect rc(10,9,110,113);
     pad->setCapInsets(rc);
-    addChild(pad);
+    addChild(pad,2);
 }
 
 void ItemPad::SetColor(Colors::ItemsColorsId colorIndex)
@@ -656,13 +652,13 @@ void ItemPad::SetColor(Colors::ItemsColorsId colorIndex)
     //    setColor(Colors::Instance()->GetItemsColor(colorIndex));
 }
 
-void ItemPad::setContentSize(const cocos2d::Size &contentSize)
-{
-    Node::setContentSize(contentSize);
-    if (NULL==pad) return;
-    pad->setContentSize(contentSize);
-    pad->setPosition(Vec2(0,contentSize.height));
-}
+//void ItemPad::setContentSize(const cocos2d::Size &contentSize)
+//{
+//    Node::setContentSize(contentSize);
+//    if (NULL==pad) return;
+//    pad->setContentSize(contentSize);
+//    pad->setPosition(Vec2(0,contentSize.height));
+//}
 
 void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {

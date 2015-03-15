@@ -15,33 +15,27 @@ namespace ScdfCtrl
 {
     class MainScene;
     
-    class WorkingPanelItemCallback : public ItemBaseCallback
-    {
-        std::unique_ptr<ScdfCtrl::ControlUnit> cUnit;
-    public:
-        void OnItemTouchBegan(){}
-        void OnItemTouchMoved(int value);
-        void OnItemTouchEnded(){}
-    };
     class WorkingPanel : public cocos2d::ui::Layout
     {
-        bool drawGrid;
         MainScene *parent;
         cocos2d::Rect draggingRect;
+        bool collisionDetected, active;
         std::vector <ItemBase*> items;
-        bool active;
+        
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void DrawGrid();
-       // void OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         void CheckRemoveControl(Node *n);
+        void DetectCollisions(Node *_item);
+        void DoDetectCollisions(Node *_item, cocos2d::Rect r);
+        
     public:
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
         void CheckAddControl(int buttonTag);
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
-      //  void selectedItemEvent(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ToggleActiveState();
+        void DetectCollisions(cocos2d::Rect r);
         CREATE_FUNC(WorkingPanel);
     };
 }
