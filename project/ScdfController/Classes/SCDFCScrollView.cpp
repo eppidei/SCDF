@@ -34,7 +34,7 @@ void ItemScrollViewSubpanel::SubscribeButton(cocos2d::ui::Button *button, bool d
     button->addTouchEventListener(CC_CALLBACK_2(ItemScrollViewSubpanel::DragItemOnTouchEvent, this));
 }
 
-void ItemScrollView::AddButtonToScrollView(std::string image, int id)
+template <class ItemType> void ItemScrollView::AddButtonToScrollView()
 {
 //#define SCROLLVIEW_ITEM_SIZE        (SCROLLBAR_ITEM_SIDE_BASE*parent->GetUnityBase())
 //#define SCROLLVIEW_ITEM_DISTANCE    (SCROLLVIEW_ITEM_SIZE/2)
@@ -43,7 +43,7 @@ void ItemScrollView::AddButtonToScrollView(std::string image, int id)
     int numElements=scrollView->getChildrenCount();
     float innerWidth = scrollView->getContentSize().width;
     
-    float itemHeight = scrollView->getContentSize().width/2;
+    float itemHeight = scrollView->getContentSize().width*0.4;
     float itemDistance = itemHeight/2;
     float scrollviewRecord=itemHeight+itemDistance;
     
@@ -58,7 +58,8 @@ void ItemScrollView::AddButtonToScrollView(std::string image, int id)
         i++;
     }
     Button* button = Button::create();
-    button->loadTextureNormal(image);
+    button->loadTextureNormal(ItemType::GetIcon());
+    button->loadTexturePressed(ItemType::GetIconPressed());
     button->setAnchorPoint(Vec2(0,1));
     button->ignoreContentAdaptWithSize(false);
     //button->setScale9Enabled(true);
@@ -66,7 +67,7 @@ void ItemScrollView::AddButtonToScrollView(std::string image, int id)
     button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*itemDistance- button->getContentSize().height*numElements));
     
     SubscribeButton(button, /*id==ITEM_KEYBOARD_ID*/true);
-    scrollView->addChild(button,0,id);
+    scrollView->addChild(button,0,ItemType::GetID());
 }
 
 ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, cocos2d::Rect r)
@@ -160,19 +161,19 @@ void ItemScrollView::DoInit(MainScene *main, cocos2d::Rect r)
 
 void ItemScrollViewSubpanel::InitWithContentAndBitmaps(MainScene *main, cocos2d::Rect r, std::vector<std::string> buttonsBtm, int ownerID)
 {
-    DoInit(main, r);
-    for (int i=0;i<buttonsBtm.size();++i)
-        AddButtonToScrollView(buttonsBtm[i], ownerID+i);
-    
-//    setBackGroundImage("rightPanel.png");
-//    const int bitmapcapInsetOffset=80;
-//    cocos2d::Rect rr(58, 33, getBackGroundImageTextureSize().width-58, getBackGroundImageTextureSize().height-33-55);
-//    setBackGroundImageScale9Enabled(true);
-//    setBackGroundImageCapInsets(rr);
-    
-    setBackGroundColor(Color3B::GREEN);
-    setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-    setBackGroundColorOpacity(150);
+//    DoInit(main, r);
+//    for (int i=0;i<buttonsBtm.size();++i)
+//        AddButtonToScrollView(buttonsBtm[i],buttonsBtm[i], ownerID+i);
+//    
+////    setBackGroundImage("rightPanel.png");
+////    const int bitmapcapInsetOffset=80;
+////    cocos2d::Rect rr(58, 33, getBackGroundImageTextureSize().width-58, getBackGroundImageTextureSize().height-33-55);
+////    setBackGroundImageScale9Enabled(true);
+////    setBackGroundImageCapInsets(rr);
+//    
+//    setBackGroundColor(Color3B::GREEN);
+//    setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+//    setBackGroundColorOpacity(150);
 }
 
 void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
@@ -188,31 +189,31 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     LOGD("ITEM SCROLL ORIG %f,%f SIZE %f,%f",r.origin.x,r.origin.y,r.size.width,r.size.height);
     
     LOGD("Add slider button");
-    AddButtonToScrollView("sliderIcon.png", ItemSlider::GetID());
+    AddButtonToScrollView<ItemSlider>();
 //    CreateSubpanel(ItemSlider::GetID(),v,subPanelRect);
 //    LOGD("Add pad button");
 //    v.clear();
 //    v.push_back("padIcon.png");
 //    v.push_back("padIcon.png");
 //    v.push_back("padIcon.png");
-    AddButtonToScrollView("padIcon.png", ItemPad::GetID());
+    AddButtonToScrollView<ItemPad>();
 //    CreateSubpanel(ItemPad::GetID(),v,subPanelRect);
 //    LOGD("Add knob button");
 //    v.clear();
 //    v.push_back("knobIcon.png");
 //    v.push_back("knobIcon.png");
 //    v.push_back("knobIcon.png");
-    AddButtonToScrollView("knobIcon.png", ItemKnob::GetID());
+    AddButtonToScrollView<ItemKnob>();
 //    CreateSubpanel(ItemKnob::GetID(),v,subPanelRect);
 //    LOGD("Add switch pad button");
 //    v.clear();
 //    v.push_back("sensorIcon.png");
 //    v.push_back("sensorIcon.png");
 //    v.push_back("sensorIcon.png");
-    AddButtonToScrollView("sensorIcon.png", ItemSwitch::GetID());
+    AddButtonToScrollView<ItemSwitch>();
 //    CreateSubpanel(ItemSwitch::GetID(),v,subPanelRect);
     LOGD("Add keyboard button");
-    AddButtonToScrollView("fullPad.png", ItemKeyboard::GetID());
+    AddButtonToScrollView<ItemKeyboard>();
 
     LOGD("Init with content over");
     
@@ -250,6 +251,7 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
     {
         case Widget::TouchEventType::BEGAN:
         {
+            button->loadTextureNormal(ItemType::GetIconPressed());
             scrollView->setDirection(ScrollView::Direction::NONE);
             Vec2 parentScreenCoord=/*parent->*/convertToWorldSpace(scrollView->getPosition());
             dragStartPoint=Vec2(parentScreenCoord.x+buttonRect.origin.x,parentScreenCoord.y-(scrollView->getContentSize().height-buttonRect.origin.y));
@@ -266,11 +268,12 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
             float diff_y=button->getTouchMovePosition().y-button->getTouchBeganPosition().y;
             float newX=dragStartPoint.x+diff_x;
             float newY=dragStartPoint.y+diff_y;
-            parent->OnDragging(cocos2d::Rect(newX,newY,button->getContentSize().width, button->getContentSize().height));
+            parent->OnDragging<ItemType>(cocos2d::Rect(newX,newY,button->getContentSize().width, button->getContentSize().height));
         }
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
+            button->loadTextureNormal(ItemType::GetIcon());
             scrollView->setDirection(ScrollView::Direction::VERTICAL);
             parent->OnEndDragging<ItemType>();
             break;
@@ -382,3 +385,9 @@ void ItemScrollView::ToggleItemMenuOnTouchEvent(Ref *pSender, cocos2d::ui::Widge
 //            break;
 //    }
 }
+
+template void ItemScrollView::AddButtonToScrollView<ItemSlider>();
+template void ItemScrollView::AddButtonToScrollView<ItemPad>();
+template void ItemScrollView::AddButtonToScrollView<ItemKnob>();
+template void ItemScrollView::AddButtonToScrollView<ItemKeyboard>();
+template void ItemScrollView::AddButtonToScrollView<ItemSwitch>();

@@ -24,7 +24,7 @@ namespace ScdfCtrl
         virtual void OnItemTouchMoved(int value) = 0;
         virtual void OnItemTouchEnded() = 0;
     };
-    class ItemBase : public cocos2d::Sprite/*ui::Layout*/, public SubjectSimple
+    class ItemBase : public /*cocos2d::Sprite*/cocos2d::ui::Layout, public SubjectSimple
     {
         int inflateHValue;
         int inflateVValue;
@@ -84,6 +84,8 @@ namespace ScdfCtrl
         void Create();
         static cocos2d::Size GetBaseSize() { return SLIDER_SIZE_BASE;}
         static int GetID() { return ITEM_SLIDER_ID;}
+        static std::string GetIcon() { return "iconSliderDefault.png";}
+        static std::string GetIconPressed() { return "iconSliderPressed.png";}
         virtual ~ItemSlider();
         void SetVertical(bool vertical);
         void SetRange(float _min, float _max);
@@ -108,12 +110,15 @@ namespace ScdfCtrl
         void Create();
         static cocos2d::Size GetBaseSize() { return KNOB_SIZE_BASE;}
         static int GetID() { return ITEM_KNOB_ID;}
+        static std::string GetIcon() { return "iconKnobDefault.png";}
+        static std::string GetIconPressed() { return "iconKnobPressed.png";}
         CREATE_FUNC(ItemKnob);
     };
     class ItemPad : public ItemBase
     {
         friend class ItemMultipad;
         cocos2d::ui::Button *pad;
+//        cocos2d::ui::Button *pad;
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
@@ -123,8 +128,10 @@ namespace ScdfCtrl
         void Create();
         static cocos2d::Size GetBaseSize() { return PAD_SIZE_BASE;}
         static int GetID() { return ITEM_PAD_ID;}
+        static std::string GetIcon() { return "iconPadDefault.png";}
+        static std::string GetIconPressed() { return "iconPadPressed.png";}
         ~ItemPad();
-        virtual void setContentSize(const cocos2d::Size &contentSize) override;
+      //  virtual void setContentSize(const cocos2d::Size &contentSize) override;
         CREATE_FUNC(ItemPad);
     };
     class ItemMultipad: public ItemBase
@@ -169,6 +176,8 @@ namespace ScdfCtrl
         void Create();
         static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}
         static int GetID() { return ITEM_KEYBOARD_ID;}
+        static std::string GetIcon() { return "iconPianoDefault.png";}
+        static std::string GetIconPressed() { return "iconPianoPressed.png";}
         ~ItemKeyboard();
         CREATE_FUNC(ItemKeyboard);
     };
@@ -179,6 +188,8 @@ namespace ScdfCtrl
         void Create(){}
         static cocos2d::Size GetBaseSize() { return RECT_SENSOR_SIZE_BASE;}
         static int GetID() { return ITEM_SWITCH_ID;}
+        static std::string GetIcon() { return "iconVuMeterDefault.png";}
+        static std::string GetIconPressed() { return "iconVuMeterPressed.png";}
         CREATE_FUNC(ItemSwitch);
     };
 }

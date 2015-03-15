@@ -19,7 +19,7 @@ namespace ScdfCtrl
         std::unique_ptr<PropertiesPanel> propertiesPanel;
         std::unique_ptr<LoadSavePanel> loadSavePanel;
         
-        cocos2d::ui::ImageView *draggingImage;
+      //  cocos2d::ui::ImageView *draggingImage;
         void AddToolbar(cocos2d::Rect r);
         void CalculateGrid();
         int gridIndex;
@@ -38,7 +38,7 @@ namespace ScdfCtrl
         void touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         //void touchEvent(Ref *pSender, cocos2d::ui::TouchEventType type);
         template <class ItemType> void  OnStartDragging(cocos2d::Vec2 dragStartPoint);
-        void OnDragging(cocos2d::Rect draggingRect);
+        template <class ItemType> void OnDragging(cocos2d::Rect draggingRect);
         template <class ItemType> void  OnEndDragging();
         static int GetUnityBase();
         

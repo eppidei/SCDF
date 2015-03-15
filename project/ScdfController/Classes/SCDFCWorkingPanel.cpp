@@ -32,16 +32,20 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
 {
     parent=main;
     active=true;
+    collisionDetected=false;
     draggingRect=cocos2d::Rect::ZERO;
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
     parent->addChild(this,-2);
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
-     auto backGroundImage = Sprite::create("background.jpg",rr);
+    auto backGroundImage = Sprite::create("background.jpg");
+    cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
     backGroundImage->setAnchorPoint(Vec2(0,1));
     backGroundImage->setPosition(0,r.size.height);
-    addChild(backGroundImage);
+    backGroundImage->setScale(r.size.width/rrr.size.width, r.size.height/rrr.size.height);
+    backGroundImage->setBlendFunc(cocos2d::BlendFunc::ADDITIVE);
+    addChild(backGroundImage,-3);
 }
 
 void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
@@ -51,11 +55,13 @@ void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
 
 void WorkingPanel::CheckAddControl(int buttonTag)
 {
-    if (0==draggingRect.size.width) return;
-    
+    if (0==draggingRect.size.width || collisionDetected)
+    {
+        collisionDetected=false;
+        return;
+    }
     auto item = ItemBase::CreateItem(draggingRect, buttonTag);
-    addChild(item);
-    //item->addTouchEventListener(CC_CALLBACK_2(WorkingPanel::OnControlTouch, this));
+    addChild(item,10);
     parent->AttachItem(item);
     items.push_back(item);
 }
@@ -71,7 +77,7 @@ void WorkingPanel::CheckRemoveControl(Node *n)
     }
     parent->DetachItem((ItemBase*)n);
     removeChild(n);
-    printf("Control removed from working space\n");
+    LOGD("Control removed from working space\n");
 }
 
 void TestSerialization();
@@ -84,7 +90,7 @@ void WorkingPanel::ToggleActiveState()
 
 void WorkingPanel::DrawGrid()
 {
-    DrawPrimitives::setDrawColor4F(0.3, 0.3, 0.3, 0.6);
+    DrawPrimitives::setDrawColor4F(0.1, 0.1, 0.1, 1.0);
     
     for(int i=0;i<getContentSize().width;i+=parent->GetGridDistance())
         DrawPrimitives::drawLine(Vec2(i,getContentSize().height), Vec2(i,0));
@@ -94,96 +100,57 @@ void WorkingPanel::DrawGrid()
 
 void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
 {
-//    Color4F panelBackgroud = active ? Color4F(0.9,0.9,0.9,1) : Color4F(0.8,0.8,0.8,1);
-//    DrawPrimitives::drawSolidRect(Vec2(0,0), Vec2(getContentSize().width,getContentSize().height), panelBackgroud);
     if (!active)
         DrawGrid();
     
     if (0!=draggingRect.size.width)
-        DrawPrimitives::drawSolidRect(draggingRect.origin, Vec2(draggingRect.origin.x+draggingRect.size.width,draggingRect.origin.y-draggingRect.size.height),Color4F(1.0f,20.0f/255.0f,20.0f/255.0f, 0.2f));
+    {
+        Color4F color(0.1,0.1,0.1, 1.0);
+        if (collisionDetected)
+            color=Color4F(1.0,0,0, 1.0);
+        
+        DrawPrimitives::drawSolidRect(draggingRect.origin, Vec2(draggingRect.origin.x+draggingRect.size.width,draggingRect.
+            origin.y-draggingRect.size.height),color);
+    }
 }
 
-//void WorkingPanel::OnControlTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
-//{
-////    if (!active)
-////    {
-////        OnControlMove(pSender, type);
-////        return;
-////    }
-//    ui::Button* button = dynamic_cast<ui::Button*>(pSender);
-//    static Vec2 dragStartPoint;
-//    switch (type)
-//    {
-//        case Widget::TouchEventType::BEGAN:
-//        {
-////            ListView* lv = ListView::create();
-////            Button* model = Button::create();
-////            model->setTouchEnabled(true);
-////            model->setScale9Enabled(true);
-////            model->setContentSize(Size(100, 40));
-////            model->ignoreContentAdaptWithSize(true);
-////            model->setTitleText("Text Button");
-////            model->setTitleFontSize(20);
-////            model->setTitleColor(Color3B(255,0,0));
-////            model->setPressedActionEnabled(true);
-////            lv->setItemModel(model);
-////            
-////            for (int i=0; i<5; i++)
-////            {
-////                lv->pushBackDefaultItem();
-////            }
-////            addChild(lv);
-////            lv->setItemsMargin(5);
-////            lv->setGravity(ListView::Gravity::CENTER_VERTICAL);
-////            lv->setSize(Size(100,100));
-////            lv->setBackGroundColorType(LAYOUT_COLOR_SOLID);
-////            lv->setBackGroundColor(Color3B::GREEN);
-////            lv->setPosition(button->getPosition());
-////            lv->addEventListener(CC_CALLBACK_2(WorkingPanel::selectedItemEvent, this));
-//            break;
-//        }
-//        case Widget::TouchEventType::MOVED:
-//        {
-//        }
-//            break;
-//        case Widget::TouchEventType::ENDED:
-//            break;
-//        case Widget::TouchEventType::CANCELED:
-//            break;
-//        default:
-//            break;
-//    }
-//}
+void WorkingPanel::DetectCollisions(cocos2d::Rect r)
+{
+    DoDetectCollisions(NULL, r);
+}
 
-//void WorkingPanel::selectedItemEvent(Ref *pSender, ListView::EventType type)
-//{
-//    switch (type)
-//    {
-//        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_START:
-//        {
-//            ListView* listView = static_cast<ListView*>(pSender);
-//            CC_UNUSED_PARAM(listView);
-//            CCLOG("select child start index = %ld", listView->getCurSelectedIndex());
-//            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(0,0,255));
-//            break;
-//        }
-//        case cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END:
-//        {
-//            ListView* listView = static_cast<ListView*>(pSender);
-//            CC_UNUSED_PARAM(listView);
-//            CCLOG("select child end index = %ld", listView->getCurSelectedIndex());
-//            ((Button*)listView->getItem(listView->getCurSelectedIndex()))->setTitleColor(Color3B(255,0,0));
-//            break;
-//        }
-//        default:
-//            break;
-//    }
-//}
+void WorkingPanel::DetectCollisions(Node *item)
+{
+    cocos2d::Rect rItem(item->getPositionX(), item->getPositionY(), item->getContentSize().width, item->getContentSize().height);
+    DoDetectCollisions(item, rItem);
+}
+
+bool RectIntersection(cocos2d::Rect r1, cocos2d::Rect r2)
+{
+    return !(r1.origin.x > r2.origin.x+r2.size.width  ||
+             r2.origin.x > r1.origin.x+r1.size.width  ||
+             r1.origin.y < r2.origin.y-r2.size.height ||
+             r2.origin.y < r1.origin.y-r1.size.height);
+}
+void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r)
+{
+    collisionDetected=false;
+    for (int i=0;i<items.size();++i)
+    {
+        if (NULL!=item&&dynamic_cast<Layout*>(items[i])==item) continue;
+        cocos2d::Rect rItem(items[i]->getPositionX(), items[i]->getPositionY(), items[i]->getContentSize().width, items[i]->getContentSize().height);
+        if(RectIntersection(r,rItem))
+        {
+            collisionDetected=true;
+            return;
+        }
+    }
+}
 
 bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type)
 {
     if (active) return false;
-    Node* button = dynamic_cast<Node*>(pSender);
+    Node* item = dynamic_cast<Node*>(pSender);
     static Vec2 dragStartPoint;
     static Vec2 touchStartPos;
     switch (type)
@@ -192,7 +159,7 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
         {
             parent->EnableScrollView(false);
             touchStartPos=touchPos;
-            dragStartPoint=button->getPosition();
+            dragStartPoint=item->getPosition();
             break;
         }
         case Widget::TouchEventType::MOVED:
@@ -201,17 +168,28 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
             float diff_y=touchPos.y-touchStartPos.y;
             float newX=dragStartPoint.x+diff_x;
             float newY=dragStartPoint.y+diff_y;
-            cocos2d::Rect r(newX, newY, button->getContentSize().width,button->getContentSize().height);
+            cocos2d::Rect r(newX, newY, item->getContentSize().width,item->getContentSize().height);
             parent->SnapToGrid(r);
-            button->setPosition(r.origin);
+            item->setPosition(r.origin);
+
+            DetectCollisions(item);
+            int opacity=255;
+            if (collisionDetected)
+                opacity=80;
+            item->setOpacity(opacity);
         }
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
         {
             parent->EnableScrollView(true);
-            auto node = dynamic_cast<Node*>(pSender);
-            CheckRemoveControl(node);
+            if (collisionDetected)
+            {
+                item->setPosition(dragStartPoint);
+                item->setOpacity(255);
+                collisionDetected=false;
+            }
+            CheckRemoveControl(item);
         }
             break;
         default:

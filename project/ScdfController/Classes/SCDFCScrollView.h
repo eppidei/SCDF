@@ -30,7 +30,7 @@ namespace ScdfCtrl {
         MainScene *parent;
         void DoInit(MainScene *main, cocos2d::Rect r);
         cocos2d::ui::ScrollView *scrollView;
-        void AddButtonToScrollView(std::string image, int itemId);
+        template <class ItemType> void AddButtonToScrollView();
         float RetrieveButtonYCoordInScrollview(cocos2d::ui::Button* button);
         void DragItemOnTouchEvent(cocos2d::Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         void ToggleItemMenuOnTouchEvent(cocos2d::Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
