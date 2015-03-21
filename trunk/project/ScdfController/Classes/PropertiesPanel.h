@@ -110,7 +110,7 @@ namespace ScdfCtrl
     public:
         void UpdateOSCInfo();
         void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event) override;
-        ScdfCtrl::ControlUnit *GetCurrentControlUnit();
+        ScdfCtrl::MultiSender *GetCurrentSender();
         ItemBase *GetSelectedItem();
         CREATE_FUNC(PropertiesPanel);
     };

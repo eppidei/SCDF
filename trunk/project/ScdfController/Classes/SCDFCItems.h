@@ -12,11 +12,18 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 #include "Colors.h"
+//#include "MultiSender.h"
+#include "ControlUnit.h"
+#include "ScdfSensorAPI.h"
 
 namespace ScdfCtrl
 {
-    class ControlUnit;
-    
+	class ControlUnit;
+	class ControlUnitSlider;
+	class ControlUnitPad;
+	class ControlUnitDsp;
+	class MultiSender;
+
     class ItemBaseCallback
     {
     public:
@@ -24,41 +31,56 @@ namespace ScdfCtrl
         virtual void OnItemTouchMoved(int value) = 0;
         virtual void OnItemTouchEnded() = 0;
     };
+
+	class ItemProperties {
+
+	};
+
     class ItemBase : public /*cocos2d::Sprite*/cocos2d::ui::Layout, public SubjectSimple
     {
-        int inflateHValue;
+    	int inflateHValue;
         int inflateVValue;
         void CalculateItemSize(float gridBase);
     protected:
-        int value;
+
+        std::unique_ptr<ControlUnit> controlUnit;
+
         std::string name;
         //cocos2d::Color3B color;
         Colors::ItemsColorsId colorIndex;
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
-        std::unique_ptr<ScdfCtrl::ControlUnit> controlUnit;
         std::unique_ptr<ItemBaseCallback> callback;
         virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
     public:
+
+        ControlUnit* GetControlUnit() { return controlUnit.get(); };
+        void ChangeControlUnit(ControlUnit::Type t);
+
         static ItemBase *CreateItem(cocos2d::Rect r, int itemID);
+        //static ItemBase *CreateItemFromControlUnit(ControlUnit* cu);
+
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
-        ScdfCtrl::ControlUnit *GetControlUnit() { return controlUnit.get();}
         ItemBase();
         virtual void Create()=0;
         virtual ~ItemBase(){}
-        void SetCallback(ItemBaseCallback *c) {callback.reset(c);}
-        void SetName(std::string _name) {name=_name;}
-        virtual void SetColor(Colors::ItemsColorsId _colorIndex) {colorIndex=_colorIndex;}
-        void SetValue(int _value) {value=_value;}
+        //void SetCallback(ItemBaseCallback *c) {callback.reset(c);}
         void IncrementInflate(bool isHeight);
         void DecrementInflate(bool isHeight);
-        std::string GetName() {return name;}
-        int GetColor() {return colorIndex;}
         int GetInflateValue(bool height) {if (height) return inflateVValue; return inflateHValue;}
-        virtual int GetValue() {return value;}
+
+        std::string GetName();
+        Colors::ItemsColorsId GetColor();
+        virtual int GetValue();
+        ScdfCtrl::MultiSender *GetSender();
+        void SetName(std::string _name);
+        virtual void SetColor(Colors::ItemsColorsId _colorIndex);
+      //  virtual void SetValue(int _value);
+
         virtual cocos2d::Size GetStaticBaseSize()=0;
     };
+
     class ItemSlider : public ItemBase
     {
         cocos2d::Size GetSizeConsideringOrientation(const cocos2d::Size resized);
@@ -76,7 +98,7 @@ namespace ScdfCtrl
         cocos2d::ui::Layout *slideBar;
         cocos2d::ui::Layout *slideBarOff;
         bool isVertical;
-        float min, max;
+        //float min, max;
         void CreateThumb();
         void LinearMode(cocos2d::Vec2 touchPos);
     public:
@@ -88,11 +110,15 @@ namespace ScdfCtrl
         static std::string GetIconPressed() { return "iconSliderPressed.png";}
         virtual ~ItemSlider();
         void SetVertical(bool vertical);
-        void SetRange(float _min, float _max);
-        void SetValue(float _value);
+        bool IsVertical();
+        void SetRange(int _min, int _max);
+		int GetMin();
+		int GetMax();
+		//void SetValue(float _value);
         virtual void setContentSize(const cocos2d::Size &contentSize) override;
         CREATE_FUNC(ItemSlider);
     };
+
     class ItemKnob : public ItemSlider
     {
         void SetThumbPosition();
@@ -114,6 +140,9 @@ namespace ScdfCtrl
         static std::string GetIconPressed() { return "iconKnobPressed.png";}
         CREATE_FUNC(ItemKnob);
     };
+
+
+    class ItemKeyboard;
     class ItemPad : public ItemBase
     {
         friend class ItemMultipad;
@@ -122,9 +151,10 @@ namespace ScdfCtrl
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
+
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
-        int midiNote;
+        //int midiNote;
         void Create();
         static cocos2d::Size GetBaseSize() { return PAD_SIZE_BASE;}
         static int GetID() { return ITEM_PAD_ID;}
@@ -144,8 +174,12 @@ namespace ScdfCtrl
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
-    public:
-        ItemPad *GetSelectedPad();
+
+        std::shared_ptr<ControlUnitPad> ctrlUnitPad;
+
+        public:
+
+		ItemPad *GetSelectedPad();
         void UpdateSelectedPadIndex(ItemPad *pad);
         void Create();
         static cocos2d::Size GetBaseSize() { return MULTIPAD_SIZE_BASE;}
@@ -184,7 +218,11 @@ namespace ScdfCtrl
     class ItemSwitch : public ItemBase
     {
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
+
+        ControlUnitDsp* ctrlUnitDsp;
+
     public:
+
         void Create(){}
         static cocos2d::Size GetBaseSize() { return RECT_SENSOR_SIZE_BASE;}
         static int GetID() { return ITEM_SWITCH_ID;}
@@ -193,4 +231,5 @@ namespace ScdfCtrl
         CREATE_FUNC(ItemSwitch);
     };
 }
+
 #endif /* defined(__ScdfController__SCDFCItems__) */

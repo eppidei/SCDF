@@ -13,7 +13,7 @@
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
 #include "PropertiesPanel.h"
-#include "ControlUnit.h"
+#include "MultiSender.h"
 #include "Logging.h"
 #include "LoadSavePanel.h"
 
@@ -39,13 +39,15 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setPosition(r.origin);
     parent->addChild(this,-2);
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
-    auto backGroundImage = Sprite::create("background.jpg");
+    auto backGroundImage = Sprite::create("Background.png");
     cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
     backGroundImage->setAnchorPoint(Vec2(0,1));
     backGroundImage->setPosition(0,r.size.height);
     backGroundImage->setScale(r.size.width/rrr.size.width, r.size.height/rrr.size.height);
     backGroundImage->setBlendFunc(cocos2d::BlendFunc::ADDITIVE);
     addChild(backGroundImage,-3);
+
+    patch.reset(new ControlUnitPatch());
 }
 
 void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
@@ -60,10 +62,17 @@ void WorkingPanel::CheckAddControl(int buttonTag)
         collisionDetected=false;
         return;
     }
-    auto item = ItemBase::CreateItem(draggingRect, buttonTag);
+    ItemBase* item = ItemBase::CreateItem(draggingRect, buttonTag);
+    // we use unique ptr just to let Cereal easily serialize
+    // the patch:
+
+    // transfer ownership of control unit to the patch:
+    std::unique_ptr<ControlUnit> unitUnique(item->GetControlUnit());
+    patch->units.push_back(std::move(unitUnique));
+
     addChild(item,10);
     parent->AttachItem(item);
-    items.push_back(item);
+
 }
 
 void WorkingPanel::CheckRemoveControl(Node *n)
@@ -72,12 +81,23 @@ void WorkingPanel::CheckRemoveControl(Node *n)
         && (n->getPositionX()+n->getContentSize().width)<=getContentSize().width
         && (n->getPositionY()-n->getContentSize().height)>=getPosition().y-getContentSize().height)
         return;
-    for (int i=0;i<items.size();++i){
-        if (items[i]==n) items.erase(items.begin()+i);
+
+    for (int i=0;i<patch->units.size();++i)
+    {
+        if (patch->units[i]->GetItem()==n)
+        {
+        	parent->DetachItem((ItemBase*)n);
+            removeChild(n); // does this delete n? if not, we have a leak
+            patch->units.erase(patch->units.begin()+i); // this deletes the unit!
+            printf("Control removed from working space\n");
+            return;
+            // remove "return" if you ever plan to put an item in the patch twice
+            // but consider that the index will break after the first deletion
+        }
     }
-    parent->DetachItem((ItemBase*)n);
-    removeChild(n);
-    LOGD("Control removed from working space\n");
+    //parent->DetachItem((ItemBase*)n);
+    //removeChild(n);
+    //LOGD("Control removed from working space\n");
 }
 
 void TestSerialization();
@@ -135,10 +155,11 @@ bool RectIntersection(cocos2d::Rect r1, cocos2d::Rect r2)
 void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r)
 {
     collisionDetected=false;
-    for (int i=0;i<items.size();++i)
+    for (int i=0;i<patch->units.size();++i)
     {
-        if (NULL!=item&&dynamic_cast<Layout*>(items[i])==item) continue;
-        cocos2d::Rect rItem(items[i]->getPositionX(), items[i]->getPositionY(), items[i]->getContentSize().width, items[i]->getContentSize().height);
+    	Layout* testItem = dynamic_cast<Layout*>(patch->units[i]->GetItem());
+        if (NULL!=item && item==testItem) continue;
+        cocos2d::Rect rItem(testItem->getPositionX(), testItem->getPositionY(), testItem->getContentSize().width, testItem->getContentSize().height);
         if(RectIntersection(r,rItem))
         {
             collisionDetected=true;

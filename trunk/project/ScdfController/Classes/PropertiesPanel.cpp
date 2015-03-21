@@ -11,7 +11,7 @@
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "MainScene.h"
-#include "ControlUnit.h"
+#include "MultiSender.h"
 #include "SCDFCItems.h"
 #include "LoadSavePanel.h"
 //#include "PlatformInfo.h"
@@ -201,11 +201,11 @@ void OSCInfo::PositionElements()
 void OSCInfo::OnCheckEvent(CheckBox *widget, bool selected)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetCurrentControlUnit()) return;
+    if (NULL==panel->GetCurrentSender()) return;
     switch (widget->getTag())
     {
         case PROPERTIES_OSC_TOGGLE:
-            panel->GetCurrentControlUnit()->SetOscEnabled(selected);
+            panel->GetCurrentSender()->SetOscEnabled(selected);
             break;
         default:
             break;
@@ -221,10 +221,10 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
     switch (widget->getTag())
     {
         case PROPERTIES_OSC_PORT:
-            panel->GetCurrentControlUnit()->SetOscPort(std::stoi(widget->getStringValue()));
+            panel->GetCurrentSender()->SetOscPort(std::stoi(widget->getStringValue()));
             break;
         case PROPERTIES_OSC_IP:
-            panel->GetCurrentControlUnit()->SetOscIp(widget->getStringValue());
+            panel->GetCurrentSender()->SetOscIp(widget->getStringValue());
             break;
         default:
             break;
@@ -266,7 +266,7 @@ void MIDIDevices::Update()
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
     
-    devices->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiOutIndex()+1);
+    devices->SetSelectedIndex(panel->GetCurrentSender()->GetMidiOutIndex()+1);
 }
 
 void MIDIDevices::PositionElements()
@@ -280,10 +280,10 @@ void MIDIDevices::PositionElements()
 void MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetCurrentControlUnit()) return;
+    if (NULL==panel->GetCurrentSender()) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (devices==menu)
-        panel->GetCurrentControlUnit()->SetMidiOutIndex(selectedIndex-1);
+        panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
 }
 
 void OSCInfo::Update()
@@ -291,12 +291,12 @@ void OSCInfo::Update()
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
     
-    oscToggle->setSelectedState(panel->GetCurrentControlUnit()->IsOscEnabled());
+    oscToggle->setSelectedState(panel->GetCurrentSender()->IsOscEnabled());
     std::ostringstream os;
-    os<<(panel->GetCurrentControlUnit()->GetOscPort());
+    os<<(panel->GetCurrentSender()->GetOscPort());
     oscPort->setText(os.str());
-    oscIP->setText(panel->GetCurrentControlUnit()->GetOscIp());
-    oscTag->setString(panel->GetCurrentControlUnit()->GetOscTag());
+    oscIP->setText(panel->GetCurrentSender()->GetOscIp());
+    oscTag->setString(panel->GetCurrentSender()->GetOscTag());
     InitChildrensVisibilityAndPos();
 }
 
@@ -314,7 +314,7 @@ void MIDIInfo::Update()
     VISIBILITY_CHECK
     
     int selectedIndex=-1;
-    switch(panel->GetCurrentControlUnit()->GetMidiMessageType())
+    switch(panel->GetCurrentSender()->GetMidiMessageType())
     {
         case NoteOn: selectedIndex=0; break;
         case NoteOff: selectedIndex=1; break;
@@ -336,8 +336,8 @@ void MIDIInfo::Update()
     else
     {
         midiMessage->setEnabled(true);
-        controlChange->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiControl());
-        channel->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiChannel());
+        controlChange->SetSelectedIndex(panel->GetCurrentSender()->GetMidiControl());
+        channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
     }
     UpdateVelocity();
 }
@@ -409,7 +409,7 @@ void MIDIInfo::InitControlMenuValue()
 void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetCurrentControlUnit()) return;
+    if (NULL==panel->GetCurrentSender()) return;
     int selectedIndex=menu->getCurSelectedIndex();
     if (menu==midiMessage)
     {
@@ -425,20 +425,22 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             case 6: msg=PitchBend; break;
             default: return;
         }
-        panel->GetCurrentControlUnit()->SetMidiMessageType(msg);
+        panel->GetCurrentSender()->SetMidiMessageType(msg);
         InitControlMenuValue();
     }
     else if (menu==controlChange)
     {
         if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
-            panel->GetCurrentControlUnit()->SetMidiControl(selectedIndex);
+            panel->GetCurrentSender()->SetMidiControl(selectedIndex);
         else
             dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
     }
     else if (menu==channel)
-        panel->GetCurrentControlUnit()->SetMidiChannel(selectedIndex);
+        panel->GetCurrentSender()->SetMidiChannel(selectedIndex);
     else if (menu==velocity)
-        panel->GetSelectedItem()->SetValue(selectedIndex);
+        panel->GetSelectedItem()->GetControlUnit()->SetMax(selectedIndex);
+    	// this is used for the button, and the button
+    	// sends the max value when pressed
     panel->UpdateOSCInfo();
     
 }
@@ -847,8 +849,8 @@ ItemBase *PropertiesPanel::GetSelectedItem()
     return selectedItem;
 }
 
-ScdfCtrl::ControlUnit *PropertiesPanel::GetCurrentControlUnit()
+ScdfCtrl::MultiSender *PropertiesPanel::GetCurrentSender()
 {
     if(NULL==selectedItem) return NULL;
-    return selectedItem->GetControlUnit();
+    return selectedItem->GetSender();
 }

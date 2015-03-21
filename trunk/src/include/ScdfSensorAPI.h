@@ -21,7 +21,11 @@ const int DEFAULT_SENSORS_RATE = 50;
 
 namespace scdf {
     
-    class HarvesterListener;
+    class HarvesterListener
+    {
+       public:
+           virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
+    };
     
     class ScdfSensorAPI
     {
