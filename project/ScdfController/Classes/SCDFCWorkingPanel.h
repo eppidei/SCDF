@@ -8,19 +8,28 @@
 
 #ifndef __ScdfController__SCDFCWorkingPanel__
 #define __ScdfController__SCDFCWorkingPanel__
-#include "ControlUnit.h"
-#include "SCDFCItems.h"
+//#include "MultiSender.h"
+#include "ControlUnitPatch.h"
 
 namespace ScdfCtrl
 {
     class MainScene;
     
+    class WorkingPanelItemCallback : public ItemBaseCallback
+    {
+        //std::unique_ptr<ScdfCtrl::ControlUnit> cUnit;
+    public:
+        void OnItemTouchBegan(){}
+        void OnItemTouchMoved(int value);
+        void OnItemTouchEnded(){}
+    };
+
     class WorkingPanel : public cocos2d::ui::Layout
     {
         MainScene *parent;
         cocos2d::Rect draggingRect;
         bool collisionDetected, active;
-        std::vector <ItemBase*> items;
+        std::unique_ptr<ControlUnitPatch> patch;
         
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void DrawGrid();

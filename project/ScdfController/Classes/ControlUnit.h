@@ -9,83 +9,210 @@
 #define CONTROLUNIT_H_
 
 #include "TypeDefinitions.h"
-#include "MidiUtils.h"
-#include "MidiOutConnection.h"
-#include <string>
-#include "UDPSender.h"
+#include "SCDFCDefinitions.h"
+
+
+#include "Colors.h"
+#include "ScdfSensorAPI.h"
+
+#include <memory>
+
+#include <cereal/types/polymorphic.hpp>
+#include "cereal/archives/xml.hpp"
+#include "cereal/access.hpp"
+#include "cereal/types/base_class.hpp"
+#include "cereal/types/string.hpp"
+
+#include "MultiSender.h"
 
 namespace ScdfCtrl {
 
-class ControlUnit : public Scdf::MidiOutConnection::Listener {
+class ItemBase;
+
+class ControlUnit {
 
 public:
 
+	enum Type { Wire, Blow };
+
+	static ControlUnit* Create(Type t);
+	static void Destroy(ControlUnit* cu);
+
+	enum TouchEvent { TouchDown, TouchUp, TouchMove, TouchCode };
+	virtual bool OnTouch(TouchEvent ev, float normValue) = 0;
+
+	virtual float GetNormalizedValue() = 0;
+
+	virtual int GetValue() { return GetNormalizedValue()*(GetMax()-GetMin()) + GetMin(); }
+
+	virtual void SetMin(int _min) { min = _min;}
+	virtual void SetMax(int _max) { max = _max;}
+	virtual int GetMin() { return min; }
+	virtual int GetMax() { return max; }
+
+	virtual void SetRange(int min, int max) { SetMin(min); SetMax(max);}
+
+	virtual bool SetEnabled(bool enabled) = 0;
+	virtual bool IsEnabled() = 0;
+
+	virtual Type GetType() = 0;
+	virtual bool IsDSP() = 0;
+
+	MultiSender* GetSender();
+
+	void SetItem(ItemBase* iv);
+	ItemBase* GetItem();
+
 	ControlUnit();
+	virtual ~ControlUnit();
 
-	// Get Properties:
+protected:
 
-	std::string GetOscIp();
-	s_int32 GetOscPort();
-	std::string GetOscTag();
-	s_bool IsOscEnabled();
+	std::unique_ptr<MultiSender> sender;
 
-	s_int32 GetMidiOutIndex();
-	MidiMessageType GetMidiMessageType();
-	s_int32 GetMidiChannel();
+	ItemBase* itemView; // knows position, name, color, current value
 
-	s_int32 GetMidiControl();
-	s_int32 GetMidiPitch() { return GetMidiControl(); }
-    s_int32 GetValue() { return value;}
-
-	// Set Properties:
-
-	void SetOscIp(std::string ip);
-	void SetOscPort(s_int32 port);
-	void SetOscEnabled(s_bool enabled);
-
-	s_bool SetMidiOutIndex(s_int32 index);
-	void SetMidiMessageType(MidiMessageType type);
-	void SetMidiChannel(s_int32 chan);
-
-	void SetMidiControl(s_int32 ctrl);
-	void SetMidiPitch(s_int32 pitch) { SetMidiControl(pitch); }
-
-	// Actions:
-
-	s_bool SendValue(s_int32 value);
-	s_bool SendValue(s_int32 number, s_int32 value);
-
-	// Listening callbacks:
-
-	 void OnConnectionLost(Scdf::MidiOutConnection* connection);
+	int min;
+	int max;
 
 private:
 
-	Scdf::MidiOutConnection* midiConnection;
-	int lastOpenedMidiOutIndex; // TODO: ask directly to the midi connection
 
-	// osc sender
+ 	friend class ::cereal::access;
 
-	scdf::UDPSender udpSender;
-	//std::string oscIp;
-	//s_int32 oscPort;
-	std::string oscTag;
-	s_bool oscEnabled;
+	template <class Archive>
+	void save( Archive & ar, std::uint32_t const version ) const
+	{
+		ar(CEREAL_NVP(sender));
 
-	static osc::OutboundPacketStream PackOSCValue(s_int32 ctrl, s_int32 value, std::string tag);
+//		ar(CEREAL_NVP(x));
+//		ar(CEREAL_NVP(y));
+//		ar(CEREAL_NVP(w));
+//		ar(CEREAL_NVP(h));
+	}
 
-	// midi parameters:
-
-	MidiMessageType midiMsgType;
-	s_int32 midiChannel;
-	s_int32 midiControl; // when midiMsgType is noteon/off, this is the pitch
-    s_int32 value;
-
+	template <class Archive>
+	void load( Archive & ar, std::uint32_t const version )
+	{
+//		ar(CEREAL_NVP(value));
+//		ar(CEREAL_NVP(name));
+//		ar(CEREAL_NVP(colorId));
+//		ar(CEREAL_NVP(sender));
+//
+//		ar(CEREAL_NVP(itemViewId));
+//		ar(CEREAL_NVP(x));
+//		ar(CEREAL_NVP(y));
+//		ar(CEREAL_NVP(w));
+//		ar(CEREAL_NVP(h));
+	}
 
 };
 
 
-}
+class ControlUnitWire : public ControlUnit
+{
 
+public:
+
+	bool OnTouch(TouchEvent ev, float normValue) override;
+
+	float GetNormalizedValue() override { return normVal; }
+
+	bool SetEnabled(bool enabled) override { return false; }
+	bool IsEnabled() override { return true; }
+
+	Type GetType() override { return Wire; }
+	bool IsDSP() override { return false; }
+
+	ControlUnitWire() : ControlUnit() {}
+
+private:
+
+	float normVal;
+
+	void SetValue(float newValue);
+
+
+//	friend class ::cereal::access;
+//
+//	template <class Archive>
+//	void save( Archive & ar, std::uint32_t const version ) const
+//	{
+//	    ar(cereal::base_class<ControlUnit>( this ));
+//		//ar(CEREAL_NVP(midiNote));
+//	}
+//
+//	template <class Archive>
+//	void load( Archive & ar, std::uint32_t const version )
+//	{
+//	    ar(cereal::base_class<ControlUnit>( this ));
+//		//ar(CEREAL_NVP(midiNote));
+//	}
+};
+
+
+class ControlUnitDsp : public ControlUnit, public scdf::HarvesterListener
+{
+
+public:
+
+    //void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
+    //{    }
+
+	bool OnTouch(TouchEvent ev, float normValue) override;
+	float GetNormalizedValue() override;
+
+	bool SetEnabled(bool enabled) override;
+	bool IsEnabled() override;
+
+	bool IsDSP() override { return true; }
+
+	ControlUnitDsp() : ControlUnit() { isEnabled = true;}
+
+protected:
+
+	float lastValue;
+
+private:
+
+	bool isEnabled;
+
+//	friend class ::cereal::access;
+//
+//	template <class Archive>
+//	void save( Archive & ar, std::uint32_t const version ) const
+//	{
+//	    ar(cereal::base_class<ControlUnit>( this ));
+//		//ar(CEREAL_NVP(midiNote));
+//	}
+//
+//	template <class Archive>
+//	void load( Archive & ar, std::uint32_t const version )
+//	{
+//	    ar(cereal::base_class<ControlUnit>( this ));
+//		//ar(CEREAL_NVP(midiNote));
+//	}
+};
+
+
+class ControlUnitBlow : public ControlUnitDsp
+{
+public:
+
+    void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer);
+    ControlUnitBlow() : ControlUnitDsp() {}
+    Type GetType() { return Blow; }
+
+private:
+
+
+};
+
+} // ScdfCtrl namespace end
+
+// Register Derived Classes (needed for polymorfism on serialization)
+//CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitDerived);
+
+CEREAL_CLASS_VERSION(ScdfCtrl::ControlUnit,0);
 
 #endif /* CONTROLUNIT_H_ */

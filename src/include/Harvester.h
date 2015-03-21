@@ -15,11 +15,7 @@
 
 namespace scdf{
     
-    class HarvesterListener
-    {
-    public:
-        virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
-    };
+    class HarvesterListener;
     
     class HarvesterListenerContainer
     {
@@ -40,6 +36,7 @@ namespace scdf{
     
     
   
+
 
     class Harvester
     {

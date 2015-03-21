@@ -11,8 +11,10 @@
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
-#include "ControlUnit.h"
+//#include "MultiSender.h"
 #include "LoadSavePanel.h"
+#include "ControlUnit.h"
+#include "MultiSender.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;
@@ -22,8 +24,42 @@ using namespace ui;
         static int counter=0; \
         std::ostringstream os; \
         os<<x<<counter; \
-        name=os.str(); \
+        SetName(os.str()); \
         counter=++counter%50; \
+
+void ItemBase::SetName(std::string _name)
+{
+	name = _name;
+}
+
+std::string ItemBase::GetName()
+{
+	return name;
+}
+
+Colors::ItemsColorsId ItemBase::GetColor()
+{
+	return colorIndex;
+}
+
+int ItemBase::GetValue()
+{
+	return GetControlUnit()->GetValue();
+}
+
+ScdfCtrl::MultiSender* ItemBase::GetSender()
+{
+	return GetControlUnit()->GetSender();
+}
+
+void ItemBase::SetColor(Colors::ItemsColorsId _colorIndex)
+{
+	colorIndex = _colorIndex;
+}
+
+//void ItemBase::SetValue(int _value) {GetControlUnit()->SetValue(_value);}
+
+
 
 ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
 {
@@ -58,8 +94,71 @@ ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
     return item;
 }
 
-ItemBase::ItemBase() : controlUnit(new ScdfCtrl::ControlUnit()), inflateVValue(0), inflateHValue(0), colorIndex(Colors::ItemsColorsId::Gray)
+/*ItemBase *ItemBase::CreateItemFromControlUnit(ControlUnit* cu)
 {
+    ItemBase *item=NULL;
+    int itemID = cu->GetItemViewId();
+
+    switch (itemID)
+    {
+        case ITEM_SLIDER_ID:
+        {
+        	ControlUnitSlider* cus = dynamic_cast<ControlUnitSlider*>(cu);
+        	ItemSlider* i = ItemSlider::create();
+        	i->SetControlUnit(cus);
+        	item = i;
+            break;
+        }
+        case ITEM_KEYBOARD_ID:
+            item=ItemKeyboard::create();
+            break;
+        case ITEM_KNOB_ID:
+        {
+			ControlUnitSlider* cus = dynamic_cast<ControlUnitSlider*>(cu);
+			ItemSlider* i = ItemKnob::create();
+			i->SetControlUnit(cus);
+			item = i;
+			break;
+		}
+        case ITEM_PAD_ID:
+        {
+			ControlUnitPad* cus = dynamic_cast<ControlUnitPad*>(cu);
+			ItemPad* i = ItemPad::create();
+			i->SetControlUnit(cus);
+			item = i;
+			break;
+        }
+        case ITEM_SENSOR1_ID:
+        {
+			ControlUnitDsp* cus = dynamic_cast<ControlUnitDsp*>(cu);
+			ItemSensor1* i = ItemSensor1::create();
+			i->SetControlUnit(cus);
+			item = i;
+			break;
+		}
+        default:
+            return NULL;
+    }
+
+    item->setAnchorPoint(Vec2(0,1));
+    item->setContentSize(Size(cu->w,cu->h));
+    item->setPosition(Vec2(cu->x,cu->y));
+    item->Create();
+    return item;
+}*/
+
+
+
+ItemBase::ItemBase() : inflateVValue(0), inflateHValue(0)
+{
+	controlUnit.reset( ControlUnit::Create(ControlUnit::Wire) );
+	controlUnit->SetItem(this);
+}
+
+void ItemBase::ChangeControlUnit(ControlUnit::Type t)
+{
+	controlUnit.reset(ControlUnit::Create(t));
+	controlUnit->SetItem(this);
 }
 
 void ItemBase::CalculateItemSize(float gridBase)
@@ -179,10 +278,15 @@ void ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventT
     dragPosUpdated=widget->getTouchMovePosition();
 }
 
+int ItemSlider::GetMin() { return GetControlUnit()->GetMin(); }
+int ItemSlider::GetMax() { return GetControlUnit()->GetMax(); }
+
+
+
 cocos2d::Size ItemSlider::GetSizeConsideringOrientation(const cocos2d::Size resized)
 {
     cocos2d::Size ret;
-    if (isVertical)
+    if (IsVertical())
         ret=cocos2d::Size(fmin(resized.height, resized.width),fmax(resized.height, resized.width));
     else
         ret=cocos2d::Size(fmax(resized.height, resized.width),fmin(resized.height, resized.width));
@@ -192,9 +296,13 @@ cocos2d::Size ItemSlider::GetSizeConsideringOrientation(const cocos2d::Size resi
 void ItemSlider::CreateThumb()
 {
     thumb=NULL;
-    min=0;
-    max=127;
-    value=64;
+//    min=0;
+//    max=127;
+//    value=64;
+    GetControlUnit()->SetMin(0);
+    GetControlUnit()->SetMax(127);
+    GetControlUnit()->OnTouch(ControlUnit::TouchCode,0.5);
+
     thumb = Layout::create();
     addChild(thumb,2);
 
@@ -236,25 +344,29 @@ ItemSlider::~ItemSlider()
 
 void ItemSlider::SetVertical(bool vertical)
 {
-    isVertical=vertical;
-    setContentSize(getContentSize());
+	isVertical = vertical;
+	setContentSize(getContentSize());
 //    InitSliderLayout();
 }
 
-void ItemSlider::SetValue(float _value)
+bool ItemSlider::IsVertical()
 {
-    value=fmax(min,fmin(max,_value));
-    //#ifdef DEBUG
-    printf("KNOB VALUE %d\n", value);
-    //#endif
-    SetThumbPosition();
+	return isVertical;
 }
 
-void ItemSlider::SetRange(float _min, float _max)
+/*void ItemSlider::SetValue(float _value)
 {
-    min=_min;
-    max=_max;
-    SetValue(value);
+    GetControlUnit()->OnTouch(_value);
+	//#ifdef DEBUG
+    printf("KNOB VALUE %d\n", _value);
+    //#endif
+    SetThumbPosition();
+}*/
+
+void ItemSlider::SetRange(int _min, int _max)
+{
+	GetControlUnit()->SetRange(_min,_max);
+    //SetValue(GetValue());
 }
 
 void ItemSlider::Create()
@@ -304,16 +416,28 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     ItemBase::OnItemTouchBegan(widget, type);
     dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
     //dragStartPos=dragPosUpdated=thumb->getWorldPosition();
-    if (callback.get())
-        callback->OnItemTouchBegan();
+    //if (callback.get())
+    //    callback->OnItemTouchBegan();
+
+    GetControlUnit()->OnTouch( ControlUnit::TouchDown,
+        		GetControlUnit()->GetNormalizedValue());
+    // control unit wire doesn't really need this
+    // but dsp unit needs this for activate/deactivate
+
 }
 
 void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (widget==slideBar) return;
     ItemBase::OnItemTouchEnded(widget, type);
-    if (callback.get())
-        callback->OnItemTouchEnded();
+    //if (callback.get())
+    //    callback->OnItemTouchEnded();
+
+    GetControlUnit()->OnTouch( ControlUnit::TouchUp,
+        		GetControlUnit()->GetNormalizedValue());
+    // control unit wire doesn't really need this
+    // but dsp unit needs this for activate/deactivate
+
 }
 
 #define RangeRadStart 4.27
@@ -342,10 +466,12 @@ void ItemKnob::AngularMode(Vec2 touchCoordWorld)
     
     angle=RangeRadStart-angle;
     double val=angle/RangeRadEnd;
-    long temp=(max-min)-long(min+(max-min)*val);
+    //long temp=(max-min)-long(min+(max-min)*val);
+    //if(abs(temp-value)<((max-min)*2/3))
+    //    SetValue(temp);
+
+    GetControlUnit()->OnTouch(ControlUnit::TouchMove,val);
     
-    if(abs(temp-value)<((max-min)*2/3))
-        SetValue(temp);
 }
 
 Vec2 ItemSlider::OnMove(Widget *widget)
@@ -355,7 +481,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
     
     if (!IsKnob())
     {
-        if (isVertical)
+        if (IsVertical())
             touchPos.y=fmin(fmax(touchPos.y,limits.y-getContentSize().height),limits.y);
         else
             touchPos.x=fmin(fmax(touchPos.x,limits.x),limits.x+getContentSize().width);
@@ -371,9 +497,10 @@ Vec2 ItemSlider::OnMove(Widget *widget)
         distanceY=abs(dragStartPos.y-touchPos.y);
     }
     
+    float diff = 0;
     int gainDiff=0;
-    float touchDistanceFromStart=isVertical?distanceX:distanceY;//sqrt(pow(distanceX,2)+pow(distanceY,2));
-    if (isVertical){
+    float touchDistanceFromStart=IsVertical()?distanceX:distanceY;//sqrt(pow(distanceX,2)+pow(distanceY,2));
+    if (IsVertical()){
         float diff=touchPos.y-dragPosUpdated.y;
         float draggingVel=log(1+touchDistanceFromStart)+1;
         float sliderComp=thumb->getContentSize().height;
@@ -383,10 +510,10 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        gainDiff=(int)(diff*(abs(max-min))/(getContentSize().height-sliderComp));
+        gainDiff=(int)(diff*(abs(GetMax()-GetMin()))/(getContentSize().height-sliderComp));
     }
     else{
-        float diff=touchPos.x-dragPosUpdated.x;
+        diff=touchPos.x-dragPosUpdated.x;
         float draggingVel=log(1+touchDistanceFromStart)+1;
         float sliderComp=thumb->getContentSize().width;
         if (IsKnob())
@@ -395,13 +522,16 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        gainDiff=(int)(diff*(abs(max-min))/(getContentSize().width-sliderComp));
+        gainDiff=(int)(diff*(abs(GetMax()-GetMin()))/(getContentSize().width-sliderComp));
     }
     if (abs(gainDiff)>=1)
     {
         //printf("DIFF INT VALUE %d\n", gainDiff);
-        value+=gainDiff;
-        SetValue(value);
+       // value+=gainDiff;
+        //SetValue(value);
+
+    	GetControlUnit()->OnTouch(ControlUnit::TouchMove,diff);
+
     }
     return touchPos;
 }
@@ -420,10 +550,11 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
 
     Vec2 touchPosNew=OnMove(widget);
     
-    if (callback.get())
-        callback->OnItemTouchMoved(value);
-    else
-        controlUnit->SendValue(value);
+// VALUE REMOVAL
+//    if (callback.get())
+//        callback->OnItemTouchMoved(value);
+//    else
+//        controlUnit->OnTouch(ControlUnit::TouchDown,value);
     
     dragPosUpdated=touchPosNew;
 
@@ -433,11 +564,11 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
 void ItemSlider::SetThumbPosition()
 {
     if (NULL==thumb) return;
-    float offset=isVertical?thumb->getContentSize().height:thumb->getContentSize().width;
+    float offset =	IsVertical() ? thumb->getContentSize().height:thumb->getContentSize().width;
 //    if (IsKnob()) offset=0;
-    float size=isVertical?getContentSize().height-offset:getContentSize().width-offset;
-    float position=((((float)value-min)/(abs(max-min)))*(/*value-min*/size))+offset/2;
-    if (isVertical)
+    float size=IsVertical()?getContentSize().height-offset:getContentSize().width-offset;
+    float position=((((float)GetValue()-GetMin())/(abs(GetMax()-GetMin())))*(/*value-GetMin()*/size))+offset/2;
+    if (IsVertical())
     {
         const int bitmapThumbXOffset=-8;
         thumb->setPosition(Vec2(getContentSize().width/2.0+bitmapThumbXOffset,position));
@@ -450,7 +581,7 @@ void ItemSlider::SetThumbPosition()
 
 cocos2d::Size ItemSlider::GetStaticBaseSize()
 {
-    if (isVertical)
+    if (IsVertical())
         return GetBaseSize();
     return SLIDER_HORZ_SIZE_BASE;
 }
@@ -471,7 +602,10 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 
     Layout::setContentSize(temp);
     //Node::setContentSize(temp);
-    SetValue(value);
+
+    //SetValue(GetValue());
+    // don't set value, just refresh gui getting the current value
+    // you can ask the normalized value
 }
 
 //void ItemSlider::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
@@ -491,8 +625,10 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 
 void ItemKnob::UpdateOnPointVisibility()
 {
-    int selectedPoint=(16.0f/(abs(max-min)))*(value-min);
-    for (int i=0;i<onPoints.size();++i)
+    //int selectedPoint=(16.0f/(abs(max-min)))*(value-min);
+    int selectedPoint = 16 * GetControlUnit()->GetNormalizedValue();
+
+	for (int i=0;i<onPoints.size();++i)
         onPoints[i]->setVisible(false);
     onPoints[selectedPoint]->setVisible(true);
 }
@@ -501,7 +637,8 @@ void ItemKnob::SetThumbPosition()
 {
     if (NULL==thumb) return;
     thumb->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
-    float rotation=(270.0f/(abs(max-min)))*(value-min);
+    //float rotation=(270.0f/(abs(max-min)))*(value-min);
+    float rotation= 270 * GetControlUnit()->GetNormalizedValue();
     thumb->setRotation(rotation);
     UpdateOnPointVisibility();
 }
@@ -586,7 +723,7 @@ void ItemKnob::Create()
     DEFAULT_NAME("Knob")
     slideBar=NULL;
     thumb=NULL;
-    isVertical=true;
+    SetVertical(true);
     ItemSlider::CreateThumb();
     
 //    auto sprite=Sprite::create("test_knob.png");
@@ -629,7 +766,7 @@ void ItemKnob::Create()
 
 void ItemPad::Create()
 {
-    value=127;
+    //SetValue(127);
     DEFAULT_NAME("Pad")
     pad = Button::create();
     pad->setTouchEnabled(true);
@@ -664,13 +801,13 @@ void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventTy
 {
     ItemBase::OnItemTouchBegan(widget,type);
     printf("Pad %x sends noteOn\n", widget);
-    controlUnit->SendValue(value);
+    GetControlUnit()->OnTouch(ControlUnit::TouchDown,1.0);
 }
 
 void ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     printf("Pad %x sends noteOff\n", widget);
-    controlUnit->SendValue(0);
+    GetControlUnit()->OnTouch(ControlUnit::TouchUp,0.0);
 }
 
 ItemPad::~ItemPad()
@@ -807,10 +944,13 @@ void ItemKeyboard::UpdateSelectedKey()
     Vec2 nodeCoord=keysHandle->convertToNodeSpace(dragPosUpdated);
     selectedKey=fmax(0,fmin(11,(nodeCoord.x-(leftBitmapOffsetPercentageForPressedKey*getContentSize().width))/keyWidth));
     int vel=velo*(getContentSize().height-nodeCoord.y)/getContentSize().height;
-    SetValue(vel);
-    controlUnit->SetMidiPitch(numKeyboardKeys*currentOctave+selectedKey);
-    controlUnit->SendValue(vel);
     
+    //SetValue(vel);
+    GetControlUnit()->GetSender()->SetMidiPitch(numKeyboardKeys*currentOctave+selectedKey);
+    GetControlUnit()->OnTouch(ControlUnit::TouchDown,vel/127.0);
+    // VALUE REMOVAL
+    //controlUnit->SendValue(vel);
+
     if (selectedKey==1||selectedKey==3||selectedKey==6||selectedKey==8||selectedKey==10)
     {
         blackKeyPressed->setPosition(Vec2(leftBitmapOffsetPercentageForPressedKey*getContentSize().width+keyWidth*selectedKey,getContentSize().height-(topBitmapOffsetPercentageForPressedKey*getContentSize().height)));
@@ -823,7 +963,7 @@ void ItemKeyboard::UpdateSelectedKey()
         blackKeyPressed->setVisible(false);
         whiteKeyPressed->setVisible(true);
     }
-    printf("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetMidiPitch(), vel);
+    //printf("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetMidiPitch(), vel);
 }
 
 void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -838,7 +978,7 @@ void ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEv
     selectedKey=-1;
     whiteKeyPressed->setVisible(false);
     blackKeyPressed->setVisible(false);
-    controlUnit->SendValue(0);
+    GetControlUnit()->OnTouch(ControlUnit::TouchUp,0);
 }
 
 void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)

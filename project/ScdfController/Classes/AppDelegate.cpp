@@ -1,12 +1,12 @@
-
 #include "SCDFCDefinitions.h"
+
 #include "AppDelegate.h"
+#include "MultiSender.h"
 #include "MainScene.h"
-#include "ControlUnit.h"
 #include "SCDFCItems.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
-#include "ControlUnit.h"
+
 #include "PropertiesPanel.h"
 #include <platform/CCDevice.h>
 #include "Logging.h"

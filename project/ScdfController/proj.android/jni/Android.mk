@@ -6,9 +6,6 @@ LIBUSB_SRC := $(LIBUSB_DIR)/libusb
 LIBUSB_INCLUDES := $(LIBUSB_SRC) $(LIBUSB_SRC)/os $(LIBUSB_SRC)/android
 
 
-
-
-
 # SCDF:
 
 SCDF_TRUNK := /home/athos/SCDF/trunk
@@ -59,7 +56,6 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					android/SensorAudioInputImplAndroid.cpp \
 					SensorsManager.cpp \
 					CustomPipe.cpp \
-					InitFramework.cpp \
 					ThreadUtils.cpp \
 					UDPSender.cpp \
 					UDPSendersManager.cpp \
@@ -77,6 +73,8 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					android/usb/UsbMidiInterface.cpp \
 					android/usb/UsbAudioDevice.cpp \
 					android/MidiOutConnectionAndroid.cpp
+					#InitFramework.cpp \
+					
 					
 include $(BUILD_SHARED_LIBRARY)
 
@@ -125,10 +123,15 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 		../../Classes/SCDFCScrollView.cpp \
 		../../Classes/SCDFCWorkingPanel.cpp \
 		../../Classes/PropertiesPanel.cpp \
-		../../Classes/ControlUnit.cpp \
+		../../Classes/MultiSender.cpp \
 		../../Classes/DropDownMenu.cpp \
-		../../Classes/ControlPatch.cpp
-
+		../../Classes/ControlUnitPatch.cpp \
+		../../Classes/Colors.cpp \
+		../../Classes/Configuration.cpp \
+		../../Classes/LoadSavePanel.cpp \
+		../../Classes/Panel.cpp \
+		../../Classes/ControlUnit.cpp
+		
 LOCAL_LDLIBS += -landroid -llog
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes \

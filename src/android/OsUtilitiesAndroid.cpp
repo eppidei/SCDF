@@ -8,7 +8,7 @@
 #include "OsUtilities.h"
 #include "JniGlue.h"
 
-std::string Scdf::GetAppDataDirectory()
+std::string scdf::GetAppDataDirectory()
 {
 	JNIEnv* env = Jni::Env();
 	jclass foregroundActivity = Jni::FindClass("it/scdf/framework/ForegroundActivity");
@@ -23,7 +23,7 @@ std::string Scdf::GetAppDataDirectory()
 	return pathString;
 }
 
-std::string Scdf::GetUserDataDirectory()
+std::string scdf::GetUserDataDirectory()
 {
 	JNIEnv* env = Jni::Env();
 	jclass foregroundActivity = Jni::FindClass("it/scdf/framework/ForegroundActivity");

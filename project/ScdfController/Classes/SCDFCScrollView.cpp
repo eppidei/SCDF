@@ -13,7 +13,7 @@
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
-#include "ControlUnit.h"
+#include "MultiSender.h"
 #include "LoadSavePanel.h"
 //#include "PlatformInfo.h"
 
