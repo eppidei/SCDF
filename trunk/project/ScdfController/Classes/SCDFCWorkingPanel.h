@@ -17,7 +17,6 @@ namespace ScdfCtrl
     
     class WorkingPanelItemCallback : public ItemBaseCallback
     {
-        //std::unique_ptr<ScdfCtrl::ControlUnit> cUnit;
     public:
         void OnItemTouchBegan(){}
         void OnItemTouchMoved(int value);

@@ -553,6 +553,8 @@ void ItemSettings::InitChildrensVisibilityAndPos()
     HideElement(name,collapsed);
     HideElement(colorLabel,collapsed);
     HideElement(color,collapsed);
+    HideElement(controlLabel,collapsed);
+    HideElement(modes,collapsed);
     
     bool forceHide=false;
     if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
@@ -587,6 +589,8 @@ void ItemSettings::PositionElements()
     DoPosition(name, xOffset, yPos);
     DoPosition(colorLabel, xOffset, yPos);
     DoPosition(color, xOffset, yPos);
+    DoPosition(controlLabel, xOffset, yPos);
+    DoPosition(modes, xOffset, yPos);
     DoPosition(orientLabel, xOffset, yPos);
     DoPosition(orientation, xOffset, yPos);
     DoPosition(sizeLabel, xOffset, yPos);
@@ -636,13 +640,35 @@ void ItemSettings::CreateControls()
     
     color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
+    //create control modes label
+    CreateLabelWithBackground(this, &controlLabel, -1, r, "CONTROL MODE", "Arial", 16);
+    addChild(controlLabel,6);
+    
+    //create control modes control
+    cocos2d::Rect rToolbar(0,0,r.size.width,r.size.height*4);
+    const float numbButtonsPerRow=3.0;
+    const float gapBetweenButtons=2.0;
+    float bSize=(r.size.width/numbButtonsPerRow)-((numbButtonsPerRow+1)*gapBetweenButtons);
+    cocos2d::Size buttonSize(bSize, bSize);
+    modes = Toolbar::CreateToolbar(rToolbar);
+    addChild(modes,7);
+    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+    std::vector<std::string> images;
+    images.push_back("CloseNormal.png");
+    images.push_back("CloseSelected.png");
+    modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    modes->AddButton(PROPERTIES_CONTROLMODE_PIPPO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    modes->AddButton(PROPERTIES_CONTROLMODE_PLUTO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    modes->AddButton(PROPERTIES_CONTROLMODE_PAPERINO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    
     //Create orient label
     CreateLabelWithBackground(this, &orientLabel, -1, r, "ORIENT", "Arial", 16);
-    addChild(orientLabel,6);
+    addChild(orientLabel,8);
     
     //Create orient dropDown
     orientation = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
-    addChild(orientation,7);
+    addChild(orientation,9);
     dropDownData.clear();
     dropDownData.push_back(DropDownMenuData("Vertical",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Horizontal",Colors::Instance()->GetUIColor(Colors::DropDownText)));
@@ -650,11 +676,11 @@ void ItemSettings::CreateControls()
     
     //Create size label
     CreateLabelWithBackground(this, &sizeLabel, -1, r, "SIZE", "Arial", 16);
-    addChild(sizeLabel,8);
+    addChild(sizeLabel,10);
     
     //Create size control
     h_minus = ui::Button::create();
-    addChild(h_minus, 10, PROPERTIES_ITEM_HEIGHT_MINUS);
+    addChild(h_minus, 12, PROPERTIES_ITEM_HEIGHT_MINUS);
     h_minus->setTouchEnabled(true);
     h_minus->ignoreContentAdaptWithSize(false);
     h_minus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
@@ -665,11 +691,11 @@ void ItemSettings::CreateControls()
     CreateLabelWithBackground(this, &sizeText, -1, r, "", GetDigitalFontPath(), 18);
     sizeText->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     sizeText->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-    addChild(sizeText,9);
+    addChild(sizeText,11);
     sizeText->SetAlignement(TextHAlignment::CENTER, TextVAlignment::CENTER);
     
     h_plus = ui::Button::create();
-    addChild(h_plus, 11, PROPERTIES_ITEM_HEIGHT_PLUS);
+    addChild(h_plus, 13, PROPERTIES_ITEM_HEIGHT_PLUS);
     h_plus->ignoreContentAdaptWithSize(false);
     h_plus->setTouchEnabled(true);
     h_plus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
@@ -691,6 +717,7 @@ void ItemSettings::Update()
     sizeText->SetText(str);
     color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
     name->SetText(panel->GetSelectedItem()->GetName());
+    //modes->CheckButton((int)(panel->GetSelectedItem()->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
 
     InitChildrensVisibilityAndPos();
     
@@ -725,6 +752,12 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
         case PROPERTIES_ITEM_HEIGHT_PLUS:
             panel->GetSelectedItem()->GetLayoutManager()->IncrementInflate();
             break;
+        case PROPERTIES_CONTROLMODE_WIRE:
+        case PROPERTIES_CONTROLMODE_BLOW:
+        case PROPERTIES_CONTROLMODE_PIPPO:
+        case PROPERTIES_CONTROLMODE_PLUTO:
+        case PROPERTIES_CONTROLMODE_PAPERINO:
+//            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
         default:
             break;
     }
