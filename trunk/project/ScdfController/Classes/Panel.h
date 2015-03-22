@@ -14,12 +14,12 @@
 #include "DropDownMenu.h"
 
 #define SUBPANEL_DISTANCE 20
-#define SUBPANEL_ITEM_HEIGHT 45.0
+#define SUBPANEL_ITEM_HEIGHT 30.0
 
 namespace ScdfCtrl
 {
     class MainScene;
-    
+    class SubpanelBase;
     class PanelBase : public cocos2d::ui::Layout
     {
         void InitWithContent(MainScene *main, cocos2d::Rect r);
@@ -33,6 +33,7 @@ namespace ScdfCtrl
      //   virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         template <class PanelType> static PanelBase *CreatePanel(MainScene *main, cocos2d::Rect r);
         void EnableScrolling(bool enable);
+        void CollapseAllSubpanelsButThis(SubpanelBase *subPanel);
         CREATE_FUNC(PanelBase);
     protected:
         cocos2d::ui::ScrollView *scrollView;
@@ -50,23 +51,16 @@ namespace ScdfCtrl
             void OnSizeChanged(float oldSize, float newSize);
             void OnSelectItem(DropDownMenu *menu);
         };
-//        class SubPanelItemCallback : public ItemBaseCallback
-//        {
-//            SubpanelBase *parent;
-//        public:
-//            SubPanelItemCallback(SubpanelBase *_parent) : parent(_parent) {}
-//            void OnItemTouchBegan();
-//            void OnItemTouchMoved(int value);
-//            void OnItemTouchEnded();
-//        };
-        
         std::unique_ptr<PanelBase> parent;
+        
         void Resize(float newHeight);
         void CalculateHeight();
         virtual void CreateControls() = 0;
+        virtual int GetYPadding() = 0;
     protected:
         std::unique_ptr<DropDownMenuCallbackSubPanel> dropDownCallback;
-       // std::unique_ptr<SubPanelItemCallback> itemCallback;
+        bool collapsed;
+        
         void HideElement(Node *n, bool hide);
         virtual void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected){}
         virtual void OnTextInput(cocos2d::ui::TextField *widget){}
@@ -88,6 +82,8 @@ namespace ScdfCtrl
         void TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         void CheckBoxEventCallback(Ref* pSender,cocos2d::ui::CheckBox::EventType type);
         void ListviewItemEvent(Ref *pSender, cocos2d::ui::ListView::EventType type);
+        bool IsCollapsed() { return collapsed;}
+        void SetCollapsed(bool collapsed);
     };
 };
 

@@ -26,6 +26,7 @@ namespace ScdfCtrl
         void CreateControls() override;
         SavePatch();
         void PositionElements() override;
+        int GetYPadding() override { return 0;}
         CREATE_FUNC(SavePatch);
     protected:
         void OnTouchEventBegan(Node *widget) override;
@@ -45,6 +46,7 @@ namespace ScdfCtrl
         void InitFilesListView();
         void HighLightCurrentItem();
         void Update() override;
+        int GetYPadding() override { return 0;}
     protected:
         void OnTouchEventBegan(Node *widget) override;
         void OnTouchEventEnded(Node *widget) override;

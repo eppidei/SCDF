@@ -29,6 +29,12 @@ namespace ScdfCtrl {
             SubPanel,
             DropDownText,
             LabelText,
+            LabelTextOn,
+            LabelBackGroundGradientTop,
+            LabelBackGroundGradientBottom,
+            LabelHeaderBackGround,
+            WidgetBackGround,
+            SubpanelGenericItem,
             UIColorsId_Count
         };
         enum ItemsColorsId

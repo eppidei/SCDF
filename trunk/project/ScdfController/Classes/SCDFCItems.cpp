@@ -91,6 +91,7 @@ ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
     item->setContentSize(r.size);
     item->setPosition(r.origin);
     item->Create();
+    item->SetColor(item->GetColor());
     return item;
 }
 
@@ -278,11 +279,6 @@ void ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventT
     dragPosUpdated=widget->getTouchMovePosition();
 }
 
-int ItemSlider::GetMin() { return GetControlUnit()->GetMin(); }
-int ItemSlider::GetMax() { return GetControlUnit()->GetMax(); }
-
-
-
 cocos2d::Size ItemSlider::GetSizeConsideringOrientation(const cocos2d::Size resized)
 {
     cocos2d::Size ret;
@@ -466,11 +462,18 @@ void ItemKnob::AngularMode(Vec2 touchCoordWorld)
     
     angle=RangeRadStart-angle;
     double val=angle/RangeRadEnd;
-    //long temp=(max-min)-long(min+(max-min)*val);
-    //if(abs(temp-value)<((max-min)*2/3))
-    //    SetValue(temp);
-
-    GetControlUnit()->OnTouch(ControlUnit::TouchMove,val);
+//    long temp=(max-min)-long(min+(max-min)*val);
+//    long temp=(max-min)-long(min+(max-min)*val);
+//    if(abs(temp-value)<((max-min)*2/3))
+//        SetValue(temp);
+    
+    double temp=1.0-val;
+    if(abs(temp-GetControlUnit()->GetNormalizedValue())<(2.0/3.0))
+    {
+        temp=fmin(1,fmax(temp,0));
+        GetControlUnit()->OnTouch(ControlUnit::TouchMove,temp);
+        SetThumbPosition();
+    }
     
 }
 
@@ -498,10 +501,9 @@ Vec2 ItemSlider::OnMove(Widget *widget)
     }
     
     float diff = 0;
-    int gainDiff=0;
     float touchDistanceFromStart=IsVertical()?distanceX:distanceY;//sqrt(pow(distanceX,2)+pow(distanceY,2));
     if (IsVertical()){
-        float diff=touchPos.y-dragPosUpdated.y;
+        diff=touchPos.y-dragPosUpdated.y;
         float draggingVel=log(1+touchDistanceFromStart)+1;
         float sliderComp=thumb->getContentSize().height;
         if (IsKnob())
@@ -510,7 +512,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        gainDiff=(int)(diff*(abs(GetMax()-GetMin()))/(getContentSize().height-sliderComp));
+        diff/=(getContentSize().height-sliderComp);
     }
     else{
         diff=touchPos.x-dragPosUpdated.x;
@@ -522,17 +524,13 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        gainDiff=(int)(diff*(abs(GetMax()-GetMin()))/(getContentSize().width-sliderComp));
+        diff/=(getContentSize().width-sliderComp);
     }
-    if (abs(gainDiff)>=1)
-    {
-        //printf("DIFF INT VALUE %d\n", gainDiff);
-       // value+=gainDiff;
-        //SetValue(value);
-
-    	GetControlUnit()->OnTouch(ControlUnit::TouchMove,diff);
-
-    }
+    
+    float normValue=GetControlUnit()->GetNormalizedValue()+diff;
+    normValue=fmin(1,fmax(0,normValue));
+    GetControlUnit()->OnTouch(ControlUnit::TouchMove,normValue);
+    SetThumbPosition();
     return touchPos;
 }
 
@@ -565,14 +563,12 @@ void ItemSlider::SetThumbPosition()
 {
     if (NULL==thumb) return;
     float offset =	IsVertical() ? thumb->getContentSize().height:thumb->getContentSize().width;
-//    if (IsKnob()) offset=0;
     float size=IsVertical()?getContentSize().height-offset:getContentSize().width-offset;
-    float position=((((float)GetValue()-GetMin())/(abs(GetMax()-GetMin())))*(/*value-GetMin()*/size))+offset/2;
+    float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
     if (IsVertical())
     {
         const int bitmapThumbXOffset=-8;
         thumb->setPosition(Vec2(getContentSize().width/2.0+bitmapThumbXOffset,position));
-//        slideBarOff->setPosition(Vec2(slideBarOff->getPositionX(),position+slideBarOff->getContentSize().height));
         slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,getContentSize().height-position+2));
     }
     else
@@ -602,10 +598,8 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 
     Layout::setContentSize(temp);
     //Node::setContentSize(temp);
-
-    //SetValue(GetValue());
-    // don't set value, just refresh gui getting the current value
-    // you can ask the normalized value
+    
+    SetThumbPosition();
 }
 
 //void ItemSlider::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
@@ -625,7 +619,6 @@ void ItemSlider::setContentSize(const cocos2d::Size &contentSize)
 
 void ItemKnob::UpdateOnPointVisibility()
 {
-    //int selectedPoint=(16.0f/(abs(max-min)))*(value-min);
     int selectedPoint = 16 * GetControlUnit()->GetNormalizedValue();
 
 	for (int i=0;i<onPoints.size();++i)
@@ -637,8 +630,7 @@ void ItemKnob::SetThumbPosition()
 {
     if (NULL==thumb) return;
     thumb->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
-    //float rotation=(270.0f/(abs(max-min)))*(value-min);
-    float rotation= 270 * GetControlUnit()->GetNormalizedValue();
+    float rotation= 270.0 * GetControlUnit()->GetNormalizedValue();
     thumb->setRotation(rotation);
     UpdateOnPointVisibility();
 }

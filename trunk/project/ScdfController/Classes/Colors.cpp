@@ -41,7 +41,13 @@ void Colors::InitUIColors()
         Color3B(50,50,50),      //Main_Background
         Color3B(1,80,80),       //SubPanel
         Color3B::WHITE,         //DropDownText
-        Color3B::BLACK          //LabelText
+        Color3B::WHITE,         //LabelText
+        Color3B(165,204,47),    //LabelTextOn
+        Color3B(109,109,109),   //LabelBackGroundGradientTop
+        Color3B(48,48,48),      //LabelBackGroundGradientBottom
+        Color3B(171,171,171),   //LabelHeaderBackGround
+        Color3B(165,204,47),    //WidgetBackGround
+        Color3B::WHITE,         //SubpanelGenericItem
     };
     
     for(int i=0; i<UIColorsId_Count; ++i)

@@ -42,16 +42,17 @@
 
 //Properties subpanel items ID
 
-#define PROPERTIES_ITEM_NAME    1
-#define PROPERTIES_ITEM_COLOR   2
+#define PROPERTIES_ITEM_NAME            1
+#define PROPERTIES_ITEM_COLOR           2
 #define PROPERTIES_ITEM_HEIGHT_MINUS    3
-#define PROPERTIES_ITEM_HEIGHT_PLUS    4
-#define PROPERTIES_ITEM_WIDTH_MINUS    5
-#define PROPERTIES_ITEM_WIDTH_PLUS    6
-#define PROPERTIES_OSC_TOGGLE   7
-#define PROPERTIES_OSC_PORT     8
-#define PROPERTIES_OSC_IP       9
-#define PATCH_LOAD              10
-#define PATCH_SAVE              11
+#define PROPERTIES_ITEM_HEIGHT_PLUS     4
+#define PROPERTIES_ITEM_WIDTH_MINUS     5
+#define PROPERTIES_ITEM_WIDTH_PLUS      6
+#define PROPERTIES_OSC_TOGGLE           7
+#define PROPERTIES_OSC_PORT             8
+#define PROPERTIES_OSC_IP               9
+#define PATCH_LOAD                      10
+#define PATCH_SAVE                      11
+#define PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW     12
 
 #endif

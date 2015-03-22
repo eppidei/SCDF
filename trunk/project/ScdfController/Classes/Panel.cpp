@@ -136,7 +136,18 @@ bool PanelBase::HideShow(PanelBase *substitute)
     return opened;
 }
 
-
+void PanelBase::CollapseAllSubpanelsButThis(SubpanelBase *subPanel)
+{
+    Vector<Node*> _childrens = scrollView->getChildren();
+    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
+    {
+        SubpanelBase *sub=dynamic_cast<SubpanelBase*>(*it);
+        if (sub==NULL) continue;
+        if (sub==subPanel) continue;
+        if (sub->IsCollapsed()) continue;
+        sub->SetCollapsed(true);
+    }
+}
 
 void SubpanelBase::DropDownMenuCallbackSubPanel::OnSizeChanged(float oldSize, float newSize)
 {
@@ -166,13 +177,19 @@ void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu
 void SubpanelBase::CalculateHeight()
 {
     int height=0;
-    Vector<Node*> _childrens = getChildren();
-    float lastChildrenYCoord=-1;
-    for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
+    if (collapsed)
+        height=SUBPANEL_ITEM_HEIGHT;
+    else
     {
-        if (!(*it)->isVisible() || (*it)->getPositionY()==lastChildrenYCoord) continue;
-        height+=(*it)->getContentSize().height;
-        lastChildrenYCoord=(*it)->getPositionY();
+        Vector<Node*> _childrens = getChildren();
+        float lastChildrenYCoord=-1;
+        for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
+        {
+            if (!(*it)->isVisible() || (*it)->getPositionY()==lastChildrenYCoord) continue;
+            height+=(*it)->getContentSize().height;
+            lastChildrenYCoord=(*it)->getPositionY();
+        }
+        height+=GetYPadding();
     }
     Resize(height);
 }
@@ -235,14 +252,13 @@ void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint
 void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
 {
     parent.reset(_parent);
+    setClippingEnabled(true);
+    collapsed=true;
     dropDownCallback.reset(new DropDownMenuCallbackSubPanel(this));
-    //itemCallback.reset(new SubPanelItemCallback(this));
     setContentSize(s);
     setBackGroundColorType(Layout::BackGroundColorType::NONE);
-    //    setBackGroundColor(MAIN_BACK_COLOR);
     setAnchorPoint(Vec2(0,1));
     CreateControls();
-   // CalculateHeight(true);
     PositionElements();
     InitChildrensVisibilityAndPos();
 
@@ -258,7 +274,15 @@ void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEv
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
-            OnTouchEventBegan(node);
+            if (node->getTag()==PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW)
+            {
+                collapsed=!collapsed;
+                if(!collapsed)
+                    parent->CollapseAllSubpanelsButThis(this);
+                InitChildrensVisibilityAndPos();
+            }
+            else
+                OnTouchEventBegan(node);
             break;
         case Widget::TouchEventType::MOVED:
             //OnTouchMoved(node);
@@ -308,4 +332,10 @@ void SubpanelBase::CheckBoxEventCallback(Ref* pSender,CheckBox::EventType type)
 {
     CheckBox *checkBox=dynamic_cast<CheckBox*>(pSender);
     OnCheckEvent(checkBox, type==CheckBox::EventType::SELECTED);
+}
+
+void SubpanelBase::SetCollapsed(bool c)
+{
+    collapsed=c;
+    InitChildrensVisibilityAndPos();
 }
