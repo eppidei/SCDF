@@ -43,5 +43,15 @@ namespace ScdfCtrl
         void SetText(std::string s);
         CREATE_FUNC(TextInputWithBackground);
     };
+    class Toolbar : public cocos2d::ui::Layout
+    {
+        std::vector<cocos2d::ui::CheckBox*> buttons;
+    public:
+        static Toolbar *CreateToolbar(cocos2d::Rect r);
+        void AddButton(int ctrlID, cocos2d::Size s, std::vector<std::string> images, Widget::ccWidgetTouchCallback callback);
+        void CheckButton(int ctrlID);
+        void UpdateLayout();
+        CREATE_FUNC(Toolbar);
+    };
 }
 #endif /* defined(__ScdfController__Label__) */

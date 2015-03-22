@@ -96,3 +96,66 @@ void TextInputWithBackground::SetText(std::string s)
 {
     text->setText(s);
 }
+
+Toolbar *Toolbar::CreateToolbar(cocos2d::Rect r)
+{
+    Toolbar *toolbar=Toolbar::create();
+    toolbar->setAnchorPoint(Vec2(0,1));
+    toolbar->setContentSize(r.size);
+    toolbar->setPosition(r.origin);
+    toolbar->setClippingEnabled(true);
+    return toolbar;
+}
+
+void Toolbar::AddButton(int ctrlID, cocos2d::Size s, std::vector<std::string> images, Widget::ccWidgetTouchCallback callback)
+{
+    auto button = CheckBox::create(images[0],images[1], images[1], images[1], images[0]);
+  //  if (images.size()>0)
+//        button->loadTextureBackGround(images[0]);
+//    if (images.size()>1){
+////        button->loadTextureBackGroundSelected(images[1]);
+//        button->loadTextureFrontCross(images[1]);
+   // }
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(s);
+    button->addTouchEventListener(callback);
+    button->setSelectedState(false);
+    addChild(button,1,ctrlID);
+    UpdateLayout();
+}
+//
+void Toolbar::CheckButton(int ctrlID)
+{
+    CheckBox *b=dynamic_cast<CheckBox*>(getChildByTag(ctrlID));
+    if (NULL==b) return;
+    b->setSelectedState(true);
+
+    for (auto it=getChildren().begin();it!=getChildren().end();++it)
+    {
+        CheckBox *bb=dynamic_cast<CheckBox*>(*it);
+        if (NULL==bb || b==bb) continue;
+        bb->setSelectedState(false);
+    }
+}
+void Toolbar::UpdateLayout()
+{
+    float width=getContentSize().width;
+    float lastXOffset=2.0;
+    float lastYOffset=getContentSize().height-2.0;
+    float yOffsetMax=0;
+    for (auto it=getChildren().begin();it!=getChildren().end();++it)
+    {
+        if (((*it)->getContentSize().width +lastXOffset)>width)
+        {
+            lastXOffset=2.0;
+            lastYOffset=lastYOffset-yOffsetMax-2.0;
+            yOffsetMax=0;
+        }
+        (*it)->setPosition(Vec2(lastXOffset,lastYOffset));
+        if ((*it)->getContentSize().height>yOffsetMax)
+            yOffsetMax=(*it)->getContentSize().height;
+        lastXOffset=lastXOffset+(*it)->getContentSize().width+2;
+    }
+}

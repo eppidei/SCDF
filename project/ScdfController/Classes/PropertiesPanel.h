@@ -88,8 +88,8 @@ namespace ScdfCtrl
         cocos2d::ui::Button *h_plus, *h_minus, *w_plus, *w_minus;
         DropDownMenu *color, *orientation;
         TextInputWithBackground *name;
-        TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel, *orientLabel, *sizeText;
-        
+        TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel, *orientLabel, *sizeText, *controlLabel;
+        Toolbar *modes;
         void CreateControls() override;
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
