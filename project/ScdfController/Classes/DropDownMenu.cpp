@@ -12,6 +12,8 @@ using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
+std::string GetDigitalFontPath();
+
 #define MAX_OPENED_MENU_HEIGHT 200.0
 void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 {
@@ -45,12 +47,6 @@ void DropDownMenu::ToggleOpenMenu()
     ResizeAndScroll(newHeight,disableScrolling);
 }
 
-//void DropDownMenu::SetSize(const Size & size)
-//{
-//    closedHeight=size.height;
-//    setContentSize(size);
-//}
-
 void DropDownMenu::SetCallback(DropDownMenuCallback *_callback)
 {
     callback=_callback;
@@ -64,13 +60,7 @@ void DropDownMenu::setPosition(const Vec2 &pos)
 
 int DropDownMenu::GetSelectedIndex()
 {
-//    if (_curSelectedIndex>=itemsData.size()){
-//        printf("\nError retrieving item info\n");
-//        return DropDownMenuData("",0);
-//    }
-//    return itemsData[_curSelectedIndex];
     return _curSelectedIndex;
-    
 }
 
 void DropDownMenu::SetSelectedIndex(int selected)
@@ -78,8 +68,6 @@ void DropDownMenu::SetSelectedIndex(int selected)
     if (lastSelectedIndex==selected) return;
     _curSelectedIndex=lastSelectedIndex=selected;
     ScrollToSelected();
-    if (callback)
-        callback->OnSelectItem(this);
 }
 
 void DropDownMenu::updateTweenAction(float value, const std::string& key)
@@ -101,6 +89,8 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
         case ListView::EventType::ON_SELECTED_ITEM_END:
             ToggleOpenMenu();
             SetSelectedIndex(getCurSelectedIndex());
+            if (callback)
+                callback->OnSelectItem(this);
             break;
         default:
             break;
@@ -109,7 +99,6 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
 
 DropDownMenu::DropDownMenu()
 {
-
     opened=false;
     callback=NULL;
     resizeParent=true;
@@ -134,7 +123,7 @@ template <class DropDownType> DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Si
     menu->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     menu->setAnchorPoint(Vec2(0,1));
     menu->setBackGroundColorType(BackGroundColorType::SOLID);
-    menu->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::Main_Background));
+    menu->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::WidgetBackGround));
     return menu;
 }
 
@@ -160,8 +149,9 @@ void DropDownMenu::BeforeInitData(float itemHeight)
 
 void DropDownMenu::AfterInitData(int numElements)
 {
-    updateInnerContainerSize();
     SetSelectedIndex(0);
+    setItemsMargin(GetVerticalMargin());
+    refreshView();
     ScrollView::setDirection(Direction::NONE);
 }
 
@@ -169,11 +159,11 @@ bool DropDownMenu::CheckDataSize(std::vector<DropDownMenuData> data)
 {
     if (0==data.size())
     {
-        Text *model = Text::create("No data","Arial",20);
+        Text *model = Text::create("No data",GetDigitalFontPath(),20);
         model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::CENTER);
+        model->setTextHorizontalAlignment(TextHAlignment::LEFT);
         model->setColor(Color3B::WHITE);
         pushBackCustomItem(model);
         return false;
@@ -185,12 +175,12 @@ void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
 {
     for (int i=0; i<data.size(); i++)
     {
-        Text *model = Text::create(data[i].text,"Arial",20);
+        Text *model = Text::create(data[i].text,GetDigitalFontPath(),20);
         model->setTouchEnabled(true);
         model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::CENTER);
+        model->setTextHorizontalAlignment(TextHAlignment::LEFT);
         model->setColor(data[i].c);
         pushBackCustomItem(model);
     }
@@ -198,14 +188,11 @@ void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
 
 void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
 {
-    setItemsMargin(getContentSize().height/2);
-            setGravity(cocos2d::ui::ListView::Gravity::CENTER_HORIZONTAL);
     for (int i=0; i<data.size(); i++)
     {
         Layout *model = Layout::create();
         model->setTouchEnabled(true);
         model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height/2));
-        //model->setPosition(Vec2(3,getContentSize().height-getItemsMargin()-(model->getContentSize().height+getItemsMargin())));
         model->ignoreContentAdaptWithSize(false);
         model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
         model->setBackGroundColor(data[i].c);
@@ -215,7 +202,6 @@ void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
 
 void DropDownMenu::InitData(std::vector<DropDownMenuData> data, float itemHeight)
 {
-//    itemsData=data;
     BeforeInitData(itemHeight);
     int numElements=1;
     if (CheckDataSize(data))

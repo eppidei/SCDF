@@ -30,10 +30,41 @@ using namespace ui;
         if (!isVisible()) \
             setVisible(true); \
 
+std::string GetDigitalFontPath()
+{
+    return "/Users/andreascuderi/Documents/SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf";
+    std::string s=std::string(getenv("HOME"))+"Documents/SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf";
+    return (FileUtils::getInstance()->getWritablePath()+"SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf");
+}
+
+void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **label, int labelID, cocos2d::Rect r, std::string labelText, std::string labelFont, int fontSize)
+{
+    (*label)=TextWithBackground::CreateText(PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW,r, labelText,labelFont,fontSize);
+    if (-1!=labelID)
+    {
+        (*label)->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+        (*label)->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelHeaderBackGround));
+        (*label)->AddTouchCallback(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, subPanel));
+    }
+    else
+    {
+        (*label)->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::GRADIENT);
+        (*label)->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientTop),Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientBottom));
+    }
+}
+
+void DoPosition(Node *n, float xPos, float &yPos)
+{
+    if (n && n->isVisible())
+    {
+        n->setPosition(Vec2(xPos,yPos));
+        yPos-=n->getContentSize().height;
+    }
+}
 
 void OSCInfo::InitChildrensVisibilityAndPos()
 {
-    bool hideItem=!oscToggle->getSelectedState();
+    bool hideItem=collapsed;
     HideElement(portLabel,hideItem);
     HideElement(oscPort,hideItem);
     HideElement(ipLabel,hideItem);
@@ -45,110 +76,64 @@ void OSCInfo::InitChildrensVisibilityAndPos()
 
 OSCInfo::OSCInfo()
 {
-    toggleLabel=portLabel=ipLabel=oscTagLabel=oscTag=NULL;
+    toggleLabel=NULL;
+    portLabel=ipLabel=oscTagLabel=oscTag=NULL;
     oscToggle=NULL;
     oscPort=oscIP=NULL;
 }
 
 void OSCInfo::CreateControls()
 {
-    //Create toggle
-    oscToggle=CheckBox::create();
-    oscToggle->loadTextures("ToggleOn.png",
-                            "ToggleOff.png",
-                            "ToggleOff.png",
-                            "ToggleOff.png",
-                            "ToggleOn.png");
-
+    cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
+    //Create header
+    CreateLabelWithBackground(this, &toggleLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "OSC", "Arial", 18);
+    addChild(toggleLabel,0);
+    
+    //Create toggle
+    oscToggle=Button::create();
+    oscToggle->loadTextures("btnOFFSimple.png", "btnONSimple.png", "");
+    oscToggle->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     oscToggle->setTouchEnabled(true);
-    oscToggle->setContentSize(cocos2d::Size(SUBPANEL_ITEM_HEIGHT,SUBPANEL_ITEM_HEIGHT));
+    oscToggle->setContentSize(cocos2d::Size(r.size.height,r.size.height));
     oscToggle->setAnchorPoint(Vec2(0,1));
-    oscToggle->setSelectedState(false);
-    oscToggle->addEventListener(CC_CALLBACK_2(SubpanelBase::CheckBoxEventCallback, this));
-    addChild(oscToggle,0,PROPERTIES_OSC_TOGGLE);
+    addChild(oscToggle,1,PROPERTIES_OSC_TOGGLE);
     oscToggle->ignoreContentAdaptWithSize(false);
     
-    //Create toggle label
-    toggleLabel = Text::create("ENABLE OSC","Arial",16);
-    toggleLabel->ignoreContentAdaptWithSize(false);
-    toggleLabel->setAnchorPoint(Vec2(0,1));
-    toggleLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    toggleLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    toggleLabel->setContentSize(cocos2d::Size(getContentSize().width/2,SUBPANEL_ITEM_HEIGHT));
-    toggleLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    addChild(toggleLabel);
+    r.size.width-=GetYPadding();
     
     //Create oscPort control
-    oscPort=TextField::create();
-    oscPort->ignoreContentAdaptWithSize(false);
-    oscPort->setPlaceHolder("No Port");
-    oscPort->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscPort->setAnchorPoint(Vec2(0,1));
-    oscPort->setTextVerticalAlignment(TextVAlignment::CENTER);
-    oscPort->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    oscPort->setFontSize(20);
-    oscPort->setTouchEnabled(true);
-    oscPort->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    oscPort->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
-    addChild(oscPort, 0, PROPERTIES_OSC_PORT);
+    oscPort = TextInputWithBackground::CreateText(PROPERTIES_OSC_PORT, r, "No Port",GetDigitalFontPath(),20);
+    addChild(oscPort,2);
+    oscPort->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    oscPort->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    oscPort->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
     //Create oscPort label
-    portLabel = Text::create("UDP PORT","Arial",16);
-    portLabel->ignoreContentAdaptWithSize(false);
-    portLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    portLabel->setAnchorPoint(Vec2(0,1));
-    portLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    portLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    portLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    addChild(portLabel);
+    CreateLabelWithBackground(this, &portLabel, -1, r, "UDP PORT", "Arial", 16);
+    addChild(portLabel,3);
     
     //Create oscIP control
-    oscIP=TextField::create();
-    oscIP->setPlaceHolder("No Ip");
-    oscIP->ignoreContentAdaptWithSize(false);
-    oscIP->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscIP->setAnchorPoint(Vec2(0,1));
-    oscIP->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    oscIP->setTextVerticalAlignment(TextVAlignment::CENTER);
-    oscIP->setTouchEnabled(true);
-    oscIP->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    oscIP->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
-    addChild(oscIP, 0 , PROPERTIES_OSC_IP);
-    oscIP->setFontName("Arial");
-    oscIP->setFontSize(20);
-    
-    
+    oscIP = TextInputWithBackground::CreateText(PROPERTIES_OSC_IP, r, "No Ip",GetDigitalFontPath(),20);
+    addChild(oscIP,4);
+    oscIP->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    oscIP->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    oscIP->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
+
     //Create oscIP label
-    ipLabel = Text::create("IP ADDRESS","Arial",16);
-    ipLabel->ignoreContentAdaptWithSize(false);
-    ipLabel->setAnchorPoint(Vec2(0,1));
-    ipLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    ipLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    ipLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    ipLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    addChild(ipLabel);
+    CreateLabelWithBackground(this, &ipLabel, -1, r, "IP ADDRESS", "Arial", 16);
+    addChild(ipLabel,5);
+
+    //Create OSCtag label
+    CreateLabelWithBackground(this, &oscTagLabel, -1, r, "OSC TAG", "Arial", 16);
+    addChild(oscTagLabel,6);
     
     //Create OSCtag label
-    oscTagLabel = Text::create("OSC TAG","Arial",16);
-    oscTagLabel->ignoreContentAdaptWithSize(false);
-    oscTagLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    oscTagLabel->setAnchorPoint(Vec2(0,1));
-    oscTagLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    oscTagLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscTagLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    addChild(oscTagLabel);
+    oscTag=TextWithBackground::CreateText(-1,r, "",GetDigitalFontPath(),16);
+    oscTag->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    oscTag->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    addChild(oscTag,7);
     
-    //Create OSCtag label
-    oscTag = Text::create("","Arial",16);
-    oscTag->setString("No Tag");
-    oscTag->ignoreContentAdaptWithSize(false);
-    oscTag->setAnchorPoint(Vec2(0,1));
-    oscTag->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    oscTag->setTextVerticalAlignment(TextVAlignment::CENTER);
-    oscTag->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    oscTag->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    addChild(oscTag);
     PositionElements();
     InitChildrensVisibilityAndPos();
 }
@@ -156,61 +141,62 @@ void OSCInfo::CreateControls()
 void OSCInfo::PositionElements()
 {
     float yPos=getContentSize().height;
+    const int xOffset=GetYPadding()/2;
     
-    if (toggleLabel)
-    {
-        toggleLabel->setPosition(Vec2(0,getContentSize().height));
-        yPos-=toggleLabel->getContentSize().height;
-    }
+    DoPosition(toggleLabel, 0, yPos);
     
     if (oscToggle)
-        oscToggle->setPosition(Vec2(getContentSize().width/2+getContentSize().width/4-oscToggle->getContentSize().width/2,getContentSize().height-SUBPANEL_ITEM_HEIGHT/2+oscToggle->getContentSize().height/2));
+        oscToggle->setPosition(Vec2(getContentSize().width-oscToggle->getContentSize().width,getContentSize().height));
     
-    if (portLabel && portLabel->isVisible())
-    {
-        portLabel->setPosition(Vec2(0,yPos));
-        yPos-=portLabel->getContentSize().height;
-    }
-    if (oscPort && oscPort->isVisible())
-    {
-        oscPort->setPosition(Vec2(0,yPos));
-        yPos-=oscPort->getContentSize().height;
-    }
-
-    if (ipLabel && ipLabel->isVisible())
-    {
-        ipLabel->setPosition(Vec2(0,yPos));
-        yPos-=ipLabel->getContentSize().height;
-    }
-    if (oscIP && oscIP->isVisible())
-    {
-        oscIP->setPosition(Vec2(0,yPos));
-        yPos-=oscIP->getContentSize().height;
-    }
+    yPos-=xOffset;
     
-    if (oscTagLabel && oscTagLabel->isVisible())
-    {
-        oscTagLabel->setPosition(Vec2(0,yPos));
-        yPos-=oscTagLabel->getContentSize().height;
-    }
-    
-    if (oscTag && oscTag->isVisible())
-        oscTag->setPosition(Vec2(0,yPos));
+    DoPosition(portLabel, xOffset, yPos);
+    DoPosition(oscPort, xOffset, yPos);
+    DoPosition(ipLabel, xOffset, yPos);
+    DoPosition(oscIP, xOffset, yPos);
+    DoPosition(oscTagLabel, xOffset, yPos);
+    DoPosition(oscTag, xOffset, yPos);
 }
 
-void OSCInfo::OnCheckEvent(CheckBox *widget, bool selected)
+void OSCInfo::UpdateOSCToggle()
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel->GetCurrentSender()) return;
+    if (panel->GetCurrentSender()->IsOscEnabled())
+        oscToggle->loadTextures("btnONSimple.png", "btnOFFSimple.png", "");
+    else
+        oscToggle->loadTextures("btnOFFSimple.png", "btnONSimple.png", "");
+}
+
+void OSCInfo::Update()
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
+    
+    UpdateOSCToggle();
+    std::ostringstream os;
+    os<<(panel->GetCurrentSender()->GetOscPort());
+    oscPort->SetText(os.str());
+    oscIP->SetText(panel->GetCurrentSender()->GetOscIp());
+    oscTag->SetText(panel->GetCurrentSender()->GetOscTag());
+//    InitChildrensVisibilityAndPos();
+}
+
+void OSCInfo::OnTouchEventBegan(cocos2d::Node *widget)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetCurrentSender()) return;
     switch (widget->getTag())
     {
         case PROPERTIES_OSC_TOGGLE:
-            panel->GetCurrentSender()->SetOscEnabled(selected);
+        {
+            panel->GetCurrentSender()->SetOscEnabled(!panel->GetCurrentSender()->IsOscEnabled());
+            UpdateOSCToggle();
             break;
+        }
         default:
             break;
     }
-    InitChildrensVisibilityAndPos();
 }
 
 void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
@@ -231,74 +217,63 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
     }
 }
 
-MIDIDevices::MIDIDevices()
-{
-    devices=NULL;
-    devicesLabel=NULL;
-}
+//MIDIDevices::MIDIDevices()
+//{
+//    devices=NULL;
+//    devicesLabel=NULL;
+//}
 
-void MIDIDevices::CreateControls()
-{
-    //Create dropDown label
-    devicesLabel = Text::create("MIDI DEVICES","Arial",16);
-    addChild(devicesLabel);
-    devicesLabel->ignoreContentAdaptWithSize(false);
-    devicesLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    devicesLabel->setAnchorPoint(Vec2(0,1));
-    devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    devicesLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    devicesLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    
-    devices = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    addChild(devices);
-    devices->ignoreContentAdaptWithSize(false);
-    devices->setAnchorPoint(Vec2(0,1));
-    devices->SetCallback(dropDownCallback.get());
-    std::vector<DropDownMenuData> dropDownData;
-    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
-}
+//void MIDIDevices::CreateControls()
+//{
+//    //Create dropDown label
+//    cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
+//    devicesLabel = TextWithBackground::CreateText(-1, r, "MIDI DEVICES","Arial",16);
+//    addChild(devicesLabel);
+//    devicesLabel->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::GRADIENT);
+//    devicesLabel->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientTop),Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientBottom));
+////    devicesLabel->ignoreContentAdaptWithSize(false);
+////    devicesLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
+////    devicesLabel->setAnchorPoint(Vec2(0,1));
+////    devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
+////    devicesLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+////    devicesLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
+//    
+//    devices = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+//    addChild(devices);
+//    devices->ignoreContentAdaptWithSize(false);
+//    devices->setAnchorPoint(Vec2(0,1));
+//    devices->SetCallback(dropDownCallback.get());
+//    std::vector<DropDownMenuData> dropDownData;
+//    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+//    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
+//        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+//    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+//}
 
-void MIDIDevices::Update()
-{
-    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
-    
-    devices->SetSelectedIndex(panel->GetCurrentSender()->GetMidiOutIndex()+1);
-}
+//void MIDIDevices::Update()
+//{
+//    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+//    if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
+//    
+//    devices->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiOutIndex()+1);
+//}
 
-void MIDIDevices::PositionElements()
-{
-    if (devicesLabel)
-        devicesLabel->setPosition(Vec2(0,getContentSize().height));
-    if (devices)
-        devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
-}
+//void MIDIDevices::PositionElements()
+//{
+//    if (devicesLabel)
+//        devicesLabel->setPosition(Vec2(0,getContentSize().height));
+//    if (devices)
+//        devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
+//}
 
-void MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
-{
-    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetCurrentSender()) return;
-    int selectedIndex=menu->getCurSelectedIndex();
-    if (devices==menu)
-        panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
-}
-
-void OSCInfo::Update()
-{
-    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
-    
-    oscToggle->setSelectedState(panel->GetCurrentSender()->IsOscEnabled());
-    std::ostringstream os;
-    os<<(panel->GetCurrentSender()->GetOscPort());
-    oscPort->setText(os.str());
-    oscIP->setText(panel->GetCurrentSender()->GetOscIp());
-    oscTag->setString(panel->GetCurrentSender()->GetOscTag());
-    InitChildrensVisibilityAndPos();
-}
+//void MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
+//{
+//    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+//    if (NULL==panel->GetCurrentControlUnit()) return;
+//    int selectedIndex=menu->getCurSelectedIndex();
+//    if (devices==menu)
+//        panel->GetCurrentControlUnit()->SetMidiOutIndex(selectedIndex-1);
+//}
 
 void MIDIInfo::UpdateVelocity()
 {
@@ -312,6 +287,10 @@ void MIDIInfo::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     VISIBILITY_CHECK
+    
+    if (NULL==panel->GetCurrentSender()) return;
+    
+    devices->SetSelectedIndex(panel->GetCurrentSender()->GetMidiOutIndex()+1);
     
     int selectedIndex=-1;
     switch(panel->GetCurrentSender()->GetMidiMessageType())
@@ -344,22 +323,38 @@ void MIDIInfo::Update()
 
 void MIDIInfo::PositionElements()
 {
-    if (midiMessageLabel)
-        midiMessageLabel->setPosition(Vec2(0,getContentSize().height));
-    if (midiMessage)
-        midiMessage->setPosition(Vec2(0,midiMessageLabel->getPositionY()-midiMessageLabel->getContentSize().height));
-    if (controlChangeLabel)
-        controlChangeLabel->setPosition(Vec2(0,midiMessage->getPositionY()-midiMessage->getContentSize().height));
-    if (controlChange)
-        controlChange->setPosition(Vec2(0,controlChangeLabel->getPositionY()-controlChangeLabel->getContentSize().height));
-    if (channelLabel)
-        channelLabel->setPosition(Vec2(0,controlChange->getPositionY()-controlChange->getContentSize().height));
-    if (channel)
-        channel->setPosition(Vec2(0,channelLabel->getPositionY()-channelLabel->getContentSize().height));
-    if (velocityLabel)
-        velocityLabel->setPosition(Vec2(0,channel->getPositionY()-channel->getContentSize().height));
-    if (velocity)
-        velocity->setPosition(Vec2(0,velocityLabel->getPositionY()-velocityLabel->getContentSize().height));
+    float yPos=getContentSize().height;
+    const int xOffset=GetYPadding()/2;
+    
+    DoPosition(midiLabel, 0, yPos);
+    
+    yPos-=xOffset;
+    
+    DoPosition(devicesLabel, xOffset, yPos);
+    DoPosition(devices, xOffset, yPos);
+    DoPosition(midiMessageLabel, xOffset, yPos);
+    DoPosition(midiMessage, xOffset, yPos);
+    DoPosition(controlChangeLabel, xOffset, yPos);
+    DoPosition(controlChange, xOffset, yPos);
+    DoPosition(channelLabel, xOffset, yPos);
+    DoPosition(channel, xOffset, yPos);
+    DoPosition(velocityLabel, xOffset, yPos);
+    DoPosition(velocity, xOffset, yPos);
+}
+
+void MIDIInfo::InitChildrensVisibilityAndPos()
+{
+    HideElement(devicesLabel,collapsed);
+    HideElement(devices,collapsed);
+    HideElement(midiMessageLabel,collapsed);
+    HideElement(midiMessage,collapsed);
+    HideElement(controlChangeLabel,collapsed);
+    HideElement(controlChange,collapsed);
+    HideElement(channelLabel,collapsed);
+    HideElement(channel,collapsed);
+    HideElement(velocityLabel,collapsed);
+    HideElement(velocity,collapsed);
+    SubpanelBase::InitChildrensVisibilityAndPos();
 }
 
 void MIDIInfo::InitControlMenuValue()
@@ -380,7 +375,7 @@ void MIDIInfo::InitControlMenuValue()
                 if (i>0&&0==i%12)
                     octave++;
             }
-            controlChangeLabel->setString("MIDI NOTE");
+            controlChangeLabel->SetText("MIDI NOTE");
         }
         else
         {
@@ -390,7 +385,7 @@ void MIDIInfo::InitControlMenuValue()
                 os<<"CC: "<<i;
                 dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
             }
-            controlChangeLabel->setString("CONTROL CHANGE");
+            controlChangeLabel->SetText("CONTROL CHANGE");
         }
     }
     else
@@ -401,7 +396,7 @@ void MIDIInfo::InitControlMenuValue()
             os<<i-1;
             dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
         }
-        controlChangeLabel->setString("OCTAVE");
+        controlChangeLabel->SetText("OCTAVE");
     }
     controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
@@ -441,18 +436,52 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
         panel->GetSelectedItem()->GetControlUnit()->SetMax(selectedIndex);
     	// this is used for the button, and the button
     	// sends the max value when pressed
+    else if (menu==devices)
+        panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
     panel->UpdateOSCInfo();
     
+    panel->UpdateOSCInfo();
 }
 
 MIDIInfo::MIDIInfo()
 {
+    devices=NULL;
+    devicesLabel=NULL;
     midiMessage=controlChange=channel=velocity=NULL;
-    midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=NULL;
+    midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
 
 void MIDIInfo::CreateControls()
 {
+    cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
+    
+    //Create header
+    CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", "Arial", 18);
+    addChild(midiLabel);
+    
+    r.size.width-=GetYPadding();
+
+    //Create device label
+    CreateLabelWithBackground(this, &devicesLabel, -1, r, "MIDI DEVICES", "Arial", 16);
+    addChild(devicesLabel);
+    
+    //Create device dropDown
+    devices = DropDownMenu::CreateMenu<DropDownMenu>(r.size);
+    addChild(devices);
+    devices->ignoreContentAdaptWithSize(false);
+    devices->setAnchorPoint(Vec2(0,1));
+    devices->SetCallback(dropDownCallback.get());
+    std::vector<DropDownMenuData> dropDownData;
+    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
+        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    
+    //Create midiMessage label
+    CreateLabelWithBackground(this, &midiMessageLabel, -1, r, "MIDI MESSAGE", "Arial", 16);
+    addChild(midiMessageLabel);
+    
+    //Create midiMessage dropDown
     std::vector<std::string> MidiMessageString;
     MidiMessageString.push_back("Note On");
     MidiMessageString.push_back("Note Off");
@@ -461,62 +490,34 @@ void MIDIInfo::CreateControls()
     MidiMessageString.push_back("Program Change");
     MidiMessageString.push_back("PolyKeyPressure");
     MidiMessageString.push_back("Pitch Bend");
-    
-    //Create midiMessage label
-    midiMessageLabel = Text::create("MIDI MESSAGE","Arial",16);
-    addChild(midiMessageLabel);
-    midiMessageLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    midiMessageLabel->ignoreContentAdaptWithSize(false);
-    midiMessageLabel->setAnchorPoint(Vec2(0,1));
-    midiMessageLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    midiMessageLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    midiMessageLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-
-    
-    //Create dropDown midiMessage
-    midiMessage = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    midiMessage = DropDownMenu::CreateMenu<DropDownMenu>(r.size);
     addChild(midiMessage);
     midiMessage->ignoreContentAdaptWithSize(false);
     midiMessage->setAnchorPoint(Vec2(0,1));
     midiMessage->SetCallback(dropDownCallback.get());
-    std::vector<DropDownMenuData> dropDownData;
+    dropDownData.clear();
     for (int i=0;i<MidiMessageString.size();++i)
         dropDownData.push_back(DropDownMenuData(MidiMessageString[i],Colors::Instance()->GetUIColor(Colors::DropDownText)));
     midiMessage->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
-    //Create dropDown label
-    controlChangeLabel = Text::create("CONTROL CHANGE","Arial",16);
+    //Create ControlChange label
+    CreateLabelWithBackground(this, &controlChangeLabel, -1, r, "CONTROL CHANGE", "Arial", 16);
     addChild(controlChangeLabel);
-    controlChangeLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    controlChangeLabel->ignoreContentAdaptWithSize(false);
-    controlChangeLabel->setAnchorPoint(Vec2(0,1));
-    controlChangeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    controlChangeLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    controlChangeLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
-
-    //Create dropDown
-    controlChange = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    //Create ControlChange dropDown
+    controlChange = DropDownMenu::CreateMenu<DropDownMenu>(r.size);
     addChild(controlChange);
     controlChange->ignoreContentAdaptWithSize(false);
     controlChange->setAnchorPoint(Vec2(0,1));
     controlChange->SetCallback(dropDownCallback.get());
-    dropDownData.clear();
-    
     InitControlMenuValue();
-    //Create dropDown label
-    channelLabel = Text::create("CHANNEL","Arial",16);
+    
+    //Create channel label
+    CreateLabelWithBackground(this, &channelLabel, -1, r, "CHANNEL", "Arial", 16);
     addChild(channelLabel);
-    channelLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    channelLabel->ignoreContentAdaptWithSize(false);
-    channelLabel->setAnchorPoint(Vec2(0,1));
-    channelLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    channelLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    channelLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
 
-
-    //Create dropDown
-    channel = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    //Create channel dropDown
+    channel = DropDownMenu::CreateMenu<DropDownMenu>(r.size);
     addChild(channel);
     channel->ignoreContentAdaptWithSize(false);
     channel->setAnchorPoint(Vec2(0,1));
@@ -530,19 +531,12 @@ void MIDIInfo::CreateControls()
     }
     channel->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
-    //Create dropDown label
-    velocityLabel = Text::create("VELOCITY","Arial",16);
+    //Create velocity label
+    CreateLabelWithBackground(this, &velocityLabel, -1, r, "VELOCITY", "Arial", 16);
     addChild(velocityLabel);
-    velocityLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    velocityLabel->ignoreContentAdaptWithSize(false);
-    velocityLabel->setAnchorPoint(Vec2(0,1));
-    velocityLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    velocityLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    velocityLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-
-
-    //Create dropDown
-    velocity = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    
+    //Create velocity dropDown
+    velocity = DropDownMenu::CreateMenu<DropDownMenu>(r.size);
     addChild(velocity);
     velocity->ignoreContentAdaptWithSize(false);
     velocity->setAnchorPoint(Vec2(0,1));
@@ -566,19 +560,36 @@ ItemSettings::ItemSettings()
     sizeLabel=colorLabel=nameLabel=NULL;
 }
 
+void ItemSettings::InitChildrensVisibilityAndPos()
+{
+    HideElement(nameLabel,collapsed);
+    HideElement(name,collapsed);
+    HideElement(colorLabel,collapsed);
+    HideElement(color,collapsed);
+    HideElement(sizeLabel,collapsed);
+    HideElement(h_plus,collapsed);
+    HideElement(sizeText,collapsed);
+    HideElement(w_minus,collapsed);
+    HideElement(w_plus,collapsed);
+    HideElement(h_minus,collapsed);
+    SubpanelBase::InitChildrensVisibilityAndPos();
+}
+
 void ItemSettings::PositionElements()
 {
-    if (nameLabel)
-        nameLabel->setPosition(Vec2(0,getContentSize().height));
-    if (name)
-        name->setPosition(Vec2(0,nameLabel->getPositionY()-nameLabel->getContentSize().height));
-    if (colorLabel)
-        colorLabel->setPosition(Vec2(0,name->getPositionY()-name->getContentSize().height));
-    if (color)
-        color->setPosition(Vec2(0,colorLabel->getPositionY()-colorLabel->getContentSize().height));
-
-    if (sizeLabel)
-        sizeLabel->setPosition(Vec2(0,color->getPositionY()-color->getContentSize().height));
+    float yPos=getContentSize().height;
+    const int xOffset=GetYPadding()/2;
+    
+    DoPosition(settingsLabel, 0, yPos);
+    
+    yPos-=xOffset;
+    
+    DoPosition(nameLabel, xOffset, yPos);
+    DoPosition(name, xOffset, yPos);
+    DoPosition(colorLabel, xOffset, yPos);
+    DoPosition(color, xOffset, yPos);
+    DoPosition(sizeLabel, xOffset, yPos);
+    
     if (h_plus)
     {
         h_plus->setPosition(Vec2(getContentSize().width/2.0-h_plus->getContentSize().width/2.0,sizeLabel->getPositionY()-sizeLabel->getContentSize().height));
@@ -591,51 +602,40 @@ void ItemSettings::PositionElements()
 
 void ItemSettings::CreateControls()
 {
-    sizeLabel = Text::create("ITEM SIZE","Arial",16);
+    cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
+    
+    //Create header
+    CreateLabelWithBackground(this, &settingsLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "ITEM SETTINGS", "Arial", 18);
+    addChild(settingsLabel);
+    
+    r.size.width-=GetYPadding();
+
+    //Create size label
+    CreateLabelWithBackground(this, &sizeLabel, -1, r, "SIZE", "Arial", 16);
     addChild(sizeLabel);
-    sizeLabel->ignoreContentAdaptWithSize(false);
-    sizeLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    sizeLabel->setAnchorPoint(Vec2(0,1));
-    sizeLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    sizeLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    sizeLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
-    colorLabel = Text::create("ITEM COLOR","Arial",16);
+    //Create color label
+    CreateLabelWithBackground(this, &colorLabel, -1, r, "COLOR", "Arial", 16);
     addChild(colorLabel);
-    colorLabel->ignoreContentAdaptWithSize(false);
-    colorLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    colorLabel->setAnchorPoint(Vec2(0,1));
-    colorLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    colorLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    colorLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
-    nameLabel = Text::create("ITEM NAME","Arial",16);
+    //Create name label
+    CreateLabelWithBackground(this, &nameLabel, -1, r, "NAME", "Arial", 16);
     addChild(nameLabel);
-    nameLabel->ignoreContentAdaptWithSize(false);
-    nameLabel->setAnchorPoint(Vec2(0,1));
-    nameLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-    nameLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    nameLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    nameLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
     
-    name=TextField::create();
-    addChild(name, 0, PROPERTIES_ITEM_NAME);
-    name->ignoreContentAdaptWithSize(false);
-    name->setPlaceHolder("No name");
-    name->setTextVerticalAlignment(TextVAlignment::CENTER);
-    name->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    name->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    name->setAnchorPoint(Vec2(0,1));
-    name->setFontSize(20);
-    name->setTouchEnabled(true);
-    name->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-    name->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
+    //Create name control
+    name = TextInputWithBackground::CreateText(PROPERTIES_ITEM_NAME, r, "No Name",GetDigitalFontPath(),20);
+    addChild(name);
+    name->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    name->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    name->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
-    color = DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    //Create name control
+    color = DropDownMenu::CreateMenu<DropDownColorMenu>(r.size);
     addChild(color,0,PROPERTIES_ITEM_COLOR);
     color->ignoreContentAdaptWithSize(false);
     color->setAnchorPoint(Vec2(0,1));
     color->SetCallback(dropDownCallback.get());
+    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
     
     std::vector<DropDownMenuData> dropDownData;
     for (int i=0;i<Colors::Instance()->CountItemsColor();++i)
@@ -643,7 +643,7 @@ void ItemSettings::CreateControls()
     
     color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
-    
+    //Create size control
     h_minus = ui::Button::create();
     addChild(h_minus, 0, PROPERTIES_ITEM_HEIGHT_MINUS);
     h_minus->setTouchEnabled(true);
@@ -702,7 +702,7 @@ void ItemSettings::Update()
     sprintf(str,"(%d,%d)",(int)(item->GetStaticBaseSize().width+item->GetInflateValue(false)),(int)(item->GetStaticBaseSize().height+item->GetInflateValue(true)));
     sizeText->setString(str);
     color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
-    name->setText(panel->GetSelectedItem()->GetName());
+    name->SetText(panel->GetSelectedItem()->GetName());
     
 }
 
@@ -759,9 +759,6 @@ void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
 
 void PropertiesPanel::InitPanel()
 {
-//            cocos2d::Rect rr(0, 0,     getContentSize().width/*, getBackGroundImageTextureSize().width-0*/,     /*getBackGroundImageTextureSize()*/getContentSize().height-0);
-//    auto jacket = Sprite::create("leftPanel.png",rr);
-//    addChild(jacket);
     setBackGroundImage("leftPanel.png");
     const int rightPadding=60;
     selectedItem=NULL;
@@ -769,9 +766,9 @@ void PropertiesPanel::InitPanel()
     sectionOSCInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
     scrollView->addChild(sectionOSCInfo);
     
-    sectionMIDIDevices=MIDIDevices::create();
-    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width/2));
-    scrollView->addChild(sectionMIDIDevices);
+//    sectionMIDIDevices=MIDIDevices::create();
+//    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width/2));
+//    scrollView->addChild(sectionMIDIDevices);
     
     sectionMIDIInfo=MIDIInfo::create();
     sectionMIDIInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
@@ -793,19 +790,12 @@ void PropertiesPanel::InitPanel()
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
     UpdateSubpanels();
-//    cocos2d::Rect rr(0, 0, getContentSize().width, getContentSize().height);
-//    auto backGroundImage = Sprite::create("leftPanel.png");
-//    addChild(backGroundImage);
-//    cocos2d::Size s=backGroundImage->getContentSize();
-//    backGroundImage->setAnchorPoint(Vec2(0,1));
-//    backGroundImage->setScale(getContentSize().width/s.width, getInnerContainerSize().height/s.height);
-//    backGroundImage->setPosition(0,getContentSize().height);
 }
 
 void PropertiesPanel::UpdateSubpanels()
 {
     sectionOSCInfo->Update();
-    sectionMIDIDevices->Update();
+    //sectionMIDIDevices->Update();
     sectionMIDIInfo->Update();
     sectionItemSettings->Update();
     InitLayout();

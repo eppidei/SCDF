@@ -47,6 +47,7 @@ namespace ScdfCtrl
         void BeforeInitData(float itemHeight);
         void AfterInitData(int numElements);
         bool CheckDataSize(std::vector<DropDownMenuData> data);
+        virtual float GetVerticalMargin() {return 0;}
     protected:
         DropDownMenu();
         virtual void DoInitData(std::vector<DropDownMenuData> data);
@@ -65,6 +66,7 @@ namespace ScdfCtrl
     class DropDownColorMenu : public DropDownMenu
     {
         DropDownColorMenu() : DropDownMenu() {}
+        float GetVerticalMargin() override {return getContentSize().height/2.0;}
     protected:
         void DoInitData(std::vector<DropDownMenuData> data) override;
     public:

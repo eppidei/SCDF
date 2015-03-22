@@ -13,6 +13,7 @@
 #include "DropDownMenu.h"
 #include "Observer.h"
 #include "Panel.h"
+#include "Label.h"
 
 namespace ScdfCtrl
 {
@@ -28,49 +29,53 @@ namespace ScdfCtrl
     {
         friend class PropertiesPanel;
         
-        cocos2d::ui::Text *toggleLabel, *portLabel, *ipLabel, *oscTagLabel, *oscTag;
-        cocos2d::ui::CheckBox *oscToggle;
-        cocos2d::ui::TextField* oscPort;
-        cocos2d::ui::TextField* oscIP;
+        TextWithBackground *portLabel, *ipLabel, *oscTagLabel, *oscTag, *toggleLabel;
+        cocos2d::ui::Button *oscToggle;
+        TextInputWithBackground *oscPort, *oscIP;
         
+        void UpdateOSCToggle();
         void CreateControls() override;
         void Update() override;
         void PositionElements() override;
         void InitChildrensVisibilityAndPos() override;
-        void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected) override;
+        void OnTouchEventBegan(cocos2d::Node *widget);
         void OnTextInput(cocos2d::ui::TextField *widget) override;
+        int GetYPadding() override { return 20;}
         OSCInfo();
         CREATE_FUNC(OSCInfo);
     };
     
-    class MIDIDevices : public SubpanelBase
-    {
-        friend class PropertiesPanel;
-        
-        DropDownMenu *devices;
-        cocos2d::ui::Text *devicesLabel;
-        
-        void CreateControls() override;
-        void OnDropDownSelectionChange(DropDownMenu *menu) override;
-        void PositionElements() override;
-        void Update() override;
-        MIDIDevices();
-        CREATE_FUNC(MIDIDevices);
-    };
+//    class MIDIDevices : public SubpanelBase
+//    {
+//        friend class PropertiesPanel;
+//        
+//        DropDownMenu *devices;
+//        TextWithBackground *devicesLabel;
+//        
+//        void CreateControls() override;
+//        void OnDropDownSelectionChange(DropDownMenu *menu) override;
+//        void PositionElements() override;
+//        void Update() override;
+//        MIDIDevices();
+//        int GetYPadding() override { return 0;}
+//        CREATE_FUNC(MIDIDevices);
+//    };
     
     class MIDIInfo : public SubpanelBase
     {
         friend class PropertiesPanel;
-        
-        DropDownMenu *midiMessage, *controlChange, *channel, *velocity;
-        cocos2d::ui::Text *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel;
+    
+        DropDownMenu *midiMessage, *controlChange, *channel, *velocity, *devices;
+        TextWithBackground *devicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel;
         
         void CreateControls() override;
         void InitControlMenuValue();
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
         void Update() override;
+        void InitChildrensVisibilityAndPos() override;
         void UpdateVelocity();
+        int GetYPadding() override { return 20;}
         MIDIInfo();
         CREATE_FUNC(MIDIInfo);
     };
@@ -81,10 +86,10 @@ namespace ScdfCtrl
         
         float itemMultiply;
         cocos2d::ui::Button *h_plus, *h_minus, *w_plus, *w_minus;
-        cocos2d::ui::Text *sizeText;
         DropDownMenu *color;
-        cocos2d::ui::TextField* name;
-        cocos2d::ui::Text *sizeLabel, *colorLabel, *nameLabel;
+        TextInputWithBackground *name;
+        TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel;
+        cocos2d::ui::Text *sizeText;
         
         void CreateControls() override;
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
@@ -92,6 +97,8 @@ namespace ScdfCtrl
         void Update() override;
         void OnTextInput(cocos2d::ui::TextField *widget) override;
         void OnTouchEventBegan(cocos2d::Node *widget) override;
+        void InitChildrensVisibilityAndPos() override;
+        int GetYPadding() override { return 20;}
         ItemSettings();
         CREATE_FUNC(ItemSettings);
     };
@@ -100,7 +107,7 @@ namespace ScdfCtrl
     {
 
         OSCInfo *sectionOSCInfo;
-        MIDIDevices *sectionMIDIDevices;
+     //   MIDIDevices *sectionMIDIDevices;
         MIDIInfo *sectionMIDIInfo;
         ItemSettings *sectionItemSettings;
         ItemBase *selectedItem;
