@@ -86,10 +86,9 @@ namespace ScdfCtrl
         
         float itemMultiply;
         cocos2d::ui::Button *h_plus, *h_minus, *w_plus, *w_minus;
-        DropDownMenu *color;
+        DropDownMenu *color, *orientation;
         TextInputWithBackground *name;
-        TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel;
-        cocos2d::ui::Text *sizeText;
+        TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel, *orientLabel, *sizeText;
         
         void CreateControls() override;
         void OnDropDownSelectionChange(DropDownMenu *menu) override;

@@ -105,25 +105,27 @@ DropDownMenu::DropDownMenu()
     lastSelectedIndex=-1;
 }
 
-void DropDownMenu::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-{
-    DrawPrimitives::setDrawColor4B(255, 255, 255, 255);
-    DrawPrimitives::drawRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0));
-}
+//void DropDownMenu::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+//{
+//    DrawPrimitives::setDrawColor4B(255, 255, 255, 255);
+//    DrawPrimitives::drawRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0));
+//}
 
-template  DropDownMenu *DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size s);
-template  DropDownMenu *DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size s);
+template  DropDownMenu *DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size s, DropDownMenuCallback *callback);
+template  DropDownMenu *DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size s, DropDownMenuCallback *callback);
 
-template <class DropDownType> DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s)
+template <class DropDownType> DropDownMenu *DropDownMenu::CreateMenu(cocos2d::Size s, DropDownMenuCallback *_callback)
 {
     DropDownMenu *menu=DropDownType::create();
     menu->setContentSize(s);
+    menu->ignoreContentAdaptWithSize(false);
     menu->ScrollView::setDirection(Direction::VERTICAL);
     menu->addEventListener(CC_CALLBACK_2(DropDownMenu::OnControlTouch, menu));
     menu->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     menu->setAnchorPoint(Vec2(0,1));
     menu->setBackGroundColorType(BackGroundColorType::SOLID);
     menu->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::WidgetBackGround));
+    menu->SetCallback(_callback);
     return menu;
 }
 
@@ -192,7 +194,7 @@ void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
     {
         Layout *model = Layout::create();
         model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height/2));
+        model->setContentSize(cocos2d::Size(getContentSize().width-40,getContentSize().height/2));
         model->ignoreContentAdaptWithSize(false);
         model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
         model->setBackGroundColor(data[i].c);

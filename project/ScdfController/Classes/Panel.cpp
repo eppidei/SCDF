@@ -70,7 +70,7 @@ void PanelBase::CalculateInnerHeight()
         innerHeight+=(*it)->getContentSize().height;
     }
     innerHeight+=SUBPANEL_DISTANCE;
-    scrollView->setInnerContainerSize(cocos2d::Size(getContentSize().width,fmax(getContentSize().height,innerHeight)));
+    scrollView->setInnerContainerSize(cocos2d::Size(getContentSize().width,innerHeight));
 }
 
 void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
@@ -221,10 +221,10 @@ PanelBase *SubpanelBase::GetParent()
 void SubpanelBase::Resize(float newHeight)
 {
     auto modifyHeight = ActionTween::create(0.1, "height", getContentSize().height, newHeight);
-    runAction(modifyHeight);
-//    cocos2d::Size s=cocos2d::Size(getContentSize().width, newHeight);
-//    setContentSize(s);
-//    parent->InitLayout();
+//    runAction(modifyHeight);
+    cocos2d::Size s=cocos2d::Size(getContentSize().width, newHeight);
+    setContentSize(s);
+    parent->InitLayout();
 }
 
 void SubpanelBase::updateTweenAction(float value, const std::string& key)

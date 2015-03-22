@@ -56,11 +56,11 @@ namespace ScdfCtrl
         void SetSelectedIndex(int selected);
         void InitData(std::vector<DropDownMenuData> data, float itemHeight);
         void setPosition(const cocos2d::Vec2 &pos) override;
-        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+        //void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         void SetCallback(DropDownMenuCallback *_callback);
         void updateTweenAction(float value, const std::string& key);
         ~DropDownMenu();
-        template <class DropDownType> static DropDownMenu *CreateMenu(cocos2d::Size s);
+        template <class DropDownType> static DropDownMenu *CreateMenu(cocos2d::Size s, DropDownMenuCallback *callback);
         CREATE_FUNC(DropDownMenu);
     };
     class DropDownColorMenu : public DropDownMenu

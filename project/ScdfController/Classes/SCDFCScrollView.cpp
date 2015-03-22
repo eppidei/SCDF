@@ -128,7 +128,7 @@ void ItemScrollView::ToggleShowSubpanel(int itemId, float y)
     else
     {
         HideAllSubPanels();
-        scroll->setPosition(Vec2(/*GetBackgroundBitmapLeftOffset()-8*/GetBackgroundBitmapLeftOffset()+getPositionX()-scroll->getContentSize().width, y));
+        scroll->setPosition(Vec2(GetBackgroundBitmapLeftOffset()+getPositionX()-scroll->getContentSize().width, y));
         scroll->setVisible(true);
         actScrollview = FadeIn::create(0.2f);
         CheckButton(itemId,true);

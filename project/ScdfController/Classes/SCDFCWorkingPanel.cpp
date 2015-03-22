@@ -136,13 +136,13 @@ void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parent
 
 void WorkingPanel::DetectCollisions(cocos2d::Rect r)
 {
-    DoDetectCollisions(NULL, r);
+    DoDetectCollisions(NULL, r, NULL);
 }
 
 void WorkingPanel::DetectCollisions(Node *item)
 {
     cocos2d::Rect rItem(item->getPositionX(), item->getPositionY(), item->getContentSize().width, item->getContentSize().height);
-    DoDetectCollisions(item, rItem);
+    DoDetectCollisions(item, rItem, NULL);
 }
 
 bool RectIntersection(cocos2d::Rect r1, cocos2d::Rect r2)
@@ -152,9 +152,10 @@ bool RectIntersection(cocos2d::Rect r1, cocos2d::Rect r2)
              r1.origin.y < r2.origin.y-r2.size.height ||
              r2.origin.y < r1.origin.y-r1.size.height);
 }
-void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r)
+void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r, bool *collision)
 {
-    collisionDetected=false;
+    bool *c=collision!=NULL?collision:&collisionDetected;
+    *c=false;
     for (int i=0;i<patch->units.size();++i)
     {
     	Layout* testItem = dynamic_cast<Layout*>(patch->units[i]->GetItem());
@@ -162,7 +163,7 @@ void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r)
         cocos2d::Rect rItem(testItem->getPositionX(), testItem->getPositionY(), testItem->getContentSize().width, testItem->getContentSize().height);
         if(RectIntersection(r,rItem))
         {
-            collisionDetected=true;
+            *c=true;
             return;
         }
     }
