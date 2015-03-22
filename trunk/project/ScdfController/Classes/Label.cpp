@@ -57,6 +57,12 @@ void TextWithBackground::SetText(std::string s)
     text->setString(s);
 }
 
+void TextWithBackground::SetAlignement(TextHAlignment hAlign, TextVAlignment vAlign)
+{
+    text->setTextVerticalAlignment(vAlign);
+    text->setTextHorizontalAlignment(hAlign);
+}
+
 TextInputWithBackground *TextInputWithBackground::CreateText(int ctrlID, cocos2d::Rect r, std::string s, std::string fontName, int fontSize)
 {
     TextInputWithBackground *textWB=TextInputWithBackground::create();

@@ -35,7 +35,6 @@ namespace ScdfCtrl
         void DrawGrid();
         void CheckRemoveControl(Node *n);
         void DetectCollisions(Node *_item);
-        void DoDetectCollisions(Node *_item, cocos2d::Rect r);
         
     public:
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
@@ -45,6 +44,7 @@ namespace ScdfCtrl
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
         void ToggleActiveState();
         void DetectCollisions(cocos2d::Rect r);
+        void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
         CREATE_FUNC(WorkingPanel);
     };
 }

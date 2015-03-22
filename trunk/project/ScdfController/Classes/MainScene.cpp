@@ -15,6 +15,9 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
+int MainScene::gridIndex=0;
+std::vector<float> MainScene::gridUnity;
+
 Scene* MainScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -215,13 +218,12 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     //toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
 
-void MainScene::CalculateGrid()
+void MainScene::CalculateGrid(cocos2d::Size workingPanelSize)
 {
     gridUnity.clear();
-    cocos2d::Size s=customPanel->getContentSize();
     float divisore=10;
-    float width=s.width;
-    float height=s.height;
+    float width=workingPanelSize.width;
+    float height=workingPanelSize.height;
     for (;divisore<1000;){
         if ((0==std::fmod(width,divisore)) && (0==std::fmod(height,divisore)))
             gridUnity.push_back(divisore);
@@ -261,7 +263,6 @@ bool MainScene::init()
     Director::getInstance()->setDisplayStats(false);
     cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    gridIndex=0;
     //draggingImage=NULL;
 
     /////////////////////////////
@@ -305,7 +306,7 @@ bool MainScene::init()
 
     LOGD("Added toolbar");
 
-    CalculateGrid();
+    CalculateGrid(customPanel->getContentSize());
 
     LOGD("Calculated grid");
 

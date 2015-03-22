@@ -13,7 +13,7 @@ namespace ScdfCtrl
 
     class MainScene : public cocos2d::Layer
     {
-        std::vector<float> gridUnity;
+        static std::vector<float> gridUnity;
         std::unique_ptr<ItemScrollView> customScrollView;
         std::unique_ptr<WorkingPanel> customPanel;
         std::unique_ptr<PropertiesPanel> propertiesPanel;
@@ -21,8 +21,8 @@ namespace ScdfCtrl
         
       //  cocos2d::ui::ImageView *draggingImage;
         void AddToolbar(cocos2d::Rect r);
-        void CalculateGrid();
-        int gridIndex;
+        void CalculateGrid(cocos2d::Size workingPanelSize);
+        static int gridIndex;
         void OnGridButtonClick();
         void HideShowToolbar();
         bool HideShowScrollview();
@@ -42,7 +42,7 @@ namespace ScdfCtrl
         template <class ItemType> void  OnEndDragging();
         static int GetUnityBase();
         
-        int GetGridDistance();
+        static int GetGridDistance();
         void SnapToGrid(cocos2d::Rect &r);
         void EnableScrollView(bool enable);
         void AttachItem(ItemBase *item);
