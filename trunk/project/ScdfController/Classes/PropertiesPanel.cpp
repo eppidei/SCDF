@@ -645,12 +645,16 @@ void ItemSettings::CreateControls()
     addChild(controlLabel,6);
     
     //create control modes control
-    cocos2d::Rect rToolbar(0,0,r.size.width,r.size.height*4);
+
+    const float numButtons=5.0;
     const float numbButtonsPerRow=3.0;
-    const float gapBetweenButtons=2.0;
-    float bSize=(r.size.width/numbButtonsPerRow)-((numbButtonsPerRow+1)*gapBetweenButtons);
+    const float numButtonsPerColumn=numButtons-numbButtonsPerRow;
+    const float xoffset=6.0;
+    const float yoffset=8.0;
+    float bSize=(r.size.width-((numbButtonsPerRow+1.0)*xoffset))/numbButtonsPerRow;
     cocos2d::Size buttonSize(bSize, bSize);
-    modes = Toolbar::CreateToolbar(rToolbar);
+    cocos2d::Rect rToolbar(0,0,r.size.width,buttonSize.height*(numButtonsPerColumn)+(numButtonsPerColumn+1.0)*yoffset);
+    modes = Toolbar::CreateToolbar(rToolbar, xoffset, yoffset);
     addChild(modes,7);
     color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
     std::vector<std::string> images;

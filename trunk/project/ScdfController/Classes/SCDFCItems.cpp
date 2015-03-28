@@ -69,66 +69,11 @@ template <class ItemType> ItemBase *ItemBase::CreateItem(cocos2d::Rect r)
     item->setContentSize(r.size);
     item->setPosition(r.origin);
     item->Create();
-    item->SetColor(item->GetColor());
+    item->SetColor(Colors::ItemsColorsId::Orange);
     return item;
 }
 
-/*ItemBase *ItemBase::CreateItemFromControlUnit(ControlUnit* cu)
-{
-    ItemBase *item=NULL;
-    int itemID = cu->GetItemViewId();
-
-    switch (itemID)
-    {
-        case ITEM_SLIDER_ID:
-        {
-        	ControlUnitSlider* cus = dynamic_cast<ControlUnitSlider*>(cu);
-        	ItemSlider* i = ItemSlider::create();
-        	i->SetControlUnit(cus);
-        	item = i;
-            break;
-        }
-        case ITEM_KEYBOARD_ID:
-            item=ItemKeyboard::create();
-            break;
-        case ITEM_KNOB_ID:
-        {
-			ControlUnitSlider* cus = dynamic_cast<ControlUnitSlider*>(cu);
-			ItemSlider* i = ItemKnob::create();
-			i->SetControlUnit(cus);
-			item = i;
-			break;
-		}
-        case ITEM_PAD_ID:
-        {
-			ControlUnitPad* cus = dynamic_cast<ControlUnitPad*>(cu);
-			ItemPad* i = ItemPad::create();
-			i->SetControlUnit(cus);
-			item = i;
-			break;
-        }
-        case ITEM_SENSOR1_ID:
-        {
-			ControlUnitDsp* cus = dynamic_cast<ControlUnitDsp*>(cu);
-			ItemSensor1* i = ItemSensor1::create();
-			i->SetControlUnit(cus);
-			item = i;
-			break;
-		}
-        default:
-            return NULL;
-    }
-
-    item->setAnchorPoint(Vec2(0,1));
-    item->setContentSize(Size(cu->w,cu->h));
-    item->setPosition(Vec2(cu->x,cu->y));
-    item->Create();
-    return item;
-}*/
-
-
-
-ItemBase::ItemBase()// : inflateVValue(0), inflateHValue(0)
+ItemBase::ItemBase()
 {
 	controlUnit.reset( ControlUnit::Create(ControlUnit::Wire) );
 	//controlUnit->SetItem(this);
