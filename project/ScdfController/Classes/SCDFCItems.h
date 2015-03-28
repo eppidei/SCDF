@@ -25,13 +25,13 @@ namespace ScdfCtrl
 	class MultiSender;
     class ItemBase;
 
-    class ItemBaseCallback
-    {
-    public:
-        virtual void OnItemTouchBegan() = 0;
-        virtual void OnItemTouchMoved(int value) = 0;
-        virtual void OnItemTouchEnded() = 0;
-    };
+//    class ItemBaseCallback
+//    {
+//    public:
+//        virtual void OnItemTouchBegan() = 0;
+//        virtual void OnItemTouchMoved(int value) = 0;
+//        virtual void OnItemTouchEnded() = 0;
+//    };
 
 	class ItemProperties {
 
@@ -55,8 +55,8 @@ namespace ScdfCtrl
         ItemLayoutManager(ItemBase *parent) : magValue(0), item(parent) {}
         void SetVertical(bool vertical);
         bool IsVertical() {return isVertical;}
-        void IncrementInflate();
-        void DecrementInflate();
+        void ZoomPlus();
+        void ZoomMinus();
         int GetMagValue() { return magValue;}
     };
     
@@ -66,52 +66,49 @@ namespace ScdfCtrl
 
         std::unique_ptr<ControlUnit> controlUnit;
         std::unique_ptr<ItemLayoutManager> layoutManager;
-
         std::string name;
-        //cocos2d::Color3B color;
         Colors::ItemsColorsId colorIndex;
+        
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
-        std::unique_ptr<ItemBaseCallback> callback;
+        //std::unique_ptr<ItemBaseCallback> callback;
+
         virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
     
     public:
 
-        ControlUnit* GetControlUnit() { return controlUnit.get(); };
-        ItemLayoutManager* GetLayoutManager() { return layoutManager.get(); };
-        void ChangeControlUnit(ControlUnit::Type t);
-
-        static ItemBase *CreateItem(cocos2d::Rect r, int itemID);
-        //static ItemBase *CreateItemFromControlUnit(ControlUnit* cu);
-
-        void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        template <class ItemType> static ItemBase *CreateItem(cocos2d::Rect r);
+        
         ItemBase();
         virtual ~ItemBase();
         virtual void Create()=0;
-        //void SetCallback(ItemBaseCallback *c) {callback.reset(c);}
 
+        void LaunchCollisionAnimation();
+        void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        
+        //setter
+        void ChangeControlUnit(ControlUnit::Type t);
+        void SetName(std::string _name);
+        virtual void SetColor(Colors::ItemsColorsId _colorIndex);
+        
+        //getter
+        ControlUnit* GetControlUnit() { return controlUnit.get(); };
+        ItemLayoutManager* GetLayoutManager() { return layoutManager.get(); };
 
         std::string GetName();
         Colors::ItemsColorsId GetColor();
-        virtual int GetValue();
-        ScdfCtrl::MultiSender *GetSender();
-        void SetName(std::string _name);
-        virtual void SetColor(Colors::ItemsColorsId _colorIndex);
-      //  virtual void SetValue(int _value);
 
         virtual cocos2d::Size GetStaticBaseSize()=0;
-        void LaunchCollisionAnimation();
+//        virtual int GetStaticID()=0;
+        
     };
 
     class ItemSlider : public ItemBase
     {
-        
-        virtual void SetPositionOfValueDependentComponent();
         virtual bool IsKnob() { return false;}
         void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override;
         virtual void DoCreateThumb();
         virtual cocos2d::Size GetThumbSize(cocos2d::Size currentSize);
@@ -123,6 +120,8 @@ namespace ScdfCtrl
 //        bool isVertical;
         //float min, max;
         void CreateThumb();
+        virtual void SetPositionOfValueDependentComponent();
+        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
 //        void LinearMode(cocos2d::Vec2 touchPos);
     public:
         virtual void SetColor(Colors::ItemsColorsId colorIndex) override;
@@ -168,6 +167,19 @@ namespace ScdfCtrl
         void SetItemContentSize(const cocos2d::Size &contentSize) {setContentSize(contentSize);}
         
         CREATE_FUNC(ItemKnob);
+    };
+    
+    class ItemWheel : public ItemSlider
+    {
+        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+    public:
+        
+        static cocos2d::Size GetBaseSize() { return WHEEL_SIZE_BASE;}
+        static int GetID() { return ITEM_WHEEL_ID;}
+        static std::string GetIcon() { return "iconSliderDefault.png";}
+        static std::string GetIconPressed() { return "iconSliderPressed.png";}
+        
+        CREATE_FUNC(ItemWheel);
     };
 
 
@@ -245,10 +257,10 @@ namespace ScdfCtrl
         void SetCurrentOctave(int octave) { currentOctave=octave; }
         int GetCurrentOctave() {return currentOctave;}
         void Create();
-        static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}
-        static int GetID() { return ITEM_KEYBOARD_ID;}
-        static std::string GetIcon() { return "iconPianoDefault.png";}
-        static std::string GetIconPressed() { return "iconPianoPressed.png";}
+        static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}    //for dragging
+        static int GetID() { return ITEM_KEYBOARD_ID;}                      //for item scrollbar
+        static std::string GetIcon() { return "iconPianoDefault.png";}          //for item scrollbar
+        static std::string GetIconPressed() { return "iconPianoPressed.png";}   //for item scrollbar
         
 //        virtual void setContentSize(const cocos2d::Size &contentSize) override;
         

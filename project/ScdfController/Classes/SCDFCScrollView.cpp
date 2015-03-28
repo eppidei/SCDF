@@ -211,6 +211,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
 //    v.push_back("sensorIcon.png");
 //    v.push_back("sensorIcon.png");
     AddButtonToScrollView<ItemSwitch>();
+    AddButtonToScrollView<ItemWheel>();
 //    CreateSubpanel(ItemSwitch::GetID(),v,subPanelRect);
     LOGD("Add keyboard button");
     AddButtonToScrollView<ItemKeyboard>();
@@ -300,6 +301,9 @@ void ItemScrollView::DragItemOnTouchEvent(Ref *pSender, cocos2d::ui::Widget::Tou
             break;
         case ITEM_SWITCH_ID:
             DoDragItemOnTouchEvent<ItemSwitch>(type, button);
+            break;
+        case ITEM_WHEEL_ID:
+            DoDragItemOnTouchEvent<ItemWheel>(type, button);
             break;
         default:
             break;
@@ -391,3 +395,4 @@ template void ItemScrollView::AddButtonToScrollView<ItemPad>();
 template void ItemScrollView::AddButtonToScrollView<ItemKnob>();
 template void ItemScrollView::AddButtonToScrollView<ItemKeyboard>();
 template void ItemScrollView::AddButtonToScrollView<ItemSwitch>();
+template void ItemScrollView::AddButtonToScrollView<ItemWheel>();

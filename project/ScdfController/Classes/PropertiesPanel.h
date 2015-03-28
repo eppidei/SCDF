@@ -69,7 +69,7 @@ namespace ScdfCtrl
         TextWithBackground *devicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel;
         
         void CreateControls() override;
-        void InitControlMenuValue();
+        void InitControlMenuData();
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
         void Update() override;

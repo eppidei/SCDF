@@ -24,7 +24,8 @@ class ControlUnitPatch {
 
 public:
 
-	std::vector< std::unique_ptr<ControlUnit> > units;
+	std::vector<ItemBase*> units;
+//    std::vector< std::unique_ptr<ControlUnit> > units;
 
 	bool LoadFromFile(std::string file)
 	{

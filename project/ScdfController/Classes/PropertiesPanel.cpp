@@ -279,7 +279,7 @@ void MIDIInfo::UpdateVelocity()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel) return; 
-    velocity->SetSelectedIndex(panel->GetSelectedItem()->GetValue());
+    velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetValue());
     velocity->setEnabled(dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
 }
 
@@ -306,18 +306,10 @@ void MIDIInfo::Update()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-    InitControlMenuValue();
-    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
-    {
-        midiMessage->setEnabled(false);
-        controlChange->SetSelectedIndex(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave());
-    }
-    else
-    {
-        midiMessage->setEnabled(true);
-        controlChange->SetSelectedIndex(panel->GetCurrentSender()->GetMidiControl());
-        channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
-    }
+    midiMessage->setEnabled(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    InitControlMenuData();
+
+    channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
     UpdateVelocity();
 }
 
@@ -357,7 +349,7 @@ void MIDIInfo::InitChildrensVisibilityAndPos()
     SubpanelBase::InitChildrensVisibilityAndPos();
 }
 
-void MIDIInfo::InitControlMenuValue()
+void MIDIInfo::InitControlMenuData()
 {
     std::vector<DropDownMenuData> dropDownData;
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
@@ -399,6 +391,14 @@ void MIDIInfo::InitControlMenuValue()
         controlChangeLabel->SetText("OCTAVE");
     }
     controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    
+    int value=0;
+    if (panel->GetSelectedItem()==NULL) return;
+    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
+        value=panel->GetCurrentSender()->GetMidiControl();
+    else
+        value=dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave();
+    controlChange->SetSelectedIndex(value);
 }
 
 void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
@@ -421,7 +421,7 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             default: return;
         }
         panel->GetCurrentSender()->SetMidiMessageType(msg);
-        InitControlMenuValue();
+        InitControlMenuData();
     }
     else if (menu==controlChange)
     {
@@ -501,7 +501,7 @@ void MIDIInfo::CreateControls()
     //Create ControlChange dropDown
     controlChange = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(controlChange);
-    InitControlMenuValue();
+    InitControlMenuData();
     
     //Create channel label
     CreateLabelWithBackground(this, &channelLabel, -1, r, "CHANNEL", "Arial", 16);
@@ -717,7 +717,7 @@ void ItemSettings::Update()
     sizeText->SetText(str);
     color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
     name->SetText(panel->GetSelectedItem()->GetName());
-    //modes->CheckButton((int)(panel->GetSelectedItem()->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
+    modes->CheckButton((int)(panel->GetSelectedItem()->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
 
     InitChildrensVisibilityAndPos();
     
@@ -747,17 +747,17 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
     switch (widget->getTag())
     {
         case PROPERTIES_ITEM_HEIGHT_MINUS:
-            panel->GetSelectedItem()->GetLayoutManager()->DecrementInflate();
+            panel->GetSelectedItem()->GetLayoutManager()->ZoomMinus();
             break;
         case PROPERTIES_ITEM_HEIGHT_PLUS:
-            panel->GetSelectedItem()->GetLayoutManager()->IncrementInflate();
+            panel->GetSelectedItem()->GetLayoutManager()->ZoomPlus();
             break;
         case PROPERTIES_CONTROLMODE_WIRE:
         case PROPERTIES_CONTROLMODE_BLOW:
         case PROPERTIES_CONTROLMODE_PIPPO:
         case PROPERTIES_CONTROLMODE_PLUTO:
         case PROPERTIES_CONTROLMODE_PAPERINO:
-//            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
         default:
             break;
     }
@@ -864,5 +864,5 @@ ItemBase *PropertiesPanel::GetSelectedItem()
 ScdfCtrl::MultiSender *PropertiesPanel::GetCurrentSender()
 {
     if(NULL==selectedItem) return NULL;
-    return selectedItem->GetSender();
+    return selectedItem->GetControlUnit()->GetSender();
 }

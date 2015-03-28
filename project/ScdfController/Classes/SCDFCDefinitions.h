@@ -20,6 +20,8 @@
 #define TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW  SCDFC_ID_BASE+5
 #define TOOLBAR_BUTTON_HIDESHOW_PROPERTIES  SCDFC_ID_BASE+6
 
+//Working panel items IDs
+
 #define MAX_NUM_ITEM 100
 #define ITEMS_ID_BASE    SCDFC_ID_BASE+100
 #define ITEM_SLIDER_ID   ITEMS_ID_BASE
@@ -28,11 +30,14 @@
 #define ITEM_SWITCH_ID   ITEM_KNOB_ID      + MAX_NUM_ITEM
 #define ITEM_KEYBOARD_ID ITEM_SWITCH_ID    + MAX_NUM_ITEM
 #define ITEM_MULTIPAD_ID ITEM_KEYBOARD_ID  + MAX_NUM_ITEM
+#define ITEM_WHEEL_ID ITEM_MULTIPAD_ID  + MAX_NUM_ITEM
 
+//Working panel items size base
 
 #define SCROLLBAR_ITEM_SIDE_BASE    4
 #define SLIDER_SIZE_BASE            cocos2d::Size(2,8)
-#define SLIDER_HORZ_SIZE_BASE       cocos2d::Size(8,2)
+#define WHEEL_SIZE_BASE             SLIDER_SIZE_BASE
+//#define SLIDER_HORZ_SIZE_BASE       cocos2d::Size(8,2)
 #define PAD_SIZE_BASE               cocos2d::Size(4,4)
 #define KEYBOARD_SIZE_BASE          cocos2d::Size(25,15)
 #define MULTIPAD_SIZE_BASE          cocos2d::Size(12,8)

@@ -15,13 +15,13 @@ namespace ScdfCtrl
 {
     class MainScene;
     
-    class WorkingPanelItemCallback : public ItemBaseCallback
-    {
-    public:
-        void OnItemTouchBegan(){}
-        void OnItemTouchMoved(int value);
-        void OnItemTouchEnded(){}
-    };
+//    class WorkingPanelItemCallback : public ItemBaseCallback
+//    {
+//    public:
+//        void OnItemTouchBegan(){}
+//        void OnItemTouchMoved(int value);
+//        void OnItemTouchEnded(){}
+//    };
 
     class WorkingPanel : public cocos2d::ui::Layout
     {
@@ -37,7 +37,7 @@ namespace ScdfCtrl
         
     public:
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
-        void CheckAddControl(int buttonTag);
+        template <class ItemType> void CheckAddControl();
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
