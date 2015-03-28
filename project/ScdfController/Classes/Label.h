@@ -45,12 +45,39 @@ namespace ScdfCtrl
     };
     class Toolbar : public cocos2d::ui::Layout
     {
-        std::vector<cocos2d::ui::CheckBox*> buttons;
+        struct ToolbarButton{
+            cocos2d::ui::Button* button;
+            std::string bitmap;
+            std::string checkedBitmap;
+            ToolbarButton(cocos2d::ui::Button* _button, std::string _bitmap ,std::string _checkedBitmap):
+            button(_button), bitmap(_bitmap), checkedBitmap(_checkedBitmap) {}
+            void SetChecked(bool checked)
+            {
+                std::string image=checked?checkedBitmap:bitmap;
+                button->loadTextureNormal(image);
+            }
+            cocos2d::Size GetSize()
+            {
+                return button->getContentSize();
+            }
+            void SetPosition(cocos2d::Vec2 pos)
+            {
+                return button->setPosition(pos);
+            }
+        };
+        std::vector<ToolbarButton*> buttons;
+        float xOffset, yOffset;
+        
+        ToolbarButton *GetButton(int ctrlID);
+        void SetOffsets(float _xOffset, float yOffset);
+        void UpdateLayout();
+        
     public:
-        static Toolbar *CreateToolbar(cocos2d::Rect r);
+        ~Toolbar();
+        static Toolbar *CreateToolbar(cocos2d::Rect r, float xOffset, float yOffset);
         void AddButton(int ctrlID, cocos2d::Size s, std::vector<std::string> images, Widget::ccWidgetTouchCallback callback);
         void CheckButton(int ctrlID);
-        void UpdateLayout();
+        void RemoveButton(int ctrlID);
         CREATE_FUNC(Toolbar);
     };
 }

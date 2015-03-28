@@ -97,65 +97,102 @@ void TextInputWithBackground::SetText(std::string s)
     text->setText(s);
 }
 
-Toolbar *Toolbar::CreateToolbar(cocos2d::Rect r)
+Toolbar *Toolbar::CreateToolbar(cocos2d::Rect r, float xOffset, float yOffset)
 {
     Toolbar *toolbar=Toolbar::create();
     toolbar->setAnchorPoint(Vec2(0,1));
     toolbar->setContentSize(r.size);
     toolbar->setPosition(r.origin);
     toolbar->setClippingEnabled(true);
+    toolbar->SetOffsets(xOffset, yOffset);
     return toolbar;
 }
 
+void Toolbar::SetOffsets(float _xOffset, float _yOffset)
+{
+    xOffset=_xOffset;
+    yOffset=_yOffset;
+}
+                        
 void Toolbar::AddButton(int ctrlID, cocos2d::Size s, std::vector<std::string> images, Widget::ccWidgetTouchCallback callback)
 {
-    auto button = CheckBox::create(images[0],images[1], images[1], images[1], images[0]);
-  //  if (images.size()>0)
-//        button->loadTextureBackGround(images[0]);
-//    if (images.size()>1){
-////        button->loadTextureBackGroundSelected(images[1]);
-//        button->loadTextureFrontCross(images[1]);
-   // }
-    button->setAnchorPoint(Vec2(0,1));
-    button->setTouchEnabled(true);
-    button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(s);
+    assert(images.size()>1);
+    auto button=Button::create();
+    buttons.push_back(new ToolbarButton(button, images[0], images[1]));
+    button->loadTextures(images[0], images[1], "");
     button->addTouchEventListener(callback);
-    button->setSelectedState(false);
+    button->setTouchEnabled(true);
+    button->setContentSize(s);
+    button->setAnchorPoint(Vec2(0,1));
+    button->ignoreContentAdaptWithSize(false);
     addChild(button,1,ctrlID);
     UpdateLayout();
 }
-//
+
+Toolbar::ToolbarButton *Toolbar::GetButton(int ctrlID)
+{
+    for (int i=0;i<buttons.size();++i)
+    {
+        if (buttons[i]->button->getTag()==ctrlID)
+            return buttons[i];
+    }
+    return NULL;
+}
+
 void Toolbar::CheckButton(int ctrlID)
 {
-    CheckBox *b=dynamic_cast<CheckBox*>(getChildByTag(ctrlID));
+    ToolbarButton *b=GetButton(ctrlID);
     if (NULL==b) return;
-    b->setSelectedState(true);
+    b->SetChecked(true);
 
-    for (auto it=getChildren().begin();it!=getChildren().end();++it)
+    for (int i=0;i<buttons.size();++i)
     {
-        CheckBox *bb=dynamic_cast<CheckBox*>(*it);
-        if (NULL==bb || b==bb) continue;
-        bb->setSelectedState(false);
+        ToolbarButton *bb=buttons[i];
+        if (b==bb) continue;
+        bb->SetChecked(false);
     }
 }
+
+void Toolbar::RemoveButton(int ctrlID)
+{
+    ToolbarButton *b=GetButton(ctrlID);
+    for (int i=0;i<buttons.size();++i)
+    {
+        if(b->button!=buttons[i]->button) continue;
+        removeChild(buttons[i]->button);
+        delete buttons[i];
+        buttons.erase(buttons.begin()+i);
+        break;
+    }
+    UpdateLayout();
+}
+
+Toolbar::~Toolbar()
+{
+    for (int i=0;i<buttons.size();++i)
+    {
+        removeChild(buttons[i]->button);
+        delete buttons[i];
+    }
+}
+
 void Toolbar::UpdateLayout()
 {
     float width=getContentSize().width;
-    float lastXOffset=2.0;
-    float lastYOffset=getContentSize().height-2.0;
+    float lastXOffset=xOffset;
+    float lastYOffset=getContentSize().height-yOffset;
     float yOffsetMax=0;
-    for (auto it=getChildren().begin();it!=getChildren().end();++it)
+    for (int i=0;i<buttons.size();++i)
     {
-        if (((*it)->getContentSize().width +lastXOffset)>width)
+        if ((buttons[i]->GetSize().width +lastXOffset)>width)
         {
-            lastXOffset=2.0;
-            lastYOffset=lastYOffset-yOffsetMax-2.0;
+            lastXOffset=xOffset;
+            lastYOffset=lastYOffset-yOffsetMax-yOffset;
             yOffsetMax=0;
         }
-        (*it)->setPosition(Vec2(lastXOffset,lastYOffset));
-        if ((*it)->getContentSize().height>yOffsetMax)
-            yOffsetMax=(*it)->getContentSize().height;
-        lastXOffset=lastXOffset+(*it)->getContentSize().width+2;
+        buttons[i]->SetPosition(Vec2(lastXOffset,lastYOffset));
+        if (buttons[i]->GetSize().height>yOffsetMax)
+            yOffsetMax=buttons[i]->GetSize().height;
+        lastXOffset=lastXOffset+buttons[i]->GetSize().width+xOffset;
     }
 }
