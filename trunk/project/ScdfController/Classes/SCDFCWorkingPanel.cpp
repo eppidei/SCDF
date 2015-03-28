@@ -55,20 +55,21 @@ void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
     draggingRect=_draggingRect;
 }
 
-void WorkingPanel::CheckAddControl(int buttonTag)
+template <class ItemType> void WorkingPanel::CheckAddControl()
 {
     if (0==draggingRect.size.width || collisionDetected)
     {
         collisionDetected=false;
         return;
     }
-    ItemBase* item = ItemBase::CreateItem(draggingRect, buttonTag);
+    ItemBase* item = ItemBase::CreateItem<ItemType>(draggingRect);
     // we use unique ptr just to let Cereal easily serialize
     // the patch:
 
     // transfer ownership of control unit to the patch:
-    std::unique_ptr<ControlUnit> unitUnique(item->GetControlUnit());
-    patch->units.push_back(std::move(unitUnique));
+    //std::unique_ptr<ControlUnit> unitUnique(item->GetControlUnit());
+    //patch->units.push_back(std::move(unitUnique));
+    patch->units.push_back(item);
 
     addChild(item,10);
     parent->AttachItem(item);
@@ -84,13 +85,14 @@ void WorkingPanel::CheckRemoveControl(Node *n)
 
     for (int i=0;i<patch->units.size();++i)
     {
-        if (patch->units[i]->GetItem()==n)
+//        if (patch->units[i]->GetItem()==n)
+        if (patch->units[i]==n)
         {
         	parent->DetachItem((ItemBase*)n);
             removeChild(n); // does this delete n? if not, we have a leak
             patch->units.erase(patch->units.begin()+i); // this deletes the unit!
             printf("Control removed from working space\n");
-            return;
+            break;
             // remove "return" if you ever plan to put an item in the patch twice
             // but consider that the index will break after the first deletion
         }
@@ -158,7 +160,8 @@ void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r, bool *collisi
     *c=false;
     for (int i=0;i<patch->units.size();++i)
     {
-    	Layout* testItem = dynamic_cast<Layout*>(patch->units[i]->GetItem());
+//    	Layout* testItem = dynamic_cast<Layout*>(patch->units[i]->GetItem());
+        Layout* testItem = dynamic_cast<Layout*>(patch->units[i]);
         if (NULL!=item && item==testItem) continue;
         cocos2d::Rect rItem(testItem->getPositionX(), testItem->getPositionY(), testItem->getContentSize().width, testItem->getContentSize().height);
         if(RectIntersection(r,rItem))
@@ -219,3 +222,11 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
     }
     return true;
 }
+
+template void WorkingPanel::CheckAddControl<ItemSlider>();
+template void WorkingPanel::CheckAddControl<ItemPad>();
+template void WorkingPanel::CheckAddControl<ItemKnob>();
+template void WorkingPanel::CheckAddControl<ItemKeyboard>();
+template void WorkingPanel::CheckAddControl<ItemMultipad>();
+template void WorkingPanel::CheckAddControl<ItemSwitch>();
+template void WorkingPanel::CheckAddControl<ItemWheel>();

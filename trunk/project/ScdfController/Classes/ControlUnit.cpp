@@ -31,7 +31,7 @@ ControlUnit::ControlUnit()
 	sender.reset(new MultiSender());
 	min = 0;
 	max = 127;
-	itemView = NULL;
+	//itemView = NULL;
 }
 
 ControlUnit::~ControlUnit()
@@ -44,15 +44,15 @@ MultiSender* ControlUnit::GetSender()
 	return sender.get();
 }
 
-void ControlUnit::SetItem(ItemBase* iv)
-{
-	itemView = iv;
-}
+//void ControlUnit::SetItem(ItemBase* iv)
+//{
+//	itemView = iv;
+//}
 
-ItemBase* ControlUnit::GetItem()
-{
-	return itemView;
-}
+//ItemBase* ControlUnit::GetItem()
+//{
+//	return itemView;
+//}
 
 
 

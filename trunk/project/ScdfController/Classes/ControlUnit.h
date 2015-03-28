@@ -60,8 +60,8 @@ public:
 
 	MultiSender* GetSender();
 
-	void SetItem(ItemBase* iv);
-	ItemBase* GetItem();
+//	void SetItem(ItemBase* iv);
+//	ItemBase* GetItem();
 
 	ControlUnit();
 	virtual ~ControlUnit();
@@ -70,7 +70,7 @@ protected:
 
 	std::unique_ptr<MultiSender> sender;
 
-	ItemBase* itemView; // knows position, name, color, current value
+	//ItemBase* itemView; // knows position, name, color, current value
 
 	int min;
 	int max;

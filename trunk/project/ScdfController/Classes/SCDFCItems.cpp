@@ -42,15 +42,15 @@ Colors::ItemsColorsId ItemBase::GetColor()
 	return colorIndex;
 }
 
-int ItemBase::GetValue()
-{
-	return GetControlUnit()->GetValue();
-}
+//int ItemBase::GetValue()
+//{
+//	return GetControlUnit()->GetValue();
+//}
 
-ScdfCtrl::MultiSender* ItemBase::GetSender()
-{
-	return GetControlUnit()->GetSender();
-}
+//ScdfCtrl::MultiSender* ItemBase::GetSender()
+//{
+//	return GetControlUnit()->GetSender();
+//}
 
 void ItemBase::SetColor(Colors::ItemsColorsId _colorIndex)
 {
@@ -61,32 +61,10 @@ void ItemBase::SetColor(Colors::ItemsColorsId _colorIndex)
 
 
 
-ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
+template <class ItemType> ItemBase *ItemBase::CreateItem(cocos2d::Rect r)
 {
-    ItemBase *item=NULL;
-    switch (itemID)
-    {
-        case ITEM_SLIDER_ID:
-            item=ItemSlider::create();
-            break;
-        case ITEM_PAD_ID:
-            item=ItemPad::create();
-            break;
-        case ITEM_KEYBOARD_ID:
-            item=ItemKeyboard::create();
-            break;
-        case ITEM_MULTIPAD_ID:
-            item=ItemMultipad::create();
-            break;
-        case ITEM_KNOB_ID:
-            item=ItemKnob::create();
-            break;
-        case ITEM_SWITCH_ID:
-            item=ItemSwitch::create();
-            break;
-        default:
-            return NULL;
-    }
+    ItemBase *item=ItemType::create();
+
     item->setAnchorPoint(Vec2(0,1));
     item->setContentSize(r.size);
     item->setPosition(r.origin);
@@ -153,7 +131,7 @@ ItemBase *ItemBase::CreateItem(cocos2d::Rect r,  int itemID)
 ItemBase::ItemBase()// : inflateVValue(0), inflateHValue(0)
 {
 	controlUnit.reset( ControlUnit::Create(ControlUnit::Wire) );
-	controlUnit->SetItem(this);
+	//controlUnit->SetItem(this);
     layoutManager.reset(new ItemLayoutManager(this));
 }
 
@@ -165,7 +143,7 @@ ItemBase::~ItemBase()
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
 	controlUnit.reset(ControlUnit::Create(t));
-	controlUnit->SetItem(this);
+	//controlUnit->SetItem(this);
 }
 
 cocos2d::Size ItemSlider::CalculateNewItemSize(int magValue)
@@ -236,7 +214,7 @@ void ItemLayoutManager::SetVertical(bool vertical)
     item->InitLayoutOrientation(center);
 }
 
-void ItemLayoutManager::IncrementInflate()
+void ItemLayoutManager::ZoomPlus()
 {
     int magValueTemp=fmin(8,magValue+1);
     if (magValueTemp==magValue) return;
@@ -251,7 +229,7 @@ void ItemLayoutManager::IncrementInflate()
         item->setContentSize(newSize);
 }
 
-void ItemLayoutManager::DecrementInflate()
+void ItemLayoutManager::ZoomMinus()
 {
     int magValueTemp=fmax(0,magValue-1);
     if (magValueTemp==magValue) return;
@@ -497,7 +475,7 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
 {
     if (widget==slideBar) return;
     ItemBase::OnItemTouchBegan(widget, type);
-    dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
+    //dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
     //dragStartPos=dragPosUpdated=thumb->getWorldPosition();
     //if (callback.get())
     //    callback->OnItemTouchBegan();
@@ -508,7 +486,12 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     // but dsp unit needs this for activate/deactivate
 
 }
-
+void ItemWheel::OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    GetControlUnit()->OnTouch(ControlUnit::TouchMove,0.5f);
+    SetPositionOfValueDependentComponent();
+    ItemSlider::OnItemTouchEnded(widget, type);
+}
 void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (widget==slideBar) return;
@@ -518,6 +501,8 @@ void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
 
     GetControlUnit()->OnTouch( ControlUnit::TouchUp,
         		GetControlUnit()->GetNormalizedValue());
+    
+    NotifyEvent(SCDFC_EVENTS_Move_Item);
     // control unit wire doesn't really need this
     // but dsp unit needs this for activate/deactivate
 
@@ -908,7 +893,7 @@ void ItemMultipad::CreatePads()
         {
             padIndex=0;
             cocos2d::Rect r(row*padsWidth,getContentSize().height-column*padsHeight,padsWidth,padsHeight);
-            ItemPad *pad=(ItemPad*)ItemBase::CreateItem(r, ITEM_PAD_ID);
+            ItemPad *pad=(ItemPad*)ItemBase::CreateItem<ItemPad>(r);
             pad->setAnchorPoint(Vec2(0,1));
             pads.push_back(pad);
             addChild(pad);
@@ -1044,3 +1029,11 @@ void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEv
     UpdateSelectedKey();
     NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
 }
+
+template ItemBase *ItemBase::CreateItem<ItemSlider>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemPad>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemKnob>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemKeyboard>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemMultipad>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemSwitch>(cocos2d::Rect r);
+template ItemBase *ItemBase::CreateItem<ItemWheel>(cocos2d::Rect r);

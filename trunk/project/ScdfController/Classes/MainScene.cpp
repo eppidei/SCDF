@@ -89,7 +89,7 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
 template <class ItemType> void MainScene::OnEndDragging()
 {
     if (NULL==customPanel.get()) return;
-    customPanel->CheckAddControl(ItemType::GetID());
+    customPanel->CheckAddControl<ItemType>();
     customPanel->SetDraggingRect(cocos2d::Rect::ZERO);
 //    removeChild(draggingImage);
 //    draggingImage=NULL;
@@ -517,16 +517,19 @@ template void MainScene::OnStartDragging<ItemKnob>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemSwitch>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemKeyboard>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemMultipad>(Vec2 dragStartPoint);
+template void MainScene::OnStartDragging<ItemWheel>(Vec2 dragStartPoint);
 template void MainScene::OnEndDragging<ItemSlider>();
 template void MainScene::OnEndDragging<ItemPad>();
 template void MainScene::OnEndDragging<ItemKnob>();
 template void MainScene::OnEndDragging<ItemSwitch>();
 template void MainScene::OnEndDragging<ItemKeyboard>();
 template void MainScene::OnEndDragging<ItemMultipad>();
+template void MainScene::OnEndDragging<ItemWheel>();
 template void MainScene::OnDragging<ItemSlider>(cocos2d::Rect r);
 template void MainScene::OnDragging<ItemPad>(cocos2d::Rect r);
 template void MainScene::OnDragging<ItemKnob>(cocos2d::Rect r);
 template void MainScene::OnDragging<ItemSwitch>(cocos2d::Rect r);
 template void MainScene::OnDragging<ItemKeyboard>(cocos2d::Rect r);
 template void MainScene::OnDragging<ItemMultipad>(cocos2d::Rect r);
+template void MainScene::OnDragging<ItemWheel>(cocos2d::Rect r);
 
