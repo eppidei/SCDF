@@ -41,9 +41,8 @@ namespace ScdfCtrl
     class ItemLayoutInterface
     {
     public:
-        virtual cocos2d::Size CalculateNewItemSize(int magValue) = 0;
+        virtual cocos2d::Size CalculateNewItemBaseSize(int magValue) = 0;
         virtual void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) = 0;
-        virtual void SetItemContentSize(const cocos2d::Size &contentSize) = 0;
     };
     class ItemLayoutManager
     {
@@ -57,6 +56,7 @@ namespace ScdfCtrl
         ItemLayoutManager(ItemBase *parent) : magValue(0), item(parent) {}
         void SetVertical(bool vertical);
         bool IsVertical() {return isVertical;}
+        bool ControlIconOnTop(cocos2d::Size itemBaseSize);
         void ZoomPlus();
         void ZoomMinus();
         void SetMagValue(int magValue);
@@ -65,10 +65,11 @@ namespace ScdfCtrl
     
     class ItemBase : public /*cocos2d::Sprite*/cocos2d::ui::Layout, public SubjectSimple, public ItemLayoutInterface
     {
-        TextWithBackground *label;
+        TextWithBackground *label, *label1;
         cocos2d::Sprite *controlImage;
         
-        void CreateBaseElements();
+        void CreateItemBaseElements();
+        void PlaceItemBaseElements();
     protected:
 
         std::unique_ptr<ControlUnit> controlUnit;
@@ -145,9 +146,8 @@ namespace ScdfCtrl
 //        void SetRange(int _min, int _max);
         void DoSetContentSize(cocos2d::Size contentSize) override;
         
-        cocos2d::Size CalculateNewItemSize(int magValue) override;
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;
-        void SetItemContentSize(const cocos2d::Size &contentSize) {setContentSize(contentSize);}
         CREATE_FUNC(ItemSlider);
     };
 
@@ -174,9 +174,8 @@ namespace ScdfCtrl
         static std::string GetIconPressed() { return "iconKnobPressed.png";}
         void DoSetContentSize(cocos2d::Size contentSize) override;
         
-        cocos2d::Size CalculateNewItemSize(int magValue) override;
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
-        void SetItemContentSize(const cocos2d::Size &contentSize) {setContentSize(contentSize);}
         
         CREATE_FUNC(ItemKnob);
     };
@@ -219,9 +218,8 @@ namespace ScdfCtrl
         
         void DoSetContentSize(cocos2d::Size contentSize) override;
         
-        cocos2d::Size CalculateNewItemSize(int magValue) override;
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
-        void SetItemContentSize(const cocos2d::Size &contentSize) {setContentSize(contentSize);}
         
         CREATE_FUNC(ItemPad);
     };
@@ -262,9 +260,8 @@ namespace ScdfCtrl
         static cocos2d::Size GetBaseSize() { return MULTIPAD_SIZE_BASE;}
         static int GetID() { return ITEM_MULTIPAD_ID;}
         
-        cocos2d::Size CalculateNewItemSize(int magValue) override {return getContentSize();}
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return getContentSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
-        void SetItemContentSize(const cocos2d::Size &contentSize) {setContentSize(contentSize);}
         void DoSetContentSize(cocos2d::Size contentSize) override {}
         
         CREATE_FUNC(ItemMultipad);
@@ -296,10 +293,9 @@ namespace ScdfCtrl
         static std::string GetIconPressed() { return "iconPianoPressed.png";}   //for item scrollbar
         
 //        virtual void setContentSize(const cocos2d::Size &contentSize) override;
-        void DoSetContentSize(cocos2d::Size contentSize) override{}
-        cocos2d::Size CalculateNewItemSize(int magValue) override {return getContentSize();};
+        void DoSetContentSize(cocos2d::Size contentSize) override;
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return GetStaticBaseSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
-        void SetItemContentSize(const cocos2d::Size &contentSize) override {}
         
         CREATE_FUNC(ItemKeyboard);
     };

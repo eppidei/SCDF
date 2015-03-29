@@ -32,6 +32,9 @@ namespace ScdfCtrl
         void SetText(std::string s);
         void SetAlignement(cocos2d::TextHAlignment hAlign=cocos2d::TextHAlignment::CENTER, cocos2d::TextVAlignment vAlign=cocos2d::TextVAlignment::CENTER);
         CREATE_FUNC(TextWithBackground);
+        void setPosition(const cocos2d::Vec2& position) override;
+        void setContentSize(const cocos2d::Size &contentSize) override;
+        void SetTextColor(cocos2d::Color3B &c);
     };
     class TextInputWithBackground : public ControlWithBackground
     {
