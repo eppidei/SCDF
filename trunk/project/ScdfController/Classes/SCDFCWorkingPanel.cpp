@@ -62,7 +62,8 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
         collisionDetected=false;
         return;
     }
-    ItemBase* item = ItemBase::CreateItem<ItemType>(draggingRect);
+    ItemBase* item = ItemBase::CreateItem<ItemType>();
+    item->setPosition(draggingRect.origin);
     // we use unique ptr just to let Cereal easily serialize
     // the patch:
 
@@ -91,7 +92,7 @@ void WorkingPanel::CheckRemoveControl(Node *n)
         	parent->DetachItem((ItemBase*)n);
             removeChild(n); // does this delete n? if not, we have a leak
             patch->units.erase(patch->units.begin()+i); // this deletes the unit!
-            printf("Control removed from working space\n");
+            LOGD("Control removed from working space\n");
             break;
             // remove "return" if you ever plan to put an item in the patch twice
             // but consider that the index will break after the first deletion

@@ -54,14 +54,23 @@ cocos2d::Size ItemBase::GetControlContentSize()
     return control->getContentSize();
 }
 
-void ItemBase::CreateBaseElements()
+#define LABEL_X_OFFSET 5.0
+
+void ItemBase::CreateItemBaseElements()
 {
     cocos2d::Rect lRect(0,getContentSize().height,getContentSize().width,ITEMS_LABEL_HEIGHT);
     label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
 //    label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 //    label->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-//    label->SetAlignement(cocos2d::TextHAlignment::LEFT);
+   // label->SetAlignement();
     addChild(label,1);
+    lRect.size.width=ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET;
+    lRect.size.height=ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET;
+    label1=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
+    label1->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    label1->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    //    label->SetAlignement(cocos2d::TextHAlignment::LEFT);
+    addChild(label1,1);
     
     control=Layout::create();
     addChild(control,1);
@@ -70,19 +79,33 @@ void ItemBase::CreateBaseElements()
     control->setPosition(Vec2(0,getContentSize().height));
 }
 
+void ItemBase::PlaceItemBaseElements()
+{
+    if (GetLayoutManager()->ControlIconOnTop(getContentSize()))
+    {
+        label1->setPosition(Vec2(getContentSize().width/2.0-label1->getContentSize().width/2.0,getContentSize().height));
+        control->setPosition(Vec2(0,getContentSize().height-ITEMS_LABEL_HEIGHT));
+        label->setPosition(Vec2(getContentSize().width/2.0-label->getContentSize().width/2.0,getContentSize().height-ITEMS_LABEL_HEIGHT-control->getContentSize().height-LABEL_X_OFFSET));
+    }
+    else
+    {
+        float itemInfoWidth=label1->getContentSize().width+label->getContentSize().width;
+        control->setPosition(Vec2(0,getContentSize().height));
+        label1->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
+        label->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0+label1->getContentSize().width,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
+    }
+}
+
 void ItemBase::setContentSize(const cocos2d::Size &contentSize)
 {
     Layout::setContentSize(cocos2d::Size(contentSize.width, contentSize.height));
     if (!control) return;
-    control->setContentSize(cocos2d::Size(contentSize.width, contentSize.height-ITEMS_LABEL_HEIGHT));
-    control->setPosition(Vec2(0,getContentSize().height));
-    label->setPosition(Vec2(0,getContentSize().height-control->getContentSize().height));
-    const int labelXOffset=5;
-    if (GetLayoutManager()->IsVertical())
-        label->setContentSize(cocos2d::Size(contentSize.width, ITEMS_LABEL_HEIGHT-labelXOffset));
-    else
-        label->setContentSize(cocos2d::Size(contentSize.width/3.0, ITEMS_LABEL_HEIGHT-labelXOffset));
-    label->setPosition(Vec2(0,getContentSize().height-control->getContentSize().height-labelXOffset));
+    float itemHeight=GetLayoutManager()->ControlIconOnTop(contentSize)?contentSize.height-2*ITEMS_LABEL_HEIGHT:contentSize.height-ITEMS_LABEL_HEIGHT;
+    control->setContentSize(cocos2d::Size(contentSize.width, itemHeight));
+    float labelWidth=GetLayoutManager()->ControlIconOnTop(contentSize)?contentSize.width:contentSize.width-ITEMS_LABEL_HEIGHT;
+    label->setContentSize(cocos2d::Size(labelWidth, ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET));
+
+    PlaceItemBaseElements();
     DoSetContentSize(control->getContentSize());
 }
 
@@ -91,7 +114,7 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
     ItemBase *item=ItemType::create();
 
     item->setAnchorPoint(Vec2(0,1));
-    item->CreateBaseElements();
+    item->CreateItemBaseElements();
     item->GetLayoutManager()->SetMagValue(0);
     item->Create();
     item->SetColor(Colors::ItemsColorsId::Orange);
@@ -100,7 +123,7 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
 
 ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL)
 {
-	controlUnit.reset( ControlUnit::Create(ControlUnit::Wire) );
+	ChangeControlUnit(ControlUnit::Wire);
 	//controlUnit->SetItem(this);
     layoutManager.reset(new ItemLayoutManager(this));
 }
@@ -117,12 +140,12 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 	//controlUnit->SetItem(this);
 }
 
-cocos2d::Size ItemSlider::CalculateNewItemSize(int magValue)
+cocos2d::Size ItemSlider::CalculateNewItemBaseSize(int magValue)
 {
     cocos2d::Size baseSize=GetStaticBaseSize();
     baseSize.height+=magValue;
     baseSize.width=(int)((baseSize.width*baseSize.height)/GetStaticBaseSize().height);
-    return cocos2d::Size(cocos2d::Size(baseSize.width*MainScene::GetGridDistance(), baseSize.height*MainScene::GetGridDistance()));
+    return baseSize;
 }
 
 cocos2d::Size ItemLayoutManager::GetSizeConsideringOrientation(const cocos2d::Size resized)
@@ -133,6 +156,11 @@ cocos2d::Size ItemLayoutManager::GetSizeConsideringOrientation(const cocos2d::Si
     else
         ret=cocos2d::Size(fmax(resized.height, resized.width),fmin(resized.height, resized.width));
     return ret;
+}
+
+bool ItemLayoutManager::ControlIconOnTop(cocos2d::Size itemBaseSize)
+{
+    return itemBaseSize.width<(3*ITEMS_LABEL_HEIGHT);
 }
 
 bool ItemLayoutManager::CheckNewSizeCollision(cocos2d::Rect r)
@@ -181,18 +209,20 @@ void ItemLayoutManager::SetVertical(bool vertical)
         isVertical=!isVertical;
         return;
     }
-    item->SetItemContentSize(newSize);
+    item->setContentSize(newSize);
     item->InitLayoutOrientation(center);
 }
 
 cocos2d::Size ItemLayoutManager::CalculateNewSize(int _magValue)
 {
-    cocos2d::Size newSize=item->CalculateNewItemSize(_magValue);
-    if (IsVertical())
+    cocos2d::Size newSize=item->CalculateNewItemBaseSize(_magValue);
+    newSize=cocos2d::Size(newSize.width*MainScene::GetGridDistance(), newSize.height*MainScene::GetGridDistance());
+    newSize=GetSizeConsideringOrientation(newSize);
+    newSize.height+=ITEMS_LABEL_HEIGHT;
+    if (ControlIconOnTop(newSize))
         newSize.height+=ITEMS_LABEL_HEIGHT;
-    else
-        newSize.width+=ITEMS_LABEL_HEIGHT;
-    return GetSizeConsideringOrientation(newSize);
+    return newSize;
+    
 }
 
 void ItemLayoutManager::ZoomPlus()
@@ -356,12 +386,12 @@ void ItemKnob::DoSetContentSize(cocos2d::Size contentSize)
     ItemSlider::DoSetContentSize(contentSize);
 }
 
-cocos2d::Size ItemKnob::CalculateNewItemSize(int magValue)
+cocos2d::Size ItemKnob::CalculateNewItemBaseSize(int magValue)
 {
     cocos2d::Size baseSize=GetStaticBaseSize();
     baseSize.height+=magValue;
     baseSize.width+=magValue;
-    return cocos2d::Size(cocos2d::Size(baseSize.width*MainScene::GetGridDistance(), baseSize.height*MainScene::GetGridDistance()));
+    return baseSize;
 }
 
 void ItemSlider::SetPositionOfValueDependentComponent()
@@ -834,13 +864,13 @@ void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventTy
 {
     ItemBase::OnItemTouchBegan(widget,type);
     GetControlUnit()->OnTouch(ControlUnit::TouchDown,1);
-    printf("%s sends %d with velocity %d \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), GetControlUnit()->GetValue());
+    LOGD("%s sends %d with velocity %d \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), GetControlUnit()->GetValue());
 }
 
 void ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     GetControlUnit()->OnTouch(ControlUnit::TouchUp,0.0);
-    printf("%s sends %d with velocity %f \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), 0.f);
+    LOGD("%s sends %d with velocity %f \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), 0.f);
 }
 
 void ItemPad::DoSetContentSize(cocos2d::Size contentSize)
@@ -852,12 +882,12 @@ void ItemPad::DoSetContentSize(cocos2d::Size contentSize)
     }
 }
 
-cocos2d::Size ItemPad::CalculateNewItemSize(int magValue)
+cocos2d::Size ItemPad::CalculateNewItemBaseSize(int magValue)
 {
     cocos2d::Size baseSize=GetStaticBaseSize();
     baseSize.height+=magValue;
     baseSize.width+=magValue;
-    return cocos2d::Size(cocos2d::Size(baseSize.width*MainScene::GetGridDistance(), baseSize.height*MainScene::GetGridDistance()));
+    return baseSize;
 }
 
 void ItemMultipad::Create()
@@ -934,9 +964,19 @@ void ItemMultipad::UpdateSelectedPadIndex(ItemPad *pad)
     padIndex=-1;
 }
 
+void ItemKeyboard::DoSetContentSize(cocos2d::Size contentSize)
+{
+    if (keysHandle)
+    {
+        keysHandle->setContentSize(contentSize);
+        keysHandle->setPosition(Vec2(0,contentSize.height));
+    }
+}
+
 void ItemKeyboard::Create()
 {
     DEFAULT_NAME("Keyboard")
+    GetLayoutManager()->SetVertical(false);
     currentOctave=4;
     selectedKey=-1;
     keysHandle = Layout::create();
@@ -1002,7 +1042,7 @@ void ItemKeyboard::UpdateSelectedKey()
         blackKeyPressed->setVisible(false);
         whiteKeyPressed->setVisible(true);
     }
-    //printf("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetMidiPitch(), vel);
+    LOGD("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetSender()->GetMidiPitch(), vel);
 }
 
 void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)

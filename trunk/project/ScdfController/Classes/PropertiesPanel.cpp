@@ -844,7 +844,7 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
         selectedItem=(ItemBase*)subject;
     
     if (getPositionX()<0) return;
-    printf ("Updating properties \n");
+    LOGD ("Updating properties \n");
     switch (event)
     {
 //        case SCDFC_EVENTS_Add_Item_Slider:

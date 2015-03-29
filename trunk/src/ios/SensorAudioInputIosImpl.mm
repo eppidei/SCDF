@@ -121,8 +121,8 @@ OSStatus SensorAudioInputImpl::PerformRender (void                         *inRe
     
 #ifdef LOG_TIMESTAMP
     s_uint64 timestampInterval=inTimeStamp->mHostTime-mach_absolute_time();
-    printf("AUDIO CALLBACK TIMESTAMPS DIFF: %llu\n",timestampInterval);
-    printf("AUDIO CALLBACK TIMESTAMPS DIFF MS: %llu\n",getUptimeInMilliseconds(timestampInterval));
+    LOGD("AUDIO CALLBACK TIMESTAMPS DIFF: %llu\n",timestampInterval);
+    LOGD("AUDIO CALLBACK TIMESTAMPS DIFF MS: %llu\n",getUptimeInMilliseconds(timestampInterval));
 #endif
 
     s->type = scdf::AudioInput;

@@ -32,6 +32,8 @@ TextWithBackground *TextWithBackground::CreateText(int ctrlID, cocos2d::Rect r, 
     return textWB;
 }
 
+#define LABEL_X_OFFSET 2.0
+
 void TextWithBackground::InitWithContent(int ctrlID, cocos2d::Rect r, std::string s, std::string fontName, int fontSize)
 {
     ControlWithBackground::InitWithContent(r);
@@ -41,9 +43,29 @@ void TextWithBackground::InitWithContent(int ctrlID, cocos2d::Rect r, std::strin
     text->setTextHorizontalAlignment(TextHAlignment::LEFT);
     text->setAnchorPoint(Vec2(0,1));
     text->setTextVerticalAlignment(TextVAlignment::CENTER);
-    text->setContentSize(cocos2d::Size(r.size.width-5,r.size.height));
-    text->setPosition(cocos2d::Vec2(5,r.size.height));
+    text->setContentSize(cocos2d::Size(r.size.width-LABEL_X_OFFSET,r.size.height));
+    text->setPosition(cocos2d::Vec2(LABEL_X_OFFSET,r.size.height));
     text->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
+}
+
+void TextWithBackground::setPosition(const Vec2& position)
+{
+    Layout::setPosition(position);
+    if (text)
+        text->setPosition(cocos2d::Vec2(LABEL_X_OFFSET,getContentSize().height));
+}
+
+void TextWithBackground::setContentSize(const cocos2d::Size &contentSize)
+{
+    Layout::setContentSize(contentSize);
+    if (text)
+        text->setContentSize(cocos2d::Size(contentSize.width-LABEL_X_OFFSET, contentSize.height));
+}
+
+void TextWithBackground::SetTextColor(Color3B &c)
+{
+    if (text)
+        text->setColor(c);
 }
 
 void TextWithBackground::AddTouchCallback(Widget::ccWidgetTouchCallback callback)
