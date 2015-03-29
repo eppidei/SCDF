@@ -37,13 +37,13 @@
 #define SCROLLBAR_ITEM_SIDE_BASE    4
 #define SLIDER_SIZE_BASE            cocos2d::Size(2,8)
 #define WHEEL_SIZE_BASE             SLIDER_SIZE_BASE
-//#define SLIDER_HORZ_SIZE_BASE       cocos2d::Size(8,2)
 #define PAD_SIZE_BASE               cocos2d::Size(4,4)
 #define KEYBOARD_SIZE_BASE          cocos2d::Size(25,15)
 #define MULTIPAD_SIZE_BASE          cocos2d::Size(12,8)
 #define KNOB_SIZE_BASE              cocos2d::Size(8,8)
-#define SQUARE_SENSOR_SIZE_BASE     PAD_SIZE_BASE_BASE
+#define SWITCH_SIZE_BASE            PAD_SIZE_BASE
 #define RECT_SENSOR_SIZE_BASE       SLIDER_SIZE_BASE
+#define ITEMS_LABEL_HEIGHT          25
 
 //Properties subpanel items ID
 

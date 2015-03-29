@@ -269,7 +269,7 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
             float diff_y=button->getTouchMovePosition().y-button->getTouchBeganPosition().y;
             float newX=dragStartPoint.x+diff_x;
             float newY=dragStartPoint.y+diff_y;
-            parent->OnDragging<ItemType>(cocos2d::Rect(newX,newY,button->getContentSize().width, button->getContentSize().height));
+            parent->OnDragging<ItemType>(cocos2d::Rect(newX,newY,button->getContentSize().width, button->getContentSize().height+ITEMS_LABEL_HEIGHT));
         }
             break;
         case Widget::TouchEventType::ENDED:

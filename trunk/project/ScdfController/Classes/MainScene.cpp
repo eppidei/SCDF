@@ -61,24 +61,19 @@ template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStar
 template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
 {
     if (NULL==customPanel.get()) return;
-//    draggingImage->setPosition(r.origin);
+
     Vec2 coord(convertToNodeSpace(customPanel->getPosition()));
     cocos2d::Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
-//    float scaledHeight=draggingImage->getContentSize().height;
-//    float scaledWidth=draggingImage->getContentSize().width;
-    
-    float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance();
+    float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT;
     float scaledWidth=ItemType::GetBaseSize().width*GetGridDistance();
-    
+
     if (r.origin.y<=workingSpaceRect.origin.y && (r.origin.x>=workingSpaceRect.origin.x)
         && (r.origin.x+scaledWidth)<=workingSpaceRect.size.width
         && (r.origin.y-scaledHeight)>=workingSpaceRect.origin.y-workingSpaceRect.size.height)
     {
         SnapToGrid(r);
-        //draggingImage->setPosition(r.origin);
-//        r.size=draggingImage->getContentSize();
         r.size=cocos2d::Size(scaledWidth, scaledHeight);
         rr=r;
     }
@@ -91,8 +86,6 @@ template <class ItemType> void MainScene::OnEndDragging()
     if (NULL==customPanel.get()) return;
     customPanel->CheckAddControl<ItemType>();
     customPanel->SetDraggingRect(cocos2d::Rect::ZERO);
-//    removeChild(draggingImage);
-//    draggingImage=NULL;
 }
 
 void MainScene::AttachItem(ItemBase *item)
