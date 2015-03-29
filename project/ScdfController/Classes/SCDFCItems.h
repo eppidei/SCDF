@@ -295,7 +295,7 @@ namespace ScdfCtrl
 //        virtual void setContentSize(const cocos2d::Size &contentSize) override;
         void DoSetContentSize(cocos2d::Size contentSize) override;
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return GetStaticBaseSize();}
-        void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
+        void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;
         
         CREATE_FUNC(ItemKeyboard);
     };

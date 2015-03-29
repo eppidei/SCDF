@@ -27,6 +27,8 @@ namespace ScdfCtrl
         void CalculateInnerHeight();
         virtual void UpdateSubpanels(){}
         virtual void InitPanel(){}
+        
+        bool visible;
     public:
         void InitLayout();
         bool HideShow(PanelBase *substitute=NULL);
@@ -34,6 +36,7 @@ namespace ScdfCtrl
         template <class PanelType> static PanelBase *CreatePanel(MainScene *main, cocos2d::Rect r);
         void EnableScrolling(bool enable);
         void CollapseAllSubpanelsButThis(SubpanelBase *subPanel);
+        bool IsVisible() { return visible;}
         CREATE_FUNC(PanelBase);
     protected:
         cocos2d::ui::ScrollView *scrollView;
