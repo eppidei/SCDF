@@ -343,7 +343,7 @@ void ItemSlider::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
     slideBar->setRotation(rotation);
     slideBarOff->setRotation(rotation);
     
-    setPosition(Vec2(rotationCenter.x-GetControlContentSize().width/2.0, rotationCenter.y+GetControlContentSize().height/2.0));
+    setPosition(Vec2(rotationCenter.x-getContentSize().width/2.0, rotationCenter.y+getContentSize().height/2.0));
 }
 
 void ItemSlider::DoSetContentSize(cocos2d::Size contentSize)
@@ -966,11 +966,31 @@ void ItemMultipad::UpdateSelectedPadIndex(ItemPad *pad)
 
 void ItemKeyboard::DoSetContentSize(cocos2d::Size contentSize)
 {
-    if (keysHandle)
+
+    if (NULL==keysHandle) return;
+//    float offset =	thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
+//    float size=GetLayoutManager()->IsVertical()?GetControlContentSize().height-offset:GetControlContentSize().width-offset;
+//    float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
+//    const int bitmapThumbXOffset=-8;
+    if (GetLayoutManager()->IsVertical())
+    {
+        keysHandle->setContentSize(cocos2d::Size(contentSize.height, contentSize.width));
+        
+//        keysHandle->setPosition(Vec2(GetControlContentSize().width/2.0+bitmapThumbXOffset,position));
+//        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().height-position+2.0));
+//        slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0,position+slideBarOff->getContentSize().height/2.0));
+//        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
+    }
+    else
     {
         keysHandle->setContentSize(contentSize);
-        keysHandle->setPosition(Vec2(0,contentSize.height));
+
+//        thumb->setPosition(Vec2(position,GetControlContentSize().height/2.0-bitmapThumbXOffset));
+//        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().width-position+2));
+//        slideBarOff->setPosition(Vec2(position+slideBarOff->getContentSize().height/2.0, GetControlContentSize().height/2.0));
+//        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2.0));
     }
+    keysHandle->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
 }
 
 void ItemKeyboard::Create()
@@ -983,9 +1003,9 @@ void ItemKeyboard::Create()
     control->addChild(keysHandle);
     keysHandle->setTouchEnabled(true);
    // keysHandle->setBackGroundColorType(Layout::BackGroundColorType::NONE);
-    keysHandle->setAnchorPoint(Vec2(0,1));
+    keysHandle->setAnchorPoint(Vec2(0.5,0.5));
     keysHandle->setContentSize(GetControlContentSize());
-    keysHandle->setPosition(Vec2(0,GetControlContentSize().height));
+    keysHandle->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
     
     keysHandle->setBackGroundImage("pianoDefault.png");
     const int bitmapOffsetLeft=0;
@@ -1018,31 +1038,47 @@ const float numKeyboardKeys=12.0;
 
 void ItemKeyboard::UpdateSelectedKey()
 {
+    float mockWidth=GetLayoutManager()->IsVertical()?GetControlContentSize().height:GetControlContentSize().width;
+    float mockHeight=GetLayoutManager()->IsVertical()?GetControlContentSize().width:GetControlContentSize().height;
+    
     const float velo=127.0;
-    float keyWidth=(GetControlContentSize().width-(2*leftBitmapOffsetPercentageForPressedKey*GetControlContentSize().width))/numKeyboardKeys;
+    float keyWidth=(mockWidth-(2*leftBitmapOffsetPercentageForPressedKey*mockWidth))/numKeyboardKeys;
     Vec2 nodeCoord=keysHandle->convertToNodeSpace(dragPosUpdated);
-    selectedKey=fmax(0,fmin(11,(nodeCoord.x-(leftBitmapOffsetPercentageForPressedKey*GetControlContentSize().width))/keyWidth));
-    int vel=velo*(GetControlContentSize().height-nodeCoord.y)/GetControlContentSize().height;
+    selectedKey=fmax(0,fmin(11,(nodeCoord.x-(leftBitmapOffsetPercentageForPressedKey*mockWidth))/keyWidth));
+    int vel=velo*(mockHeight-nodeCoord.y)/mockHeight;
     
     //SetValue(vel);
     GetControlUnit()->GetSender()->SetMidiPitch(numKeyboardKeys*currentOctave+selectedKey);
     GetControlUnit()->OnTouch(ControlUnit::TouchDown,vel/127.0);
     // VALUE REMOVAL
     //controlUnit->SendValue(vel);
-
+    
     if (selectedKey==1||selectedKey==3||selectedKey==6||selectedKey==8||selectedKey==10)
     {
-        blackKeyPressed->setPosition(Vec2(leftBitmapOffsetPercentageForPressedKey*GetControlContentSize().width+keyWidth*selectedKey,GetControlContentSize().height-(topBitmapOffsetPercentageForPressedKey*GetControlContentSize().height)));
+
+        blackKeyPressed->setPosition(Vec2(leftBitmapOffsetPercentageForPressedKey*mockWidth+keyWidth*selectedKey,mockHeight-(topBitmapOffsetPercentageForPressedKey*mockHeight)));
         blackKeyPressed->setVisible(true);
         whiteKeyPressed->setVisible(false);
     }
     else
     {
-        whiteKeyPressed->setPosition(Vec2(leftBitmapOffsetPercentageForPressedKey*GetControlContentSize().width+keyWidth*selectedKey,GetControlContentSize().height-(topBitmapOffsetPercentageForPressedKey*GetControlContentSize().height)));
+        whiteKeyPressed->setPosition(Vec2(leftBitmapOffsetPercentageForPressedKey*mockWidth+keyWidth*selectedKey,mockHeight-(topBitmapOffsetPercentageForPressedKey*mockHeight)));
         blackKeyPressed->setVisible(false);
         whiteKeyPressed->setVisible(true);
     }
     LOGD("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetSender()->GetMidiPitch(), vel);
+}
+
+void ItemKeyboard::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
+{
+    if (!keysHandle) return;
+    if ((!GetLayoutManager()->IsVertical() && keysHandle->getRotation()==0)  ||
+        (GetLayoutManager()->IsVertical() && keysHandle->getRotation()!=0))
+        return;
+    int rotation=GetLayoutManager()->IsVertical()?-90:0;
+
+    keysHandle->setRotation(rotation);
+    setPosition(Vec2(rotationCenter.x-getContentSize().width/2.0, rotationCenter.y+getContentSize().height/2.0));
 }
 
 void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)

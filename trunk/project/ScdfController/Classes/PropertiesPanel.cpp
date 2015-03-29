@@ -567,8 +567,7 @@ void ItemSettings::InitChildrensVisibilityAndPos()
     
     forceHide=false;
     if (dynamic_cast<ItemPad*>(panel->GetSelectedItem())!=NULL ||
-        dynamic_cast<ItemKnob*>(panel->GetSelectedItem())!=NULL||
-        dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
+        dynamic_cast<ItemKnob*>(panel->GetSelectedItem())!=NULL)
         forceHide=true;
     
     HideElement(orientation,collapsed||forceHide);
@@ -722,7 +721,10 @@ void ItemSettings::Update()
     color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
     name->SetText(panel->GetSelectedItem()->GetName());
     modes->CheckButton((int)(panel->GetSelectedItem()->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
-
+    int orientationIndex=1;
+    if (panel->GetSelectedItem()->GetLayoutManager()->IsVertical())
+        orientationIndex=0;
+    orientation->SetSelectedIndex(orientationIndex);
     InitChildrensVisibilityAndPos();
     
 }
@@ -843,7 +845,7 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
     else
         selectedItem=(ItemBase*)subject;
     
-    if (getPositionX()<0) return;
+    if (!IsVisible()) return;
     LOGD ("Updating properties \n");
     switch (event)
     {

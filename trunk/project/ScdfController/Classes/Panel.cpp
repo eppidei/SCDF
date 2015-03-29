@@ -80,6 +80,7 @@ void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
 //    backGroundImage->setAnchorPoint(Vec2(0,1));
 //    backGroundImage->setPosition(0,r.size.height);
 //    addChild(backGroundImage);
+    visible=false;
     parent=main;
     scrollView=cocos2d::ui::ScrollView::create();
     addChild(scrollView);
@@ -109,13 +110,13 @@ bool PanelBase::HideShow(PanelBase *substitute)
         callback = CallFunc::create([substitute](){
             substitute->HideShow();
         });
-    bool opened=false;
+    visible=false;
     if (getPositionX()==0)
         action = MoveTo::create(0.1f, cocos2d::Vec2(-getContentSize().width+80, getPositionY()));
     else if (NULL==substitute)
     {
         action = MoveTo::create(0.1f, cocos2d::Vec2(0, getPositionY()));
-        opened=true;
+        visible=true;
     }
     
     if (NULL==action)
@@ -133,7 +134,7 @@ bool PanelBase::HideShow(PanelBase *substitute)
     else
         //No Substitution
         runAction(action);
-    return opened;
+    return visible;
 }
 
 void PanelBase::CollapseAllSubpanelsButThis(SubpanelBase *subPanel)

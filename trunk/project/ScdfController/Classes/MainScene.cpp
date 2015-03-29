@@ -396,10 +396,10 @@ bool MainScene::HideShowScrollview()
 
 bool MainScene::HideShowPropertiesPanel()
 {
-    bool opened=loadSavePanel->HideShow(propertiesPanel.get());
+    loadSavePanel->HideShow(propertiesPanel.get());
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 //    propertiesPanel->HideShow();
-    return opened;
+    return propertiesPanel->IsVisible();
 }
 
 void MainScene::HideShowToolbar()
