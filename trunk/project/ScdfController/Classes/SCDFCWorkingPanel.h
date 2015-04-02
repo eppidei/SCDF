@@ -44,6 +44,11 @@ namespace ScdfCtrl
         void ToggleActiveState();
         void DetectCollisions(cocos2d::Rect r);
         void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
+        
+        void OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        
         CREATE_FUNC(WorkingPanel);
     };
 }

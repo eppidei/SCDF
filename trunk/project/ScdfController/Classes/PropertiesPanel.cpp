@@ -540,10 +540,12 @@ ItemSettings::ItemSettings()
 {
     h_minus=h_plus=w_minus=w_plus=NULL;
     sizeText=NULL;
-    color=orientation=NULL;
+    color=orientation=group=NULL;
     name=NULL;
-    sizeLabel=colorLabel=nameLabel=NULL;
+    sizeLabel=colorLabel=nameLabel=groupLabel=NULL;
     orientLabel=NULL;
+    masterButton=NULL;
+    
 }
 
 void ItemSettings::InitChildrensVisibilityAndPos()
@@ -590,6 +592,9 @@ void ItemSettings::PositionElements()
     DoPosition(color, xOffset, yPos);
     DoPosition(controlLabel, xOffset, yPos);
     DoPosition(modes, xOffset, yPos);
+    DoPosition(groupLabel, xOffset, yPos);
+    DoPosition(group, xOffset, yPos);
+    DoPosition(masterButton, xOffset, yPos);
     DoPosition(orientLabel, xOffset, yPos);
     DoPosition(orientation, xOffset, yPos);
     DoPosition(sizeLabel, xOffset, yPos);
@@ -597,8 +602,6 @@ void ItemSettings::PositionElements()
     {
         h_plus->setPosition(Vec2(getContentSize().width-xOffset-h_plus->getContentSize().width,yPos));
         sizeText->setPosition(Vec2(xOffset,yPos));
-//        w_minus->setPosition(Vec2(sizeText->getPositionX()-w_minus->getContentSize().width,h_plus->getPositionY()-h_plus->getContentSize().height));
-//        w_plus->setPosition(Vec2(sizeText->getPositionX()+sizeText->getContentSize().width,h_plus->getPositionY()-h_plus->getContentSize().height));
         h_minus->setPosition(Vec2(xOffset,yPos));
     }
 }
@@ -664,14 +667,41 @@ void ItemSettings::CreateControls()
     modes->AddButton(PROPERTIES_CONTROLMODE_PIPPO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     modes->AddButton(PROPERTIES_CONTROLMODE_PLUTO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     modes->AddButton(PROPERTIES_CONTROLMODE_PAPERINO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+
+    //Create group label
+    CreateLabelWithBackground(this, &groupLabel, -1, r, "GROUP", "Arial", 16);
+    addChild(groupLabel,8);
+    
+    //Create orient dropDown
+    group = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
+    addChild(group,9);
+    dropDownData.clear();
+    dropDownData.push_back(DropDownMenuData("No Group",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    for(int i=0;i<11;++i)
+    {
+        std::ostringstream os;
+        os<<i;
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    }
+    group->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    
+    //Create master toggle
+    masterButton=Button::create();
+    masterButton->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    masterButton->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    masterButton->setTouchEnabled(true);
+    masterButton->setContentSize(cocos2d::Size(r.size.width,r.size.height));
+    masterButton->setAnchorPoint(Vec2(0,1));
+    addChild(masterButton,10,PROPERTIES_ITEMSETTINGS_MASTER);
+    masterButton->ignoreContentAdaptWithSize(false);
     
     //Create orient label
     CreateLabelWithBackground(this, &orientLabel, -1, r, "ORIENT", "Arial", 16);
-    addChild(orientLabel,8);
+    addChild(orientLabel,11);
     
     //Create orient dropDown
     orientation = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
-    addChild(orientation,9);
+    addChild(orientation,12);
     dropDownData.clear();
     dropDownData.push_back(DropDownMenuData("Vertical",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Horizontal",Colors::Instance()->GetUIColor(Colors::DropDownText)));
@@ -679,11 +709,11 @@ void ItemSettings::CreateControls()
     
     //Create size label
     CreateLabelWithBackground(this, &sizeLabel, -1, r, "SIZE", "Arial", 16);
-    addChild(sizeLabel,10);
+    addChild(sizeLabel,13);
     
     //Create size control
     h_minus = ui::Button::create();
-    addChild(h_minus, 12, PROPERTIES_ITEM_HEIGHT_MINUS);
+    addChild(h_minus, 15, PROPERTIES_ITEM_HEIGHT_MINUS);
     h_minus->setTouchEnabled(true);
     h_minus->ignoreContentAdaptWithSize(false);
     h_minus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
@@ -694,11 +724,11 @@ void ItemSettings::CreateControls()
     CreateLabelWithBackground(this, &sizeText, -1, r, "", GetDigitalFontPath(), 18);
     sizeText->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     sizeText->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-    addChild(sizeText,11);
+    addChild(sizeText,14);
     sizeText->SetAlignement(TextHAlignment::CENTER, TextVAlignment::CENTER);
     
     h_plus = ui::Button::create();
-    addChild(h_plus, 13, PROPERTIES_ITEM_HEIGHT_PLUS);
+    addChild(h_plus, 16, PROPERTIES_ITEM_HEIGHT_PLUS);
     h_plus->ignoreContentAdaptWithSize(false);
     h_plus->setTouchEnabled(true);
     h_plus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
@@ -718,13 +748,18 @@ void ItemSettings::Update()
     char str[256];
     sprintf(str,"x %d",item->GetLayoutManager()->GetMagValue());
     sizeText->SetText(str);
-    color->SetSelectedIndex(panel->GetSelectedItem()->GetColor());
-    name->SetText(panel->GetSelectedItem()->GetName());
-    modes->CheckButton((int)(panel->GetSelectedItem()->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
+    color->SetSelectedIndex(item->GetColor());
+    name->SetText(item->GetName());
+    modes->CheckButton((int)(item->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
     int orientationIndex=1;
-    if (panel->GetSelectedItem()->GetLayoutManager()->IsVertical())
+    if (item->GetLayoutManager()->IsVertical())
         orientationIndex=0;
     orientation->SetSelectedIndex(orientationIndex);
+    group->SetSelectedIndex(item->GetGroupID()+1);
+    if (item->IsMaster())
+        masterButton->loadTextureNormal("CloseSelected.png");
+    else
+        masterButton->loadTextureNormal("CloseNormal.png");
     InitChildrensVisibilityAndPos();
     
 }
@@ -743,6 +778,11 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
         panel->GetSelectedItem()->GetLayoutManager()->SetVertical(menu->GetSelectedIndex()==0);
         Update();
     }
+    else if (group==menu)
+    {
+        panel->GetSelectedItem()->SetGroupID(menu->GetSelectedIndex()-1);
+        Update();
+    }
 }
 
 void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
@@ -757,6 +797,9 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             break;
         case PROPERTIES_ITEM_HEIGHT_PLUS:
             panel->GetSelectedItem()->GetLayoutManager()->ZoomPlus();
+            break;
+        case PROPERTIES_ITEMSETTINGS_MASTER:
+            panel->GetSelectedItem()->SetMaster(!panel->GetSelectedItem()->IsMaster());
             break;
         case PROPERTIES_CONTROLMODE_WIRE:
         case PROPERTIES_CONTROLMODE_BLOW:

@@ -39,14 +39,34 @@ std::string ItemBase::GetName()
 	return name;
 }
 
+int ItemBase::GetGroupID()
+{
+    return groupId;
+}
+
 Colors::ItemsColorsId ItemBase::GetColor()
 {
 	return colorIndex;
 }
 
+bool ItemBase::IsMaster()
+{
+    return isMaster;
+}
+
 void ItemBase::SetColor(Colors::ItemsColorsId _colorIndex)
 {
 	colorIndex = _colorIndex;
+}
+
+void ItemBase::SetGroupID(int _groupId)
+{
+    groupId = _groupId;
+}
+
+void ItemBase::SetMaster(bool _isMaster)
+{
+    isMaster = _isMaster;
 }
 
 cocos2d::Size ItemBase::GetControlContentSize()
@@ -60,7 +80,7 @@ void ItemBase::CreateItemBaseElements()
 {
     cocos2d::Rect lRect(0,getContentSize().height,getContentSize().width,ITEMS_LABEL_HEIGHT);
     label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
-//    label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    label->setColor(Color3B::BLACK);
 //    label->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
    // label->SetAlignement();
     addChild(label,1);
@@ -121,10 +141,9 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
     return item;
 }
 
-ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL)
+ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL), groupId(-1), isMaster(false)
 {
 	ChangeControlUnit(ControlUnit::Wire);
-	//controlUnit->SetItem(this);
     layoutManager.reset(new ItemLayoutManager(this));
 }
 
@@ -267,16 +286,16 @@ void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventT
     {
         case Widget::TouchEventType::BEGAN:
             if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchBeganPosition(), type))
-                OnItemTouchBegan(widget, type);
+                wPanel->OnItemTouchBegan(this, widget, type);
             break;
         case Widget::TouchEventType::MOVED:
             if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchMovePosition(), type))
-                OnItemTouchMoved(widget, type);
+                wPanel->OnItemTouchMoved(this, widget, type);
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
             if (NULL==wPanel||!wPanel->OnControlMove (this, widget->getTouchEndPosition(), type))
-                OnItemTouchEnded(widget, type);
+                wPanel->OnItemTouchEnded(this, widget, type);
             break;
         default:
             break;
@@ -285,7 +304,8 @@ void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventT
 
 void ItemBase::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    NotifyEvent(SCDFC_EVENTS_Select_Item);
+    if (widget->getParent()==control)
+        NotifyEvent(SCDFC_EVENTS_Select_Item);
     dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
 }
 void ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -520,7 +540,8 @@ void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
     GetControlUnit()->OnTouch( ControlUnit::TouchUp,
         		GetControlUnit()->GetNormalizedValue());
     
-    NotifyEvent(SCDFC_EVENTS_Move_Item);
+    if (widget->getParent()==control)
+        NotifyEvent(SCDFC_EVENTS_Move_Item);
     // control unit wire doesn't really need this
     // but dsp unit needs this for activate/deactivate
 
@@ -569,20 +590,22 @@ void ItemKnob::AngularMode(Vec2 touchCoordWorld)
 
 Vec2 ItemSlider::OnMove(Widget *widget)
 {
-    Vec2 limits=convertToWorldSpace(Vec2(_anchorPoint.x * _contentSize.width, _anchorPoint.y * _contentSize.height));//getWorldPosition();
+//    Vec2 limits=convertToWorldSpace(Vec2(_anchorPoint.x * _contentSize.width, _anchorPoint.y * _contentSize.height));//getWorldPosition();
+    Node *parent=widget->getParent();
+    Vec2 limits=parent->convertToWorldSpace(Vec2(parent->getAnchorPoint().x * parent->getContentSize().width, parent->getAnchorPoint().y * parent->getContentSize().height));
     Vec2 touchPos=widget->getTouchMovePosition();
     
     if (!IsKnob())
     {
         if (GetLayoutManager()->IsVertical())
-            touchPos.y=fmin(fmax(touchPos.y,limits.y-GetControlContentSize().height),limits.y);
+            touchPos.y=fmin(fmax(touchPos.y,limits.y-parent->getContentSize().height),limits.y);
         else
-            touchPos.x=fmin(fmax(touchPos.x,limits.x),limits.x+GetControlContentSize().width);
+            touchPos.x=fmin(fmax(touchPos.x,limits.x),limits.x+parent->getContentSize().width);
     }
     
     float distanceX=0, distanceY=0;
     
-    cocos2d::Rect rItem(getPositionX(), getPositionY()-GetControlContentSize().height,GetControlContentSize().width, GetControlContentSize().height);
+    cocos2d::Rect rItem(parent->getPositionX(), parent->getPositionY()-parent->getContentSize().height,parent->getContentSize().width, parent->getContentSize().height);
     
     if (!rItem.containsPoint(touchPos))
     {
@@ -602,7 +625,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        diff/=(GetControlContentSize().height-sliderComp);
+        diff/=(parent->getContentSize().height-sliderComp);
     }
     else{
         diff=touchPos.x-dragPosUpdated.x;
@@ -614,7 +637,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
             diff/=draggingVel;
             sliderComp=0;
         }
-        diff/=(GetControlContentSize().width-sliderComp);
+        diff/=(parent->getContentSize().width-sliderComp);
     }
     
     float normValue=GetControlUnit()->GetNormalizedValue()+diff;
@@ -647,7 +670,8 @@ void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEven
     
     dragPosUpdated=touchPosNew;
 
-    NotifyEvent(SCDFC_EVENTS_Move_Item);
+    if (widget->getParent()==control)
+        NotifyEvent(SCDFC_EVENTS_Move_Item);
 }
 
 cocos2d::Size ItemSlider::GetStaticBaseSize()
@@ -1100,7 +1124,8 @@ void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEv
 {
     ItemBase::OnItemTouchMoved(widget, type);
     UpdateSelectedKey();
-    NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
+    if (widget->getParent()==control)
+        NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
 }
 
 void ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
