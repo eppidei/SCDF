@@ -201,11 +201,13 @@ void ItemBase::LaunchCollisionAnimation()
 {
     for (auto it=getChildren().begin();it!=getChildren().end();++it)
     {
-        auto tintTo = TintTo::create(0.05f, 200.0f, 20.0f, 20.0f);
+        if (dynamic_cast<TextWithBackground*>(*it) != NULL) continue;
+        auto tintTo = TintTo::create(0.05f, 180.0f, 20.0f, 20.0f);
         auto callback = CallFunc::create([this](){
             
             for (auto itt=getChildren().begin();itt!=getChildren().end();++itt)
             {
+                if (dynamic_cast<TextWithBackground*>(*itt) != NULL) continue;
                 auto retintTo = TintTo::create(0.2f, 255.0f, 255.0f, 255.0f);
                 (*itt)->runAction(retintTo);
             }
@@ -518,8 +520,8 @@ void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     //if (callback.get())
     //    callback->OnItemTouchBegan();
 
-    GetControlUnit()->OnTouch( ControlUnit::TouchDown,
-        		GetControlUnit()->GetNormalizedValue());
+//    GetControlUnit()->OnTouch( ControlUnit::TouchDown,
+//        		GetControlUnit()->GetNormalizedValue());
     // control unit wire doesn't really need this
     // but dsp unit needs this for activate/deactivate
 
@@ -537,11 +539,11 @@ void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
     //if (callback.get())
     //    callback->OnItemTouchEnded();
 
-    GetControlUnit()->OnTouch( ControlUnit::TouchUp,
-        		GetControlUnit()->GetNormalizedValue());
+//    GetControlUnit()->OnTouch( ControlUnit::TouchUp,
+//        		GetControlUnit()->GetNormalizedValue());
     
-    if (widget->getParent()==control)
-        NotifyEvent(SCDFC_EVENTS_Move_Item);
+//    if (widget->getParent()==control)
+//        NotifyEvent(SCDFC_EVENTS_Move_Item);
     // control unit wire doesn't really need this
     // but dsp unit needs this for activate/deactivate
 
@@ -551,14 +553,16 @@ void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
 #define RangeRadEnd 5.4105206811824216884634413823147
 #define PHI 3.1415926535897932384626433832795
 
-void ItemKnob::AngularMode(Vec2 touchCoordWorld)
+void ItemKnob::AngularMode(Widget *knob)
 {
-
+    Vec2 touchWorldPos=knob->getTouchMovePosition();
+    Node *parent=knob->getParent();
+    
     static double AngleConstantOffset=PHI/2-RangeRadStart;
     
-    Vec2 center(GetControlContentSize().width/2, GetControlContentSize().height/2);
+    Vec2 center(parent->getContentSize().width/2, parent->getContentSize().height/2);
 
-    Vec2 touchPos=convertToNodeSpace(touchCoordWorld);
+    Vec2 touchPos=parent->convertToNodeSpace(touchWorldPos);
     short int x=touchPos.x;
     short int y=touchPos.y;
     
@@ -651,7 +655,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
 Vec2 ItemKnob::OnMove(Widget *widget)
 {
     Vec2 touchPos=widget->getTouchMovePosition();
-    AngularMode(touchPos);
+    AngularMode(widget);
     //return ItemSlider::OnMove(widget) //Linear movement like slider
     return touchPos;
 }
@@ -1060,15 +1064,19 @@ void ItemKeyboard::Create()
 
 const float numKeyboardKeys=12.0;
 
-void ItemKeyboard::UpdateSelectedKey()
+bool ItemKeyboard::UpdateSelectedKey(Widget* widget, bool onMoving)
 {
-    float mockWidth=GetLayoutManager()->IsVertical()?GetControlContentSize().height:GetControlContentSize().width;
-    float mockHeight=GetLayoutManager()->IsVertical()?GetControlContentSize().width:GetControlContentSize().height;
+    Node *parent=widget->getParent();
+    float mockWidth=GetLayoutManager()->IsVertical() ? parent->getContentSize().height : parent->getContentSize().width;
+    float mockHeight=GetLayoutManager()->IsVertical() ? parent->getContentSize().width : parent->getContentSize().height;
     
     const float velo=127.0;
     float keyWidth=(mockWidth-(2*leftBitmapOffsetPercentageForPressedKey*mockWidth))/numKeyboardKeys;
-    Vec2 nodeCoord=keysHandle->convertToNodeSpace(dragPosUpdated);
+    Vec2 nodeCoord=widget->convertToNodeSpace(dragPosUpdated);
+    int lastSelectedKey=selectedKey;
     selectedKey=fmax(0,fmin(11,(nodeCoord.x-(leftBitmapOffsetPercentageForPressedKey*mockWidth))/keyWidth));
+    if (lastSelectedKey==selectedKey && onMoving)
+        return false;
     int vel=velo*(mockHeight-nodeCoord.y)/mockHeight;
     
     //SetValue(vel);
@@ -1090,6 +1098,7 @@ void ItemKeyboard::UpdateSelectedKey()
         blackKeyPressed->setVisible(false);
         whiteKeyPressed->setVisible(true);
     }
+    return true;
     LOGD("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetSender()->GetMidiPitch(), vel);
 }
 
@@ -1108,7 +1117,7 @@ void ItemKeyboard::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
 void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     ItemBase::OnItemTouchBegan(widget, type);
-    UpdateSelectedKey();
+    UpdateSelectedKey(widget, false);
 }
 
 void ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -1123,8 +1132,8 @@ void ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEv
 void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     ItemBase::OnItemTouchMoved(widget, type);
-    UpdateSelectedKey();
-    if (widget->getParent()==control)
+    bool notify=UpdateSelectedKey(widget, true);
+    if (notify && widget->getParent()==control)
         NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
 }
 
