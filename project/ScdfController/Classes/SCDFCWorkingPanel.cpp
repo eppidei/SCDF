@@ -39,7 +39,7 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setPosition(r.origin);
     parent->addChild(this,-2);
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
-    auto backGroundImage = Sprite::create("Background.png");
+    auto backGroundImage = Sprite::create("background.jpg");
     cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
     backGroundImage->setAnchorPoint(Vec2(0,1));
     backGroundImage->setPosition(0,r.size.height);
@@ -222,6 +222,51 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
             break;
     }
     return true;
+}
+
+
+void WorkingPanel::OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    item->OnItemTouchBegan(widget, type);
+    int itemGroupId=item->GetGroupID();
+    if (item->IsMaster())
+    {
+        for (int i=0;i<patch->units.size();++i)
+        {
+            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
+            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->units[i]->OnItemTouchBegan(widget,type);
+        }
+    }
+}
+void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    item->OnItemTouchMoved(widget, type);
+    int itemGroupId=item->GetGroupID();
+    if (item->IsMaster())
+    {
+        for (int i=0;i<patch->units.size();++i)
+        {
+            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
+            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->units[i]->OnItemTouchMoved(widget,type);
+        }
+    }
+}
+
+void WorkingPanel::OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    item->OnItemTouchEnded(widget, type);
+    int itemGroupId=item->GetGroupID();
+    if (item->IsMaster())
+    {
+        for (int i=0;i<patch->units.size();++i)
+        {
+            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
+            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->units[i]->OnItemTouchEnded(widget,type);
+        }
+    }
 }
 
 template void WorkingPanel::CheckAddControl<ItemSlider>();

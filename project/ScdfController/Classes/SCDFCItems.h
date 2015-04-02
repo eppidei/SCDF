@@ -76,19 +76,20 @@ namespace ScdfCtrl
         std::unique_ptr<ItemLayoutManager> layoutManager;
         std::string name;
         Colors::ItemsColorsId colorIndex;
+        int groupId;
+        bool isMaster;
         
         cocos2d::ui::Layout *control;
         cocos2d::Vec2 dragStartPos, dragPosUpdated;
         //std::unique_ptr<ItemBaseCallback> callback;
-
-        virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
         
         cocos2d::Size GetControlContentSize();
         virtual void DoSetContentSize(cocos2d::Size contentSize) = 0;
     public:
 
+        virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
         template <class ItemType> static ItemBase *CreateItem();
         
         ItemBase();
@@ -101,6 +102,8 @@ namespace ScdfCtrl
         //setter
         void ChangeControlUnit(ControlUnit::Type t);
         void SetName(std::string _name);
+        void SetGroupID(int _groupId);
+        void SetMaster(bool _isMaster);
         virtual void SetColor(Colors::ItemsColorsId _colorIndex);
         virtual void setContentSize(const cocos2d::Size &contentSize) override;
         
@@ -110,9 +113,11 @@ namespace ScdfCtrl
 
         std::string GetName();
         Colors::ItemsColorsId GetColor();
+        int GetGroupID();
+        bool IsMaster();
 
         virtual cocos2d::Size GetStaticBaseSize()=0;
-//        virtual int GetStaticID()=0;
+        virtual int GetStaticID()=0;
         
     };
 
@@ -148,6 +153,7 @@ namespace ScdfCtrl
         
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;
+        int GetStaticID() override { return GetID();}
         CREATE_FUNC(ItemSlider);
     };
 
@@ -176,6 +182,7 @@ namespace ScdfCtrl
         
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
+        int GetStaticID() override { return GetID();}
         
         CREATE_FUNC(ItemKnob);
     };
@@ -190,6 +197,7 @@ namespace ScdfCtrl
         static int GetID() { return ITEM_WHEEL_ID;}
         static std::string GetIcon() { return "iconSliderDefault.png";}
         static std::string GetIconPressed() { return "iconSliderPressed.png";}
+        int GetStaticID() override { return GetID();}
         
         CREATE_FUNC(ItemWheel);
     };
@@ -220,6 +228,7 @@ namespace ScdfCtrl
         
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
+        int GetStaticID() override { return GetID();}
         
         CREATE_FUNC(ItemPad);
     };
@@ -235,6 +244,7 @@ namespace ScdfCtrl
         static int GetID() { return ITEM_SWITCH_ID;}
         static std::string GetIcon() { return "iconPadDefault.png";}
         static std::string GetIconPressed() { return "iconPadPressed.png";}
+        int GetStaticID() override { return GetID();}
         
         CREATE_FUNC(ItemSwitch);
     };
@@ -263,6 +273,7 @@ namespace ScdfCtrl
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return getContentSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
         void DoSetContentSize(cocos2d::Size contentSize) override {}
+        int GetStaticID() override { return GetID();}
         
         CREATE_FUNC(ItemMultipad);
     };
@@ -297,6 +308,7 @@ namespace ScdfCtrl
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return GetStaticBaseSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;
         
+        int GetStaticID() override { return GetID();}
         CREATE_FUNC(ItemKeyboard);
     };
 }
