@@ -169,7 +169,7 @@ namespace ScdfCtrl
         std::vector<cocos2d::ui::Layout*> onPoints;
         void CreateONPoints();
         void UpdateOnPointVisibility();
-        void AngularMode(cocos2d::Vec2 touchPos);
+        void AngularMode(Widget *knob);
         cocos2d::Vec2 OnMove(cocos2d::ui::Widget *widget) override;
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
@@ -292,7 +292,7 @@ namespace ScdfCtrl
         void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
-        void UpdateSelectedKey();
+        bool UpdateSelectedKey(cocos2d::ui::Widget* widget, bool onMoving);
     public:
         //void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         void SetCurrentOctave(int octave) { currentOctave=octave; }
