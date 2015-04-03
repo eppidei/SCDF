@@ -280,7 +280,7 @@ void MIDIInfo::UpdateVelocity()
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel) return; 
     velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetValue());
-    velocity->setEnabled(dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    EnableElement(velocity, dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
 }
 
 void MIDIInfo::Update()
@@ -306,7 +306,7 @@ void MIDIInfo::Update()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-    midiMessage->setEnabled(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
     InitControlMenuData();
 
     channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());

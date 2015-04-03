@@ -1118,6 +1118,8 @@ void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEv
 {
     ItemBase::OnItemTouchBegan(widget, type);
     UpdateSelectedKey(widget, false);
+    if (widget->getParent()==control)
+        NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
 }
 
 void ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
