@@ -65,6 +65,7 @@ namespace ScdfCtrl
         bool collapsed;
         
         void HideElement(Node *n, bool hide);
+        void EnableElement(Widget *w, bool enable);
         virtual void OnCheckEvent(cocos2d::ui::CheckBox *widget, bool selected){}
         virtual void OnTextInput(cocos2d::ui::TextField *widget){}
         virtual void OnTouchEventBegan(cocos2d::Node *widget){}

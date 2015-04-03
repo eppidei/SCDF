@@ -201,6 +201,14 @@ void SubpanelBase::HideElement(Node *n, bool hide)
     // CalculateHeight();
 }
 
+void SubpanelBase::EnableElement(Widget *w, bool enable)
+{
+    w->setEnabled(enable);
+    Color3B c=enable?Colors::Instance()->GetUIColor(Colors::UIColorsId::WidgetBackGround):Color3B::GRAY;
+    if (dynamic_cast<DropDownMenu*>(w)!=NULL)
+        dynamic_cast<DropDownMenu*>(w)->setBackGroundColor(c);
+}
+
 void SubpanelBase::InitChildrensVisibilityAndPos()
 {
     CalculateHeight();
@@ -221,7 +229,7 @@ PanelBase *SubpanelBase::GetParent()
 
 void SubpanelBase::Resize(float newHeight)
 {
-    auto modifyHeight = ActionTween::create(0.1, "height", getContentSize().height, newHeight);
+   // auto modifyHeight = ActionTween::create(0.1, "height", getContentSize().height, newHeight);
 //    runAction(modifyHeight);
     cocos2d::Size s=cocos2d::Size(getContentSize().width, newHeight);
     setContentSize(s);
