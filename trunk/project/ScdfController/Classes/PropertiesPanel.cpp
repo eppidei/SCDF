@@ -803,10 +803,11 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             break;
         case PROPERTIES_CONTROLMODE_WIRE:
         case PROPERTIES_CONTROLMODE_BLOW:
+            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+            break;
         case PROPERTIES_CONTROLMODE_PIPPO:
         case PROPERTIES_CONTROLMODE_PLUTO:
         case PROPERTIES_CONTROLMODE_PAPERINO:
-            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
         default:
             break;
     }
@@ -886,7 +887,12 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
     else if (selectedItem==(ItemBase*)subject && event!=SCDFC_EVENTS_Move_Item)
         return;
     else
+    {
+        if (NULL!=selectedItem)
+            selectedItem->Select(false);
         selectedItem=(ItemBase*)subject;
+        selectedItem->Select(true);
+    }
     
     if (!IsVisible()) return;
     LOGD ("Updating properties \n");

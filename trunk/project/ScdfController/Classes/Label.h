@@ -34,7 +34,7 @@ namespace ScdfCtrl
         CREATE_FUNC(TextWithBackground);
         void setPosition(const cocos2d::Vec2& position) override;
         void setContentSize(const cocos2d::Size &contentSize) override;
-        void SetTextColor(cocos2d::Color3B &c);
+        void SetTextColor(cocos2d::Color3B c);
     };
     class TextInputWithBackground : public ControlWithBackground
     {

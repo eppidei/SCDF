@@ -98,6 +98,7 @@ namespace ScdfCtrl
 
         void LaunchCollisionAnimation();
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        void Select(bool select);
         
         //setter
         void ChangeControlUnit(ControlUnit::Type t);
