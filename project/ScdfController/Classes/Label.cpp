@@ -62,7 +62,7 @@ void TextWithBackground::setContentSize(const cocos2d::Size &contentSize)
         text->setContentSize(cocos2d::Size(contentSize.width-LABEL_X_OFFSET, contentSize.height));
 }
 
-void TextWithBackground::SetTextColor(Color3B &c)
+void TextWithBackground::SetTextColor(Color3B c)
 {
     if (text)
         text->setColor(c);

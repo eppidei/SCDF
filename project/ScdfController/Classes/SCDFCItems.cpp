@@ -80,7 +80,8 @@ void ItemBase::CreateItemBaseElements()
 {
     cocos2d::Rect lRect(0,getContentSize().height,getContentSize().width,ITEMS_LABEL_HEIGHT);
     label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
-    label->setColor(Color3B::BLACK);
+    label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
+    label->SetTextColor(Color3B::BLACK);
 //    label->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
    // label->SetAlignement();
     addChild(label,1);
@@ -304,10 +305,22 @@ void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventT
     }
 }
 
+void ItemBase::Select(bool select)
+{
+    if (select)
+    {
+        label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+        label->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
+    }
+    else
+        label->setBackGroundColorType(Layout::BackGroundColorType::NONE);
+}
+
 void ItemBase::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Select_Item);
+    
     dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
 }
 void ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -466,7 +479,7 @@ void ItemSlider::Init()
 }
 void ItemWheel::Init()
 {
-    DEFAULT_NAME("Switch")
+    DEFAULT_NAME("Wheel")
 }
 void ItemSlider::Create()
 {
