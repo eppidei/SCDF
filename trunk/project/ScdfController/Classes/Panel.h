@@ -71,10 +71,11 @@ namespace ScdfCtrl
         virtual void OnTouchEventBegan(cocos2d::Node *widget){}
         virtual void OnTouchEventEnded(cocos2d::Node *widget){}
         virtual void OnListViewItemSelected(cocos2d::ui::ListView *widget){}
-        virtual void InitChildrensVisibilityAndPos();
+        virtual void CheckShowElements() {}
+        void UpdateLayout();
     public:
         ~SubpanelBase();
-        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+//        virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         virtual void PositionElements() = 0;
         virtual void OnDropDownSelectionChange(DropDownMenu *menu) {}
         virtual void Update() {}

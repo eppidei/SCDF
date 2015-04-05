@@ -152,7 +152,8 @@ void PanelBase::CollapseAllSubpanelsButThis(SubpanelBase *subPanel)
 
 void SubpanelBase::DropDownMenuCallbackSubPanel::OnSizeChanged(float oldSize, float newSize)
 {
-    parent->GetParent()->InitLayout();
+//    parent->GetParent()->InitLayout();
+    parent->UpdateLayout();
 }
 
 void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu)
@@ -209,10 +210,11 @@ void SubpanelBase::EnableElement(Widget *w, bool enable)
         dynamic_cast<DropDownMenu*>(w)->setBackGroundColor(c);
 }
 
-void SubpanelBase::InitChildrensVisibilityAndPos()
+void SubpanelBase::UpdateLayout()
 {
     CalculateHeight();
     PositionElements();
+    GetParent()->InitLayout();
 }
 
 SubpanelBase::~SubpanelBase()
@@ -233,6 +235,7 @@ void SubpanelBase::Resize(float newHeight)
 //    runAction(modifyHeight);
     cocos2d::Size s=cocos2d::Size(getContentSize().width, newHeight);
     setContentSize(s);
+    PositionElements();
     parent->InitLayout();
 }
 
@@ -241,22 +244,23 @@ void SubpanelBase::updateTweenAction(float value, const std::string& key)
     if ("height"==key){
         cocos2d::Size s=cocos2d::Size(getContentSize().width, value);
         setContentSize(s);
+        PositionElements();
         parent->InitLayout();
     }
     
 }
 
-void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-{
-//    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
-//    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
-    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
-    {
-        PositionElements();
-        // parent->InitLayout();
-        
-    }
-}
+//void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
+//{
+////    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
+////    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
+//    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
+//    {
+////        PositionElements();
+//        // parent->InitLayout();
+//        
+//    }
+//}
 
 void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
 {
@@ -269,7 +273,7 @@ void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
     setAnchorPoint(Vec2(0,1));
     CreateControls();
     PositionElements();
-    InitChildrensVisibilityAndPos();
+    CheckShowElements();
 
     setBackGroundImage("leftMenuPanel.png");
     cocos2d::Rect rr(20, 20, getBackGroundImageTextureSize().width-40, getBackGroundImageTextureSize().height-40);
@@ -288,7 +292,7 @@ void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEv
                 collapsed=!collapsed;
                 if(!collapsed)
                     parent->CollapseAllSubpanelsButThis(this);
-                InitChildrensVisibilityAndPos();
+                CheckShowElements();
             }
             else
                 OnTouchEventBegan(node);
@@ -346,5 +350,5 @@ void SubpanelBase::CheckBoxEventCallback(Ref* pSender,CheckBox::EventType type)
 void SubpanelBase::SetCollapsed(bool c)
 {
     collapsed=c;
-    InitChildrensVisibilityAndPos();
+    CheckShowElements();
 }

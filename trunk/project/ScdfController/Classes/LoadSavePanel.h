@@ -42,7 +42,7 @@ namespace ScdfCtrl
         LoadPatch();
         void PositionElements() override;
         CREATE_FUNC(LoadPatch);
-        void InitChildrensVisibilityAndPos() override {}
+        void CheckShowElements() override {}
         void InitFilesListView();
         void HighLightCurrentItem();
         void Update() override;
