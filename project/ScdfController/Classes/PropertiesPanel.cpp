@@ -62,7 +62,7 @@ void DoPosition(Node *n, float xPos, float &yPos)
     }
 }
 
-void OSCInfo::InitChildrensVisibilityAndPos()
+void OSCInfo::CheckShowElements()
 {
     bool hideItem=collapsed;
     HideElement(portLabel,hideItem);
@@ -71,7 +71,7 @@ void OSCInfo::InitChildrensVisibilityAndPos()
     HideElement(oscIP,hideItem);
     HideElement(oscTagLabel,hideItem);
     HideElement(oscTag,hideItem);
-    SubpanelBase::InitChildrensVisibilityAndPos();
+    UpdateLayout();
 }
 
 OSCInfo::OSCInfo()
@@ -135,7 +135,7 @@ void OSCInfo::CreateControls()
     addChild(oscTag,7);
     
     PositionElements();
-    InitChildrensVisibilityAndPos();
+    CheckShowElements();
 }
 
 void OSCInfo::PositionElements()
@@ -307,7 +307,7 @@ void MIDIInfo::Update()
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
     EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
-    InitControlMenuData();
+    UpdateControlMenuData();
 
     channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
     UpdateVelocity();
@@ -327,78 +327,109 @@ void MIDIInfo::PositionElements()
     DoPosition(midiMessageLabel, xOffset, yPos);
     DoPosition(midiMessage, xOffset, yPos);
     DoPosition(controlChangeLabel, xOffset, yPos);
+
     DoPosition(controlChange, xOffset, yPos);
+    DoPosition(octaveMenu, xOffset, yPos);
+    DoPosition(pitchValue, xOffset, yPos);
+    
     DoPosition(channelLabel, xOffset, yPos);
     DoPosition(channel, xOffset, yPos);
     DoPosition(velocityLabel, xOffset, yPos);
     DoPosition(velocity, xOffset, yPos);
 }
 
-void MIDIInfo::InitChildrensVisibilityAndPos()
+void MIDIInfo::CheckShowElements()
 {
     HideElement(devicesLabel,collapsed);
     HideElement(devices,collapsed);
     HideElement(midiMessageLabel,collapsed);
     HideElement(midiMessage,collapsed);
     HideElement(controlChangeLabel,collapsed);
-    HideElement(controlChange,collapsed);
+    UpdateControlMenuData();
     HideElement(channelLabel,collapsed);
     HideElement(channel,collapsed);
     HideElement(velocityLabel,collapsed);
     HideElement(velocity,collapsed);
-    SubpanelBase::InitChildrensVisibilityAndPos();
+
+    UpdateLayout();
 }
 
 void MIDIInfo::InitControlMenuData()
 {
     std::vector<DropDownMenuData> dropDownData;
+
+    static std::string note[12]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+    
+    int octave=-1;
+    for (int i=0;i<127;++i)
+    {
+        std::ostringstream os;
+        os<<note[i%12]<<octave;
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+        if (i>0&&0==i%12)
+            octave++;
+    }
+    pitchValue->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    pitchValue->setVisible(false);
+    
+    dropDownData.clear();
+    for (int i=0;i<120;++i)
+    {
+        std::ostringstream os;
+        os<<"CC: "<<i;
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    }
+    controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    controlChange->setVisible(true);
+    
+    dropDownData.clear();
+    for (int i=0;i<11;++i)
+    {
+        std::ostringstream os;
+        os<<i-1;
+        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    }
+
+    octaveMenu->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    octaveMenu->setVisible(false);
+    
+}
+
+void MIDIInfo::UpdateControlMenuData()
+{
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel->GetSelectedItem()) return;
+    
+    octaveMenu->setVisible(false);
+    controlChange->setVisible(false);
+    pitchValue->setVisible(false);
+    
+    if (collapsed) return;
+    
     if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
     {
+        DropDownMenu *menu;
         if (midiMessage->getCurSelectedIndex()<2)
         {
-            static std::string note[12]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-            int octave=-1;
-            for (int i=0;i<127;++i)
-            {
-                std::ostringstream os;
-                os<<note[i%12]<<octave;
-                dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-                if (i>0&&0==i%12)
-                    octave++;
-            }
             controlChangeLabel->SetText("MIDI NOTE");
+            menu=pitchValue;
         }
         else
         {
-            for (int i=0;i<120;++i)
-            {
-                std::ostringstream os;
-                os<<"CC: "<<i;
-                dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-            }
+            menu=controlChange;
             controlChangeLabel->SetText("CONTROL CHANGE");
         }
+        menu->setVisible(true);
+        menu->SetSelectedIndex(panel->GetCurrentSender()->GetMidiControl());
     }
     else
     {
-        for (int i=0;i<11;++i)
-        {
-            std::ostringstream os;
-            os<<i-1;
-            dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-        }
+        octaveMenu->setVisible(true);
         controlChangeLabel->SetText("OCTAVE");
+        octaveMenu->SetSelectedIndex(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave());
     }
-    controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
-    
-    int value=0;
-    if (panel->GetSelectedItem()==NULL) return;
-    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
-        value=panel->GetCurrentSender()->GetMidiControl();
-    else
-        value=dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave();
-    controlChange->SetSelectedIndex(value);
+    UpdateLayout();
+//    GetParent()->InitLayout();
 }
 
 void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
@@ -421,15 +452,12 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             default: return;
         }
         panel->GetCurrentSender()->SetMidiMessageType(msg);
-        InitControlMenuData();
+        UpdateControlMenuData();
     }
-    else if (menu==controlChange)
-    {
-        if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
-            panel->GetCurrentSender()->SetMidiControl(selectedIndex);
-        else
-            dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
-    }
+    else if (menu==controlChange || menu==pitchValue)
+        panel->GetCurrentSender()->SetMidiControl(selectedIndex);
+    else if (menu==octaveMenu)
+        dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
     else if (menu==channel)
         panel->GetCurrentSender()->SetMidiChannel(selectedIndex);
     else if (menu==velocity)
@@ -438,8 +466,7 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
     	// sends the max value when pressed
     else if (menu==devices)
         panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
-    panel->UpdateOSCInfo();
-    
+
     panel->UpdateOSCInfo();
 }
 
@@ -447,7 +474,7 @@ MIDIInfo::MIDIInfo()
 {
     devices=NULL;
     devicesLabel=NULL;
-    midiMessage=controlChange=channel=velocity=NULL;
+    midiMessage=controlChange=channel=octaveMenu=pitchValue=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
 
@@ -501,6 +528,10 @@ void MIDIInfo::CreateControls()
     //Create ControlChange dropDown
     controlChange = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(controlChange);
+    octaveMenu = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
+    addChild(octaveMenu);
+    pitchValue = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
+    addChild(pitchValue);
     InitControlMenuData();
     
     //Create channel label
@@ -548,7 +579,7 @@ ItemSettings::ItemSettings()
     
 }
 
-void ItemSettings::InitChildrensVisibilityAndPos()
+void ItemSettings::CheckShowElements()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     HideElement(nameLabel,collapsed);
@@ -574,7 +605,7 @@ void ItemSettings::InitChildrensVisibilityAndPos()
     
     HideElement(orientation,collapsed||forceHide);
     HideElement(orientLabel,collapsed||forceHide);
-    SubpanelBase::InitChildrensVisibilityAndPos();
+    UpdateLayout();
 }
 
 void ItemSettings::PositionElements()
@@ -659,14 +690,27 @@ void ItemSettings::CreateControls()
     modes = Toolbar::CreateToolbar(rToolbar, xoffset, yoffset);
     addChild(modes,7);
     color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+    
     std::vector<std::string> images;
-    images.push_back("CloseNormal.png");
+    images.push_back("modeTouch.png");
     images.push_back("CloseSelected.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    images.clear();
+    images.push_back("modeBlow.png");
+    images.push_back("CloseSelected.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    modes->AddButton(PROPERTIES_CONTROLMODE_PIPPO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    modes->AddButton(PROPERTIES_CONTROLMODE_PLUTO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    modes->AddButton(PROPERTIES_CONTROLMODE_PAPERINO, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    images.clear();
+    images.push_back("modeSnap.png");
+    images.push_back("CloseSelected.png");
+    modes->AddButton(PROPERTIES_CONTROLMODE_SNAP, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    images.clear();
+    images.push_back("modeRoll.png");
+    images.push_back("CloseSelected.png");
+    modes->AddButton(PROPERTIES_CONTROLMODE_ROLL, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    images.clear();
+    images.push_back("modeGesture.png");
+    images.push_back("CloseSelected.png");
+    modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 
     //Create group label
     CreateLabelWithBackground(this, &groupLabel, -1, r, "GROUP", "Arial", 16);
@@ -760,7 +804,7 @@ void ItemSettings::Update()
         masterButton->loadTextureNormal("CloseSelected.png");
     else
         masterButton->loadTextureNormal("CloseNormal.png");
-    InitChildrensVisibilityAndPos();
+    CheckShowElements();
     
 }
 
@@ -805,9 +849,9 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
         case PROPERTIES_CONTROLMODE_BLOW:
             panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
             break;
-        case PROPERTIES_CONTROLMODE_PIPPO:
-        case PROPERTIES_CONTROLMODE_PLUTO:
-        case PROPERTIES_CONTROLMODE_PAPERINO:
+        case PROPERTIES_CONTROLMODE_SNAP:
+        case PROPERTIES_CONTROLMODE_ROLL:
+        case PROPERTIES_CONTROLMODE_GESTURE:
         default:
             break;
     }
@@ -894,12 +938,15 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
         selectedItem->Select(true);
     }
     
-    if (!IsVisible()) return;
+    if (!IsVisible())
+    {
+        if (event==SCDFC_EVENTS_Remove_Item)
+            selectedItem=NULL;
+        return;
+    }
     LOGD ("Updating properties \n");
     switch (event)
     {
-//        case SCDFC_EVENTS_Add_Item_Slider:
-//            sectionMIDIInfo->InitForSlider();
         case SCDFC_EVENTS_Move_Item:
             sectionMIDIInfo->UpdateVelocity();
             break;

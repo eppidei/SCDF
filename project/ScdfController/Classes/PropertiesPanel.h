@@ -37,7 +37,7 @@ namespace ScdfCtrl
         void CreateControls() override;
         void Update() override;
         void PositionElements() override;
-        void InitChildrensVisibilityAndPos() override;
+        void CheckShowElements() override;
         void OnTouchEventBegan(cocos2d::Node *widget);
         void OnTextInput(cocos2d::ui::TextField *widget) override;
         int GetYPadding() override { return 20;}
@@ -65,15 +65,16 @@ namespace ScdfCtrl
     {
         friend class PropertiesPanel;
     
-        DropDownMenu *midiMessage, *controlChange, *channel, *velocity, *devices;
+        DropDownMenu *midiMessage, *controlChange, *octaveMenu, *pitchValue, *channel, *velocity, *devices;
         TextWithBackground *devicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel;
         
         void CreateControls() override;
         void InitControlMenuData();
+        void UpdateControlMenuData();
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
         void Update() override;
-        void InitChildrensVisibilityAndPos() override;
+        void CheckShowElements() override;
         void UpdateVelocity();
         int GetYPadding() override { return 20;}
         MIDIInfo();
@@ -97,7 +98,7 @@ namespace ScdfCtrl
         void Update() override;
         void OnTextInput(cocos2d::ui::TextField *widget) override;
         void OnTouchEventBegan(cocos2d::Node *widget) override;
-        void InitChildrensVisibilityAndPos() override;
+        void CheckShowElements() override;
         int GetYPadding() override { return 20;}
         ItemSettings();
         CREATE_FUNC(ItemSettings);

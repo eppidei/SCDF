@@ -84,13 +84,17 @@ void DropDownMenu::updateTweenAction(float value, const std::string& key)
 
 void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type)
 {
+    
     switch (type)
     {
         case ListView::EventType::ON_SELECTED_ITEM_END:
             ToggleOpenMenu();
-            SetSelectedIndex(getCurSelectedIndex());
-            if (callback)
-                callback->OnSelectItem(this);
+            if (!opened) //on closure
+            {
+                SetSelectedIndex(getCurSelectedIndex());
+                if (callback )
+                    callback->OnSelectItem(this);
+            }
             break;
         default:
             break;
