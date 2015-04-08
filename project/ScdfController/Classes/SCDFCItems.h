@@ -17,6 +17,8 @@
 #include "ScdfSensorAPI.h"
 #include "Label.h"
 
+
+
 namespace ScdfCtrl
 {
 //	class ControlUnit;
@@ -25,7 +27,7 @@ namespace ScdfCtrl
 //	class ControlUnitDsp;
 //	class MultiSender;
     class ItemBase;
-
+    class SerializableItemData;
 //    class ItemBaseCallback
 //    {
 //    public:
@@ -85,16 +87,22 @@ namespace ScdfCtrl
         
         cocos2d::Size GetControlContentSize();
         virtual void DoSetContentSize(cocos2d::Size contentSize) = 0;
+
+        void SetControlUnit(ControlUnit* cu); // only for deserializeitem use
+
     public:
 
         virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
         template <class ItemType> static ItemBase *CreateItem();
+        static ItemBase* DeserializeItem(SerializableItemData* sitem);
         
         ItemBase();
         virtual ~ItemBase();
         virtual void Create()=0;
+        virtual int GetID()=0;
+        static ItemBase* CreateItem(int id);
 
         void LaunchCollisionAnimation();
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
@@ -146,7 +154,8 @@ namespace ScdfCtrl
         virtual void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
         static cocos2d::Size GetBaseSize() { return SLIDER_SIZE_BASE;}
-        static int GetID() { return ITEM_SLIDER_ID;}
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_SLIDER_ID;}
         static std::string GetIcon() { return "iconSliderDefault.png";}
         static std::string GetIconPressed() { return "iconSliderPressed.png";}
 //        void SetRange(int _min, int _max);
@@ -176,7 +185,8 @@ namespace ScdfCtrl
         void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
         static cocos2d::Size GetBaseSize() { return KNOB_SIZE_BASE;}
-        static int GetID() { return ITEM_KNOB_ID;}
+        int GetID() override { return ID();}
+        static int ID()  { return ITEM_KNOB_ID;}
         static std::string GetIcon() { return "iconKnobDefault.png";}
         static std::string GetIconPressed() { return "iconKnobPressed.png";}
         void DoSetContentSize(cocos2d::Size contentSize) override;
@@ -195,7 +205,8 @@ namespace ScdfCtrl
     public:
         
         static cocos2d::Size GetBaseSize() { return WHEEL_SIZE_BASE;}
-        static int GetID() { return ITEM_WHEEL_ID;}
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_WHEEL_ID;}
         static std::string GetIcon() { return "iconSliderDefault.png";}
         static std::string GetIconPressed() { return "iconSliderPressed.png";}
         int GetStaticID() override { return GetID();}
@@ -221,7 +232,8 @@ namespace ScdfCtrl
         //int midiNote;
         void Create();
         static cocos2d::Size GetBaseSize() { return PAD_SIZE_BASE;}
-        static int GetID() { return ITEM_PAD_ID;}
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_PAD_ID; }
         static std::string GetIcon() { return "iconPadDefault.png";}
         static std::string GetIconPressed() { return "iconPadPressed.png";}
         
@@ -242,7 +254,8 @@ namespace ScdfCtrl
         bool checked;
     public:
         static cocos2d::Size GetBaseSize() { return SWITCH_SIZE_BASE;}
-        static int GetID() { return ITEM_SWITCH_ID;}
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_SWITCH_ID;}
         static std::string GetIcon() { return "iconPadDefault.png";}
         static std::string GetIconPressed() { return "iconPadPressed.png";}
         int GetStaticID() override { return GetID();}
@@ -269,7 +282,8 @@ namespace ScdfCtrl
         void UpdateSelectedPadIndex(ItemPad *pad);
         void Create();
         static cocos2d::Size GetBaseSize() { return MULTIPAD_SIZE_BASE;}
-        static int GetID() { return ITEM_MULTIPAD_ID;}
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_MULTIPAD_ID;}
         
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return getContentSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override {}
@@ -300,7 +314,8 @@ namespace ScdfCtrl
         int GetCurrentOctave() {return currentOctave;}
         void Create();
         static cocos2d::Size GetBaseSize() { return KEYBOARD_SIZE_BASE;}    //for dragging
-        static int GetID() { return ITEM_KEYBOARD_ID;}                      //for item scrollbar
+        int GetID() override { return ID();}
+        static int ID() { return ITEM_KEYBOARD_ID;}                      //for item scrollbar
         static std::string GetIcon() { return "iconPianoDefault.png";}          //for item scrollbar
         static std::string GetIconPressed() { return "iconPianoPressed.png";}   //for item scrollbar
         
@@ -312,6 +327,7 @@ namespace ScdfCtrl
         int GetStaticID() override { return GetID();}
         CREATE_FUNC(ItemKeyboard);
     };
+
 }
 
 #endif /* defined(__ScdfController__SCDFCItems__) */

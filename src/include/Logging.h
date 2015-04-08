@@ -8,7 +8,7 @@
 #ifndef LOGGING_H_
 #define LOGGING_H_
 
-#ifdef  _DEBUG
+#ifndef  _DEBUG
 #ifdef ANDROID
 #include <android/log.h>
 #define  LOG_TAG    "SCDF"
