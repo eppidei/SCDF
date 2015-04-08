@@ -46,7 +46,7 @@ static void StartHarvestingProcedure(void *param)
         
         if(harvester->IsAudioSyncActive())
         {
-            LOGD("StartHarvestingProcedure with Audio Synch ON\n")
+            //LOGD("StartHarvestingProcedure with Audio Synch ON\n")
             
             data=thePipesManager()->ReadFromPipe(harvester->GetType());
         }
@@ -54,7 +54,7 @@ static void StartHarvestingProcedure(void *param)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(harvester->GetUpdateInterval()));
             
-            LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
+            //LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
            
             data=thePipesManager()->ReadFromReturnPipe(AudioInput);
             

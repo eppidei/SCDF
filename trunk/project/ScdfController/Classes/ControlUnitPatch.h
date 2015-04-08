@@ -19,32 +19,76 @@
 
 namespace ScdfCtrl {
 
+class SerializableItemData {
+
+public:
+	int id;
+	std::string name;
+	float x;
+	float y;
+	int magValue;
+	int color;
+	bool isVertical;
+	ControlUnit* unit;
+
+	//friend class cereal::access;
+
+	template<class Archive>	void serialize(Archive & ar, std::uint32_t const version)
+	{
+		ar(CEREAL_NVP(id));
+		ar(CEREAL_NVP(name));
+		ar(CEREAL_NVP(*unit));
+		ar(CEREAL_NVP(x));
+		ar(CEREAL_NVP(y));
+		ar(CEREAL_NVP(magValue));
+		ar(CEREAL_NVP(isVertical));
+		ar(CEREAL_NVP(color));
+	}
+
+	SerializableItemData(ItemBase* item)
+	{
+		id = item->GetID();
+		name = item->GetName();
+		unit = item->GetControlUnit();
+		x = item->getPositionX();
+		y = item->getPositionY();
+		color = item->GetColor();
+		magValue = item->GetLayoutManager()->GetMagValue();
+		isVertical = item->GetLayoutManager()->IsVertical();
+	}
+
+	SerializableItemData()
+	{
+		id = -1;
+		name = "";
+		unit = NULL;
+		x = 0;
+		y = 0;
+		color = 0;
+		magValue = 1;
+		isVertical = false;
+	}
+
+
+};
+
 
 class ControlUnitPatch {
 
 public:
 
-	std::vector<ItemBase*> units;
-//    std::vector< std::unique_ptr<ControlUnit> > units;
+	std::vector<ItemBase*> items;
 
-	bool LoadFromFile(std::string file)
-	{
-		return false;
-	}
-
-	bool SaveToFile(std::string file)
-	{
-		return false;
-	}
-
+	bool LoadFromFile(std::string patchName); // pass patch name only, without path!
+	bool SaveToFile(std::string patchName);
 private:
 
-	friend class cereal::access;
+//	friend class cereal::access;
 
-	template<class Archive>	void serialize(Archive & ar, std::uint32_t const version)
-	{
-		ar(CEREAL_NVP(units));
-	}
+//	template<class Archive>	void serialize(Archive & ar, std::uint32_t const version)
+//	{
+//		//ar(CEREAL_NVP());
+//	}
 
 };
 

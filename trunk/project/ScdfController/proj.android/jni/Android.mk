@@ -9,7 +9,10 @@ LIBUSB_INCLUDES := $(LIBUSB_SRC) $(LIBUSB_SRC)/os $(LIBUSB_SRC)/android
 # SCDF:
 
 SCDF_TRUNK := /home/athos/SCDF/trunk
-SCDF_INCLUDES := $(SCDF_TRUNK)/src/include $(SCDF_TRUNK)/src/android/include
+SCDF_INCLUDES := $(SCDF_TRUNK)/src/include \
+				$(SCDF_TRUNK)/src/android/include \
+				$(SCDF_TRUNK)/lib/cereal-1.1.0/include
+					
 SCDF_SRC := $(SCDF_TRUNK)/src
 
 OSCPACK_PATH := $(SCDF_TRUNK)/lib/oscpack_1_1_0
@@ -72,7 +75,8 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					android/usb/UsbAudioInterfaces.cpp \
 					android/usb/UsbMidiInterface.cpp \
 					android/usb/UsbAudioDevice.cpp \
-					android/MidiOutConnectionAndroid.cpp
+					android/MidiOutConnectionAndroid.cpp \
+					OsUtilities.cpp
 					#InitFramework.cpp \
 					
 					
@@ -130,7 +134,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 		../../Classes/Configuration.cpp \
 		../../Classes/LoadSavePanel.cpp \
 		../../Classes/Panel.cpp \
-		../../Classes/ControlUnit.cpp
+		../../Classes/ControlUnit.cpp \
+		../../Classes/Label.cpp
 		
 LOCAL_LDLIBS += -landroid -llog
 

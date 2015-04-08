@@ -130,6 +130,36 @@ void ItemBase::setContentSize(const cocos2d::Size &contentSize)
     DoSetContentSize(control->getContentSize());
 }
 
+ItemBase *ItemBase::CreateItem(int id)
+{
+	switch (id) {
+		case ITEM_SLIDER_ID:	return ItemBase::CreateItem<ItemSlider>();
+		case ITEM_PAD_ID:		return ItemBase::CreateItem<ItemPad>();
+		case ITEM_KNOB_ID:		return ItemBase::CreateItem<ItemKnob>();
+		case ITEM_SWITCH_ID:	return ItemBase::CreateItem<ItemSwitch>();
+		case ITEM_KEYBOARD_ID:	return ItemBase::CreateItem<ItemKeyboard>();
+		case ITEM_MULTIPAD_ID:	return ItemBase::CreateItem<ItemMultipad>();
+		case ITEM_WHEEL_ID:		return ItemBase::CreateItem<ItemWheel>();
+		default: return NULL;
+	}
+}
+
+ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
+{
+	ItemBase* i = CreateItem(sitem->id);
+
+	i->setAnchorPoint(Vec2(sitem->x,sitem->y));
+	i->SetName(sitem->name);
+	i->SetColor((Colors::ItemsColorsId)sitem->color);
+	i->GetLayoutManager()->SetMagValue(sitem->magValue);
+	i->GetLayoutManager()->SetVertical(sitem->isVertical);
+
+	i->SetControlUnit(sitem->unit);
+
+}
+
+
+
 template <class ItemType> ItemBase *ItemBase::CreateItem()
 {
     ItemBase *item=ItemType::create();
@@ -157,6 +187,12 @@ ItemBase::~ItemBase()
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
 	controlUnit.reset(ControlUnit::Create(t));
+	//controlUnit->SetItem(this);
+}
+
+void ItemBase::SetControlUnit(ControlUnit* cu)
+{
+	controlUnit.reset(cu); // item becomes the owner of the ctrl unit
 	//controlUnit->SetItem(this);
 }
 

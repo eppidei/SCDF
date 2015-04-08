@@ -84,6 +84,8 @@ private:
 	void save( Archive & ar, std::uint32_t const version ) const
 	{
 		ar(CEREAL_NVP(sender));
+		ar(CEREAL_NVP(min));
+		ar(CEREAL_NVP(max));
 
 //		ar(CEREAL_NVP(x));
 //		ar(CEREAL_NVP(y));
@@ -94,6 +96,10 @@ private:
 	template <class Archive>
 	void load( Archive & ar, std::uint32_t const version )
 	{
+		ar(CEREAL_NVP(sender));
+		ar(CEREAL_NVP(min));
+		ar(CEREAL_NVP(max));
+
 //		ar(CEREAL_NVP(value));
 //		ar(CEREAL_NVP(name));
 //		ar(CEREAL_NVP(colorId));
@@ -133,21 +139,21 @@ private:
 	void SetValue(float newValue);
 
 
-//	friend class ::cereal::access;
-//
-//	template <class Archive>
-//	void save( Archive & ar, std::uint32_t const version ) const
-//	{
-//	    ar(cereal::base_class<ControlUnit>( this ));
-//		//ar(CEREAL_NVP(midiNote));
-//	}
-//
-//	template <class Archive>
-//	void load( Archive & ar, std::uint32_t const version )
-//	{
-//	    ar(cereal::base_class<ControlUnit>( this ));
-//		//ar(CEREAL_NVP(midiNote));
-//	}
+	friend class ::cereal::access;
+
+	template <class Archive>
+	void save( Archive & ar, std::uint32_t const version ) const
+	{
+	    ar(cereal::base_class<ControlUnit>( this ));
+		ar(CEREAL_NVP(normVal));
+	}
+
+	template <class Archive>
+	void load( Archive & ar, std::uint32_t const version )
+	{
+	    ar(cereal::base_class<ControlUnit>( this ));
+		ar(CEREAL_NVP(normVal));
+	}
 };
 
 
@@ -177,21 +183,23 @@ private:
 
 	bool isEnabled;
 
-//	friend class ::cereal::access;
-//
-//	template <class Archive>
-//	void save( Archive & ar, std::uint32_t const version ) const
-//	{
-//	    ar(cereal::base_class<ControlUnit>( this ));
-//		//ar(CEREAL_NVP(midiNote));
-//	}
-//
-//	template <class Archive>
-//	void load( Archive & ar, std::uint32_t const version )
-//	{
-//	    ar(cereal::base_class<ControlUnit>( this ));
-//		//ar(CEREAL_NVP(midiNote));
-//	}
+	friend class ::cereal::access;
+
+	template <class Archive>
+	void save( Archive & ar, std::uint32_t const version ) const
+	{
+	    ar(cereal::base_class<ControlUnit>( this ));
+		ar(CEREAL_NVP(isEnabled));
+		ar(CEREAL_NVP(lastValue));
+	}
+
+	template <class Archive>
+	void load( Archive & ar, std::uint32_t const version )
+	{
+	    ar(cereal::base_class<ControlUnit>( this ));
+		ar(CEREAL_NVP(isEnabled));
+		ar(CEREAL_NVP(lastValue));
+	}
 };
 
 
@@ -205,13 +213,29 @@ public:
 
 private:
 
+    friend class ::cereal::access;
+
+	template <class Archive>
+	void save( Archive & ar, std::uint32_t const version ) const
+	{
+	    ar(cereal::base_class<ControlUnitDsp>( this ));
+	}
+
+	template <class Archive>
+	void load( Archive & ar, std::uint32_t const version )
+	{
+	    ar(cereal::base_class<ControlUnitDsp>( this ));
+	}
 
 };
 
 } // ScdfCtrl namespace end
 
 // Register Derived Classes (needed for polymorfism on serialization)
-//CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitDerived);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnit);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitWire);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitDsp);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitBlow);
 
 CEREAL_CLASS_VERSION(ScdfCtrl::ControlUnit,0);
 

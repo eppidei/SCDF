@@ -8,8 +8,88 @@
 
 #include "ControlUnitPatch.h"
 #include <sstream>
+#include <fstream>
 #include "Logging.h"
 #include "OsUtilities.h"
+
+
+bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
+{
+	std::string patchesDir =  + "/patches";
+	std::string file = scdf::GetUserDataDirectory()+"/patches/"+patchName;
+
+	LOGD("Load patch from %s",file.c_str());
+
+	//_ASSERT(items.size()==0);
+	// items will be cleared, beware of leaks!
+	//items.clear();
+
+	// deserialize the vector of temporary serializable objects
+	// for each element, create the corresponding item
+
+	std::vector<SerializableItemData> sItems;
+
+	std::ifstream stream( file );
+	//std::stringstream stream;
+	{
+		cereal::XMLInputArchive inArchive(stream);
+		inArchive(sItems);
+	}
+
+	for (int i=0; i<sItems.size(); i++)
+	{
+		items.push_back(ItemBase::DeserializeItem(&sItems[i]));
+	}
+
+	return true;
+}
+
+bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
+{
+	std::string patchesDir = scdf::GetUserDataDirectory() + "/patches";
+	bool res = scdf::CreateDirectory(patchesDir);
+
+	LOGD("Patch - create dir result: %d",res);
+
+	//_ASSERT(res);
+	std::string file = patchesDir+"/"+patchName;
+
+	LOGD("Save patch as %s",file.c_str());
+
+	std::vector<SerializableItemData> sItems;
+
+	for (int i=0; i<items.size(); i++)
+		sItems.push_back( SerializableItemData(items[i]) );
+
+	std::ofstream stream( file );
+	//std::stringstream stream;
+	{
+		cereal::XMLOutputArchive outArchive(stream);
+		outArchive(sItems);
+	}
+
+	//LOGD("YO - %s",stream.str().c_str());
+
+	// create a vector of temporary serializable objects
+	// each object contains the control unit and the needed items' properties
+	// serialize the vector
+	// throw away the temp vector
+
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ScdfCtrl::CerealTest::CerealTest()
 {

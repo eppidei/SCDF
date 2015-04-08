@@ -9,12 +9,18 @@
 #define OSUTILITIES_H_
 
 #include <string>
+#include <vector>
 
 namespace scdf {
 
 	std::string GetAppDataDirectory();
 	std::string GetUserDataDirectory();
 
+	bool CreateDirectory(std::string name);
+	bool SetCurrentDirectory(std::string path);
+	bool DoesFileExist(std::string filename);
+	bool DeleteFile(std::string filename);
+	bool ListFilesInDirectory(std::string dirPath, std::vector<std::string>& fileList);
 }
 
 #endif /* OSUTILITIES_H_ */

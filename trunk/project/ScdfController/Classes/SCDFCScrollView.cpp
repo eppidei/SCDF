@@ -67,7 +67,7 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView()
     button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*itemDistance- button->getContentSize().height*numElements));
     
     SubscribeButton(button, /*id==ITEM_KEYBOARD_ID*/true);
-    scrollView->addChild(button,0,ItemType::GetID());
+    scrollView->addChild(button,0,ItemType::ID());
 }
 
 ItemScrollView *ItemScrollView::CreateCustomScrollView(MainScene *main, cocos2d::Rect r)

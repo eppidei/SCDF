@@ -57,7 +57,9 @@ void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
 
 template <class ItemType> void WorkingPanel::CheckAddControl()
 {
-    if (0==draggingRect.size.width || collisionDetected)
+   LOGD("Check add control");
+
+	if (0==draggingRect.size.width || collisionDetected)
     {
         collisionDetected=false;
         return;
@@ -69,8 +71,8 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
 
     // transfer ownership of control unit to the patch:
     //std::unique_ptr<ControlUnit> unitUnique(item->GetControlUnit());
-    //patch->units.push_back(std::move(unitUnique));
-    patch->units.push_back(item);
+    //patch->items.push_back(std::move(unitUnique));
+    patch->items.push_back(item);
 
     addChild(item,10);
     parent->AttachItem(item);
@@ -84,14 +86,14 @@ void WorkingPanel::CheckRemoveControl(Node *n)
         && (n->getPositionY()-n->getContentSize().height)>=getPosition().y-getContentSize().height)
         return;
 
-    for (int i=0;i<patch->units.size();++i)
+    for (int i=0;i<patch->items.size();++i)
     {
-//        if (patch->units[i]->GetItem()==n)
-        if (patch->units[i]==n)
+//      if (patch->items[i]->GetItem()==n)
+        if (patch->items[i]==n)
         {
         	parent->DetachItem((ItemBase*)n);
             removeChild(n); // does this delete n? if not, we have a leak
-            patch->units.erase(patch->units.begin()+i); // this deletes the unit!
+            patch->items.erase(patch->items.begin()+i); // this deletes the unit!
             LOGD("Control removed from working space\n");
             break;
             // remove "return" if you ever plan to put an item in the patch twice
@@ -103,12 +105,38 @@ void WorkingPanel::CheckRemoveControl(Node *n)
     //LOGD("Control removed from working space\n");
 }
 
-void TestSerialization();
+bool WorkingPanel::SavePatch(std::string patchName)
+{
+	patch->SaveToFile(patchName);
+}
+
+
+bool WorkingPanel::LoadPatch(std::string patchName)
+{
+	for (int i=0;i<patch->items.size();++i)
+	{
+		parent->DetachItem(patch->items[i]);
+	    removeChild(patch->items[i]);
+	}
+
+	patch->LoadFromFile(patchName);
+
+	for (int i=0;i<patch->items.size();++i)
+	{
+		addChild(patch->items[i],10);
+	    parent->AttachItem(patch->items[i]);
+	}
+
+}
 
 void WorkingPanel::ToggleActiveState()
 {
+	LOGD("TOGGLE ACTIVE STATE");
+
     active=!active;
-    TestSerialization();
+
+    //patch->SaveToFile("testpatch");
+
 }
 
 void WorkingPanel::DrawGrid()
@@ -159,10 +187,10 @@ void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r, bool *collisi
 {
     bool *c=collision!=NULL?collision:&collisionDetected;
     *c=false;
-    for (int i=0;i<patch->units.size();++i)
+    for (int i=0;i<patch->items.size();++i)
     {
-//    	Layout* testItem = dynamic_cast<Layout*>(patch->units[i]->GetItem());
-        Layout* testItem = dynamic_cast<Layout*>(patch->units[i]);
+//    	Layout* testItem = dynamic_cast<Layout*>(patch->items[i]->GetItem());
+        Layout* testItem = dynamic_cast<Layout*>(patch->items[i]);
         if (NULL!=item && item==testItem) continue;
         cocos2d::Rect rItem(testItem->getPositionX(), testItem->getPositionY(), testItem->getContentSize().width, testItem->getContentSize().height);
         if(RectIntersection(r,rItem))
@@ -231,11 +259,11 @@ void WorkingPanel::OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui:
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {
-        for (int i=0;i<patch->units.size();++i)
+        for (int i=0;i<patch->items.size();++i)
         {
-            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
-            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
-            patch->units[i]->OnItemTouchBegan(widget,type);
+            if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
+            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->items[i]->OnItemTouchBegan(widget,type);
         }
     }
 }
@@ -245,11 +273,11 @@ void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui:
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {
-        for (int i=0;i<patch->units.size();++i)
+        for (int i=0;i<patch->items.size();++i)
         {
-            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
-            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
-            patch->units[i]->OnItemTouchMoved(widget,type);
+            if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
+            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->items[i]->OnItemTouchMoved(widget,type);
         }
     }
 }
@@ -260,11 +288,11 @@ void WorkingPanel::OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui:
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {
-        for (int i=0;i<patch->units.size();++i)
+        for (int i=0;i<patch->items.size();++i)
         {
-            if (patch->units[i]->GetGroupID()!=itemGroupId || patch->units[i]==item) continue;
-            if (patch->units[i]->GetStaticID()!=item->GetStaticID()) continue;
-            patch->units[i]->OnItemTouchEnded(widget,type);
+            if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
+            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            patch->items[i]->OnItemTouchEnded(widget,type);
         }
     }
 }

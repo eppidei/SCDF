@@ -13,6 +13,10 @@
 #include "Sensor.h"
 #include "osc/OscOutboundPacketStream.h"
 
+#include "cereal/archives/xml.hpp"
+#include "cereal/access.hpp"
+#include "cereal/types/string.hpp"
+
 class UdpSocket;
 class IpEndpointName;
 
@@ -42,6 +46,28 @@ namespace scdf
         void SetPort(s_int32 p);
         void SetAddress(std::string addr);
         void SetNumEndpoints(s_int32 numEp);
+
+        friend class cereal::access;
+
+		template <class Archive>
+		void save( Archive & ar, std::uint32_t const version ) const
+		{
+			ar(CEREAL_NVP(address));
+			ar(CEREAL_NVP(portBase));
+			int numEndpoints = endPoints.size();
+			ar(CEREAL_NVP(numEndpoints));
+		}
+
+		template <class Archive>
+		void load( Archive & ar, std::uint32_t const version )
+		{
+			ar(CEREAL_NVP(address));
+			ar(CEREAL_NVP(portBase));
+			int numEndpoints;
+			ar(CEREAL_NVP(numEndpoints));
+			InitEndpoints(portBase, numEndpoints, address);
+		}
+
     };
     
     class UDPSenderHelperBase
