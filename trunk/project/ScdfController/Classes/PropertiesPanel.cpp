@@ -37,10 +37,10 @@ std::string GetDigitalFontPath()
     return (FileUtils::getInstance()->getWritablePath()+"SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf");
 }
 
-void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **label, int labelID, cocos2d::Rect r, std::string labelText, std::string labelFont, int fontSize)
+void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **label, int labelID, cocos2d::Rect r, std::string labelText, std::string labelFont, int fontSize, bool header=false)
 {
-    (*label)=TextWithBackground::CreateText(PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW,r, labelText,labelFont,fontSize);
-    if (-1!=labelID)
+    (*label)=TextWithBackground::CreateText(labelID,r, labelText,labelFont,fontSize);
+    if (header)
     {
         (*label)->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
         (*label)->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelHeaderBackGround));
@@ -50,6 +50,8 @@ void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **labe
     {
         (*label)->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::GRADIENT);
         (*label)->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientTop),Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientBottom));
+        if (-1!=labelID)
+            (*label)->AddTouchCallback(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, subPanel));
     }
 }
 
@@ -87,7 +89,7 @@ void OSCInfo::CreateControls()
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &toggleLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "OSC", "Arial", 18);
+    CreateLabelWithBackground(this, &toggleLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "OSC", "Arial", 18, true);
     addChild(toggleLabel,0);
     
     //Create toggle
@@ -121,7 +123,7 @@ void OSCInfo::CreateControls()
     oscIP->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
 
     //Create oscIP label
-    CreateLabelWithBackground(this, &ipLabel, -1, r, "IP ADDRESS", "Arial", 16);
+    CreateLabelWithBackground(this, &ipLabel, PROPERTIES_OSC_IP, r, "IP ADDRESS", "Arial", 16);
     addChild(ipLabel,5);
 
     //Create OSCtag label
@@ -194,6 +196,13 @@ void OSCInfo::OnTouchEventBegan(cocos2d::Node *widget)
             UpdateOSCToggle();
             break;
         }
+        case PROPERTIES_OSC_PORT:
+            oscPort->OnTouchIndirect();
+            break;
+        case PROPERTIES_OSC_IP:
+            oscIP->OnTouchIndirect();
+            break;
+            
         default:
             break;
     }
@@ -217,70 +226,13 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
     }
 }
 
-//MIDIDevices::MIDIDevices()
-//{
-//    devices=NULL;
-//    devicesLabel=NULL;
-//}
-
-//void MIDIDevices::CreateControls()
-//{
-//    //Create dropDown label
-//    cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
-//    devicesLabel = TextWithBackground::CreateText(-1, r, "MIDI DEVICES","Arial",16);
-//    addChild(devicesLabel);
-//    devicesLabel->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::GRADIENT);
-//    devicesLabel->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientTop),Colors::Instance()->GetUIColor(Colors::LabelBackGroundGradientBottom));
-////    devicesLabel->ignoreContentAdaptWithSize(false);
-////    devicesLabel->setTextHorizontalAlignment(TextHAlignment::CENTER);
-////    devicesLabel->setAnchorPoint(Vec2(0,1));
-////    devicesLabel->setTextVerticalAlignment(TextVAlignment::CENTER);
-////    devicesLabel->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-////    devicesLabel->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
-//    
-//    devices = DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-//    addChild(devices);
-//    devices->ignoreContentAdaptWithSize(false);
-//    devices->setAnchorPoint(Vec2(0,1));
-//    devices->SetCallback(dropDownCallback.get());
-//    std::vector<DropDownMenuData> dropDownData;
-//    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-//    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-//        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-//    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
-//}
-
-//void MIDIDevices::Update()
-//{
-//    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-//    if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
-//    
-//    devices->SetSelectedIndex(panel->GetCurrentControlUnit()->GetMidiOutIndex()+1);
-//}
-
-//void MIDIDevices::PositionElements()
-//{
-//    if (devicesLabel)
-//        devicesLabel->setPosition(Vec2(0,getContentSize().height));
-//    if (devices)
-//        devices->setPosition(Vec2(0,getContentSize().height-devicesLabel->getContentSize().height));
-//}
-
-//void MIDIDevices::OnDropDownSelectionChange(DropDownMenu *menu)
-//{
-//    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-//    if (NULL==panel->GetCurrentControlUnit()) return;
-//    int selectedIndex=menu->getCurSelectedIndex();
-//    if (devices==menu)
-//        panel->GetCurrentControlUnit()->SetMidiOutIndex(selectedIndex-1);
-//}
-
 void MIDIInfo::UpdateVelocity()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel) return; 
     velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetValue());
     EnableElement(velocity, dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    EnableElement(velocityLabel, dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
 }
 
 void MIDIInfo::Update()
@@ -307,6 +259,7 @@ void MIDIInfo::Update()
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
     EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    EnableElement(midiMessageLabel, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
     UpdateControlMenuData();
 
     channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
@@ -478,18 +431,52 @@ MIDIInfo::MIDIInfo()
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
 
+void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel->GetSelectedItem()) return;
+
+    switch (widget->getTag())
+    {
+        case PROPERTIES_MIDI_DEVICE: devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_MIDI_MESSAGE: midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_MIDI_CONTROL:
+        {
+            DropDownMenu *menu;
+            if (controlChange->isVisible())
+                menu=controlChange;
+            else if (octaveMenu->isVisible())
+                menu=octaveMenu;
+            else
+                menu=pitchValue;
+            menu->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+        }
+            break;
+        case PROPERTIES_MIDI_CHANNEL: channel->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_MIDI_VELOCITY: velocity->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        default:
+            break;
+            
+            
+    }
+}
+
 void MIDIInfo::CreateControls()
 {
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", "Arial", 18);
+    CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", "Arial", 18, true);
     addChild(midiLabel);
     
     r.size.width-=GetYPadding();
 
     //Create device label
-    CreateLabelWithBackground(this, &devicesLabel, -1, r, "MIDI DEVICES", "Arial", 16);
+    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "MIDI DEVICES", "Arial", 16);
     addChild(devicesLabel);
     
     //Create device dropDown
@@ -502,7 +489,7 @@ void MIDIInfo::CreateControls()
     devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create midiMessage label
-    CreateLabelWithBackground(this, &midiMessageLabel, -1, r, "MIDI MESSAGE", "Arial", 16);
+    CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MIDI MESSAGE", "Arial", 16);
     addChild(midiMessageLabel);
     
     //Create midiMessage dropDown
@@ -522,7 +509,7 @@ void MIDIInfo::CreateControls()
     midiMessage->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create ControlChange label
-    CreateLabelWithBackground(this, &controlChangeLabel, -1, r, "CONTROL CHANGE", "Arial", 16);
+    CreateLabelWithBackground(this, &controlChangeLabel, PROPERTIES_MIDI_CONTROL, r, "CONTROL CHANGE", "Arial", 16);
     addChild(controlChangeLabel);
 
     //Create ControlChange dropDown
@@ -535,14 +522,15 @@ void MIDIInfo::CreateControls()
     InitControlMenuData();
     
     //Create channel label
-    CreateLabelWithBackground(this, &channelLabel, -1, r, "CHANNEL", "Arial", 16);
+    CreateLabelWithBackground(this, &channelLabel, PROPERTIES_MIDI_CHANNEL, r, "CHANNEL", "Arial", 16);
     addChild(channelLabel);
 
     //Create channel dropDown
     channel = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(channel);
     dropDownData.clear();
-    for (int i=0;i<16;++i)
+    const int NUM_MIDI_CHANNELS = 16;
+    for (int i=0;i<NUM_MIDI_CHANNELS;++i)
     {
         std::ostringstream os;
         os<<i;
@@ -551,14 +539,15 @@ void MIDIInfo::CreateControls()
     channel->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
     //Create velocity label
-    CreateLabelWithBackground(this, &velocityLabel, -1, r, "VELOCITY", "Arial", 16);
+    CreateLabelWithBackground(this, &velocityLabel, PROPERTIES_MIDI_VELOCITY, r, "VELOCITY", "Arial", 16);
     addChild(velocityLabel);
     
     //Create velocity dropDown
     velocity = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(velocity);
     dropDownData.clear();
-    for (int i=0;i<128;++i)
+    const int NUM_MIDI_NOTES = 128;
+    for (int i=0;i<NUM_MIDI_NOTES;++i)
     {
         std::ostringstream os;
         os<<i;
@@ -642,13 +631,13 @@ void ItemSettings::CreateControls()
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &settingsLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "ITEM SETTINGS", "Arial", 18);
+    CreateLabelWithBackground(this, &settingsLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "ITEM SETTINGS", "Arial", 18, true);
     addChild(settingsLabel,1);
     
     r.size.width-=GetYPadding();
 
     //Create name label
-    CreateLabelWithBackground(this, &nameLabel, -1, r, "NAME", "Arial", 16);
+    CreateLabelWithBackground(this, &nameLabel, PROPERTIES_ITEM_NAME, r, "NAME", "Arial", 16);
     addChild(nameLabel,2);
     
     //Create name control
@@ -659,7 +648,7 @@ void ItemSettings::CreateControls()
     name->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
     //Create color label
-    CreateLabelWithBackground(this, &colorLabel, -1, r, "COLOR", "Arial", 16);
+    CreateLabelWithBackground(this, &colorLabel, PROPERTIES_ITEMSETTINGS_COLOR, r, "COLOR", "Arial", 16);
     addChild(colorLabel,4);
     
     //Create color control
@@ -713,7 +702,7 @@ void ItemSettings::CreateControls()
     modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 
     //Create group label
-    CreateLabelWithBackground(this, &groupLabel, -1, r, "GROUP", "Arial", 16);
+    CreateLabelWithBackground(this, &groupLabel, PROPERTIES_ITEMSETTINGS_GROUP, r, "GROUP", "Arial", 16);
     addChild(groupLabel,8);
     
     //Create orient dropDown
@@ -740,7 +729,7 @@ void ItemSettings::CreateControls()
     masterButton->ignoreContentAdaptWithSize(false);
     
     //Create orient label
-    CreateLabelWithBackground(this, &orientLabel, -1, r, "ORIENT", "Arial", 16);
+    CreateLabelWithBackground(this, &orientLabel, PROPERTIES_ITEMSETTINGS_ORIENT, r, "ORIENT", "Arial", 16);
     addChild(orientLabel,11);
     
     //Create orient dropDown
@@ -836,6 +825,9 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
     
     switch (widget->getTag())
     {
+        case PROPERTIES_ITEM_NAME:
+            name->OnTouchIndirect();
+            break;
         case PROPERTIES_ITEM_HEIGHT_MINUS:
             panel->GetSelectedItem()->GetLayoutManager()->ZoomMinus();
             break;
@@ -852,6 +844,16 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
         case PROPERTIES_CONTROLMODE_SNAP:
         case PROPERTIES_CONTROLMODE_ROLL:
         case PROPERTIES_CONTROLMODE_GESTURE:
+            break;
+        case PROPERTIES_ITEMSETTINGS_GROUP:
+            group->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_ITEMSETTINGS_COLOR:
+            color->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_ITEMSETTINGS_ORIENT:
+            orientation->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
         default:
             break;
     }

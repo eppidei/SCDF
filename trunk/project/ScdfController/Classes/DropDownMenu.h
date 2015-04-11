@@ -40,7 +40,6 @@ namespace ScdfCtrl
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
         //std::vector<DropDownMenuDataBase> itemsData;
-        void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         void ScrollToSelected();
         void ResizeAndScroll(float newHeight, bool disableScrolling);
         void ToggleOpenMenu();
@@ -52,6 +51,7 @@ namespace ScdfCtrl
         DropDownMenu();
         virtual void DoInitData(std::vector<DropDownMenuData> data);
     public:
+        void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         int GetSelectedIndex();
         void SetSelectedIndex(int selected);
         void InitData(std::vector<DropDownMenuData> data, float itemHeight);

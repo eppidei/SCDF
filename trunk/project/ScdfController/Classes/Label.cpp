@@ -114,6 +114,13 @@ void TextInputWithBackground::AddEventListener(TextField::ccTextFieldCallback ca
     text->addEventListener(callback);
 }
 
+void TextInputWithBackground::OnTouchIndirect()
+{
+    if(!text) return;
+    text->setAttachWithIME(true);
+    text->update(0);
+}
+
 void TextInputWithBackground::SetText(std::string s)
 {
     text->setText(s);

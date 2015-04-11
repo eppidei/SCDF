@@ -66,7 +66,9 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
     cocos2d::Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
-    float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT;
+    float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT; //item label
+    if (ItemType::ID()!=ITEM_KNOB_ID && ItemType::ID()!=ITEM_KEYBOARD_ID)
+        scaledHeight+=ITEMS_LABEL_HEIGHT;   //item control icon on top
     float scaledWidth=ItemType::GetBaseSize().width*GetGridDistance();
 
     if (r.origin.y<=workingSpaceRect.origin.y && (r.origin.x>=workingSpaceRect.origin.x)

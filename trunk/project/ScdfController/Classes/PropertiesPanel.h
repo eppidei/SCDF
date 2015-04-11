@@ -77,6 +77,7 @@ namespace ScdfCtrl
         void CheckShowElements() override;
         void UpdateVelocity();
         int GetYPadding() override { return 20;}
+        void OnTouchEventBegan(cocos2d::Node *widget) override;
         MIDIInfo();
         CREATE_FUNC(MIDIInfo);
     };
