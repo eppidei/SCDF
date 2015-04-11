@@ -116,9 +116,9 @@ void TextInputWithBackground::AddEventListener(TextField::ccTextFieldCallback ca
 
 void TextInputWithBackground::OnTouchIndirect()
 {
-    if(!text) return;
-    text->setAttachWithIME(true);
-    text->update(0);
+//    if(!text) return;
+//    text->setAttachWithIME(true);
+//    text->update(0);
 }
 
 void TextInputWithBackground::SetText(std::string s)
@@ -224,4 +224,52 @@ void Toolbar::UpdateLayout()
             yOffsetMax=buttons[i]->GetSize().height;
         lastXOffset=lastXOffset+buttons[i]->GetSize().width+xOffset;
     }
+}
+
+void ModalPanel::OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
+{
+    switch (type)
+    {
+        case Widget::TouchEventType::ENDED:
+        case Widget::TouchEventType::CANCELED:
+            Close();
+            break;
+        default:
+            break;
+    }
+}
+
+void ModalPanel::Close()
+{
+    removeAllChildren();
+    getParent()->removeChild(this);
+}
+
+bool ModalPanel::init()
+{
+    bool ret=Layout::init();
+    setTouchEnabled(true);
+    setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    setBackGroundColor(Color3B::BLACK);
+    setBackGroundColorOpacity(100);
+    setAnchorPoint(Vec2(0,1));
+    setPosition(Vec2(0,Director::getInstance()->getWinSize().height));
+    setContentSize(Director::getInstance()->getWinSize());
+    CreatePanel();
+    return ret;
+}
+
+void ModalPanel::CreatePanel()
+{
+    close = Button::create();
+    addChild(close);
+    close->loadTextureNormal("CloseNormal.png");
+    close->loadTexturePressed("CloseSelected.png");
+    close->setAnchorPoint(Vec2(0.5,0.5));
+    close->ignoreContentAdaptWithSize(false);
+    close->setColor(Color3B::WHITE);
+    //button->setScale9Enabled(true);
+    close->setContentSize(cocos2d::Size(50, 50));
+    close->setPosition(Vec2(getContentSize().width/2.0, getContentSize().height/2.0));
+    close->addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
 }

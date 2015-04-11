@@ -10,57 +10,52 @@
 #define __ScdfController__LoadSavePanel__
 
 #include <stdio.h>
-#include "Panel.h"
+#include "Label.h"
+#include "SCDFCWorkingPanel.h"
 
 
 namespace ScdfCtrl
 {
-    class LoadSavePanel;
-    
-    class SavePatch : public SubpanelBase
+    class LoadSavePanelBase : public ModalPanel
     {
-        friend class LoadSavePanel;
-        cocos2d::ui::Text *saveButton;
+        void CreatePanel() override;
+        virtual void CreateMain() = 0;
+        virtual void CreateControlButton() = 0;
+        virtual void OnTouchBegan(int nodeTag) = 0;
+        virtual void OnTouchEnded(int nodeTag) = 0;
+    protected:
+        WorkingPanel *workingPanel;
+        cocos2d::ui::Layout *mainPanel;
+        cocos2d::ui::Button *control, *close;
+        
+    public:
+        void OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        void SetWorkingPanel(WorkingPanel *wp) { workingPanel=wp;}
+    };
+    class SavePanel : public LoadSavePanelBase
+    {
         cocos2d::ui::TextField* saveFile;
         
-        void CreateControls() override;
-        SavePatch();
-        void PositionElements() override;
-        int GetYPadding() override { return 0;}
-        CREATE_FUNC(SavePatch);
-    protected:
-        void OnTouchEventBegan(Node *widget) override;
+        void CreateMain() override;
+        void CreateControlButton() override;
+        void OnTouchBegan(int nodeTag) override;
+        void OnTouchEnded(int nodeTag) override;
+    public:
+        CREATE_FUNC(SavePanel);
     };
     
-    class LoadPatch : public SubpanelBase
+    class LoadPanel : public LoadSavePanelBase
     {
-        friend class LoadSavePanel;
         cocos2d::ui::ListView *loadFiles;
-        cocos2d::ui::Text *loadButton;
-        
-        void CreateControls() override;
-        LoadPatch();
-        void PositionElements() override;
-        CREATE_FUNC(LoadPatch);
-        void CheckShowElements() override {}
+
+        void CreateMain() override;
+        void CreateControlButton() override;
+        void OnTouchBegan(int nodeTag) override;
+        void OnTouchEnded(int nodeTag) override;
         void InitFilesListView();
         void HighLightCurrentItem();
-        void Update() override;
-        int GetYPadding() override { return 0;}
-    protected:
-        void OnTouchEventBegan(Node *widget) override;
-        void OnTouchEventEnded(Node *widget) override;
-    };
-    
-    class LoadSavePanel : public PanelBase
-    {
-        SavePatch *sectionSave;
-        LoadPatch *sectionLoad;
-        
-        void UpdateSubpanels() override;
-        void InitPanel() override;
     public:
-        CREATE_FUNC(LoadSavePanel);
+        CREATE_FUNC(LoadPanel);
     };
 }
 
