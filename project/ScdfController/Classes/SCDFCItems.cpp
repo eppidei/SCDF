@@ -82,16 +82,12 @@ void ItemBase::CreateItemBaseElements()
     label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
     label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
     label->SetTextColor(Color3B::BLACK);
-//    label->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-   // label->SetAlignement();
     addChild(label,1);
-    lRect.size.width=ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET;
-    lRect.size.height=ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET;
-    label1=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
-    label1->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-    label1->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-    //    label->SetAlignement(cocos2d::TextHAlignment::LEFT);
-    addChild(label1,1);
+    
+    controlImage=Layout::create();
+    controlImage->setAnchorPoint(Vec2(0,1));
+    addChild(controlImage,1);
+    SetControlModeImage();
     
     control=Layout::create();
     addChild(control,1);
@@ -104,16 +100,16 @@ void ItemBase::PlaceItemBaseElements()
 {
     if (GetLayoutManager()->ControlIconOnTop(getContentSize()))
     {
-        label1->setPosition(Vec2(getContentSize().width/2.0-label1->getContentSize().width/2.0,getContentSize().height));
+        controlImage->setPosition(Vec2(getContentSize().width/2.0-controlImage->getContentSize().width/2.0,getContentSize().height));
         control->setPosition(Vec2(0,getContentSize().height-ITEMS_LABEL_HEIGHT));
         label->setPosition(Vec2(getContentSize().width/2.0-label->getContentSize().width/2.0,getContentSize().height-ITEMS_LABEL_HEIGHT-control->getContentSize().height-LABEL_X_OFFSET));
     }
     else
     {
-        float itemInfoWidth=label1->getContentSize().width+label->getContentSize().width;
+        float itemInfoWidth=controlImage->getContentSize().width+label->getContentSize().width+LABEL_X_OFFSET;
         control->setPosition(Vec2(0,getContentSize().height));
-        label1->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
-        label->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0+label1->getContentSize().width,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
+        controlImage->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
+        label->setPosition(Vec2(getContentSize().width/2.0-itemInfoWidth/2.0+controlImage->getContentSize().width+LABEL_X_OFFSET,getContentSize().height-control->getContentSize().height-LABEL_X_OFFSET));
     }
 }
 
@@ -184,10 +180,32 @@ ItemBase::~ItemBase()
     removeAllChildren();
 }
 
+void ItemBase::SetControlModeImage()
+{
+    if (!controlImage) return;
+    switch(controlUnit->GetType())
+    {
+        case ControlUnit::Wire:
+            controlImage->setBackGroundImage("modeTouch.png");
+            break;
+        case ControlUnit::Blow:
+            controlImage->setBackGroundImage("modeBlow.png");
+            break;
+        default:
+            break;
+    }
+//    controlImage->setAnchorPoint(Vec2(0,1));
+    float iconDim=ITEMS_LABEL_HEIGHT-LABEL_X_OFFSET;
+    cocos2d::Rect rr(0, 0, 200/*controlImage->getBackGroundImageTextureSize().width, controlImage->getBackGroundImageTextureSize().height*/,200);
+    controlImage->setBackGroundImageScale9Enabled(true);
+    controlImage->setBackGroundImageCapInsets(rr);
+    controlImage->setContentSize(cocos2d::Size(iconDim, iconDim));
+//    controlImage->setScale(iconDim/controlImage->getTexture()->getContentSizeInPixels().width, iconDim/controlImage->getTexture()->getContentSizeInPixels().height);
+}
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
 	controlUnit.reset(ControlUnit::Create(t));
-	//controlUnit->SetItem(this);
+    SetControlModeImage();
 }
 
 void ItemBase::SetControlUnit(ControlUnit* cu)
@@ -424,7 +442,7 @@ void ItemSlider::DoSetContentSize(cocos2d::Size contentSize)
     {
         cocos2d::Size barsSize(temp.height/3.0, temp.width);
         if (GetLayoutManager()->IsVertical())
-            barsSize=cocos2d::Size(temp.width/3, temp.height);
+            barsSize=cocos2d::Size(temp.width/3.0, temp.height);
             
         slideBar->setContentSize(barsSize);
         slideBarOff->setContentSize(cocos2d::Size(barsSize.width, slideBarOff->getContentSize().height));
@@ -532,11 +550,11 @@ void ItemSlider::Create()
     slideBar->setBackGroundImage("sliderBARStripe.png");
     const int bitmapcapInsetOffset=5;
     cocos2d::Rect rr(0, bitmapcapInsetOffset, slideBar->getBackGroundImageTextureSize().width, slideBar->getBackGroundImageTextureSize().height-2*bitmapcapInsetOffset);
-    cocos2d::Size s(GetControlContentSize().width/3, GetControlContentSize().height);
+    cocos2d::Size s(GetControlContentSize().width/3.0, GetControlContentSize().height);
     slideBar->setBackGroundImageScale9Enabled(true);
     slideBar->setBackGroundImageCapInsets(rr);
     slideBar->setContentSize(s);
-    slideBar->setPosition(Vec2(GetControlContentSize().width/2/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2));
+    slideBar->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2.0));
     
     
     slideBarOff = Layout::create();
@@ -553,7 +571,7 @@ void ItemSlider::Create()
     slideBarOff->setBackGroundImageScale9Enabled(true);
     slideBarOff->setBackGroundImageCapInsets(rr);
     slideBarOff->setContentSize(cocos2d::Size(s.width, s.height+2));
-    slideBarOff->setPosition(Vec2(GetControlContentSize().width/2/*-slideBarOff->GetControlContentSize().width/2*/, 2+GetControlContentSize().height/2));
+    slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBarOff->GetControlContentSize().width/2*/, 2+GetControlContentSize().height/2.0));
     
     //InitSliderLayout();
 
@@ -580,6 +598,9 @@ void ItemWheel::OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widge
     GetControlUnit()->OnTouch(ControlUnit::TouchMove,0.5f);
     SetPositionOfValueDependentComponent();
     ItemSlider::OnItemTouchEnded(widget, type);
+    
+    if (widget->getParent()==control)
+        NotifyEvent(SCDFC_EVENTS_Move_Item);
 }
 void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
@@ -607,9 +628,9 @@ void ItemKnob::AngularMode(Widget *knob)
     Vec2 touchWorldPos=knob->getTouchMovePosition();
     Node *parent=knob->getParent();
     
-    static double AngleConstantOffset=PHI/2-RangeRadStart;
+    static double AngleConstantOffset=PHI/2.0f-RangeRadStart;
     
-    Vec2 center(parent->getContentSize().width/2, parent->getContentSize().height/2);
+    Vec2 center(parent->getContentSize().width/2.0, parent->getContentSize().height/2.0);
 
     Vec2 touchPos=parent->convertToNodeSpace(touchWorldPos);
     short int x=touchPos.x;
@@ -621,8 +642,8 @@ void ItemKnob::AngularMode(Widget *knob)
 
     angle-=AngleConstantOffset;
     
-    if(angle>3*PHI/2) angle-=2*PHI;
-    if(angle<0&&angle<-PHI/2) angle+=2*PHI;
+    if(angle>3.0*PHI/2.0) angle-=2.0*PHI;
+    if(angle<0&&angle<-PHI/2.0) angle+=2.0*PHI;
     
     angle=RangeRadStart-angle;
     double val=angle/RangeRadEnd;
@@ -634,7 +655,7 @@ void ItemKnob::AngularMode(Widget *knob)
     double temp=1.0-val;
     if(abs(temp-GetControlUnit()->GetNormalizedValue())<(2.0/3.0))
     {
-        temp=fmin(1,fmax(temp,0));
+        temp=fmin(1.0f,fmax(temp,0.f));
         GetControlUnit()->OnTouch(ControlUnit::TouchMove,temp);
         SetPositionOfValueDependentComponent();
     }
@@ -674,7 +695,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
         float sliderComp=thumb->getContentSize().height;
         if (IsKnob())
         {
-            draggingVel=3*log(1+distanceX)+1;
+            draggingVel=3.0*log(1+distanceX)+1;
             diff/=draggingVel;
             sliderComp=0;
         }
@@ -686,7 +707,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
         float sliderComp=thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
         if (IsKnob())
         {
-            draggingVel=3*log(1+distanceY)+1;
+            draggingVel=3.0*log(1+distanceY)+1;
             diff/=draggingVel;
             sliderComp=0;
         }
@@ -694,7 +715,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
     }
     
     float normValue=GetControlUnit()->GetNormalizedValue()+diff;
-    normValue=fmin(1,fmax(0,normValue));
+    normValue=fmin(1.f,fmax(0.f,normValue));
     LOGD("SLIDER VALUE %f\n", normValue);
     GetControlUnit()->OnTouch(ControlUnit::TouchMove,normValue);
     SetPositionOfValueDependentComponent();
@@ -1043,30 +1064,11 @@ void ItemMultipad::UpdateSelectedPadIndex(ItemPad *pad)
 
 void ItemKeyboard::DoSetContentSize(cocos2d::Size contentSize)
 {
-
     if (NULL==keysHandle) return;
-//    float offset =	thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
-//    float size=GetLayoutManager()->IsVertical()?GetControlContentSize().height-offset:GetControlContentSize().width-offset;
-//    float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
-//    const int bitmapThumbXOffset=-8;
     if (GetLayoutManager()->IsVertical())
-    {
         keysHandle->setContentSize(cocos2d::Size(contentSize.height, contentSize.width));
-        
-//        keysHandle->setPosition(Vec2(GetControlContentSize().width/2.0+bitmapThumbXOffset,position));
-//        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().height-position+2.0));
-//        slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0,position+slideBarOff->getContentSize().height/2.0));
-//        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
-    }
     else
-    {
         keysHandle->setContentSize(contentSize);
-
-//        thumb->setPosition(Vec2(position,GetControlContentSize().height/2.0-bitmapThumbXOffset));
-//        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().width-position+2));
-//        slideBarOff->setPosition(Vec2(position+slideBarOff->getContentSize().height/2.0, GetControlContentSize().height/2.0));
-//        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2.0));
-    }
     keysHandle->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
 }
 
@@ -1190,7 +1192,11 @@ void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEv
 
 void ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (checked) return;
+    if (checked)
+    {
+        ItemBase::OnItemTouchBegan(widget,type);
+        return;
+    }
     ItemPad::OnItemTouchBegan(widget,type);
     pad->loadTextureNormal("padHover.png");
     

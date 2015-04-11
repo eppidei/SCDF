@@ -62,4 +62,21 @@ namespace scdf {
 
         return [documentsDirectory UTF8String];
     }
+    bool CreateDirectory(std::string path)
+    {
+        NSString* directoryPath = [NSString stringWithUTF8String:path.c_str()];
+        NSError *error;
+        
+        bool result=true;
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:directoryPath
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error])
+        {
+            std::string errorString=[error.localizedDescription UTF8String];
+            LOGD("Create directory error: %s\n", errorString.c_str());
+            result=false;
+        }
+        return result;
+    }
 }

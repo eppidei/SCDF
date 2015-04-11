@@ -189,7 +189,6 @@ void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r, bool *collisi
     *c=false;
     for (int i=0;i<patch->items.size();++i)
     {
-//    	Layout* testItem = dynamic_cast<Layout*>(patch->items[i]->GetItem());
         Layout* testItem = dynamic_cast<Layout*>(patch->items[i]);
         if (NULL!=item && item==testItem) continue;
         cocos2d::Rect rItem(testItem->getPositionX(), testItem->getPositionY(), testItem->getContentSize().width, testItem->getContentSize().height);
@@ -262,7 +261,7 @@ void WorkingPanel::OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui:
         for (int i=0;i<patch->items.size();++i)
         {
             if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
-            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            if (patch->items[i]->GetID()!=item->GetID()) continue;
             patch->items[i]->OnItemTouchBegan(widget,type);
         }
     }
@@ -276,7 +275,7 @@ void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui:
         for (int i=0;i<patch->items.size();++i)
         {
             if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
-            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            if (patch->items[i]->GetID()!=item->GetID()) continue;
             patch->items[i]->OnItemTouchMoved(widget,type);
         }
     }
@@ -291,7 +290,7 @@ void WorkingPanel::OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui:
         for (int i=0;i<patch->items.size();++i)
         {
             if (patch->items[i]->GetGroupID()!=itemGroupId || patch->items[i]==item) continue;
-            if (patch->items[i]->GetStaticID()!=item->GetStaticID()) continue;
+            if (patch->items[i]->GetID()!=item->GetID()) continue;
             patch->items[i]->OnItemTouchEnded(widget,type);
         }
     }

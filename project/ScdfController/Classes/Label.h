@@ -44,6 +44,7 @@ namespace ScdfCtrl
         static TextInputWithBackground *CreateText(int ctrlID, cocos2d::Rect r, std::string text, std::string fontName, int fontSize);
         void AddEventListener(cocos2d::ui::TextField::ccTextFieldCallback callback);
         void SetText(std::string s);
+        void OnTouchIndirect();
         CREATE_FUNC(TextInputWithBackground);
     };
     class Toolbar : public cocos2d::ui::Layout
