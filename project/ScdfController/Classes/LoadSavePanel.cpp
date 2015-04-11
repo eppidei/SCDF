@@ -191,5 +191,8 @@ void LoadPanel::HighLightCurrentItem()
 {
     for (int i=0;i<loadFiles->getItems().size();++i)
         loadFiles->getItem(i)->setHighlighted(false);
-    loadFiles->getItem(loadFiles->getCurSelectedIndex())->setHighlighted(true);
+    
+    Widget *element=loadFiles->getItem(loadFiles->getCurSelectedIndex());
+    if (element)
+        element->setHighlighted(true);
 }
