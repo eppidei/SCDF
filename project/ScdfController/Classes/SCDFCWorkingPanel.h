@@ -15,14 +15,6 @@ namespace ScdfCtrl
 {
     class MainScene;
     
-//    class WorkingPanelItemCallback : public ItemBaseCallback
-//    {
-//    public:
-//        void OnItemTouchBegan(){}
-//        void OnItemTouchMoved(int value);
-//        void OnItemTouchEnded(){}
-//    };
-
     class WorkingPanel : public cocos2d::ui::Layout
     {
         MainScene *parent;

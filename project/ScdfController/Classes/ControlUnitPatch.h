@@ -37,7 +37,8 @@ public:
 	{
 		ar(CEREAL_NVP(id));
 		ar(CEREAL_NVP(name));
-		ar(CEREAL_NVP(*unit));
+        if(unit)
+            ar(CEREAL_NVP(*unit));
 		ar(CEREAL_NVP(x));
 		ar(CEREAL_NVP(y));
 		ar(CEREAL_NVP(magValue));
@@ -76,7 +77,6 @@ public:
 class ControlUnitPatch {
 
 public:
-
 	std::vector<ItemBase*> items;
 
 	bool LoadFromFile(std::string patchName); // pass patch name only, without path!

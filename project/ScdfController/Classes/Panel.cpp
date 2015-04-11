@@ -18,7 +18,7 @@ using namespace cocos2d;
 using namespace ui;
 
 template PanelBase *PanelBase::CreatePanel<PropertiesPanel>(MainScene *main, cocos2d::Rect r);
-template PanelBase *PanelBase::CreatePanel<LoadSavePanel>(MainScene *main, cocos2d::Rect r);
+//template PanelBase *PanelBase::CreatePanel<LoadSavePanel>(MainScene *main, cocos2d::Rect r);
 
 template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, cocos2d::Rect r)
 {

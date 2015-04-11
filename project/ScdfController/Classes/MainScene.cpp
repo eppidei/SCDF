@@ -166,16 +166,16 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     
     
     //int buttonsWidth = 87;
-//    auto buttonGrid = Button::create();
-//    buttonGrid->setTouchEnabled(true);
-//    //buttonGrid->Sets
-//    //buttonGrid->setScale9Enabled(true);
-//    buttonGrid->ignoreContentAdaptWithSize(false);
-//    buttonGrid->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
-//    buttonGrid->setAnchorPoint(Vec2(0,1));
-//    buttonGrid->setPosition(Vec2(buttonShowItems->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
-//    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
-//    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    auto buttonGrid = Button::create();
+    buttonGrid->setTouchEnabled(true);
+    //buttonGrid->Sets
+    //buttonGrid->setScale9Enabled(true);
+    buttonGrid->ignoreContentAdaptWithSize(false);
+    buttonGrid->loadTextures("TogglePannelOff.png", "TogglePannelOn.png", "TogglePannelOn.png");
+    buttonGrid->setAnchorPoint(Vec2(0,1));
+    buttonGrid->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
+    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
+    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
 
     auto buttonEdit = CheckBox::create();
     buttonEdit->setTouchEnabled(true);
@@ -188,7 +188,7 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     //buttonEdit->setScale9Enabled(true);
     //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
     buttonEdit->setAnchorPoint(Vec2(0,1));
-    buttonEdit->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
+    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
     buttonEdit->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
     buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     
@@ -208,7 +208,7 @@ void MainScene::AddToolbar(cocos2d::Rect r)
     
     toolbar->addChild(buttonLoadSavePanel,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
    // toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
-  // toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
+   toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
     toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
     //toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
 }
@@ -295,7 +295,7 @@ bool MainScene::init()
 
     propertiesPanel.reset(dynamic_cast<PropertiesPanel*>(PanelBase::CreatePanel<PropertiesPanel>((MainScene*)this,propertiesRect)));
 
-    loadSavePanel.reset(dynamic_cast<LoadSavePanel*>(PanelBase::CreatePanel<LoadSavePanel>((MainScene*)this,propertiesRect)));
+//    loadSavePanel.reset(dynamic_cast<LoadSavePanel*>(PanelBase::CreatePanel<LoadSavePanel>((MainScene*)this,propertiesRect)));
 
     AddToolbar(toolbarPanelsize);
 
@@ -359,7 +359,7 @@ bool MainScene::init()
 
 void MainScene::HideShowLoadSavePanel()
 {
-    propertiesPanel->HideShow(loadSavePanel.get());
+//    propertiesPanel->HideShow(loadSavePanel.get());
 }
 
 bool MainScene::HideShowScrollview()
@@ -398,7 +398,7 @@ bool MainScene::HideShowScrollview()
 
 bool MainScene::HideShowPropertiesPanel()
 {
-    loadSavePanel->HideShow(propertiesPanel.get());
+    propertiesPanel->HideShow(NULL);
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 //    propertiesPanel->HideShow();
     return propertiesPanel->IsVisible();
@@ -467,13 +467,23 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
     {
         case Widget::TouchEventType::BEGAN:
             if (TOOLBAR_BUTTON_GRID==button->getTag())
-                OnGridButtonClick();
+                //OnGridButtonClick();
+            {
+                SavePanel *p=SavePanel::create();
+                p->SetWorkingPanel(customPanel.get());
+                addChild(p,100);
+            }
             else if (TOOLBAR_BUTTON_ACTIVATE==button->getTag())
                 customPanel->ToggleActiveState();
             else if (TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW==button->getTag())
                 ChangeBitmap(pSender,HideShowScrollview());
             else if (TOOLBAR_BUTTON_HIDESHOW_TOOLBAR==button->getTag())
-                HideShowLoadSavePanel();
+            {
+                LoadPanel *p=LoadPanel::create();
+                p->SetWorkingPanel(customPanel.get());
+                addChild(p,100);
+            }
+//                HideShowLoadSavePanel();
             else if (TOOLBAR_BUTTON_HIDESHOW_PROPERTIES==button->getTag())
                 ChangeBitmap(pSender,HideShowPropertiesPanel());
             break;

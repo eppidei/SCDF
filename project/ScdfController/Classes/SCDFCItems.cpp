@@ -144,14 +144,14 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
 {
 	ItemBase* i = CreateItem(sitem->id);
 
-	i->setAnchorPoint(Vec2(sitem->x,sitem->y));
+	i->setPosition(Vec2(sitem->x,sitem->y));
 	i->SetName(sitem->name);
 	i->SetColor((Colors::ItemsColorsId)sitem->color);
 	i->GetLayoutManager()->SetMagValue(sitem->magValue);
 	i->GetLayoutManager()->SetVertical(sitem->isVertical);
 
-	i->SetControlUnit(sitem->unit);
-
+	//i->SetControlUnit(sitem->unit);
+    return i;
 }
 
 

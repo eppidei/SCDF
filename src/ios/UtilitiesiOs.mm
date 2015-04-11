@@ -79,4 +79,18 @@ namespace scdf {
         }
         return result;
     }
+    
+    bool ListFilesInDirectory(std::string folderPath, std::vector<std::string>& fileList)
+    {
+        NSString* _directoryPath = [NSString stringWithUTF8String:folderPath.c_str()];
+        NSError * error;
+        NSArray * directoryContents =  [[NSFileManager defaultManager]
+                                        contentsOfDirectoryAtPath:_directoryPath error:&error];
+        
+        for (int i=0;i<[directoryContents count];++i)
+        {
+            fileList.push_back([directoryContents[i] UTF8String]);
+        }
+        return true;
+    }
 }

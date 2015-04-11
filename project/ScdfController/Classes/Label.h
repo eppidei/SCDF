@@ -84,5 +84,18 @@ namespace ScdfCtrl
         void RemoveButton(int ctrlID);
         CREATE_FUNC(Toolbar);
     };
+    class ModalPanel : public cocos2d::ui::Layout
+    {
+        cocos2d::ui::Button *close;
+        
+        void OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        virtual void CreatePanel();
+    protected:
+        bool init() override;
+        void Close();
+    public:
+        CREATE_FUNC(ModalPanel);
+    };
+
 }
 #endif /* defined(__ScdfController__Label__) */

@@ -30,6 +30,7 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 	std::vector<SerializableItemData> sItems;
 
 	std::ifstream stream( file );
+    if (!stream) return false;
 	//std::stringstream stream;
 	{
 		cereal::XMLInputArchive inArchive(stream);

@@ -7,153 +7,189 @@
 //
 
 #include "LoadSavePanel.h"
+#include "OsUtilities.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
-void LoadSavePanel::InitPanel()
+#define ITEM_HEIGHT 30.0
+#define CLOSE_ID -10
+
+void LoadSavePanelBase::CreatePanel()
 {
-    sectionSave=SavePatch::create();
-    sectionSave->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().width));
-    addChild(sectionSave);
+    CreateMain();
     
-    sectionLoad=LoadPatch::create();
-    sectionLoad->InitWithContent(this, cocos2d::Size(getContentSize().width-2*SUBPANEL_DISTANCE,getContentSize().height-3*SUBPANEL_DISTANCE-sectionSave->getContentSize().height));
-    addChild(sectionLoad);
+    close = Button::create();
+    close->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
+    mainPanel->addChild(close,0,CLOSE_ID);
+    close->loadTextureNormal("btnCloseDefault.png");
+    close->loadTexturePressed("btnCloseHover.png");
+    close->ignoreContentAdaptWithSize(false);
+    close->setAnchorPoint(Vec2(0,1));
+    close->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+    close->setPosition(Vec2(mainPanel->getContentSize().width-close->getContentSize().width-20,ITEM_HEIGHT+20));
+    
+    CreateControlButton();
+    control->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
+    control->ignoreContentAdaptWithSize(false);
+    control->setAnchorPoint(Vec2(0,1));
+    control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
 }
 
-void LoadSavePanel::UpdateSubpanels()
+void SavePanel::CreateMain()
 {
-    sectionLoad->Update();
-    sectionSave->Update();
-}
-
-SavePatch::SavePatch()
-{
-    saveButton=NULL;
-    saveFile=NULL;
-}
-
-LoadPatch::LoadPatch()
-{
-    loadButton=NULL;
-    loadFiles=NULL;
-}
-
-void LoadPatch::Update()
-{
-    InitFilesListView();
-}
-
-void SavePatch::PositionElements()
-{
-    if (saveButton)
-        saveButton->setPosition(Vec2(0,getContentSize().height));
-    if (saveFile)
-        saveFile->setPosition(Vec2(0,saveButton->getPositionY()-saveButton->getContentSize().height));
-}
-
-void LoadPatch::PositionElements()
-{
-    if (loadButton)
-        loadButton->setPosition(Vec2(0,getContentSize().height));
-    if (loadFiles)
-        loadFiles->setPosition(Vec2(0,loadButton->getPositionY()-loadButton->getContentSize().height));
-}
-
-void SavePatch::CreateControls()
-{
-    saveButton = Text::create("SAVE","Arial",16);
-    saveButton->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    addChild(saveButton);
-    saveButton->ignoreContentAdaptWithSize(false);
-    saveButton->setAnchorPoint(Vec2(0,1));
-    saveButton->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    saveButton->setTextVerticalAlignment(TextVAlignment::CENTER);
-    saveButton->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    saveButton->setColor(cocos2d::Color3B::WHITE);
+    mainPanel=Layout::create();
+    addChild(mainPanel);
+    mainPanel->setBackGroundImage("SavePopup.png");
+    float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
+    float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
+    
+    cocos2d::Rect rr(15, 13, textureWidth-15-23, textureHeight-13-25);
+    mainPanel->setBackGroundImageScale9Enabled(true);
+    mainPanel->setBackGroundImageCapInsets(rr);
+    mainPanel->setAnchorPoint(Vec2(0.5,0.5));
+    float sizeBase=250.0;
+    mainPanel->setContentSize(cocos2d::Size(1.512*sizeBase, sizeBase));
+    mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     saveFile=TextField::create();
+    mainPanel->addChild(saveFile);
     saveFile->ignoreContentAdaptWithSize(false);
-    saveFile->setPlaceHolder("Insert name");
-    saveFile->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
+    saveFile->setPlaceHolder("Patch name");
+    saveFile->setContentSize(cocos2d::Size(0.787*mainPanel->getContentSize().width,0.198*mainPanel->getContentSize().height));
+    saveFile->setPosition(Vec2(0.102*mainPanel->getContentSize().width,0.603*mainPanel->getContentSize().height));
     saveFile->setAnchorPoint(Vec2(0,1));
     saveFile->setTextVerticalAlignment(TextVAlignment::CENTER);
-    saveFile->setTextHorizontalAlignment(TextHAlignment::CENTER);
+    saveFile->setTextHorizontalAlignment(TextHAlignment::LEFT);
     saveFile->setFontSize(20);
     saveFile->setTouchEnabled(true);
-    saveFile->setColor(cocos2d::Color3B::WHITE);
-    saveFile->addEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
-    addChild(saveFile);
+    saveFile->setColor(cocos2d::Color3B::BLACK);
 }
 
-void LoadPatch::CreateControls()
+void LoadPanel::CreateMain()
 {
-    loadButton = Text::create("LOAD","Arial",16);
-    loadButton->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    addChild(loadButton,0,PATCH_LOAD);
-    loadButton->ignoreContentAdaptWithSize(false);
-    loadButton->setAnchorPoint(Vec2(0,1));
-    loadButton->setTextHorizontalAlignment(TextHAlignment::CENTER);
-    loadButton->setTextVerticalAlignment(TextVAlignment::CENTER);
-    loadButton->setContentSize(cocos2d::Size(getContentSize().width,SUBPANEL_ITEM_HEIGHT));
-    loadButton->setColor(cocos2d::Color3B::WHITE);
+    mainPanel=Layout::create();
+    addChild(mainPanel);
+    mainPanel->setBackGroundImage("loadPopup.png");
+    float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
+    float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
+    
+    cocos2d::Rect rr(14, 13, textureWidth-14-22, textureHeight-13-24);
+    mainPanel->setBackGroundImageScale9Enabled(true);
+    mainPanel->setBackGroundImageCapInsets(rr);
+    mainPanel->setAnchorPoint(Vec2(0.5,0.5));
+    float sizeBase=250.0;
+    mainPanel->setContentSize(cocos2d::Size(1.214*sizeBase, sizeBase));
+    mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     loadFiles = ListView::create();
+    mainPanel->addChild(loadFiles);
+    loadFiles->setAnchorPoint(Vec2(0,1));
+    loadFiles->setContentSize(cocos2d::Size(0.747*mainPanel->getContentSize().width, 0.372*mainPanel->getContentSize().height));
+    loadFiles->setPosition(Vec2(0.103*mainPanel->getContentSize().width, mainPanel->getContentSize().height*0.687/*-(0.313*mainPanel->getContentSize().height)*/));
     InitFilesListView();
-    loadFiles->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height-SUBPANEL_ITEM_HEIGHT));
-    addChild(loadFiles);
     loadFiles->ScrollView::setDirection(ScrollView::Direction::VERTICAL);
     loadFiles->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
-    loadFiles->setAnchorPoint(Vec2(0,1));
     loadFiles->setBackGroundColorType(BackGroundColorType::NONE);
+//    loadFiles->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::WidgetBackGround));
 }
 
-void LoadPatch::InitFilesListView()
+void LoadPanel::CreateControlButton()
+{
+    control = Button::create();
+    mainPanel->addChild(control,0,PATCH_LOAD);
+    control->loadTextureNormal("btnLoadDefault.png");
+    control->loadTexturePressed("btnLoadHover.png");
+    control->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+}
+
+void SavePanel::CreateControlButton()
+{
+    control = Button::create();
+    mainPanel->addChild(control,0,PATCH_SAVE);
+    control->loadTextureNormal("btnSaveDefault.png");
+    control->loadTexturePressed("btnSaveHover.png");
+    control->setContentSize(cocos2d::Size(1.84*ITEM_HEIGHT,ITEM_HEIGHT));
+}
+
+void LoadPanel::InitFilesListView()
 {
     loadFiles->removeAllItems();
-    const int numFiles=20;
-    for (int i=0; i<numFiles; i++)
+    std::vector<std::string> files;
+    scdf::ListFilesInDirectory(scdf::GetUserDataDirectory() + "/patches", files);
+    for (int i=0; i<files.size(); i++)
     {
-        std::ostringstream os;
-        os<<"File "<<i;
-        Text *model = Text::create(os.str(),"Arial",20);
+        Text *model = Text::create(files[i],"Arial",20);
         model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width-6,SUBPANEL_ITEM_HEIGHT));
+        model->setContentSize(cocos2d::Size(getContentSize().width-6,ITEM_HEIGHT));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
         model->setTextHorizontalAlignment(TextHAlignment::CENTER);
-        model->setColor(cocos2d::Color3B::WHITE);
+        model->setColor(cocos2d::Color3B::BLACK);
         model->setBright(true);
         model->setTouchScaleChangeEnabled(true);
         loadFiles->pushBackCustomItem(model);
-        model->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+        model->addTouchEventListener(CC_CALLBACK_2(LoadSavePanelBase::OnTouchEvent, this));
     }
     loadFiles->refreshView();
 }
 
-void LoadPatch::HighLightCurrentItem()
+void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
+{
+    Node *node=dynamic_cast<Node*>(pSender);
+    switch (type)
+    {
+        case Widget::TouchEventType::BEGAN:
+            OnTouchBegan(node->getTag());
+            break;
+        case Widget::TouchEventType::ENDED:
+        case Widget::TouchEventType::CANCELED:
+        {
+            if (node->getTag()==CLOSE_ID)
+                Close();
+            else
+                OnTouchEnded(node->getTag());
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+void SavePanel::OnTouchBegan(int nodeTag)
+{
+}
+
+void SavePanel::OnTouchEnded(int nodeTag)
+{
+    if (nodeTag==PATCH_SAVE)
+    {
+        workingPanel->SavePatch(saveFile->getStringValue());
+        Close();
+    }
+}
+
+void LoadPanel::OnTouchBegan(int nodeTag)
+{
+    HighLightCurrentItem();
+}
+
+void LoadPanel::OnTouchEnded(int nodeTag)
+{
+    if (nodeTag==PATCH_LOAD)
+    {
+        Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
+        workingPanel->LoadPatch(t->getString());
+        Close();
+    }
+    else
+        HighLightCurrentItem();
+}
+
+void LoadPanel::HighLightCurrentItem()
 {
     for (int i=0;i<loadFiles->getItems().size();++i)
         loadFiles->getItem(i)->setHighlighted(false);
     loadFiles->getItem(loadFiles->getCurSelectedIndex())->setHighlighted(true);
-}
-
-void SavePatch::OnTouchEventBegan(Node *widget)
-{
-    
-}
-
-void LoadPatch::OnTouchEventBegan(Node *widget)
-{
-    HighLightCurrentItem();
-}
-
-void LoadPatch::OnTouchEventEnded(Node *widget)
-{
-    if (widget->getTag()==PATCH_LOAD)
-        int pippo=0;
-    else
-    HighLightCurrentItem();
 }

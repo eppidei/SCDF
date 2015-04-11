@@ -110,7 +110,6 @@ bool WorkingPanel::SavePatch(std::string patchName)
 	patch->SaveToFile(patchName);
 }
 
-
 bool WorkingPanel::LoadPatch(std::string patchName)
 {
 	for (int i=0;i<patch->items.size();++i)
@@ -118,7 +117,7 @@ bool WorkingPanel::LoadPatch(std::string patchName)
 		parent->DetachItem(patch->items[i]);
 	    removeChild(patch->items[i]);
 	}
-
+    patch->items.clear();
 	patch->LoadFromFile(patchName);
 
 	for (int i=0;i<patch->items.size();++i)
