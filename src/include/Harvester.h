@@ -31,6 +31,8 @@ namespace scdf{
         void Attach(HarvesterListener* _listener,std::vector<SensorType> _typeList );
         void Detach(HarvesterListener* _listener);
         
+        bool IsAny();
+        
         void OnHarvesterBufferReady(std::vector<SensorData*> *buffer);
     };
     
@@ -50,7 +52,7 @@ namespace scdf{
         SensorType requesterType;
         ThreadUtils::ThreadHandle handle;
         ThreadUtils::CustomSemaphore harvestReady;
-        HarvesterListener *harversterListener;
+        //HarvesterListener *harversterListener;
         int uptateIntervalMs;
         
         struct HarvestInfo{
@@ -83,7 +85,7 @@ namespace scdf{
         int GetUpdateInterval(){return uptateIntervalMs;}
         s_bool IsAudioSyncActive();
         void SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs);
-        void SetHarvesterListener(HarvesterListener *listner){harversterListener = listner;}
+        //void SetHarvesterListener(HarvesterListener *listner){harversterListener = listner;}
         void SendingQueuePushBuffer(std::vector<SensorData*> *buffer);
         void WaitForHarvest();
         bool IsActive(){return activated;}

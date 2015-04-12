@@ -81,7 +81,7 @@ std::vector<SensorData*> *Harvester::AllocBufferHarvest()
     
     std::vector<SensorData*> *bufferTemp;
     
-    if (harversterListener!=NULL)
+    if (/*harversterListener!=NULL*/GetListeners()->IsAny())
     {
         static std::vector<SensorData*> *buffer=new std::vector<SensorData*>();
         bufferTemp=buffer;
@@ -117,7 +117,7 @@ std::vector<SensorData*> *Harvester::AllocBufferHarvest()
     
 }
 
-Harvester::Harvester() : activated(false), requesterType(AudioInput), harversterListener(NULL),uptateIntervalMs(40)
+Harvester::Harvester() : activated(false), requesterType(AudioInput),/* harversterListener(NULL),*/uptateIntervalMs(40)
 {
     
 }
@@ -356,8 +356,8 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
     
     SentDataRecyclingProcedure(&harvestData);
     
-    if (NULL!=harversterListener)
-        harversterListener->OnHarvesterBufferReady(b);
+    if (/*NULL!=harversterListener*/ GetListeners()->IsAny())
+        GetListeners()->OnHarvesterBufferReady(b);
     else
         SendingQueuePushBuffer(b);
 
@@ -379,7 +379,7 @@ void Harvester::Harvest(SensorData *masterData)
 #ifdef LOG_TIMESTAMP
     printf("Master sensor: %s; Harvesting starts: %llu; Harvesting ends: %llu; Harvesting ms interval: %llu;\n",SensorTypeString[masterData->type].c_str(),masterData->timeid,masterData->timestamp,getUptimeInMilliseconds(masterData->timestamp-masterData->timeid));
 #endif
-    harversterListener = NULL;
+    //harversterListener = NULL;
     myHarvestInfo.CleanUp();
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp[0]);
     PipesHarvesting(masterData->timeid, masterData->timestamp[0], masterData->type);
@@ -422,7 +422,12 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
     listenersMap.insert(std::pair<HarvesterListener*,std::vector<SensorType>>(_listener,_typeList));
     
     for(int i = 0; i<_typeList.size(); i++)
+    {
         listenersRefCount[_typeList[i]]++;
+        scdf::theSensorManager()->StartSensor(_typeList[i]);
+    }
+    
+    
     
     CheckRefCountForToStartAndStopHarvester();
 }
@@ -433,12 +438,25 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
     std::vector<SensorType> sensorTypeListForListener = listenersMap[_listener];
     
     for(int i = 0; i<sensorTypeListForListener.size(); i++)
+    {
         listenersRefCount[sensorTypeListForListener[i]]--;
+        if(0==listenersRefCount[sensorTypeListForListener[i]])
+            scdf::theSensorManager()->StopSensor(sensorTypeListForListener[i]);
+            
+    }
    
     listenersMap.erase(_listener);
     
     
     CheckRefCountForToStartAndStopHarvester();
+}
+
+bool HarvesterListenerContainer::IsAny()
+{
+    if(GetTotalRefCount()>0)
+        return true;
+    
+    return false;
 }
 
 int HarvesterListenerContainer::GetTotalRefCount()

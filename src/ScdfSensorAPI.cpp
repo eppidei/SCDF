@@ -63,6 +63,11 @@ void ScdfSensorAPI::StartAllSensors(bool excludeAudio)
 
 }
 
+void ScdfSensorAPI::StopAllSensors()
+{
+    scdf::theSensorManager()->StopAllSensors();
+}
+
 void ScdfSensorAPI::InitSensors()
 {
     scdf::SensorSettings settings;
