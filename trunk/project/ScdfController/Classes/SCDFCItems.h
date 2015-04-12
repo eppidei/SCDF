@@ -111,6 +111,8 @@ namespace ScdfCtrl
         virtual cocos2d::Size GetStaticBaseSize()=0;
         virtual int GetID()=0;
         
+        virtual void UpdateUI() = 0;
+        
     };
 
     class ItemSlider : public ItemBase
@@ -132,6 +134,7 @@ namespace ScdfCtrl
         virtual void SetPositionOfValueDependentComponent();
         virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
 //        void LinearMode(cocos2d::Vec2 touchPos);
+        void UpdateUI() override;
     public:
         virtual void SetColor(Colors::ItemsColorsId colorIndex) override;
         void Create();
@@ -205,6 +208,7 @@ namespace ScdfCtrl
         
         virtual bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        virtual void UpdateUI() override {};
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
         //int midiNote;
@@ -229,6 +233,8 @@ namespace ScdfCtrl
         void Init() override;
         bool IsChecked();
         bool checked;
+        
+        void UpdateUI() override;
     public:
         static cocos2d::Size GetBaseSize() { return SWITCH_SIZE_BASE;}
         int GetID() override { return ID();}
@@ -250,6 +256,7 @@ namespace ScdfCtrl
         bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
 
+        void UpdateUI() override {};
     public:
 
 		ItemPad *GetSelectedPad();
@@ -281,6 +288,8 @@ namespace ScdfCtrl
         bool OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
         bool UpdateSelectedKey(cocos2d::ui::Widget* widget, bool onMoving);
+        
+        void UpdateUI() override {};
     public:
         void SetCurrentOctave(int octave) { currentOctave=octave; }
         int GetCurrentOctave() {return currentOctave;}

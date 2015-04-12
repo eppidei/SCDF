@@ -156,11 +156,10 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
 	i->GetLayoutManager()->SetMagValue(sitem->magValue);
 	i->GetLayoutManager()->SetVertical(sitem->isVertical);
 
-	//i->SetControlUnit(sitem->unit);
+	i->SetControlUnit(sitem->unit);
+    i->UpdateUI();
     return i;
 }
-
-
 
 template <class ItemType> ItemBase *ItemBase::CreateItem()
 {
@@ -210,14 +209,13 @@ void ItemBase::SetControlModeImage()
 }
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
-	controlUnit.reset(ControlUnit::Create(t));
-    SetControlModeImage();
+	SetControlUnit(ControlUnit::Create(t));
 }
 
 void ItemBase::SetControlUnit(ControlUnit* cu)
 {
 	controlUnit.reset(cu); // item becomes the owner of the ctrl unit
-	//controlUnit->SetItem(this);
+    SetControlModeImage();
 }
 
 cocos2d::Size ItemSlider::CalculateNewItemBaseSize(int magValue)
@@ -411,7 +409,7 @@ void ItemSlider::CreateThumb()
     thumb->setAnchorPoint(Vec2(0.5,0.5));
     thumb->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     DoCreateThumb();
-    SetPositionOfValueDependentComponent();
+    UpdateUI();
 }
 
 cocos2d::Size ItemSlider::GetThumbSize(cocos2d::Size currentSize)
@@ -465,7 +463,7 @@ void ItemSlider::DoSetContentSize(cocos2d::Size contentSize)
         thumb->setContentSize(GetThumbSize(temp));
     
     
-    SetPositionOfValueDependentComponent();
+    UpdateUI();
 }
 
 void ItemKnob::DoSetContentSize(cocos2d::Size contentSize)
@@ -495,6 +493,11 @@ cocos2d::Size ItemKnob::CalculateNewItemBaseSize(int magValue)
     baseSize.height+=magValue;
     baseSize.width+=magValue;
     return baseSize;
+}
+
+void ItemSlider::UpdateUI()
+{
+    SetPositionOfValueDependentComponent();
 }
 
 void ItemSlider::SetPositionOfValueDependentComponent()
@@ -602,7 +605,7 @@ bool ItemWheel::OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widge
 {
     if (!ItemSlider::OnItemTouchEnded(widget, type)) return false;
     GetControlUnit()->OnTouch(ControlUnit::TouchMove,0.5f);
-    SetPositionOfValueDependentComponent();
+    UpdateUI();
     
     if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Move_Item);
@@ -649,7 +652,7 @@ void ItemKnob::AngularMode(Widget *knob)
     {
         temp=fmin(1.0f,fmax(temp,0.f));
         GetControlUnit()->OnTouch(ControlUnit::TouchMove,temp);
-        SetPositionOfValueDependentComponent();
+        UpdateUI();
     }
     
 }
@@ -710,7 +713,7 @@ Vec2 ItemSlider::OnMove(Widget *widget)
     normValue=fmin(1.f,fmax(0.f,normValue));
     LOGD("SLIDER VALUE %f\n", normValue);
     GetControlUnit()->OnTouch(ControlUnit::TouchMove,normValue);
-    SetPositionOfValueDependentComponent();
+    UpdateUI();
     return touchPos;
 }
 
@@ -1195,6 +1198,13 @@ bool ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     return true;
 }
 
+void ItemSwitch::UpdateUI()
+{
+    if (checked)
+        pad->loadTextureNormal("padHover.png");
+    else
+        pad->loadTextureNormal("padDefault.png");
+}
 
 bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
@@ -1204,8 +1214,8 @@ bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
         checked=true;
     else{
         ItemPad::OnItemTouchEnded(widget,type);
-        pad->loadTextureNormal("padDefault.png");
         checked=false;
+        pad->loadTextureNormal("padDefault.png");
     }
     return true;
 }

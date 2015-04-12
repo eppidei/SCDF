@@ -29,6 +29,7 @@ public:
 	int magValue;
 	int color;
 	bool isVertical;
+    ControlUnit::Type type;
 	ControlUnit* unit;
 
 	//friend class cereal::access;
@@ -37,8 +38,16 @@ public:
 	{
 		ar(CEREAL_NVP(id));
 		ar(CEREAL_NVP(name));
-        if(unit)
-            ar(CEREAL_NVP(*unit));
+        ar(CEREAL_NVP(type));
+        if (!unit)
+            unit=ControlUnit::Create(type);
+        
+        switch(type)
+        {
+            case ControlUnit::Type::Wire: ar(CEREAL_NVP(*((ControlUnitWire*)unit))); break;
+            case ControlUnit::Type::Blow: ar(CEREAL_NVP(*((ControlUnitBlow*)unit))); break;
+            default: break;
+        }
 		ar(CEREAL_NVP(x));
 		ar(CEREAL_NVP(y));
 		ar(CEREAL_NVP(magValue));
@@ -56,6 +65,7 @@ public:
 		color = item->GetColor();
 		magValue = item->GetLayoutManager()->GetMagValue();
 		isVertical = item->GetLayoutManager()->IsVertical();
+        type = item->GetControlUnit()->GetType();
 	}
 
 	SerializableItemData()
@@ -68,6 +78,7 @@ public:
 		color = 0;
 		magValue = 1;
 		isVertical = false;
+        type=ControlUnit::Type::Wire;
 	}
 
 

@@ -97,7 +97,7 @@ private:
 		ar(CEREAL_NVP(midiChannel));
 		ar(CEREAL_NVP(midiControl));
 		ar(CEREAL_NVP(val));
-//		ar(CEREAL_NVP(udpSender));
+		ar(CEREAL_NVP(udpSender));
 		ar(CEREAL_NVP(lastOpenedMidiOutIndex));
 	}
 
@@ -110,7 +110,7 @@ private:
 		ar(CEREAL_NVP(midiChannel));
 		ar(CEREAL_NVP(midiControl));
 		ar(CEREAL_NVP(val));
-//		ar(CEREAL_NVP(udpSender));
+		ar(CEREAL_NVP(udpSender));
 
 		ar(CEREAL_NVP(lastOpenedMidiOutIndex));
 		SetMidiOutIndex(lastOpenedMidiOutIndex); // creates the midi connection!!!
