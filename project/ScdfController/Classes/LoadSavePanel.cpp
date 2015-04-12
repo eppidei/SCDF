@@ -145,15 +145,12 @@ void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEve
         case Widget::TouchEventType::BEGAN:
             if (node->getTag()!=CLOSE_ID)
                 OnTouchBegan(node->getTag());
+            else
+                Close(mainPanel);
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
-        {
-            if (node->getTag()==CLOSE_ID)
-                Close(mainPanel);
-            else
-                OnTouchEnded(node->getTag());
-        }
+            OnTouchEnded(node->getTag());
             break;
         default:
             break;
@@ -162,10 +159,6 @@ void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEve
 
 void SavePanel::OnTouchBegan(int nodeTag)
 {
-}
-
-void SavePanel::OnTouchEnded(int nodeTag)
-{
     if (nodeTag==PATCH_SAVE)
     {
         workingPanel->SavePatch(saveFile->getStringValue());
@@ -173,12 +166,11 @@ void SavePanel::OnTouchEnded(int nodeTag)
     }
 }
 
-void LoadPanel::OnTouchBegan(int nodeTag)
+void SavePanel::OnTouchEnded(int nodeTag)
 {
-    HighLightCurrentItem();
 }
 
-void LoadPanel::OnTouchEnded(int nodeTag)
+void LoadPanel::OnTouchBegan(int nodeTag)
 {
     if (nodeTag==PATCH_LOAD)
     {
@@ -187,6 +179,12 @@ void LoadPanel::OnTouchEnded(int nodeTag)
         Close(mainPanel);
     }
     else
+        HighLightCurrentItem();
+}
+
+void LoadPanel::OnTouchEnded(int nodeTag)
+{
+    if (nodeTag!=PATCH_LOAD)
         HighLightCurrentItem();
 }
 
