@@ -18,7 +18,7 @@ namespace ScdfCtrl
 {
     class LoadSavePanelBase : public ModalPanel
     {
-        void CreatePanel() override;
+        Node *CreatePanel() override;
         virtual void CreateMain() = 0;
         virtual void CreateControlButton() = 0;
         virtual void OnTouchBegan(int nodeTag) = 0;

@@ -116,9 +116,9 @@ void TextInputWithBackground::AddEventListener(TextField::ccTextFieldCallback ca
 
 void TextInputWithBackground::OnTouchIndirect()
 {
-//    if(!text) return;
-//    text->setAttachWithIME(true);
-//    text->update(0);
+    if(!text) return;
+    text->setAttachWithIME(true);
+    text->update(0);
 }
 
 void TextInputWithBackground::SetText(std::string s)
@@ -232,22 +232,32 @@ void ModalPanel::OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
     {
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
-            Close();
+            Close(close);
             break;
         default:
             break;
     }
 }
 
-void ModalPanel::Close()
+void ModalPanel::Close(Node *mainPanel)
 {
-    removeAllChildren();
-    getParent()->removeChild(this);
+    auto fadeOut = FadeOut::create(0.2f);
+    auto scale = ScaleTo::create(0.15f, 0.0f);
+    auto callback = CallFunc::create([this](){
+        removeAllChildren();
+        getParent()->removeChild(this);
+    });
+    auto seq = Sequence::create(fadeOut, callback, NULL);
+    
+    mainPanel->runAction(scale);
+    runAction(seq);
+
 }
 
 bool ModalPanel::init()
 {
     bool ret=Layout::init();
+    setOpacity(0);
     setTouchEnabled(true);
     setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     setBackGroundColor(Color3B::BLACK);
@@ -255,11 +265,18 @@ bool ModalPanel::init()
     setAnchorPoint(Vec2(0,1));
     setPosition(Vec2(0,Director::getInstance()->getWinSize().height));
     setContentSize(Director::getInstance()->getWinSize());
-    CreatePanel();
+
+    Node *mainPanel=CreatePanel();
+    mainPanel->setScale(0);
+    
+    auto fadeIn = FadeIn::create(0.2f);
+    auto scale = ScaleTo::create(0.15f, 1.0f);
+    runAction(fadeIn);
+    mainPanel->runAction(scale);
     return ret;
 }
 
-void ModalPanel::CreatePanel()
+Node *ModalPanel::CreatePanel()
 {
     close = Button::create();
     addChild(close);
@@ -272,4 +289,5 @@ void ModalPanel::CreatePanel()
     close->setContentSize(cocos2d::Size(50, 50));
     close->setPosition(Vec2(getContentSize().width/2.0, getContentSize().height/2.0));
     close->addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
+    return close;
 }

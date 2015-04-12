@@ -82,11 +82,15 @@ void ItemBase::CreateItemBaseElements()
     label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
     label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
     label->SetTextColor(Color3B::BLACK);
+    label->setTouchEnabled(true);
+        label->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     addChild(label,1);
     
     controlImage=Layout::create();
     controlImage->setAnchorPoint(Vec2(0,1));
+        controlImage->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     addChild(controlImage,1);
+    controlImage->setTouchEnabled(true);
     SetControlModeImage();
     
     control=Layout::create();
@@ -94,6 +98,8 @@ void ItemBase::CreateItemBaseElements()
     control->setAnchorPoint(Vec2(0,1));
     control->setContentSize(getContentSize());
     control->setPosition(Vec2(0,getContentSize().height));
+    control->setTouchEnabled(true);
+    control->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
 }
 
 void ItemBase::PlaceItemBaseElements()
@@ -342,17 +348,14 @@ void ItemBase::ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventT
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
-            if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchBeganPosition(), type))
-                wPanel->OnItemTouchBegan(this, widget, type);
+            wPanel->OnItemTouchBegan(this, widget, type);
             break;
         case Widget::TouchEventType::MOVED:
-            if (NULL==wPanel||!wPanel->OnControlMove(this, widget->getTouchMovePosition(), type))
-                wPanel->OnItemTouchMoved(this, widget, type);
+            wPanel->OnItemTouchMoved(this, widget, type);
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
-            if (NULL==wPanel||!wPanel->OnControlMove (this, widget->getTouchEndPosition(), type))
-                wPanel->OnItemTouchEnded(this, widget, type);
+            wPanel->OnItemTouchEnded(this, widget, type);
             break;
         default:
             break;
@@ -370,16 +373,27 @@ void ItemBase::Select(bool select)
         label->setBackGroundColorType(Layout::BackGroundColorType::NONE);
 }
 
-void ItemBase::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemBase::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (widget==controlImage || widget==label) return false;
+    
     if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Select_Item);
     
     dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
+    return true;
 }
-void ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (widget==controlImage || widget==label) return false;
     dragPosUpdated=widget->getTouchMovePosition();
+    return true;
+}
+
+bool ItemBase::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (widget==controlImage || widget==label) return false;
+    return true;
 }
 
 void ItemSlider::CreateThumb()
@@ -578,45 +592,27 @@ void ItemSlider::Create()
     CreateThumb();
 }
 
-void ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemSlider::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (widget==slideBar) return;
-    ItemBase::OnItemTouchBegan(widget, type);
-    //dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
-    //dragStartPos=dragPosUpdated=thumb->getWorldPosition();
-    //if (callback.get())
-    //    callback->OnItemTouchBegan();
-
-//    GetControlUnit()->OnTouch( ControlUnit::TouchDown,
-//        		GetControlUnit()->GetNormalizedValue());
-    // control unit wire doesn't really need this
-    // but dsp unit needs this for activate/deactivate
-
+//    if (widget==slideBar) return false;
+    return ItemBase::OnItemTouchBegan(widget, type);
 }
-void ItemWheel::OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+
+bool ItemWheel::OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (!ItemSlider::OnItemTouchEnded(widget, type)) return false;
     GetControlUnit()->OnTouch(ControlUnit::TouchMove,0.5f);
     SetPositionOfValueDependentComponent();
-    ItemSlider::OnItemTouchEnded(widget, type);
     
     if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Move_Item);
-}
-void ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
-{
-    if (widget==slideBar) return;
-    ItemBase::OnItemTouchEnded(widget, type);
-    //if (callback.get())
-    //    callback->OnItemTouchEnded();
-
-//    GetControlUnit()->OnTouch( ControlUnit::TouchUp,
-//        		GetControlUnit()->GetNormalizedValue());
     
-//    if (widget->getParent()==control)
-//        NotifyEvent(SCDFC_EVENTS_Move_Item);
-    // control unit wire doesn't really need this
-    // but dsp unit needs this for activate/deactivate
+    return true;
+}
 
+bool ItemSlider::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    return ItemBase::OnItemTouchEnded(widget, type);
 }
 
 #define RangeRadStart 4.27
@@ -633,12 +629,12 @@ void ItemKnob::AngularMode(Widget *knob)
     Vec2 center(parent->getContentSize().width/2.0, parent->getContentSize().height/2.0);
 
     Vec2 touchPos=parent->convertToNodeSpace(touchWorldPos);
-    short int x=touchPos.x;
-    short int y=touchPos.y;
+    double x=touchPos.x;
+    double  y=touchPos.y;
     
-    int dx=x-center.x;
-    int dy=-y+center.y;
-    double angle=atan2(double(dy), double(dx));
+    double dx=x-center.x;
+    double dy=-y+center.y;
+    double angle=atan2(dy, dx);
 
     angle-=AngleConstantOffset;
     
@@ -647,12 +643,8 @@ void ItemKnob::AngularMode(Widget *knob)
     
     angle=RangeRadStart-angle;
     double val=angle/RangeRadEnd;
-//    long temp=(max-min)-long(min+(max-min)*val);
-//    long temp=(max-min)-long(min+(max-min)*val);
-//    if(abs(temp-value)<((max-min)*2/3))
-//        SetValue(temp);
-    
     double temp=1.0-val;
+    
     if(abs(temp-GetControlUnit()->GetNormalizedValue())<(2.0/3.0))
     {
         temp=fmin(1.0f,fmax(temp,0.f));
@@ -730,22 +722,19 @@ Vec2 ItemKnob::OnMove(Widget *widget)
     return touchPos;
 }
 
-void ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemSlider::OnItemTouchMoved(Widget *widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (widget==slideBar) return;
-
+//    if (widget==slideBar) return false;
+    Vec2 dragPosUpdatedOld=dragPosUpdated;
+    if (!ItemBase::OnItemTouchMoved(widget, type)) return false;
+    dragPosUpdated=dragPosUpdatedOld;
     Vec2 touchPosNew=OnMove(widget);
-    
-// VALUE REMOVAL
-//    if (callback.get())
-//        callback->OnItemTouchMoved(value);
-//    else
-//        controlUnit->OnTouch(ControlUnit::TouchDown,value);
-    
     dragPosUpdated=touchPosNew;
 
     if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Move_Item);
+    
+    return true;
 }
 
 cocos2d::Size ItemSlider::GetStaticBaseSize()
@@ -947,28 +936,22 @@ void ItemPad::SetColor(Colors::ItemsColorsId colorIndex)
 {
     ItemBase::SetColor(colorIndex);
     pad->setColor(Colors::Instance()->GetItemsColor(colorIndex));
-    //    setColor(Colors::Instance()->GetItemsColor(colorIndex));
 }
 
-//void ItemPad::setContentSize(const cocos2d::Size &contentSize)
-//{
-//    Node::setContentSize(contentSize);
-//    if (NULL==pad) return;
-//    pad->setContentSize(contentSize);
-//    pad->setPosition(Vec2(0,contentSize.height));
-//}
-
-void ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    ItemBase::OnItemTouchBegan(widget,type);
+    if (!ItemBase::OnItemTouchBegan(widget,type)) return false;
     GetControlUnit()->OnTouch(ControlUnit::TouchDown,1);
     LOGD("%s sends %d with velocity %d \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), GetControlUnit()->GetValue());
+    return true;
 }
 
-void ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (!ItemBase::OnItemTouchEnded(widget,type)) return false;
     GetControlUnit()->OnTouch(ControlUnit::TouchUp,0.0);
     LOGD("%s sends %d with velocity %f \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), 0.f);
+    return true;
 }
 
 void ItemPad::DoSetContentSize(cocos2d::Size contentSize)
@@ -1027,20 +1010,24 @@ void ItemMultipad::CreatePads()
     
 }
 
-void ItemMultipad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemMultipad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (!ItemBase::OnItemTouchBegan(widget, type)) return false;
     ItemPad* pad=dynamic_cast<ItemPad*>(widget->getParent());
-    if (NULL==pad) return;
+    if (NULL==pad) return false;
     UpdateSelectedPadIndex(pad);
     ItemBase::OnItemTouchBegan(widget, type);
     pad->OnItemTouchBegan(widget, type);
+    return true;
 }
 
-void ItemMultipad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemMultipad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (!ItemBase::OnItemTouchEnded(widget, type)) return false;
     ItemPad* pad=dynamic_cast<ItemPad*>(widget->getParent());
-    if (NULL==pad) return;
+    if (NULL==pad) return false;
     pad->OnItemTouchEnded(widget, type);
+    return true;
 }
 
 ItemPad *ItemMultipad::GetSelectedPad()
@@ -1149,8 +1136,8 @@ bool ItemKeyboard::UpdateSelectedKey(Widget* widget, bool onMoving)
         blackKeyPressed->setVisible(false);
         whiteKeyPressed->setVisible(true);
     }
-    return true;
     LOGD("Keyboard sends MIDI note %d with vel %d\n", controlUnit->GetSender()->GetMidiPitch(), vel);
+    return true;
 }
 
 void ItemKeyboard::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
@@ -1165,46 +1152,51 @@ void ItemKeyboard::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
     setPosition(Vec2(rotationCenter.x-getContentSize().width/2.0, rotationCenter.y+getContentSize().height/2.0));
 }
 
-void ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    ItemBase::OnItemTouchBegan(widget, type);
+    if (!ItemBase::OnItemTouchBegan(widget, type)) return false;
     UpdateSelectedKey(widget, false);
     if (widget->getParent()==control)
         NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
+    return true;
 }
 
-void ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemKeyboard::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    ItemBase::OnItemTouchEnded(widget, type);
+    if (!ItemBase::OnItemTouchEnded(widget, type)) return false;
     selectedKey=-1;
     whiteKeyPressed->setVisible(false);
     blackKeyPressed->setVisible(false);
     GetControlUnit()->OnTouch(ControlUnit::TouchUp,0);
+    return true;
 }
 
-void ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    ItemBase::OnItemTouchMoved(widget, type);
+    if (!ItemBase::OnItemTouchMoved(widget, type)) return false;
     bool notify=UpdateSelectedKey(widget, true);
     if (notify && widget->getParent()==control)
         NotifyEvent(ScdfCtrl::SCDFC_EVENTS_Move_Item);
+    return true;
 }
 
-void ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (checked)
     {
-        ItemBase::OnItemTouchBegan(widget,type);
-        return;
+        return ItemBase::OnItemTouchBegan(widget,type);
     }
-    ItemPad::OnItemTouchBegan(widget,type);
-    pad->loadTextureNormal("padHover.png");
     
+    if (!ItemPad::OnItemTouchBegan(widget,type)) return false;
+    pad->loadTextureNormal("padHover.png");
+    return true;
 }
 
 
-void ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (!ItemBase::OnItemTouchEnded(widget, type)) return false;
+    
     if (!checked)
         checked=true;
     else{
@@ -1212,6 +1204,7 @@ void ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
         pad->loadTextureNormal("padDefault.png");
         checked=false;
     }
+    return true;
 }
 
 template ItemBase *ItemBase::CreateItem<ItemSlider>();

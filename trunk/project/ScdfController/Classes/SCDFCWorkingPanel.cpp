@@ -39,7 +39,7 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setPosition(r.origin);
     parent->addChild(this,-2);
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
-    auto backGroundImage = Sprite::create("background.jpg");
+    auto backGroundImage = Sprite::create("backgroundNew.jpg");
     cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
     backGroundImage->setAnchorPoint(Vec2(0,1));
     backGroundImage->setPosition(0,r.size.height);
@@ -202,13 +202,14 @@ void WorkingPanel::DoDetectCollisions(Node *item, cocos2d::Rect r, bool *collisi
 bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type)
 {
     if (active) return false;
-    Node* item = dynamic_cast<Node*>(pSender);
+    ItemBase* item = dynamic_cast<ItemBase*>(pSender);
     static Vec2 dragStartPoint;
     static Vec2 touchStartPos;
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
         {
+            item->NotifyEvent(SCDFC_EVENTS_Select_Item);
             parent->EnableScrollView(false);
             touchStartPos=touchPos;
             dragStartPoint=item->getPosition();
@@ -253,7 +254,24 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
 
 void WorkingPanel::OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    item->OnItemTouchBegan(widget, type);
+    if (!OnControlMove(item, widget->getTouchBeganPosition(), type))
+        DoOnItemTouchBegan(item, widget, type);
+}
+void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (!OnControlMove(item, widget->getTouchMovePosition(), type))
+        DoOnItemTouchMoved(item, widget, type);
+}
+
+void WorkingPanel::OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (!OnControlMove (item, widget->getTouchEndPosition(), type))
+        DoOnItemTouchEnded(item, widget, type);
+}
+
+void WorkingPanel::DoOnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (!item->OnItemTouchBegan(widget, type)) return;
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {
@@ -265,9 +283,9 @@ void WorkingPanel::OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui:
         }
     }
 }
-void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+void WorkingPanel::DoOnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    item->OnItemTouchMoved(widget, type);
+    if (!item->OnItemTouchMoved(widget, type)) return;
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {
@@ -280,9 +298,9 @@ void WorkingPanel::OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui:
     }
 }
 
-void WorkingPanel::OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
+void WorkingPanel::DoOnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    item->OnItemTouchEnded(widget, type);
+    if (!item->OnItemTouchEnded(widget, type)) return;
     int itemGroupId=item->GetGroupID();
     if (item->IsMaster())
     {

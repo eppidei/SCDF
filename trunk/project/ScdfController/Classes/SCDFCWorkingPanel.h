@@ -27,8 +27,12 @@ namespace ScdfCtrl
         void CheckRemoveControl(Node *n);
         void DetectCollisions(Node *_item);
         
-    public:
+        void DoOnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void DoOnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        void DoOnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
+        
+    public:
         template <class ItemType> void CheckAddControl();
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
