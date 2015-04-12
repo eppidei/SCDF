@@ -198,8 +198,8 @@ void SubpanelBase::CalculateHeight()
 
 void SubpanelBase::HideElement(Node *n, bool hide)
 {
-    n->setVisible(!hide);
-    // CalculateHeight();
+    if (n)
+        n->setVisible(!hide);
 }
 
 void SubpanelBase::EnableElement(Widget *w, bool enable)

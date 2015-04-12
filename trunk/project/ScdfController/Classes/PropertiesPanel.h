@@ -65,12 +65,12 @@ namespace ScdfCtrl
     {
         friend class PropertiesPanel;
     
-        DropDownMenu *midiMessage, *controlChange, *octaveMenu, *pitchValue, *channel, *velocity, *devices;
+        DropDownMenu *midiMessage, *controlChange, *octaveMenu, *pitchValue, *programValue, *channel, *velocity, *devices;
         TextWithBackground *devicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel;
         
         void CreateControls() override;
         void InitControlMenuData();
-        void UpdateControlMenuData();
+        void UpdateControlMenuData(MidiMessageType messageType);
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;
         void Update() override;
@@ -78,6 +78,8 @@ namespace ScdfCtrl
         void UpdateVelocity();
         int GetYPadding() override { return 20;}
         void OnTouchEventBegan(cocos2d::Node *widget) override;
+        void UpdateElementsVisibilityOnMessageTypeChanged();
+        void CheckMessageTypeDependentElementsVisibility(MidiMessageType messageType);
         MIDIInfo();
         CREATE_FUNC(MIDIInfo);
     };

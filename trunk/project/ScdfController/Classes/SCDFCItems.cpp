@@ -917,7 +917,10 @@ void ItemSwitch::Init()
 
 void ItemPad::Create()
 {
+    
     Init();
+    GetControlUnit()->SetMax(127);
+    GetControlUnit()->SetMin(0);
     pad = Button::create();
     pad->setTouchEnabled(true);
     //pad->setScale9Enabled(true);

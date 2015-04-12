@@ -63,6 +63,7 @@ public:
 //	void SetItem(ItemBase* iv);
 //	ItemBase* GetItem();
 
+    void SetMidiMessageType(MidiMessageType type);
 	ControlUnit();
 	virtual ~ControlUnit();
 
@@ -130,7 +131,7 @@ public:
 	Type GetType() override { return Wire; }
 	bool IsDSP() override { return false; }
 
-	ControlUnitWire() : ControlUnit() {}
+	ControlUnitWire() : ControlUnit() { normVal=1;}
 
 private:
 

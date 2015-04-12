@@ -39,6 +39,15 @@ ControlUnit::~ControlUnit()
 
 }
 
+void ControlUnit::SetMidiMessageType(MidiMessageType type)
+{
+    if (type==PitchBend)
+        SetMax(pow(2,14));
+    else
+        SetMax(127);
+    sender->SetMidiMessageType(type);
+}
+
 MultiSender* ControlUnit::GetSender()
 {
 	return sender.get();

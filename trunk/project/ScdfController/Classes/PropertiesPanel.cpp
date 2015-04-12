@@ -258,9 +258,9 @@ void MIDIInfo::Update()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-    EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
-    EnableElement(midiMessageLabel, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
-    UpdateControlMenuData();
+//    EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+//    EnableElement(midiMessageLabel, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
+    UpdateElementsVisibilityOnMessageTypeChanged();
 
     channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
     UpdateVelocity();
@@ -284,6 +284,7 @@ void MIDIInfo::PositionElements()
     DoPosition(controlChange, xOffset, yPos);
     DoPosition(octaveMenu, xOffset, yPos);
     DoPosition(pitchValue, xOffset, yPos);
+    DoPosition(programValue, xOffset, yPos);
     
     DoPosition(channelLabel, xOffset, yPos);
     DoPosition(channel, xOffset, yPos);
@@ -295,14 +296,13 @@ void MIDIInfo::CheckShowElements()
 {
     HideElement(devicesLabel,collapsed);
     HideElement(devices,collapsed);
-    HideElement(midiMessageLabel,collapsed);
-    HideElement(midiMessage,collapsed);
-    HideElement(controlChangeLabel,collapsed);
-    UpdateControlMenuData();
-    HideElement(channelLabel,collapsed);
-    HideElement(channel,collapsed);
-    HideElement(velocityLabel,collapsed);
-    HideElement(velocity,collapsed);
+//    HideElement(controlChangeLabel,collapsed);
+    UpdateElementsVisibilityOnMessageTypeChanged();
+//    UpdateControlMenuData();
+//    HideElement(channelLabel,collapsed);
+//    HideElement(channel,collapsed);
+//    HideElement(velocityLabel,collapsed);
+//    HideElement(velocity,collapsed);
 
     UpdateLayout();
 }
@@ -346,43 +346,112 @@ void MIDIInfo::InitControlMenuData()
     octaveMenu->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     octaveMenu->setVisible(false);
     
+//    dropDownData.clear();
+//    for (int i=0;i<128;++i)
+//    {
+//        std::ostringstream os;
+//        os<<i;
+//        dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+//    }
+//    programValue->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+//    programValue->setVisible(false);
+    
+}
+void MIDIInfo::CheckMessageTypeDependentElementsVisibility(MidiMessageType messageType)
+{
+    HideElement(channelLabel, false);
+    HideElement(channel,false);
+    HideElement(controlChangeLabel,false);
+    
+    UpdateControlMenuData(messageType);
+    
+    if (messageType!=PitchBend)
+    {
+        HideElement(velocityLabel,false);
+        HideElement(velocity, false);
+    }
 }
 
-void MIDIInfo::UpdateControlMenuData()
+void MIDIInfo::UpdateElementsVisibilityOnMessageTypeChanged()
 {
-    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetSelectedItem()) return;
+    HideElement(midiMessage, true);
+    HideElement(midiMessageLabel,true);
+    HideElement(channelLabel, true);
+    HideElement(channel,true);
+    HideElement(controlChangeLabel,true);
     
-    octaveMenu->setVisible(false);
-    controlChange->setVisible(false);
-    pitchValue->setVisible(false);
+    HideElement(velocityLabel,true);
+    HideElement(velocity, true);
+    HideElement(octaveMenu, true);
+    HideElement(controlChange,true);
+    HideElement(pitchValue,true);
+    HideElement(programValue,true);
     
     if (collapsed) return;
     
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    if (NULL==panel->GetCurrentSender()) return;
+    
+    CheckMessageTypeDependentElementsVisibility(panel->GetCurrentSender()->GetMidiMessageType());
+    UpdateLayout();
+}
+
+void MIDIInfo::UpdateControlMenuData(MidiMessageType messageType)
+{
+    PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
+    
+    velocityLabel->SetText("VELOCITY");
+    HideElement(controlChangeLabel, false);
     if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL)
     {
+        HideElement(midiMessage, false);
+        HideElement(midiMessageLabel, false);
+        
         DropDownMenu *menu;
-        if (midiMessage->getCurSelectedIndex()<2)
+        switch(messageType)
         {
-            controlChangeLabel->SetText("MIDI NOTE");
-            menu=pitchValue;
+            case NoteOn:
+            case NoteOff:
+                controlChangeLabel->SetText("MIDI NOTE");
+                menu=pitchValue;
+                break;
+            case PolyKeyPressure:
+                controlChangeLabel->SetText("PRESSURE");
+                velocityLabel->SetText("PRESSURE");
+                menu=pitchValue;
+                break;
+            case ControlChange:
+                controlChangeLabel->SetText("CONTROL CHANGE");
+                velocityLabel->SetText("VALUE");
+                menu=controlChange;
+                break;
+            case ProgramChange:
+                velocityLabel->SetText("PROGRAM");
+                HideElement(controlChangeLabel, true);
+                menu=NULL;
+                break;
+            case Aftertouch:
+                velocityLabel->SetText("PRESSURE");
+                HideElement(controlChangeLabel, true);
+                menu=NULL;
+                break;
+            case PitchBend:
+                HideElement(controlChangeLabel, true);
+                menu=NULL;
+                break;
+            default: break;
         }
-        else
-        {
-            menu=controlChange;
-            controlChangeLabel->SetText("CONTROL CHANGE");
+        if (menu){
+            HideElement(menu,false);
+            menu->SetSelectedIndex(panel->GetCurrentSender()->GetMidiControl());
         }
-        menu->setVisible(true);
-        menu->SetSelectedIndex(panel->GetCurrentSender()->GetMidiControl());
     }
     else
     {
-        octaveMenu->setVisible(true);
+        HideElement(octaveMenu,false);
         controlChangeLabel->SetText("OCTAVE");
         octaveMenu->SetSelectedIndex(dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->GetCurrentOctave());
     }
-    UpdateLayout();
-//    GetParent()->InitLayout();
 }
 
 void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
@@ -404,10 +473,10 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             case 6: msg=PitchBend; break;
             default: return;
         }
-        panel->GetCurrentSender()->SetMidiMessageType(msg);
-        UpdateControlMenuData();
+        panel->GetSelectedItem()->GetControlUnit()->SetMidiMessageType(msg);
+        UpdateElementsVisibilityOnMessageTypeChanged();
     }
-    else if (menu==controlChange || menu==pitchValue)
+    else if (menu==controlChange || menu==pitchValue || menu==programValue)
         panel->GetCurrentSender()->SetMidiControl(selectedIndex);
     else if (menu==octaveMenu)
         dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
@@ -427,7 +496,7 @@ MIDIInfo::MIDIInfo()
 {
     devices=NULL;
     devicesLabel=NULL;
-    midiMessage=controlChange=channel=octaveMenu=pitchValue=velocity=NULL;
+    midiMessage=controlChange=channel=octaveMenu=pitchValue=programValue=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
 
@@ -449,6 +518,8 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
                 menu=controlChange;
             else if (octaveMenu->isVisible())
                 menu=octaveMenu;
+            else if (programValue->isVisible())
+                menu=programValue;
             else
                 menu=pitchValue;
             menu->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
@@ -519,6 +590,8 @@ void MIDIInfo::CreateControls()
     addChild(octaveMenu);
     pitchValue = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(pitchValue);
+//    programValue = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
+//    addChild(programValue);
     InitControlMenuData();
     
     //Create channel label
