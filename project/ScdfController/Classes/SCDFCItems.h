@@ -12,7 +12,6 @@
 #include "SCDFCDefinitions.h"
 #include "Observer.h"
 #include "Colors.h"
-//#include "MultiSender.h"
 #include "ControlUnit.h"
 #include "ScdfSensorAPI.h"
 #include "Label.h"
@@ -21,25 +20,9 @@
 
 namespace ScdfCtrl
 {
-//	class ControlUnit;
-//	class ControlUnitSlider;
-//	class ControlUnitPad;
-//	class ControlUnitDsp;
-//	class MultiSender;
     class ItemBase;
     class SerializableItemData;
-//    class ItemBaseCallback
-//    {
-//    public:
-//        virtual void OnItemTouchBegan() = 0;
-//        virtual void OnItemTouchMoved(int value) = 0;
-//        virtual void OnItemTouchEnded() = 0;
-//    };
-
-	class ItemProperties {
-
-	};
-
+    
     class ItemLayoutInterface
     {
     public:
@@ -65,7 +48,7 @@ namespace ScdfCtrl
         int GetMagValue() { return magValue;}
     };
     
-    class ItemBase : public /*cocos2d::Sprite*/cocos2d::ui::Layout, public SubjectSimple, public ItemLayoutInterface
+    class ItemBase : public cocos2d::ui::Layout, public SubjectSimple, public ItemLayoutInterface
     {
         TextWithBackground *label;
         Layout *controlImage;
@@ -93,9 +76,9 @@ namespace ScdfCtrl
 
     public:
 
-        virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type){}
+        virtual bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual bool OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         template <class ItemType> static ItemBase *CreateItem();
         static ItemBase* DeserializeItem(SerializableItemData* sitem);
         
@@ -133,8 +116,8 @@ namespace ScdfCtrl
     class ItemSlider : public ItemBase
     {
         virtual bool IsKnob() { return false;}
-        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        bool OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         cocos2d::Size GetStaticBaseSize() override;
         virtual void DoCreateThumb();
         virtual cocos2d::Size GetThumbSize(cocos2d::Size currentSize);
@@ -144,11 +127,10 @@ namespace ScdfCtrl
         cocos2d::ui::Layout *thumb;
         cocos2d::ui::Layout *slideBar;
         cocos2d::ui::Layout *slideBarOff;
-//        bool isVertical;
-        //float min, max;
+        
         void CreateThumb();
         virtual void SetPositionOfValueDependentComponent();
-        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
 //        void LinearMode(cocos2d::Vec2 touchPos);
     public:
         virtual void SetColor(Colors::ItemsColorsId colorIndex) override;
@@ -158,7 +140,6 @@ namespace ScdfCtrl
         static int ID() { return ITEM_SLIDER_ID;}
         static std::string GetIcon() { return "iconSliderDefault.png";}
         static std::string GetIconPressed() { return "iconSliderPressed.png";}
-//        void SetRange(int _min, int _max);
         void DoSetContentSize(cocos2d::Size contentSize) override;
         
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
@@ -198,7 +179,7 @@ namespace ScdfCtrl
     
     class ItemWheel : public ItemSlider
     {
-        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         void Init() override;
     public:
         
@@ -222,8 +203,8 @@ namespace ScdfCtrl
     protected:
         cocos2d::ui::Button *pad;
         
-        virtual void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        virtual void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        virtual bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
         //int midiNote;
@@ -243,8 +224,8 @@ namespace ScdfCtrl
     };
     class ItemSwitch : public ItemPad
     {
-        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         void Init() override;
         bool IsChecked();
         bool checked;
@@ -265,13 +246,11 @@ namespace ScdfCtrl
         int padIndex;
         void ClearPads();
         void CreatePads();
-        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
 
-//        std::shared_ptr<ControlUnitPad> ctrlUnitPad;
-
-        public:
+    public:
 
 		ItemPad *GetSelectedPad();
         void UpdateSelectedPadIndex(ItemPad *pad);
@@ -297,13 +276,12 @@ namespace ScdfCtrl
         float topBitmapOffsetPercentageForPressedKey;
         float leftBitmapOffsetPercentageForPressedKey;
         
-        void OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
-        void OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
+        bool OnItemTouchMoved(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
         bool UpdateSelectedKey(cocos2d::ui::Widget* widget, bool onMoving);
     public:
-        //void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         void SetCurrentOctave(int octave) { currentOctave=octave; }
         int GetCurrentOctave() {return currentOctave;}
         void Create();
@@ -312,8 +290,7 @@ namespace ScdfCtrl
         static int ID() { return ITEM_KEYBOARD_ID;}                      //for item scrollbar
         static std::string GetIcon() { return "iconPianoDefault.png";}          //for item scrollbar
         static std::string GetIconPressed() { return "iconPianoPressed.png";}   //for item scrollbar
-        
-//        virtual void setContentSize(const cocos2d::Size &contentSize) override;
+    
         void DoSetContentSize(cocos2d::Size contentSize) override;
         cocos2d::Size CalculateNewItemBaseSize(int magValue) override {return GetStaticBaseSize();}
         void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;

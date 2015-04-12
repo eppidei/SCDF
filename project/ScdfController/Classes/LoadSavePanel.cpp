@@ -16,7 +16,7 @@ using namespace ui;
 #define ITEM_HEIGHT 30.0
 #define CLOSE_ID -10
 
-void LoadSavePanelBase::CreatePanel()
+Node *LoadSavePanelBase::CreatePanel()
 {
     CreateMain();
     
@@ -35,6 +35,7 @@ void LoadSavePanelBase::CreatePanel()
     control->ignoreContentAdaptWithSize(false);
     control->setAnchorPoint(Vec2(0,1));
     control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
+    return mainPanel;
 }
 
 void SavePanel::CreateMain()
@@ -133,6 +134,7 @@ void LoadPanel::InitFilesListView()
         model->addTouchEventListener(CC_CALLBACK_2(LoadSavePanelBase::OnTouchEvent, this));
     }
     loadFiles->refreshView();
+    HighLightCurrentItem();
 }
 
 void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
@@ -141,13 +143,14 @@ void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEve
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
-            OnTouchBegan(node->getTag());
+            if (node->getTag()!=CLOSE_ID)
+                OnTouchBegan(node->getTag());
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
         {
             if (node->getTag()==CLOSE_ID)
-                Close();
+                Close(mainPanel);
             else
                 OnTouchEnded(node->getTag());
         }
@@ -166,7 +169,7 @@ void SavePanel::OnTouchEnded(int nodeTag)
     if (nodeTag==PATCH_SAVE)
     {
         workingPanel->SavePatch(saveFile->getStringValue());
-        Close();
+        Close(mainPanel);
     }
 }
 
@@ -181,7 +184,7 @@ void LoadPanel::OnTouchEnded(int nodeTag)
     {
         Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
         workingPanel->LoadPatch(t->getString());
-        Close();
+        Close(mainPanel);
     }
     else
         HighLightCurrentItem();

@@ -720,7 +720,7 @@ void ItemSettings::CreateControls()
     
     //Create master toggle
     masterButton=Button::create();
-    masterButton->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    masterButton->loadTextures("groupMasterBtnDefault.png", "groupMasterBtnHover.png", "");
     masterButton->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     masterButton->setTouchEnabled(true);
     masterButton->setContentSize(cocos2d::Size(r.size.width,r.size.height));
@@ -749,7 +749,7 @@ void ItemSettings::CreateControls()
     addChild(h_minus, 15, PROPERTIES_ITEM_HEIGHT_MINUS);
     h_minus->setTouchEnabled(true);
     h_minus->ignoreContentAdaptWithSize(false);
-    h_minus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    h_minus->loadTextures("zoomOutBtnDefault.png", "zoomOutBtnDefault.png", "");
     h_minus->setAnchorPoint(Vec2(0,1));
     h_minus->setContentSize(cocos2d::Size(r.size.height, r.size.height));
     h_minus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
@@ -764,7 +764,7 @@ void ItemSettings::CreateControls()
     addChild(h_plus, 16, PROPERTIES_ITEM_HEIGHT_PLUS);
     h_plus->ignoreContentAdaptWithSize(false);
     h_plus->setTouchEnabled(true);
-    h_plus->loadTextures("CloseNormal.png", "CloseSelected.png", "");
+    h_plus->loadTextures("zoomInBtnDefault.png", "zoomInBtnHover.png", "");
     h_plus->setAnchorPoint(Vec2(0,1));
     h_plus->setContentSize(cocos2d::Size(r.size.height, r.size.height));
     h_plus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
@@ -790,9 +790,9 @@ void ItemSettings::Update()
     orientation->SetSelectedIndex(orientationIndex);
     group->SetSelectedIndex(item->GetGroupID()+1);
     if (item->IsMaster())
-        masterButton->loadTextureNormal("CloseSelected.png");
+        masterButton->loadTextureNormal("groupMasterBtnHover.png");
     else
-        masterButton->loadTextureNormal("CloseNormal.png");
+        masterButton->loadTextureNormal("groupMasterBtnDefault.png");
     CheckShowElements();
     
 }
