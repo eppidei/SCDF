@@ -20,21 +20,22 @@ Node *LoadSavePanelBase::CreatePanel()
 {
     CreateMain();
     
-    close = Button::create();
-    close->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
-    mainPanel->addChild(close,0,CLOSE_ID);
-    close->loadTextureNormal("btnCloseDefault.png");
-    close->loadTexturePressed("btnCloseHover.png");
-    close->ignoreContentAdaptWithSize(false);
-    close->setAnchorPoint(Vec2(0,1));
-    close->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
-    close->setPosition(Vec2(mainPanel->getContentSize().width-close->getContentSize().width-20,ITEM_HEIGHT+20));
+//    close = Button::create();
+//    close->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
+//    mainPanel->addChild(close,0,CLOSE_ID);
+//    close->loadTextureNormal("btnCloseDefault.png");
+//    close->loadTexturePressed("btnCloseHover.png");
+//    close->ignoreContentAdaptWithSize(false);
+//    close->setAnchorPoint(Vec2(0,1));
+//    close->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+//    close->setPosition(Vec2(mainPanel->getContentSize().width-close->getContentSize().width-20,ITEM_HEIGHT+20));
     
     CreateControlButton();
     control->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
     control->ignoreContentAdaptWithSize(false);
     control->setAnchorPoint(Vec2(0,1));
-    control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
+//    control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
+    control->setPosition(Vec2(mainPanel->getContentSize().width-control->getContentSize().width-20,ITEM_HEIGHT+20));
     return mainPanel;
 }
 
@@ -146,7 +147,7 @@ void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEve
             if (node->getTag()!=CLOSE_ID)
                 OnTouchBegan(node->getTag());
             else
-                Close(mainPanel);
+                Close();
             break;
         case Widget::TouchEventType::ENDED:
         case Widget::TouchEventType::CANCELED:
@@ -162,7 +163,7 @@ void SavePanel::OnTouchBegan(int nodeTag)
     if (nodeTag==PATCH_SAVE)
     {
         workingPanel->SavePatch(saveFile->getStringValue());
-        Close(mainPanel);
+        Close();
     }
 }
 
@@ -176,7 +177,7 @@ void LoadPanel::OnTouchBegan(int nodeTag)
     {
         Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
         workingPanel->LoadPatch(t->getString());
-        Close(mainPanel);
+        Close();
     }
     else
         HighLightCurrentItem();

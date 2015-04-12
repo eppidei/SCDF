@@ -230,16 +230,15 @@ void ModalPanel::OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     switch (type)
     {
-        case Widget::TouchEventType::ENDED:
-        case Widget::TouchEventType::CANCELED:
-            Close(close);
+        case Widget::TouchEventType::BEGAN:
+            Close();
             break;
         default:
             break;
     }
 }
 
-void ModalPanel::Close(Node *mainPanel)
+void ModalPanel::Close()
 {
     auto fadeOut = FadeOut::create(0.2f);
     auto scale = ScaleTo::create(0.15f, 0.0f);
@@ -251,7 +250,6 @@ void ModalPanel::Close(Node *mainPanel)
     
     mainPanel->runAction(scale);
     runAction(seq);
-
 }
 
 bool ModalPanel::init()
@@ -265,8 +263,9 @@ bool ModalPanel::init()
     setAnchorPoint(Vec2(0,1));
     setPosition(Vec2(0,Director::getInstance()->getWinSize().height));
     setContentSize(Director::getInstance()->getWinSize());
+    addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
 
-    Node *mainPanel=CreatePanel();
+    mainPanel=CreatePanel();
     mainPanel->setScale(0);
     
     auto fadeIn = FadeIn::create(0.2f);

@@ -90,9 +90,10 @@ namespace ScdfCtrl
         
         void OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         virtual Node *CreatePanel();
+        Node *mainPanel;
     protected:
         bool init() override;
-        void Close(Node *mainPanel);
+        void Close();
     public:
         CREATE_FUNC(ModalPanel);
     };
