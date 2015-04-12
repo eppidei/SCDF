@@ -36,6 +36,8 @@
 // cocos2d application instance
 static AppDelegate s_sharedApplication;
 
+void PreloadStore();
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
 
     // Override point for customization after application launch.
@@ -79,6 +81,9 @@ static AppDelegate s_sharedApplication;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
     cocos2d::Application::getInstance()->run();
+    
+    
+    PreloadStore();
 
     return YES;
 }
