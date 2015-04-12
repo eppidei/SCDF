@@ -40,6 +40,7 @@ namespace scdf {
         
         void InitFramework();
         void StartAllSensors(bool excludeAudio = false);
+        void StopAllSensors();
         
         // *********** SENSORS API ******************* //
         s_int32 GetSensorRate(scdf::SensorType sensorType);
