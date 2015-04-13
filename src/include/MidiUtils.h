@@ -8,7 +8,7 @@
 #ifndef MIDIUTILS_H_
 #define MIDIUTILS_H_
 
-
+namespace ScdfCtrl{
 enum MidiMessageType {
 	Invalid = 0x0,
 	NoteOn = 0x90,
@@ -21,4 +21,5 @@ enum MidiMessageType {
 	NonMusical = 0xF0,
     MidiMessageTypeCount
 };
+}
 #endif /* MIDIUTILS_H_ */

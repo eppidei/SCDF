@@ -518,8 +518,8 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
                 menu=controlChange;
             else if (octaveMenu->isVisible())
                 menu=octaveMenu;
-            else if (programValue->isVisible())
-                menu=programValue;
+//            else if (programValue->isVisible())
+//                menu=programValue;
             else
                 menu=pitchValue;
             menu->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);

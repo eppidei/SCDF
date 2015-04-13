@@ -176,7 +176,8 @@ void LoadPanel::OnTouchBegan(int nodeTag)
     if (nodeTag==PATCH_LOAD)
     {
         Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
-        workingPanel->LoadPatch(t->getString());
+        if (t)
+            workingPanel->LoadPatch(t->getString());
         Close();
     }
     else

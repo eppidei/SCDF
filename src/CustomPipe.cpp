@@ -7,6 +7,7 @@
 #include "Sensor.h"
 #include "Logging.h"
 #include "CustomPipe.h"
+#include <unistd.h>
 
 using namespace scdf;
 
