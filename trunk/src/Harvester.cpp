@@ -41,7 +41,7 @@ static void StartHarvestingProcedure(void *param)
     {
         
     	s_uint64 start = now_ns();
-    	LOGD("Read master pipe");
+//    	LOGD("Read master pipe");
         SensorData *data = NULL;
         
         if(harvester->IsAudioSyncActive())
@@ -66,9 +66,9 @@ static void StartHarvestingProcedure(void *param)
             
             startTime = actualTime;
         }
-        s_uint64 elap = now_ns() - start;
+//        s_uint64 elap = now_ns() - start;
         
-        LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
+//        LOGD("Read from master pipe done. %f ms",(elap/1000000.0));
         
         if (NULL!=data)
             harvester->HarvestingProcedure(data);
