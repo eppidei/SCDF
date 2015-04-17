@@ -912,9 +912,9 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             break;
         case PROPERTIES_CONTROLMODE_WIRE:
         case PROPERTIES_CONTROLMODE_BLOW:
+        case PROPERTIES_CONTROLMODE_SNAP:
             panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
             break;
-        case PROPERTIES_CONTROLMODE_SNAP:
         case PROPERTIES_CONTROLMODE_ROLL:
         case PROPERTIES_CONTROLMODE_GESTURE:
             break;

@@ -25,15 +25,26 @@
 
 #include "MultiSender.h"
 
+#include "ADE_typedefs.h"
+
+
 namespace ScdfCtrl {
 
 class ItemBase;
 
-class ControlUnit {
+    class ControlUnitInterface
+    {
+    public:
+        virtual void OnValueChanged()=0;
+    };
+    
+    class ControlUnit : public scdf::HarvesterListener
+    {
 
 public:
-
-	enum Type { Wire, Blow };
+    ControlUnitInterface *interface;
+    void SetInterface(ControlUnitInterface *_interface) {interface=_interface;}
+	enum Type { Wire, Blow, Snap };
 
 	static ControlUnit* Create(Type t);
 	static void Destroy(ControlUnit* cu);
@@ -59,10 +70,7 @@ public:
 	virtual bool IsDSP() = 0;
 
 	MultiSender* GetSender();
-
-//	void SetItem(ItemBase* iv);
-//	ItemBase* GetItem();
-
+        
     void SetMidiMessageType(MidiMessageType type);
 	ControlUnit();
 	virtual ~ControlUnit();
@@ -71,11 +79,13 @@ protected:
 
 	std::unique_ptr<MultiSender> sender;
 
-	//ItemBase* itemView; // knows position, name, color, current value
-
 	int min;
 	int max;
 
+    void UpdateUI() {if (interface) interface->OnValueChanged();}
+    virtual void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer) {}
+    virtual void Init(s_int32 numFrames, s_int32 rate) {}
+    virtual void Release() {}
 private:
 
 
@@ -158,13 +168,10 @@ private:
 };
 
 
-class ControlUnitDsp : public ControlUnit, public scdf::HarvesterListener
+class ControlUnitDsp : public ControlUnit
 {
 
 public:
-
-    //void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
-    //{    }
 
 	bool OnTouch(TouchEvent ev, float normValue) override;
 	float GetNormalizedValue() override;
@@ -174,11 +181,13 @@ public:
 
 	bool IsDSP() override { return true; }
 
-	ControlUnitDsp() : ControlUnit() { isEnabled = true;}
+	ControlUnitDsp() : ControlUnit() , ADEcontext(NULL), lastValue(0) { isEnabled = true;}
 
 protected:
 
 	float lastValue;
+    
+    ADE_T *ADEcontext;
 
 private:
 
@@ -208,9 +217,11 @@ class ControlUnitBlow : public ControlUnitDsp
 {
 public:
 
-    void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer);
+    void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer) override;
     ControlUnitBlow() : ControlUnitDsp() {}
     Type GetType() { return Blow; }
+    void Init(s_int32 numFrames, s_int32 rate) override;
+    void Release() override;
 
 private:
 
@@ -230,6 +241,33 @@ private:
 
 };
 
+class ControlUnitSnap : public ControlUnitDsp
+{
+public:
+    
+    void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer) override;
+    ControlUnitSnap() : ControlUnitDsp() {}
+    Type GetType() { return Snap; }
+    void Init(s_int32 numFrames, s_int32 rate) override;
+    void Release() override;
+    
+private:
+    
+    friend class ::cereal::access;
+    
+    template <class Archive>
+    void save( Archive & ar, std::uint32_t const version ) const
+    {
+        ar(cereal::base_class<ControlUnitDsp>( this ));
+    }
+    
+    template <class Archive>
+    void load( Archive & ar, std::uint32_t const version )
+    {
+        ar(cereal::base_class<ControlUnitDsp>( this ));
+    }
+    
+};
 } // ScdfCtrl namespace end
 
 // Register Derived Classes (needed for polymorfism on serialization)

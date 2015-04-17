@@ -24,7 +24,9 @@ namespace scdf {
     class HarvesterListener
     {
        public:
-           virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
+            virtual void OnHarvesterBufferReady(std::vector<SensorData*> *buffer) = 0;
+            virtual void Init(s_int32 numFrames, s_int32 rate) = 0;
+            virtual void Release() = 0;
     };
     
     class ScdfSensorAPI
@@ -58,8 +60,8 @@ namespace scdf {
         void ActivateSender(s_bool activate);
         
          // *********** LISTNERS ******************* //
-        void AttachHarvesterLinstern(HarvesterListener* _listener,std::vector<SensorType> _typeList );
-        void DetachHarvesterLinstern(HarvesterListener* _listener);
+        void AttachHarvesterListener(HarvesterListener* _listener,std::vector<SensorType> _typeList );
+        void DetachHarvesterListener(HarvesterListener* _listener);
     };
 
     
