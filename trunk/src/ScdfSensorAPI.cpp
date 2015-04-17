@@ -193,12 +193,12 @@ s_bool ScdfSensorAPI::IsSensorActive(SensorType sensorType)
 #pragma mark Listeners
 
 
-void ScdfSensorAPI::AttachHarvesterLinstern(HarvesterListener* _listener,std::vector<SensorType> _typeList )
+void ScdfSensorAPI::AttachHarvesterListener(HarvesterListener* _listener,std::vector<SensorType> _typeList )
 {
     Harvester::Instance()->GetListeners()->Attach(_listener, _typeList);
     
 }
-void ScdfSensorAPI::DetachHarvesterLinstern(HarvesterListener* _listener)
+void ScdfSensorAPI::DetachHarvesterListener(HarvesterListener* _listener)
 {
     Harvester::Instance()->GetListeners()->Detach(_listener);
 }

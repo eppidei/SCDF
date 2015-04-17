@@ -15,6 +15,7 @@
 #include "LoadSavePanel.h"
 #include "ControlUnit.h"
 #include "MultiSender.h"
+#include "ScdfSensorAPI.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;
@@ -176,6 +177,7 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
 ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL), groupId(-1), isMaster(false)
 {
 	ChangeControlUnit(ControlUnit::Wire);
+    updater.reset(new ItemUIUpdater(this));
     layoutManager.reset(new ItemLayoutManager(this));
 }
 
@@ -214,7 +216,22 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 
 void ItemBase::SetControlUnit(ControlUnit* cu)
 {
+    scdf::theSensorAPI()->DetachHarvesterListener(GetControlUnit());
 	controlUnit.reset(cu); // item becomes the owner of the ctrl unit
+    if (NULL==controlUnit.get()) return;
+    
+    controlUnit->SetInterface(updater.get());
+    std::vector<scdf::SensorType> _typeList;
+    switch (cu->GetType())
+    {
+        case ControlUnit::Blow:
+        case ControlUnit::Snap:
+            _typeList.push_back(scdf::AudioInput);
+            break;
+        default:
+            break;
+    }
+    scdf::theSensorAPI()->AttachHarvesterListener(GetControlUnit(), _typeList);
     SetControlModeImage();
 }
 

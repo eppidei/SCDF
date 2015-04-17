@@ -419,34 +419,37 @@ void HarvesterListenerContainer::OnHarvesterBufferReady(std::vector<SensorData*>
 
 void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vector<SensorType> _typeList  )
 {
-    listenersMap.insert(std::pair<HarvesterListener*,std::vector<SensorType>>(_listener,_typeList));
+    if(NULL==_listener) return;
+    if (0==_typeList.size()) return;
+    
+    listenersMap[_listener]=_typeList;
     
     for(int i = 0; i<_typeList.size(); i++)
     {
         listenersRefCount[_typeList[i]]++;
         scdf::theSensorManager()->StartSensor(_typeList[i]);
+        int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
+        _listener->Init(numFrames, scdf::theSensorManager()->GetRate(_typeList[i]));
     }
-    
-    
     
     CheckRefCountForToStartAndStopHarvester();
 }
 
 void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
 {
+    if(NULL==_listener) return;
+    auto it = listenersMap.find(_listener);
+    if (it==listenersMap.end()) return;
     
-    std::vector<SensorType> sensorTypeListForListener = listenersMap[_listener];
-    
-    for(int i = 0; i<sensorTypeListForListener.size(); i++)
+    for(int i = 0; i<it->second.size(); i++)
     {
-        listenersRefCount[sensorTypeListForListener[i]]--;
-        if(0==listenersRefCount[sensorTypeListForListener[i]])
-            scdf::theSensorManager()->StopSensor(sensorTypeListForListener[i]);
-            
+        listenersRefCount[it->second[i]]--;
+        _listener->Release();
+        if(0==listenersRefCount[it->second[i]])
+            scdf::theSensorManager()->StopSensor(it->second[i]);
     }
    
     listenersMap.erase(_listener);
-    
     
     CheckRefCountForToStartAndStopHarvester();
 }

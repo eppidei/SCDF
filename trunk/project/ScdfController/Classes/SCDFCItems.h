@@ -22,6 +22,7 @@ namespace ScdfCtrl
 {
     class ItemBase;
     class SerializableItemData;
+    class ItemUIUpdater;
     
     class ItemLayoutInterface
     {
@@ -29,6 +30,7 @@ namespace ScdfCtrl
         virtual cocos2d::Size CalculateNewItemBaseSize(int magValue) = 0;
         virtual void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) = 0;
     };
+
     class ItemLayoutManager
     {
         ItemBase *item;
@@ -56,6 +58,7 @@ namespace ScdfCtrl
         void CreateItemBaseElements();
         void PlaceItemBaseElements();
         void SetControlModeImage();
+        std::unique_ptr<ItemUIUpdater> updater;
     protected:
 
         std::unique_ptr<ControlUnit> controlUnit;
@@ -307,6 +310,13 @@ namespace ScdfCtrl
         CREATE_FUNC(ItemKeyboard);
     };
 
+    class ItemUIUpdater :public ControlUnitInterface
+    {
+        ItemBase *item;
+    public:
+        ItemUIUpdater(ItemBase *_item) : item(_item) {}
+        void OnValueChanged() override { item->UpdateUI();}
+    };
 }
 
 #endif /* defined(__ScdfController__SCDFCItems__) */
