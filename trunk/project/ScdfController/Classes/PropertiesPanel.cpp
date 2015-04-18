@@ -956,6 +956,8 @@ void PropertiesPanel::InitPanel()
     sectionOSCInfo=OSCInfo::create();
     sectionOSCInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
     scrollView->addChild(sectionOSCInfo);
+//    scrollView->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+//    scrollView->setBackGroundColor(Color3B::YELLOW);
     
 //    sectionMIDIDevices=MIDIDevices::create();
 //    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width/2));
@@ -980,6 +982,18 @@ void PropertiesPanel::InitPanel()
     button->setPosition(Vec2(getContentSize().width-80, getContentSize().height-28));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
+    UpdateSubpanels();
+    
+//    button = Button::create();
+//    button->loadTextureNormal("CloseNormal.png");
+//    button->loadTexturePressed("CloseSelected.png");
+//    button->setAnchorPoint(Vec2(0,1));
+//    button->setTouchEnabled(true);
+//    button->ignoreContentAdaptWithSize(false);
+//    button->setContentSize(cocos2d::Size(40, 40));
+//    button->setPosition(Vec2(getContentSize().width/2.0-button->getContentSize().width/2.0, scrollView->getPositionY()-scrollView->getContentSize().height-5));
+//    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+//    addChild(button,6,WORKING_PANEL_SLIDE_RIGHT);
     UpdateSubpanels();
 }
 

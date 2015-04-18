@@ -10,29 +10,50 @@
 	<string>ScdfController</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>6c43cc0a-5ffe-4778-b326-04effe5da469</key>
-		<string>http://160.80.80.132:18080/svn/SCDF</string>
+		<key>33e419c5-de32-43cf-b368-fc94c049cd9f++7206</key>
+		<string>http://160.80.80.132:18080/svn/ADE/trunk/API</string>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>http://160.80.80.132:18080/svn/SCDF/trunk</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>trunk/project/ScdfController/proj.ios_mac/ScdfController.xcodeproj</string>
+	<string>project/ScdfController/proj.ios_mac/ScdfController.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>6c43cc0a-5ffe-4778-b326-04effe5da469</key>
-		<string>../../../../../..</string>
+		<key>33e419c5-de32-43cf-b368-fc94c049cd9f++7206</key>
+		<string>../../../../../ext/ADE_API/API</string>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>../../../../..</string>
 	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>33e419c5-de32-43cf-b368-fc94c049cd9f++7206</key>
+		<string>http://160.80.80.132:18080/svn/ADE</string>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>http://160.80.80.132:18080/svn/SCDF</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://160.80.80.132:18080/svn/SCDF/trunk/project/ScdfController/proj.ios_mac/ScdfController.xcodeproj</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>6c43cc0a-5ffe-4778-b326-04effe5da469</string>
+	<string>6c43cc0a-5ffe-4778-b326-04effe5da469++505</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.subversion</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>6c43cc0a-5ffe-4778-b326-04effe5da469</string>
+			<string>33e419c5-de32-43cf-b368-fc94c049cd9f++7206</string>
 			<key>IDESourceControlWCCName</key>
-			<string>SCDF</string>
+			<string>API</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6c43cc0a-5ffe-4778-b326-04effe5da469++505</string>
+			<key>IDESourceControlWCCName</key>
+			<string>trunk</string>
 		</dict>
 	</array>
 </dict>

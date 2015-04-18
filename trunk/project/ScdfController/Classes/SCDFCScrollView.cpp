@@ -148,13 +148,13 @@ void ItemScrollView::DoInit(MainScene *main, cocos2d::Rect r)
     setContentSize(r.size);
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
-    setBackGroundColorType(Layout::BackGroundColorType::NONE);
     
     scrollView=cocos2d::ui::ScrollView::create();
     addChild(scrollView);
     scrollView->setBackGroundColorType(Layout::BackGroundColorType::NONE);
+//    scrollView->setBackGroundColor(Color3B::YELLOW);
     scrollView->setInertiaScrollEnabled(true);
-    scrollView->setContentSize(cocos2d::Size(r.size.width-GetBackgroundBitmapLeftOffset(), r.size.height-(GetBackgroundBitmapTopOffset()+GetBackgroundBitmapBottomOffset())));
+    scrollView->setContentSize(cocos2d::Size(r.size.width-GetBackgroundBitmapLeftOffset(), r.size.height-(GetBackgroundBitmapTopOffset()+GetBackgroundBitmapBottomOffset())-50));
     scrollView->setAnchorPoint(Vec2(0,1));
     scrollView->setPosition(Vec2(GetBackgroundBitmapLeftOffset(),r.size.height-GetBackgroundBitmapTopOffset()));
 }
@@ -234,6 +234,18 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setPosition(Vec2(45, getContentSize().height-28));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
+    
+    button = Button::create();
+    button->loadTextureNormal("CloseNormal.png");
+    button->loadTexturePressed("CloseSelected.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    float size=(getContentSize().width-scrollView->getPositionX())/3.0;
+    button->setContentSize(cocos2d::Size(size, size));
+    button->setPosition(Vec2(scrollView->getContentSize().width/2.0+size/4.0-1, scrollView->getPositionY()-scrollView->getContentSize().height-5));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,WORKING_PANEL_DELETE_ITEM);
 }
 
 

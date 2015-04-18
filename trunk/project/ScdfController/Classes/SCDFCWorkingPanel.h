@@ -24,7 +24,6 @@ namespace ScdfCtrl
         
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void DrawGrid();
-        void CheckRemoveControl(Node *n);
         void DetectCollisions(Node *_item);
         
         void DoOnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
@@ -32,8 +31,11 @@ namespace ScdfCtrl
         void DoOnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         bool OnControlMove(Ref *pSender, cocos2d::Vec2 touchPos, cocos2d::ui::Widget::TouchEventType type);
         
+        void PanelTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+        
     public:
         template <class ItemType> void CheckAddControl();
+        void CheckRemoveControl(Node *n);
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
