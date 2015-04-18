@@ -47,15 +47,6 @@ void MainScene::SnapToGrid(cocos2d::Rect &r)
 
 template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStartPoint)
 {
-//    draggingImage=ImageView::create("CloseSelected.png");
-//    draggingImage->ignoreContentAdaptWithSize(false);
-//    draggingImage->setAnchorPoint(Vec2(0,1));
-//    float width=ItemType::GetBaseSize().width;
-//    float height=ItemType::GetBaseSize().height;
-//    draggingImage->setContentSize(cocos2d::Size(width*GetGridDistance(),height*GetGridDistance()));
-//    draggingImage->setOpacity(50);
-//    draggingImage->setPosition(dragStartPoint);
-//    addChild(draggingImage);
 }
 
 template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
@@ -63,7 +54,7 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
     if (NULL==customPanel.get()) return;
 
     Vec2 coord(convertToNodeSpace(customPanel->getPosition()));
-    cocos2d::Rect workingSpaceRect(coord.x, coord.y,customPanel->getContentSize().width, customPanel->getContentSize().height);
+    cocos2d::Rect workingSpaceRect(fmax(0, customPanel->getPositionX()), fmin(customPanel->getPositionY(), getContentSize().height), fmax(getContentSize().width, getContentSize().width-customPanel->getPositionX()), fmin(getContentSize().height,customPanel->getPositionY()));
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
     float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT; //item label
@@ -75,6 +66,7 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
         && (r.origin.x+scaledWidth)<=workingSpaceRect.size.width
         && (r.origin.y-scaledHeight)>=workingSpaceRect.origin.y-workingSpaceRect.size.height)
     {
+        r.origin=customPanel->convertToNodeSpace(r.origin);
         SnapToGrid(r);
         r.size=cocos2d::Size(scaledWidth, scaledHeight);
         rr=r;
@@ -264,7 +256,7 @@ bool MainScene::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
     
-    
+//    setColor(Color3B::GRAY);
 #define SCROLLVIEW_WIDTH (11*GetUnityBase())
 #define PROPERTIES_WIDTH (18*GetUnityBase())
 #define TOOLBAR_HEIGHT   (2*GetUnityBase())
@@ -273,10 +265,10 @@ bool MainScene::init()
                           getContentSize().height,
                           getContentSize().width,
                           TOOLBAR_HEIGHT);
-    cocos2d::Rect workingPanelsize(0,
-                          getContentSize().height,
-                          getContentSize().width,
-                          getContentSize().height);
+    cocos2d::Rect workingPanelsize(-(getContentSize().width/2.0),
+                          3.0*getContentSize().height/2.0,
+                          2*getContentSize().width,
+                          2*getContentSize().height);
     cocos2d::Rect scrollViewect(getContentSize().width-80,
                        getContentSize().height-toolbarPanelsize.size.height,
                        SCROLLVIEW_WIDTH,
@@ -400,7 +392,9 @@ bool MainScene::HideShowPropertiesPanel()
 {
     propertiesPanel->HideShow(NULL);
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
-//    propertiesPanel->HideShow();
+////    propertiesPanel->HideShow();
+//    if (!propertiesPanel->IsVisible())
+//        SlideWorkingPanel(true);
     return propertiesPanel->IsVisible();
 }
 
@@ -460,6 +454,24 @@ void ChangeBitmap(Ref *pSender, bool selected)
         b->loadTextureNormal("btnOFF.png");
 }
 
+//void MainScene::SlideWorkingPanel(bool close)
+//{
+//    float posX=0;
+//    if (customPanel->getPositionX()==0 && !close)
+//        posX=propertiesPanel->getPositionX()+propertiesPanel->getContentSize().width-32;
+//    
+//    if (close && customPanel->getPositionX()==0) return;
+//    MoveTo *action=MoveTo::create(0.1f, cocos2d::Vec2(posX, customPanel->getPositionY()));
+//    CallFunc *callback=nullptr;
+//    
+//    if (nullptr!=callback){
+//        auto seq = Sequence::create(action, callback, NULL);
+//        customPanel->runAction(seq);
+//    }
+//    else
+//        customPanel->runAction(action);
+//}
+
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     Node* button = dynamic_cast<Node*>(pSender);
@@ -489,13 +501,14 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             break;
         case Widget::TouchEventType::MOVED:
             // TODO
-          //  break;
+            break;
         case Widget::TouchEventType::ENDED:
-            // TODO
-           // break;
+            if (WORKING_PANEL_DELETE_ITEM==button->getTag())
+                customPanel->CheckRemoveControl(propertiesPanel->GetSelectedItem());
+            break;
         case Widget::TouchEventType::CANCELED:
             // TODO
-           // break;
+            break;
         default:
             // TODO
             break;

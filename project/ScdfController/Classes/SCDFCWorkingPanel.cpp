@@ -38,6 +38,8 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setAnchorPoint(Vec2(0,1));
     setPosition(r.origin);
     parent->addChild(this,-2);
+    setTouchEnabled(true);
+    addTouchEventListener(CC_CALLBACK_2(WorkingPanel::PanelTouchEvent, this));
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
     auto backGroundImage = Sprite::create("backgroundNew.jpg");
     cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
@@ -81,11 +83,11 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
 
 void WorkingPanel::CheckRemoveControl(Node *n)
 {
-    if (n->getPositionY()<=getPosition().y && (n->getPositionX()>=getPosition().x)
-        && (n->getPositionX()+n->getContentSize().width)<=getContentSize().width
-        && (n->getPositionY()-n->getContentSize().height)>=getPosition().y-getContentSize().height)
-        return;
-
+//    if (n->getPositionY()<=getPosition().y && (n->getPositionX()>=0/*=getPosition().x*/)
+//        && (n->getPositionX()+n->getContentSize().width)<=getContentSize().width
+//        && (n->getPositionY()-n->getContentSize().height)>=getPosition().y-getContentSize().height)
+//        return;
+    if (NULL==n) return;
     for (int i=0;i<patch->items.size();++i)
     {
 //      if (patch->items[i]->GetItem()==n)
@@ -107,7 +109,7 @@ void WorkingPanel::CheckRemoveControl(Node *n)
 
 bool WorkingPanel::SavePatch(std::string patchName)
 {
-	patch->SaveToFile(patchName);
+	return patch->SaveToFile(patchName);
 }
 
 bool WorkingPanel::LoadPatch(std::string patchName)
@@ -118,24 +120,20 @@ bool WorkingPanel::LoadPatch(std::string patchName)
 	    removeChild(patch->items[i]);
 	}
     patch->items.clear();
-	patch->LoadFromFile(patchName);
+	bool ret = patch->LoadFromFile(patchName);
 
 	for (int i=0;i<patch->items.size();++i)
 	{
 		addChild(patch->items[i],10);
 	    parent->AttachItem(patch->items[i]);
 	}
-
+    return ret;
 }
 
 void WorkingPanel::ToggleActiveState()
 {
 	LOGD("TOGGLE ACTIVE STATE");
-
     active=!active;
-
-    //patch->SaveToFile("testpatch");
-
 }
 
 void WorkingPanel::DrawGrid()
@@ -242,7 +240,7 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
                 item->setOpacity(255);
                 collisionDetected=false;
             }
-            CheckRemoveControl(item);
+          //  CheckRemoveControl(item);
         }
             break;
         default:
@@ -310,6 +308,34 @@ void WorkingPanel::DoOnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::u
             if (patch->items[i]->GetID()!=item->GetID()) continue;
             patch->items[i]->OnItemTouchEnded(widget,type);
         }
+    }
+}
+
+void WorkingPanel::PanelTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
+{
+    static Vec2 dragStartUpdated;
+    if (active) return;
+    switch (type)
+    {
+        case Widget::TouchEventType::BEGAN:
+            dragStartUpdated=getTouchBeganPosition();
+            break;
+        case Widget::TouchEventType::MOVED:
+        {
+            float diff_x=dragStartUpdated.x-getTouchMovePosition().x;
+            float diff_y=dragStartUpdated.y-getTouchMovePosition().y;
+            cocos2d::Size s=parent->getContentSize();
+            float newPosX=fmax(-(3.0*getContentSize().width/2.0), fmin(parent->getContentSize().width/2.0, getPositionX()-diff_x));
+            float newPosY=fmin(3.0*getContentSize().height/2.0, fmax(parent->getContentSize().height/2.0, getPositionY()-diff_y));
+            setPosition(Vec2(newPosX, newPosY));
+            dragStartUpdated=getTouchMovePosition();
+        }
+            break;
+        case Widget::TouchEventType::ENDED:
+        case Widget::TouchEventType::CANCELED:
+            break;
+        default:
+            break;
     }
 }
 
