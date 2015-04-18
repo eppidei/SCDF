@@ -9,14 +9,14 @@
 #include <string>
 
 #ifdef _DEBUG
-//#define NTRACK_NOPURCHASE_NEEDED
+//#define SCDF_NOPURCHASE_NEEDED
 #endif
 
 
 #define kInAppPurchaseProUpgradeProductId @"com.id"
-#define NTRACK_INAPP_DEFAULTS_KEY @"isProVersionPurchased"
-#define NTRACK_MSG_INAPP "Hey! Do you want to purchase the full version "
-#define NTRACK_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
+#define SCDF_INAPP_DEFAULTS_KEY @"isProVersionPurchased"
+#define SCDF_MSG_INAPP "Hey! Do you want to purchase the full version "
+#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
 
 
 static std::string productPricePro;
@@ -262,7 +262,7 @@ static InAppPurchaseController purchaseController;
 
 - (void)provideContent:(NSString *)productId
 {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NTRACK_INAPP_DEFAULTS_KEY];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SCDF_INAPP_DEFAULTS_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
 }
@@ -411,25 +411,25 @@ void PreloadStore()
 
 bool CheckIsInAppPurchasedNoPrompt()
 {
-#ifdef NTRACK_NOPURCHASE_NEEDED
+#ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
         
-    if([[NSUserDefaults standardUserDefaults] boolForKey: NTRACK_INAPP_DEFAULTS_KEY]) return true;
+    if([[NSUserDefaults standardUserDefaults] boolForKey: SCDF_INAPP_DEFAULTS_KEY]) return true;
     return false;
 }
 
 
 bool CheckIsInAppPurchased()
 {
-#ifdef NTRACK_NOPURCHASE_NEEDED
+#ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
     
-    if([[NSUserDefaults standardUserDefaults] boolForKey: NTRACK_INAPP_DEFAULTS_KEY])
+    if([[NSUserDefaults standardUserDefaults] boolForKey: SCDF_INAPP_DEFAULTS_KEY])
         return true;
     
-    std::string msg= NTRACK_MSG_INAPP;
+    std::string msg= SCDF_MSG_INAPP;
     if(productPricePro.length()>0)
     {
         msg.append(" for ");
