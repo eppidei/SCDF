@@ -486,11 +486,11 @@ void ItemSlider::DoSetContentSize(cocos2d::Size contentSize)
 void ItemKnob::DoSetContentSize(cocos2d::Size contentSize)
 {
     cocos2d::Size newSize(GetThumbSize(contentSize));
-    if (points)
-    {
-        points->setContentSize(newSize);
-        points->setPosition(Vec2(0,newSize.height));
-    }
+//    if (points)
+//    {
+//        points->setContentSize(newSize);
+//        points->setPosition(Vec2(0,newSize.height));
+//    }
     if (knob)
     {
         knob->setContentSize(newSize);
@@ -817,7 +817,7 @@ void ItemKnob::CreateONPoints()
         char str[256];
         sprintf(str, "knobVOL%d.png",i);
         auto point = Layout::create();
-        control->addChild(point,1);
+        control->addChild(point,2);
         point->setVisible(false);
         point->setAnchorPoint(Vec2(0,1));
         point->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
@@ -849,7 +849,7 @@ void ItemKnob::DoCreateThumb()
     //knob->setTouchEnabled(true);
     knob->setAnchorPoint(Vec2(0,1));
     knob->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    knob->setBackGroundImage("knobVOLKNOB.png");
+    knob->setBackGroundImage("knobVOL0.png");
     const int bitmapcapInsetOffset=0;
     cocos2d::Rect rr(0, bitmapcapInsetOffset, knob->getBackGroundImageTextureSize().width, knob->getBackGroundImageTextureSize().height-2*bitmapcapInsetOffset);
     cocos2d::Size s(GetControlContentSize().width, GetControlContentSize().height);
@@ -858,15 +858,15 @@ void ItemKnob::DoCreateThumb()
     knob->setContentSize(s);
     knob->setPosition(Vec2(0, GetControlContentSize().height));
     
-    points = Layout::create();
-    control->addChild(points);
-    points->setAnchorPoint(Vec2(0,1));
-    points->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    points->setBackGroundImage("knobVOL0.png");
-    points->setBackGroundImageScale9Enabled(true);
-    points->setBackGroundImageCapInsets(rr);
-    points->setContentSize(s);
-    points->setPosition(Vec2(0, GetControlContentSize().height));
+//    points = Layout::create();
+//    control->addChild(points);
+//    points->setAnchorPoint(Vec2(0,1));
+//    points->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+//    points->setBackGroundImage("knobVOL0.png");
+//    points->setBackGroundImageScale9Enabled(true);
+//    points->setBackGroundImageCapInsets(rr);
+//    points->setContentSize(s);
+//    points->setPosition(Vec2(0, GetControlContentSize().height));
 }
 
 void ItemKnob::SetColor(Colors::ItemsColorsId colorIndex)

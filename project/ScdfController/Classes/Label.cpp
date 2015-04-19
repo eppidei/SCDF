@@ -172,13 +172,15 @@ void Toolbar::CheckButton(int ctrlID)
 {
     ToolbarButton *b=GetButton(ctrlID);
     if (NULL==b) return;
-    b->SetChecked(true);
+    //b->SetChecked(true);
+    b->button->setOpacity(100);
 
     for (int i=0;i<buttons.size();++i)
     {
         ToolbarButton *bb=buttons[i];
         if (b==bb) continue;
-        bb->SetChecked(false);
+        //bb->SetChecked(false);
+        bb->button->setOpacity(255);
     }
 }
 

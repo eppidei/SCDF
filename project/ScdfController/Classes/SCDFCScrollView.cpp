@@ -213,8 +213,8 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     addChild(button,6,MAIN_BUTTON_HIDESHOW_SCROLLVIEW);
     
     button = Button::create();
-    button->loadTextureNormal("CloseNormal.png");
-    button->loadTexturePressed("CloseSelected.png");
+    button->loadTextureNormal("deleteBtnDefault.png");
+    button->loadTexturePressed("deleteBtnHover.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);

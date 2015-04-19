@@ -161,7 +161,7 @@ namespace ScdfCtrl
         void DoCreateThumb() override;
         cocos2d::Size GetThumbSize(cocos2d::Size currentSize) override;
         
-        cocos2d::ui::Layout *knob, *points;
+        cocos2d::ui::Layout *knob;//, *points;
         std::vector<cocos2d::ui::Layout*> onPoints;
         void CreateONPoints();
         void UpdateOnPointVisibility();

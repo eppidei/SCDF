@@ -755,23 +755,23 @@ void ItemSettings::CreateControls()
     
     std::vector<std::string> images;
     images.push_back("modeTouch.png");
-    images.push_back("CloseSelected.png");
+    images.push_back("modeTouch.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     images.clear();
     images.push_back("modeBlow.png");
-    images.push_back("CloseSelected.png");
+    images.push_back("modeBlow.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     images.clear();
     images.push_back("modeSnap.png");
-    images.push_back("CloseSelected.png");
+    images.push_back("modeSnap.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_SNAP, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     images.clear();
     images.push_back("modeRoll.png");
-    images.push_back("CloseSelected.png");
+    images.push_back("modeRoll.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_ROLL, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     images.clear();
     images.push_back("modeGesture.png");
-    images.push_back("CloseSelected.png");
+    images.push_back("modeGesture.png");
     modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 
     //Create group label
@@ -822,7 +822,7 @@ void ItemSettings::CreateControls()
     addChild(h_minus, 15, PROPERTIES_ITEM_HEIGHT_MINUS);
     h_minus->setTouchEnabled(true);
     h_minus->ignoreContentAdaptWithSize(false);
-    h_minus->loadTextures("zoomOutBtnDefault.png", "zoomOutBtnDefault.png", "");
+    h_minus->loadTextures("zoomOutDefault.png", "zoomOutActive.png", "");
     h_minus->setAnchorPoint(Vec2(0,1));
     h_minus->setContentSize(cocos2d::Size(r.size.height, r.size.height));
     h_minus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
@@ -837,7 +837,7 @@ void ItemSettings::CreateControls()
     addChild(h_plus, 16, PROPERTIES_ITEM_HEIGHT_PLUS);
     h_plus->ignoreContentAdaptWithSize(false);
     h_plus->setTouchEnabled(true);
-    h_plus->loadTextures("zoomInBtnDefault.png", "zoomInBtnHover.png", "");
+    h_plus->loadTextures("zoomInDefault.png", "zoomInActive.png", "");
     h_plus->setAnchorPoint(Vec2(0,1));
     h_plus->setContentSize(cocos2d::Size(r.size.height, r.size.height));
     h_plus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
@@ -999,8 +999,8 @@ void PropertiesPanel::InitPanel()
     addChild(button,6,MAIN_BUTTON_HIDESHOW_PROPERTIES);
     
     button = Button::create();
-    button->loadTextureNormal("openLoadPopupBtnDefault.png");
-    button->loadTexturePressed("openLoadPopupBtnActive.png");
+    button->loadTextureNormal("newDefault.png");
+    button->loadTexturePressed("newActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1012,8 +1012,8 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("openSavePopupBtnDefault.png");
-    button->loadTexturePressed("openSavePopupBtnActive.png");
+    button->loadTextureNormal("saveDefault.png");
+    button->loadTexturePressed("saveActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1025,8 +1025,8 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("openLoadPopupBtnDefault.png");
-    button->loadTexturePressed("openLoadPopupBtnActive.png");
+    button->loadTextureNormal("loadDefault.png");
+    button->loadTexturePressed("loadActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1038,8 +1038,8 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("editBtnDefault.png");
-    button->loadTexturePressed("editBtnActive.png");
+    button->loadTextureNormal("moveDefault.png");
+    button->loadTexturePressed("moveActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
