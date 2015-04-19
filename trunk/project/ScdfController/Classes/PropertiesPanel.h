@@ -124,6 +124,8 @@ namespace ScdfCtrl
         ScdfCtrl::MultiSender *GetCurrentSender();
         ItemBase *GetSelectedItem();
         CREATE_FUNC(PropertiesPanel);
+    protected:
+        void OnHideShow();
     };
 }
 #endif /* defined(__ScdfController__PropertiesPanel__) */

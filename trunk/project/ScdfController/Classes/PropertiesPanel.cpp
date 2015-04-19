@@ -950,18 +950,31 @@ void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
 
 void PropertiesPanel::InitPanel()
 {
-    setBackGroundImage("leftPanel.png");
-    const int rightPadding=60;
+    const float bitmapRightPadding=0;//48.0;
+    const float bitmapTopTransparencyPercentage=0.010;
+    const float bitmapBottomTransparencyPercentage=0.022;
+    const float bitmapToolbarHeightPercentage=0.058;
+    const float bitmapToolbarWidthPercentage=1.0-PROPERTIES_PANEL_TONGUE_PERCENTAGE;
+    const float numButtons=4.0;
+    
+    float ypadding=(getContentSize().height*bitmapToolbarHeightPercentage)*0.1;
+    float buttonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
+    float xpadding=(getContentSize().width*bitmapToolbarWidthPercentage-numButtons*buttonDim)/(numButtons+1.0);
+    
+    setBackGroundImage("panelLeft.png");
+    cocos2d::Rect rr(0, 0, getBackGroundImageTextureSize().width-bitmapRightPadding, getBackGroundImageTextureSize().height);
+    setBackGroundImageScale9Enabled(true);
+    setBackGroundImageCapInsets(rr);
+
+    float scrollbarHeight=getContentSize().height*(1.0-(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
+    float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-2.0*xpadding;
+    scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
+    scrollView->setPosition(Vec2(xpadding,(1.0-(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
+    
     selectedItem=NULL;
     sectionOSCInfo=OSCInfo::create();
     sectionOSCInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
     scrollView->addChild(sectionOSCInfo);
-//    scrollView->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-//    scrollView->setBackGroundColor(Color3B::YELLOW);
-    
-//    sectionMIDIDevices=MIDIDevices::create();
-//    sectionMIDIDevices->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width/2));
-//    scrollView->addChild(sectionMIDIDevices);
     
     sectionMIDIInfo=MIDIInfo::create();
     sectionMIDIInfo->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
@@ -971,30 +984,87 @@ void PropertiesPanel::InitPanel()
     sectionItemSettings->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
     scrollView->addChild(sectionItemSettings);
     
+    float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
+    float buttonXPos=xpadding;
     
     auto button = Button::create();
-    button->loadTextureNormal("btnOFF.png");
-    button->loadTexturePressed("btnON.png");
+    button->loadTextureNormal("btnPanelLeftOpen.png");
+    button->loadTexturePressed("btnPanelLeftOpen.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(30, 60));
-    button->setPosition(Vec2(getContentSize().width-80, getContentSize().height-28));
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(getContentSize().width*(1-PROPERTIES_PANEL_TONGUE_PERCENTAGE)+5, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
-    addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
-    UpdateSubpanels();
+    addChild(button,6,MAIN_BUTTON_HIDESHOW_PROPERTIES);
     
-//    button = Button::create();
-//    button->loadTextureNormal("CloseNormal.png");
-//    button->loadTexturePressed("CloseSelected.png");
-//    button->setAnchorPoint(Vec2(0,1));
-//    button->setTouchEnabled(true);
-//    button->ignoreContentAdaptWithSize(false);
-//    button->setContentSize(cocos2d::Size(40, 40));
-//    button->setPosition(Vec2(getContentSize().width/2.0-button->getContentSize().width/2.0, scrollView->getPositionY()-scrollView->getContentSize().height-5));
-//    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
-//    addChild(button,6,WORKING_PANEL_SLIDE_RIGHT);
+    button = Button::create();
+    button->loadTextureNormal("openLoadPopupBtnDefault.png");
+    button->loadTexturePressed("openLoadPopupBtnActive.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(buttonXPos, buttonYPos));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,MAIN_BUTTON_NEW);
+    
+    buttonXPos+=(xpadding+buttonDim);
+    
+    button = Button::create();
+    button->loadTextureNormal("openSavePopupBtnDefault.png");
+    button->loadTexturePressed("openSavePopupBtnActive.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(buttonXPos, buttonYPos));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,MAIN_BUTTON_SAVE);
+    
+    buttonXPos+=(xpadding+buttonDim);
+    
+    button = Button::create();
+    button->loadTextureNormal("openLoadPopupBtnDefault.png");
+    button->loadTexturePressed("openLoadPopupBtnActive.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(buttonXPos, buttonYPos));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,MAIN_BUTTON_LOAD);
+    
+    buttonXPos+=(xpadding+buttonDim);
+    
+    button = Button::create();
+    button->loadTextureNormal("editBtnDefault.png");
+    button->loadTexturePressed("editBtnActive.png");
+    button->setAnchorPoint(Vec2(0,1));
+    button->setTouchEnabled(true);
+    button->ignoreContentAdaptWithSize(false);
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(buttonXPos, buttonYPos));
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
+    addChild(button,6,MAIN_BUTTON_EDIT);
+
     UpdateSubpanels();
+}
+
+void PropertiesPanel::OnHideShow()
+{
+    Button *b=dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_PROPERTIES));
+    if (NULL==b) return;
+    if (IsVisible())
+    {
+        b->loadTextureNormal("btnPanelLeftClose.png");
+        b->loadTexturePressed("btnPanelLeftClose.png");
+    }
+    else
+    {
+        b->loadTextureNormal("btnPanelLeftOpen.png");
+        b->loadTexturePressed("btnPanelLeftOpen.png");
+    }
 }
 
 void PropertiesPanel::UpdateSubpanels()

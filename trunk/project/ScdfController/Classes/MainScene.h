@@ -3,6 +3,9 @@
 
 #include "SCDFCDefinitions.h"
 
+#define PROPERTIES_PANEL_TONGUE_PERCENTAGE 0.22
+#define SCROLLVIEW_TONGUE_PERCENTAGE 0.33
+
 namespace ScdfCtrl
 {
     class WorkingPanel;
@@ -25,8 +28,7 @@ namespace ScdfCtrl
         static int gridIndex;
         void OnGridButtonClick();
         void HideShowToolbar();
-        bool HideShowScrollview();
-        bool HideShowPropertiesPanel();
+        void HideShowPropertiesPanel(bool hide);
         void HideShowLoadSavePanel();
     public:
         // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -40,7 +42,7 @@ namespace ScdfCtrl
         template <class ItemType> void  OnStartDragging(cocos2d::Vec2 dragStartPoint);
         template <class ItemType> void OnDragging(cocos2d::Rect draggingRect);
         template <class ItemType> void  OnEndDragging();
-        static int GetUnityBase();
+        static float GetUnityBase();
         
         static int GetGridDistance();
         void SnapToGrid(cocos2d::Rect &r);

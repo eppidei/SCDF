@@ -26,6 +26,8 @@ namespace ScdfCtrl {
         virtual int GetBackgroundBitmapLeftOffset(){return 35;}
         virtual int GetBackgroundBitmapTopOffset(){return 30;}
         virtual int GetBackgroundBitmapBottomOffset(){return 80;}
+        
+        bool isOpened;
     protected:
         MainScene *parent;
         void DoInit(MainScene *main, cocos2d::Rect r);
@@ -38,6 +40,8 @@ namespace ScdfCtrl {
         static ItemScrollView *CreateCustomScrollView(MainScene *main, cocos2d::Rect r);
         void SetDirection(cocos2d::ui::ScrollView::Direction dir);
         void HideAllSubPanels();
+        void HideShow(bool hide);
+        bool IsOpened() {return isOpened;}
         CREATE_FUNC(ItemScrollView);
     };
     class ItemScrollViewSubpanel : public ItemScrollView
