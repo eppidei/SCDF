@@ -202,8 +202,8 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
     
     auto button = Button::create();
-    button->loadTextureNormal("btnPanelRightOpen.png");
-    button->loadTexturePressed("btnPanelRightOpen.png");
+    button->loadTextureNormal("btnPanelLeftCloseNew.png");
+    button->loadTexturePressed("btnPanelLeftCloseNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -371,15 +371,15 @@ void ItemScrollView::HideShow(bool hide)
     {
         HideAllSubPanels();
         actScrollview = MoveTo::create(0.1f, cocos2d::Point(getParent()->getContentSize().width-(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE), getPositionY()));
-        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelRightOpen.png");
-        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelRightOpen.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelLeftCloseNew.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelLeftCloseNew.png");
         isOpened=false;
     }
     else
     {
         actScrollview = MoveTo::create(0.1f, cocos2d::Point(getParent()->getContentSize().width-getContentSize().width, getPositionY()));
-        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelRightClose.png");
-        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelRightClose.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelLeftOpenNew.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelLeftOpenNew.png");
         isOpened=true;
     }
 

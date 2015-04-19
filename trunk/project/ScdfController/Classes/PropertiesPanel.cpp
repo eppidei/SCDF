@@ -793,7 +793,7 @@ void ItemSettings::CreateControls()
     
     //Create master toggle
     masterButton=Button::create();
-    masterButton->loadTextures("groupMasterBtnDefault.png", "groupMasterBtnHover.png", "");
+    masterButton->loadTextures("groupMasterBtnDefault.png", "groupMasterBtnDefault.png", "");
     masterButton->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     masterButton->setTouchEnabled(true);
     masterButton->setContentSize(cocos2d::Size(r.size.width,r.size.height));
@@ -863,9 +863,14 @@ void ItemSettings::Update()
     orientation->SetSelectedIndex(orientationIndex);
     group->SetSelectedIndex(item->GetGroupID()+1);
     if (item->IsMaster())
-        masterButton->loadTextureNormal("groupMasterBtnHover.png");
-    else
-        masterButton->loadTextureNormal("groupMasterBtnDefault.png");
+    {
+       // masterButton->loadTextureNormal("groupMasterBtnHover.png");
+        masterButton->setColor(Color3B::RED);
+    }
+    else{
+    //    masterButton->loadTextureNormal("groupMasterBtnDefault.png");
+        masterButton->setColor(Color3B::WHITE);
+    }
     CheckShowElements();
     
 }
@@ -988,8 +993,8 @@ void PropertiesPanel::InitPanel()
     float buttonXPos=xpadding;
     
     auto button = Button::create();
-    button->loadTextureNormal("btnPanelLeftOpen.png");
-    button->loadTexturePressed("btnPanelLeftOpen.png");
+    button->loadTextureNormal("btnPanelRightCloseNew.png");
+    button->loadTexturePressed("btnPanelRightCloseNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1056,13 +1061,13 @@ void PropertiesPanel::UpdateEditButton(bool editMode)
     Button *b=dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_EDIT));
     if (editMode)
     {
-        b->loadTextureNormal("moveActive.png");
-        b->loadTexturePressed("moveActive.png");
+        b->loadTextureNormal("moveDefault.png");
+        b->loadTexturePressed("moveDefault.png");
     }
     else
     {
-        b->loadTextureNormal("moveDefault.png");
-        b->loadTexturePressed("moveDefault.png");
+        b->loadTextureNormal("moveActive.png");
+        b->loadTexturePressed("moveActive.png");
     }
 }
 
@@ -1072,13 +1077,13 @@ void PropertiesPanel::OnHideShow()
     if (NULL==b) return;
     if (IsVisible())
     {
-        b->loadTextureNormal("btnPanelLeftClose.png");
-        b->loadTexturePressed("btnPanelLeftClose.png");
+        b->loadTextureNormal("btnPanelRightOpenNew.png");
+        b->loadTexturePressed("btnPanelRightOpenNew.png");
     }
     else
     {
-        b->loadTextureNormal("btnPanelLeftOpen.png");
-        b->loadTexturePressed("btnPanelLeftOpen.png");
+        b->loadTextureNormal("btnPanelRightCloseNew.png");
+        b->loadTexturePressed("btnPanelRightCloseNew.png");
     }
 }
 
