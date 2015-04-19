@@ -134,6 +134,10 @@
 		9D2124DE1AE4296A007AB0E0 /* zoomInDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D21249D1AE4296A007AB0E0 /* zoomInDefault.png */; };
 		9D2124DF1AE4296A007AB0E0 /* zoomOutActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D21249E1AE4296A007AB0E0 /* zoomOutActive.png */; };
 		9D2124E01AE4296A007AB0E0 /* zoomOutDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D21249F1AE4296A007AB0E0 /* zoomOutDefault.png */; };
+		9D2124E21AE4608A007AB0E0 /* btnPanelLeftCloseNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2124E11AE4608A007AB0E0 /* btnPanelLeftCloseNew.png */; };
+		9D2124E41AE4609B007AB0E0 /* btnPanelLeftOpenNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2124E31AE4609B007AB0E0 /* btnPanelLeftOpenNew.png */; };
+		9D2124E61AE460A3007AB0E0 /* btnPanelRightCloseNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2124E51AE460A3007AB0E0 /* btnPanelRightCloseNew.png */; };
+		9D2124E81AE460AF007AB0E0 /* btnPanelRightOpenNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2124E71AE460AE007AB0E0 /* btnPanelRightOpenNew.png */; };
 		9D39BD831AD92EAB001B3F39 /* ControlUnitPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D39BD821AD92EAA001B3F39 /* ControlUnitPatch.cpp */; };
 		9D39BDDB1AD9768A001B3F39 /* LoadSavePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */; };
 		9D5BA30E1AAB02AE00FCDBDA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5BA30D1AAB02AE00FCDBDA /* UIKit.framework */; };
@@ -472,6 +476,10 @@
 		9D21249D1AE4296A007AB0E0 /* zoomInDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoomInDefault.png; sourceTree = "<group>"; };
 		9D21249E1AE4296A007AB0E0 /* zoomOutActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoomOutActive.png; sourceTree = "<group>"; };
 		9D21249F1AE4296A007AB0E0 /* zoomOutDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoomOutDefault.png; sourceTree = "<group>"; };
+		9D2124E11AE4608A007AB0E0 /* btnPanelLeftCloseNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnPanelLeftCloseNew.png; sourceTree = "<group>"; };
+		9D2124E31AE4609B007AB0E0 /* btnPanelLeftOpenNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnPanelLeftOpenNew.png; sourceTree = "<group>"; };
+		9D2124E51AE460A3007AB0E0 /* btnPanelRightCloseNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnPanelRightCloseNew.png; sourceTree = "<group>"; };
+		9D2124E71AE460AE007AB0E0 /* btnPanelRightOpenNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnPanelRightOpenNew.png; sourceTree = "<group>"; };
 		9D39BD821AD92EAA001B3F39 /* ControlUnitPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlUnitPatch.cpp; path = ../Classes/ControlUnitPatch.cpp; sourceTree = "<group>"; };
 		9D5BA30D1AAB02AE00FCDBDA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		9D5BA30F1AAB02C500FCDBDA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
@@ -814,6 +822,10 @@
 			isa = PBXGroup;
 			children = (
 				9D21245F1AE42969007AB0E0 /* groupMasterBtnDefault.png */,
+				9D2124E71AE460AE007AB0E0 /* btnPanelRightOpenNew.png */,
+				9D2124E51AE460A3007AB0E0 /* btnPanelRightCloseNew.png */,
+				9D2124E31AE4609B007AB0E0 /* btnPanelLeftOpenNew.png */,
+				9D2124E11AE4608A007AB0E0 /* btnPanelLeftCloseNew.png */,
 				9D2124601AE42969007AB0E0 /* groupMasterBtnHover.png */,
 				9D2124611AE42969007AB0E0 /* HelloWorld.png */,
 				9D2124621AE42969007AB0E0 /* iconKnobDefault.png */,
@@ -1253,6 +1265,7 @@
 				9D2124BE1AE4296A007AB0E0 /* knobVOL17.png in Resources */,
 				9D2124B51AE4296A007AB0E0 /* knobVOL8.png in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
+				9D2124E21AE4608A007AB0E0 /* btnPanelLeftCloseNew.png in Resources */,
 				9D2124E01AE4296A007AB0E0 /* zoomOutDefault.png in Resources */,
 				9D2124C51AE4296A007AB0E0 /* modeBlow.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
@@ -1312,12 +1325,14 @@
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				9D2124CF1AE4296A007AB0E0 /* padHover.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
+				9D2124E81AE460AF007AB0E0 /* btnPanelRightOpenNew.png in Resources */,
 				DCAEADCF1A505D7000513775 /* Info.plist in Resources */,
 				9D21245A1AE42951007AB0E0 /* btnPanelRightOpen.png in Resources */,
 				9D21245B1AE42951007AB0E0 /* btnSaveDefault.png in Resources */,
 				9D2124C61AE4296A007AB0E0 /* modeGesture.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				9D2124DE1AE4296A007AB0E0 /* zoomInDefault.png in Resources */,
+				9D2124E41AE4609B007AB0E0 /* btnPanelLeftOpenNew.png in Resources */,
 				9D2124BF1AE4296A007AB0E0 /* knobVOLPOINT.png in Resources */,
 				9D2124501AE42951007AB0E0 /* backgroundNew.jpg in Resources */,
 				9D2124CB1AE4296A007AB0E0 /* moveDefault.png in Resources */,
@@ -1330,6 +1345,7 @@
 				9D2124AC1AE4296A007AB0E0 /* iconSwitchPressed.png in Resources */,
 				9D2124B01AE4296A007AB0E0 /* knobVOL3.png in Resources */,
 				9D2124A01AE4296A007AB0E0 /* groupMasterBtnDefault.png in Resources */,
+				9D2124E61AE460A3007AB0E0 /* btnPanelRightCloseNew.png in Resources */,
 				9D2124DC1AE4296A007AB0E0 /* switchSlider.png in Resources */,
 				9D2124591AE42951007AB0E0 /* btnPanelRightClose.png in Resources */,
 				9D2124B21AE4296A007AB0E0 /* knobVOL5.png in Resources */,
