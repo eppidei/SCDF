@@ -58,7 +58,7 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
     
     float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT; //item label
-    if (ItemType::ID()!=ITEM_KNOB_ID && ItemType::ID()!=ITEM_KEYBOARD_ID)
+    if (ItemType::ID()!=ITEM_KNOB_ID && ItemType::ID()!=ITEM_KEYBOARD_ID && ItemType::ID()!=ITEM_SWITCH_ID)
         scaledHeight+=ITEMS_LABEL_HEIGHT;   //item control icon on top
     float scaledWidth=ItemType::GetBaseSize().width*GetGridDistance();
 
@@ -347,6 +347,9 @@ bool MainScene::init()
 //  uButton->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
     this->addChild(uButton);*/
     
+    HideShowPropertiesPanel(false);
+    customScrollView->HideShow(false);
+    
     return true;
 }
 
@@ -357,6 +360,7 @@ void MainScene::HideShowLoadSavePanel()
 
 void MainScene::HideShowPropertiesPanel(bool hide)
 {
+    customPanel->SetActive(hide);
     propertiesPanel->HideShow(hide);
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 }
@@ -457,6 +461,11 @@ void MainScene::OnGridButtonClick()
 //        customPanel->runAction(action);
 //}
 
+void MainScene::UpdateEditButton()
+{
+    propertiesPanel->UpdateEditButton(!customPanel->IsActive());
+}
+
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     static Vec2 dragStartUpdated;
@@ -484,7 +493,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 }
                     break;
                 case MAIN_BUTTON_EDIT:
-                    customPanel->ToggleActiveState();
+                    customPanel->SetActive(!customPanel->IsActive());
                     break;
                 case MAIN_BUTTON_HIDESHOW_SCROLLVIEW:
                 case MAIN_BUTTON_HIDESHOW_PROPERTIES:

@@ -39,7 +39,8 @@ namespace ScdfCtrl
         void SetDraggingRect(cocos2d::Rect _draggingRect);
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
-        void ToggleActiveState();
+        void SetActive(bool active);
+        bool IsActive() { return active;};
         void DetectCollisions(cocos2d::Rect r);
         void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
         

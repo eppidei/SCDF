@@ -440,10 +440,10 @@ void ItemSlider::DoCreateThumb()
 {
     thumb->setContentSize(GetThumbSize(GetControlContentSize()));
     thumb->setBackGroundImage("sliderHAT.png");
-    const int bitmapOffsetLeft=22;
-    const int bitmapOffsetTop=13;
-    const int bitmapOffsetRight=7;
-    const int bitmapOffsetBottom=12;
+    const int bitmapOffsetLeft=0;//64;
+    const int bitmapOffsetTop=0;//38;
+    const int bitmapOffsetRight=0;//20;
+    const int bitmapOffsetBottom=0;//43;
     cocos2d::Rect r(bitmapOffsetLeft, bitmapOffsetTop, thumb->getBackGroundImageTextureSize().width-bitmapOffsetLeft-bitmapOffsetRight, thumb->getBackGroundImageTextureSize().height-bitmapOffsetTop-bitmapOffsetBottom);
     thumb->setBackGroundImageScale9Enabled(true);
     thumb->setBackGroundImageCapInsets(r);
@@ -523,7 +523,7 @@ void ItemSlider::SetPositionOfValueDependentComponent()
     float offset =	thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
     float size=GetLayoutManager()->IsVertical()?GetControlContentSize().height-offset:GetControlContentSize().width-offset;
     float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
-    const int bitmapThumbXOffset=-8;
+    const int bitmapThumbXOffset=-6;
     if (GetLayoutManager()->IsVertical())
     {
         thumb->setPosition(Vec2(GetControlContentSize().width/2.0+bitmapThumbXOffset,position));
@@ -927,20 +927,6 @@ void ItemKnob::Create()
 void ItemPad::Init()
 {
     DEFAULT_NAME("Pad")
-}
-
-void ItemSwitch::Init()
-{
-    checked=0;
-    DEFAULT_NAME("Swicth")
-}
-
-void ItemPad::Create()
-{
-    
-    Init();
-    GetControlUnit()->SetMax(127);
-    GetControlUnit()->SetMin(0);
     pad = Button::create();
     pad->setTouchEnabled(true);
     //pad->setScale9Enabled(true);
@@ -953,6 +939,52 @@ void ItemPad::Create()
     cocos2d::Rect rc(10,9,110,113);
     pad->setCapInsets(rc);
     control->addChild(pad,2);
+}
+
+void ItemSwitch::Init()
+{
+    checked=0;
+    DEFAULT_NAME("Swicth")
+    GetLayoutManager()->SetVertical(false);
+    backGround = Layout::create();
+    control->addChild(backGround,1);
+//    toggle->setTouchEnabled(true);
+    // keysHandle->setBackGroundColorType(Layout::BackGroundColorType::NONE);
+    backGround->setAnchorPoint(Vec2(0,1));
+//    backGround->setContentSize(GetControlContentSize());
+//    toggle->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+    backGround->setBackGroundImage("switchBase.png");
+    const int bitmapcapInsetOffset=0;
+    cocos2d::Rect rr(0, bitmapcapInsetOffset, backGround->getBackGroundImageTextureSize().width, backGround->getBackGroundImageTextureSize().height-2*bitmapcapInsetOffset);
+    cocos2d::Size s(GetControlContentSize().width, GetControlContentSize().height);
+    backGround->setBackGroundImageScale9Enabled(true);
+    backGround->setBackGroundImageCapInsets(rr);
+    backGround->setContentSize(s);
+    backGround->setPosition(Vec2(0, GetControlContentSize().height));
+    backGround->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+
+    pad = Button::create();
+    pad->setTouchEnabled(true);
+    //pad->setScale9Enabled(true);
+    pad->ignoreContentAdaptWithSize(false);
+    pad->loadTextures("switchSlider.png", "switchSlider.png");
+    pad->setAnchorPoint(Vec2(0,1));
+    pad->setPosition(Vec2(0,GetControlContentSize().height));
+    pad->setContentSize(cocos2d::Size(GetControlContentSize().width/2.0, GetControlContentSize().height));
+    pad->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
+//    cocos2d::Rect rc(10,9,110,113);
+//    pad->setCapInsets(rc);
+    control->addChild(pad,2);
+    
+    UpdateUI();
+}
+
+void ItemPad::Create()
+{
+    
+    Init();
+    GetControlUnit()->SetMax(127);
+    GetControlUnit()->SetMin(0);
 }
 
 void ItemPad::SetColor(Colors::ItemsColorsId colorIndex)
@@ -975,6 +1007,16 @@ bool ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventTy
     GetControlUnit()->OnTouch(ControlUnit::TouchUp,0.0);
     LOGD("%s sends %d with velocity %f \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), 0.f);
     return true;
+}
+
+void ItemSwitch::DoSetContentSize(cocos2d::Size contentSize)
+{
+    if (pad)
+    {
+        pad->setContentSize(cocos2d::Size(contentSize.width/2.0, contentSize.height));
+        backGround->setContentSize(contentSize);
+        UpdateUI();
+    }
 }
 
 void ItemPad::DoSetContentSize(cocos2d::Size contentSize)
@@ -1211,16 +1253,17 @@ bool ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     }
     
     if (!ItemPad::OnItemTouchBegan(widget,type)) return false;
-    pad->loadTextureNormal("padHover.png");
+    pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
     return true;
 }
 
 void ItemSwitch::UpdateUI()
 {
+    backGround->setPosition(Vec2(0, backGround->getParent()->getContentSize().height));
     if (checked)
-        pad->loadTextureNormal("padHover.png");
+        pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
     else
-        pad->loadTextureNormal("padDefault.png");
+        pad->setPosition(Vec2(pad->getParent()->getContentSize().width/2.0, pad->getParent()->getContentSize().height));
 }
 
 bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
@@ -1232,7 +1275,7 @@ bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
     else{
         ItemPad::OnItemTouchEnded(widget,type);
         checked=false;
-        pad->loadTextureNormal("padDefault.png");
+        UpdateUI();
     }
     return true;
 }

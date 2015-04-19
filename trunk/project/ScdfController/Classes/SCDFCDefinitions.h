@@ -43,7 +43,7 @@
 #define KEYBOARD_SIZE_BASE          cocos2d::Size(25,15)
 #define MULTIPAD_SIZE_BASE          cocos2d::Size(12,8)
 #define KNOB_SIZE_BASE              cocos2d::Size(8,8)
-#define SWITCH_SIZE_BASE            PAD_SIZE_BASE
+#define SWITCH_SIZE_BASE            cocos2d::Size(6,2)
 #define RECT_SENSOR_SIZE_BASE       SLIDER_SIZE_BASE
 #define ITEMS_LABEL_HEIGHT          30.0
 

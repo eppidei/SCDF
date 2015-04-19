@@ -49,6 +49,7 @@ namespace ScdfCtrl
         void EnableScrollView(bool enable);
         void AttachItem(ItemBase *item);
         void DetachItem(ItemBase *item);
+        void UpdateEditButton();
         // implement the "static create()" method manually
         CREATE_FUNC(MainScene);
     };

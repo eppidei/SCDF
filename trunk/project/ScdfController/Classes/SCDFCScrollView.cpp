@@ -192,11 +192,11 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     setBackGroundImageScale9Enabled(true);
     setBackGroundImageCapInsets(rr);
     
-    float scrollbarHeight=getContentSize().height*(1.0-(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
+    float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
     float scrollbarWidth=getContentSize().width*(1.0-(SCROLLVIEW_TONGUE_PERCENTAGE))-2.0*xpadding;
     
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
-    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE+xpadding,(1.0-(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
+    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE+xpadding,(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
 
     float buttonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
     float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
@@ -208,7 +208,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
     button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
-    button->setPosition(Vec2(getContentSize().width*(1-bitmapToolbarWidthPercentage)-buttonDim-5, buttonYPos));
+    button->setPosition(Vec2(getContentSize().width*(1.0-bitmapToolbarWidthPercentage)-buttonDim-5.0, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,MAIN_BUTTON_HIDESHOW_SCROLLVIEW);
     
@@ -218,8 +218,8 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
-    button->setPosition(Vec2(getContentSize().width*(1+SCROLLVIEW_TONGUE_PERCENTAGE)/2.0-buttonDim/2.0, buttonYPos));
+    button->setContentSize(cocos2d::Size(scrollbarWidth, buttonDim));
+    button->setPosition(Vec2(getContentSize().width*(1+SCROLLVIEW_TONGUE_PERCENTAGE)/2.0-button->getContentSize().width/2.0, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,DELETE_ITEM);
     

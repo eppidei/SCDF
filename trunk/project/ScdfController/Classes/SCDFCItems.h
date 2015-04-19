@@ -238,12 +238,15 @@ namespace ScdfCtrl
         bool checked;
         
         void UpdateUI() override;
+        cocos2d::ui::Layout *backGround;
+        cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
     public:
         static cocos2d::Size GetBaseSize() { return SWITCH_SIZE_BASE;}
         int GetID() override { return ID();}
         static int ID() { return ITEM_SWITCH_ID;}
-        static std::string GetIcon() { return "iconPadDefault.png";}
-        static std::string GetIconPressed() { return "iconPadPressed.png";}
+        static std::string GetIcon() { return "iconSwitchDefault.png";}
+        static std::string GetIconPressed() { return "iconSwitchPressed.png";}
+        void DoSetContentSize(cocos2d::Size contentSize) override;
         
         CREATE_FUNC(ItemSwitch);
     };

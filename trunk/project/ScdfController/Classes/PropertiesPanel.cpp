@@ -966,10 +966,10 @@ void PropertiesPanel::InitPanel()
     setBackGroundImageScale9Enabled(true);
     setBackGroundImageCapInsets(rr);
 
-    float scrollbarHeight=getContentSize().height*(1.0-(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
+    float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
     float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-2.0*xpadding;
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
-    scrollView->setPosition(Vec2(xpadding,(1.0-(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
+    scrollView->setPosition(Vec2(xpadding,(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
     
     selectedItem=NULL;
     sectionOSCInfo=OSCInfo::create();
@@ -1038,7 +1038,7 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("moveDefault.png");
+    button->loadTextureNormal("moveActive.png");
     button->loadTexturePressed("moveActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
@@ -1049,6 +1049,21 @@ void PropertiesPanel::InitPanel()
     addChild(button,6,MAIN_BUTTON_EDIT);
 
     UpdateSubpanels();
+}
+
+void PropertiesPanel::UpdateEditButton(bool editMode)
+{
+    Button *b=dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_EDIT));
+    if (editMode)
+    {
+        b->loadTextureNormal("moveActive.png");
+        b->loadTexturePressed("moveActive.png");
+    }
+    else
+    {
+        b->loadTextureNormal("moveDefault.png");
+        b->loadTexturePressed("moveDefault.png");
+    }
 }
 
 void PropertiesPanel::OnHideShow()
