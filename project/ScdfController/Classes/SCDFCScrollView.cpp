@@ -36,14 +36,10 @@ void ItemScrollViewSubpanel::SubscribeButton(cocos2d::ui::Button *button, bool d
 
 template <class ItemType> void ItemScrollView::AddButtonToScrollView()
 {
-//#define SCROLLVIEW_ITEM_SIZE        (SCROLLBAR_ITEM_SIDE_BASE*parent->GetUnityBase())
-//#define SCROLLVIEW_ITEM_DISTANCE    (SCROLLVIEW_ITEM_SIZE/2)
-//#define SCROLLVIEW_ITEM_RECORD      (SCROLLVIEW_ITEM_SIZE+SCROLLVIEW_ITEM_DISTANCE)
-    
     int numElements=scrollView->getChildrenCount();
     float innerWidth = scrollView->getContentSize().width;
     
-    float itemHeight = scrollView->getContentSize().width*0.4;
+    float itemHeight = scrollView->getContentSize().width;
     float itemDistance = itemHeight/2;
     float scrollviewRecord=itemHeight+itemDistance;
     
@@ -54,7 +50,7 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView()
     int i=0;
     for (auto it=_childrens.begin(); it!=_childrens.end(); ++it)
     {
-        (*it)->setPosition(Vec2(innerWidth / 2.0f-(*it)->getContentSize().width/2.0f, newInnerHeight -i*itemDistance- ((*it)->getContentSize().height)*i));
+        (*it)->setPosition(Vec2(0, newInnerHeight -i*itemDistance- ((*it)->getContentSize().height)*i));
         i++;
     }
     Button* button = Button::create();
@@ -64,7 +60,7 @@ template <class ItemType> void ItemScrollView::AddButtonToScrollView()
     button->ignoreContentAdaptWithSize(false);
     //button->setScale9Enabled(true);
     button->setContentSize(cocos2d::Size(itemHeight, itemHeight));
-    button->setPosition(Vec2(innerWidth / 2.0f-button->getContentSize().width/2.0f, newInnerHeight -numElements*itemDistance- button->getContentSize().height*numElements));
+    button->setPosition(Vec2(0, newInnerHeight -numElements*itemDistance- button->getContentSize().height*numElements));
     
     SubscribeButton(button, /*id==ITEM_KEYBOARD_ID*/true);
     scrollView->addChild(button,0,ItemType::ID());
@@ -178,62 +174,43 @@ void ItemScrollViewSubpanel::InitWithContentAndBitmaps(MainScene *main, cocos2d:
 
 void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
+    isOpened=false;
     DoInit(main, r);
     parent->addChild(this,7);
     
-    std::vector<std::string> v;
-    v.push_back("sliderIcon.png");
-    v.push_back("sliderIcon.png");
-    v.push_back("sliderIcon.png");
-    cocos2d::Rect subPanelRect(0,0,SCROLLBAR_ITEM_SIDE_BASE*parent->GetUnityBase(),SCROLLBAR_ITEM_SIDE_BASE*parent->GetUnityBase()*v.size());
-    LOGD("ITEM SCROLL ORIG %f,%f SIZE %f,%f",r.origin.x,r.origin.y,r.size.width,r.size.height);
-    
-    LOGD("Add slider button");
-    AddButtonToScrollView<ItemSlider>();
-//    CreateSubpanel(ItemSlider::GetID(),v,subPanelRect);
-//    LOGD("Add pad button");
-//    v.clear();
-//    v.push_back("padIcon.png");
-//    v.push_back("padIcon.png");
-//    v.push_back("padIcon.png");
-    AddButtonToScrollView<ItemPad>();
-//    CreateSubpanel(ItemPad::GetID(),v,subPanelRect);
-//    LOGD("Add knob button");
-//    v.clear();
-//    v.push_back("knobIcon.png");
-//    v.push_back("knobIcon.png");
-//    v.push_back("knobIcon.png");
-    AddButtonToScrollView<ItemKnob>();
-//    CreateSubpanel(ItemKnob::GetID(),v,subPanelRect);
-//    LOGD("Add switch pad button");
-//    v.clear();
-//    v.push_back("sensorIcon.png");
-//    v.push_back("sensorIcon.png");
-//    v.push_back("sensorIcon.png");
-    AddButtonToScrollView<ItemSwitch>();
-    AddButtonToScrollView<ItemWheel>();
-//    CreateSubpanel(ItemSwitch::GetID(),v,subPanelRect);
-    LOGD("Add keyboard button");
-    AddButtonToScrollView<ItemKeyboard>();
+    const float bitmapLeftPadding=0;//38.0;
+    const float bitmapTopTransparencyPercentage=0.017;
+    const float bitmapBottomTransparencyPercentage=0.025;
+    const float bitmapToolbarHeightPercentage=0.056;
+    const float bitmapToolbarWidthPercentage=1.0-SCROLLVIEW_TONGUE_PERCENTAGE;
 
-    LOGD("Init with content over");
+    float ypadding=(getContentSize().height*bitmapToolbarHeightPercentage)*0.1;
+    float xpadding=(getContentSize().width*bitmapToolbarWidthPercentage)*0.1;
     
-    setBackGroundImage("rightPanel.png");
-    const int bitmapcapInsetOffset=80;
-    cocos2d::Rect rr(58, 33, getBackGroundImageTextureSize().width-58, getBackGroundImageTextureSize().height-33-55);
+    setBackGroundImage("panelRight.png");
+    cocos2d::Rect rr(bitmapLeftPadding, 0, getBackGroundImageTextureSize().width-bitmapLeftPadding, getBackGroundImageTextureSize().height);
     setBackGroundImageScale9Enabled(true);
     setBackGroundImageCapInsets(rr);
     
+    float scrollbarHeight=getContentSize().height*(1.0-(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
+    float scrollbarWidth=getContentSize().width*(1.0-(SCROLLVIEW_TONGUE_PERCENTAGE))-2.0*xpadding;
+    
+    scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
+    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE+xpadding,(1.0-(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
+
+    float buttonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
+    float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
+    
     auto button = Button::create();
-    button->loadTextureNormal("btnOFF.png");
-    button->loadTexturePressed("btnON.png");
+    button->loadTextureNormal("btnPanelRightOpen.png");
+    button->loadTexturePressed("btnPanelRightOpen.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(30, 60));
-    button->setPosition(Vec2(45, getContentSize().height-28));
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(getContentSize().width*(1-bitmapToolbarWidthPercentage)-buttonDim-5, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
-    addChild(button,6,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
+    addChild(button,6,MAIN_BUTTON_HIDESHOW_SCROLLVIEW);
     
     button = Button::create();
     button->loadTextureNormal("CloseNormal.png");
@@ -241,11 +218,17 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    float size=(getContentSize().width-scrollView->getPositionX())/3.0;
-    button->setContentSize(cocos2d::Size(size, size));
-    button->setPosition(Vec2(scrollView->getContentSize().width/2.0+size/4.0-1, scrollView->getPositionY()-scrollView->getContentSize().height-5));
+    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setPosition(Vec2(getContentSize().width*(1+SCROLLVIEW_TONGUE_PERCENTAGE)/2.0-buttonDim/2.0, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
-    addChild(button,6,WORKING_PANEL_DELETE_ITEM);
+    addChild(button,6,DELETE_ITEM);
+    
+    AddButtonToScrollView<ItemSlider>();
+    AddButtonToScrollView<ItemPad>();
+    AddButtonToScrollView<ItemKnob>();
+    AddButtonToScrollView<ItemSwitch>();
+    AddButtonToScrollView<ItemWheel>();
+    AddButtonToScrollView<ItemKeyboard>();
 }
 
 
@@ -379,29 +362,29 @@ void ItemScrollView::ToggleItemMenuOnTouchEvent(Ref *pSender, cocos2d::ui::Widge
         default:
             break;
     }
-
-//    switch()
-//    {
-//        case ITEM_SLIDER_ID:
-//            DoDragItemOnTouchEvent<ItemSlider>(type, button);
-//            break;
-//        case ITEM_PAD_ID:
-//            DoDragItemOnTouchEvent<ItemPad>(type, button);
-//            break;
-//        case ITEM_KEYBOARD_ID:
-//            DoDragItemOnTouchEvent<ItemKeyboard>(type, button);
-//            break;
-//        case ITEM_KNOB_ID:
-//            DoDragItemOnTouchEvent<ItemKnob>(type, button);
-//            break;
-//        case ITEM_SWITCH_ID:
-//            DoDragItemOnTouchEvent<ItemSwitch>(type, button);
-//            break;
-//        default:
-//            break;
-//    }
 }
 
+void ItemScrollView::HideShow(bool hide)
+{
+    MoveTo *actScrollview;
+    if (hide)
+    {
+        HideAllSubPanels();
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getParent()->getContentSize().width-(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE), getPositionY()));
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelRightOpen.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelRightOpen.png");
+        isOpened=false;
+    }
+    else
+    {
+        actScrollview = MoveTo::create(0.1f, cocos2d::Point(getParent()->getContentSize().width-getContentSize().width, getPositionY()));
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTextureNormal("btnPanelRightClose.png");
+        dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_HIDESHOW_SCROLLVIEW))->loadTexturePressed("btnPanelRightClose.png");
+        isOpened=true;
+    }
+
+    runAction(actScrollview);
+}
 template void ItemScrollView::AddButtonToScrollView<ItemSlider>();
 template void ItemScrollView::AddButtonToScrollView<ItemPad>();
 template void ItemScrollView::AddButtonToScrollView<ItemKnob>();

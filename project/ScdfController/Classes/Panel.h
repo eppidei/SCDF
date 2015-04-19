@@ -13,8 +13,8 @@
 #include "SCDFCDefinitions.h"
 #include "DropDownMenu.h"
 
-#define SUBPANEL_DISTANCE 20
-#define SUBPANEL_ITEM_HEIGHT 30.0
+#define SUBPANEL_DISTANCE MainScene::GetUnityBase()//20
+#define SUBPANEL_ITEM_HEIGHT 2*MainScene::GetUnityBase()//30.0
 
 namespace ScdfCtrl
 {
@@ -31,7 +31,7 @@ namespace ScdfCtrl
         bool visible;
     public:
         void InitLayout();
-        bool HideShow(PanelBase *substitute=NULL);
+        bool HideShow(bool hide, PanelBase *substitute=NULL);
      //   virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
         template <class PanelType> static PanelBase *CreatePanel(MainScene *main, cocos2d::Rect r);
         void EnableScrolling(bool enable);
@@ -41,6 +41,7 @@ namespace ScdfCtrl
     protected:
         cocos2d::ui::ScrollView *scrollView;
         MainScene *parent;
+        virtual void OnHideShow(){}
     };
     
     

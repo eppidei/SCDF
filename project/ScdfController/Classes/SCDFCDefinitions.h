@@ -13,14 +13,14 @@
 #include "ui/CocosGUI.h"
 
 #define SCDFC_ID_BASE 100
-#define ID_TOOLBAR                          SCDFC_ID_BASE+1
-#define TOOLBAR_BUTTON_GRID                 SCDFC_ID_BASE+2
-#define TOOLBAR_BUTTON_ACTIVATE             SCDFC_ID_BASE+3
-#define TOOLBAR_BUTTON_HIDESHOW_TOOLBAR     SCDFC_ID_BASE+4
-#define TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW  SCDFC_ID_BASE+5
-#define TOOLBAR_BUTTON_HIDESHOW_PROPERTIES  SCDFC_ID_BASE+6
-#define WORKING_PANEL_DELETE_ITEM           SCDFC_ID_BASE+7
-//#define WORKING_PANEL_SLIDE_LEFT            SCDFC_ID_BASE+8
+#define MAIN_BUTTON_NEW                     SCDFC_ID_BASE+1
+#define MAIN_BUTTON_SAVE                    SCDFC_ID_BASE+2
+#define MAIN_BUTTON_LOAD                    SCDFC_ID_BASE+3
+#define MAIN_BUTTON_EDIT                    SCDFC_ID_BASE+4
+
+#define MAIN_BUTTON_HIDESHOW_SCROLLVIEW     SCDFC_ID_BASE+5
+#define MAIN_BUTTON_HIDESHOW_PROPERTIES     SCDFC_ID_BASE+6
+#define DELETE_ITEM                         SCDFC_ID_BASE+7
 
 //Working panel items IDs
 

@@ -147,11 +147,11 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
     if (output->state)
         s=1;
     
-    LOGD("BLOW STATE %d\n",s);
+    //LOGD("BLOW STATE %d\n",s);
     for (int i=0;i<output->n_data;++i)
     {
-       // LOGD("BLOW DATA %f\n",output->p_data[i]);
-        lastValue=output->p_data[i]/127.0;
+        LOGD("BLOW DATA %f\n",output->p_data[i]);
+        lastValue=output->p_data[i];
         GetSender()->SendValue(output->p_data[i]);
         UpdateUI();
     }
