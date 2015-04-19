@@ -130,10 +130,11 @@ bool WorkingPanel::LoadPatch(std::string patchName)
     return ret;
 }
 
-void WorkingPanel::ToggleActiveState()
+void WorkingPanel::SetActive(bool _active)
 {
 	LOGD("TOGGLE ACTIVE STATE");
-    active=!active;
+    active=_active;
+    parent->UpdateEditButton();
 }
 
 void WorkingPanel::DrawGrid()

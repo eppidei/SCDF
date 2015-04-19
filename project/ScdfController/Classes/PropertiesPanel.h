@@ -123,6 +123,7 @@ namespace ScdfCtrl
         void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event) override;
         ScdfCtrl::MultiSender *GetCurrentSender();
         ItemBase *GetSelectedItem();
+        void UpdateEditButton(bool editMode);
         CREATE_FUNC(PropertiesPanel);
     protected:
         void OnHideShow();
