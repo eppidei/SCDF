@@ -21,7 +21,7 @@
 
 namespace ScdfCtrl {
 
-class MultiSender : public Scdf::MidiOutConnection::Listener {
+class MultiSender : public Scdf::MidiConnectionListener {
 
 public:
 

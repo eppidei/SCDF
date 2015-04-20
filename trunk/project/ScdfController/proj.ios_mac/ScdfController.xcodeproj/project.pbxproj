@@ -200,6 +200,7 @@
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
 		DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */; };
 		DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */; };
+		DC4A58C21AE5AA5C0002CD7F /* MidiOutConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */; };
 		DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */; };
 		DC5B533D1AE2B0DE004946D9 /* InAppiOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */; };
 		DC5B53411AE2B0F2004946D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5B53401AE2B0F2004946D9 /* StoreKit.framework */; };
@@ -592,6 +593,7 @@
 		DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MidiOutConnectionIOS.mm; path = ../../../src/MidiOutConnectionIOS.mm; sourceTree = "<group>"; };
 		DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ControlUnit.cpp; path = ../Classes/ControlUnit.cpp; sourceTree = "<group>"; };
 		DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertiesPanel.cpp; path = ../Classes/PropertiesPanel.cpp; sourceTree = "<group>"; };
+		DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiOutConnection.cpp; path = ../../../src/MidiOutConnection.cpp; sourceTree = "<group>"; };
 		DC562A541A516BFF009C5C95 /* PlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformInfo.h; path = ../../../src/include/PlatformInfo.h; sourceTree = "<group>"; };
 		DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DropDownMenu.cpp; path = ../Classes/DropDownMenu.cpp; sourceTree = "<group>"; };
 		DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InAppiOS.mm; path = ../Classes/IOs/InAppiOS.mm; sourceTree = "<group>"; };
@@ -1088,6 +1090,7 @@
 		DCCA5A2E1A40DB430014FADE /* MIDI */ = {
 			isa = PBXGroup;
 			children = (
+				DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */,
 				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
 				DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */,
 			);
@@ -1396,6 +1399,7 @@
 				9D6C01DE1ADAF8E000F75A3C /* ADE_Utils.c in Sources */,
 				CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */,
 				9D39BD831AD92EAB001B3F39 /* ControlUnitPatch.cpp in Sources */,
+				DC4A58C21AE5AA5C0002CD7F /* MidiOutConnection.cpp in Sources */,
 				9D6C01D01ADAF8E000F75A3C /* ADE_Blow.c in Sources */,
 				CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */,
 				9DF072291ADEF2EB00F2699D /* ControlUnit.cpp in Sources */,
@@ -1515,7 +1519,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1545,6 +1548,7 @@
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
 					"$(SRCROOT)/../../../lib/cereal-1.1.0/include",
 					"$(SRCROOT)/../../../ext/ADE_API/API/src",
+					"$(SRCROOT)/../../../ext/ADE_API/API/lib/fftw-3.3.4/api",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1561,7 +1565,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1588,6 +1591,7 @@
 					"$(SRCROOT)/../../../lib/oscpack_1_1_0/osc/ip",
 					"$(SRCROOT)/../../../lib/cereal-1.1.0/include",
 					"$(SRCROOT)/../../../ext/ADE_API/API/src",
+					"$(SRCROOT)/../../../ext/ADE_API/API/lib/fftw-3.3.4/api",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;

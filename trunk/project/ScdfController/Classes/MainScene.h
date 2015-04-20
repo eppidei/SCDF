@@ -2,6 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "SCDFCDefinitions.h"
+#include "MidiOutConnection.h"
 
 #define PROPERTIES_PANEL_TONGUE_PERCENTAGE 0.22
 #define SCROLLVIEW_TONGUE_PERCENTAGE 0.33
@@ -15,7 +16,7 @@ namespace ScdfCtrl
     class ItemBase;
     class LoadSavePanel;
 
-    class MainScene : public cocos2d::Layer
+    class MainScene : public cocos2d::Layer, public Scdf::MidiDeviceMenuListener
     {
         static std::vector<float> gridUnity;
         std::unique_ptr<ItemScrollView> customScrollView;

@@ -10,18 +10,35 @@
 #define SCDF_Test_MidiOutConnection_h
 
 #include "TypeDefinitions.h"
+#include <vector>
 
 namespace Scdf  {
     
-    class MidiOutConnection
+    class MidiOutConnection;
+    
+    
+    class MidiConnectionListener
     {
     public:
+        virtual void OnConnectionLost(MidiOutConnection* connection) = 0;
+    };
+    
+    
+    class MidiDeviceMenuListener {
+        
+    public:
+        virtual void UpdateMIDIDevicesMenu() = 0;
+        
+    };
+    
+    
+    class MidiOutConnection
+    {
+        
+    public:
 
-        class Listener
-        {
-        public:
-            virtual void OnConnectionLost(MidiOutConnection* connection) = 0;
-        };
+        static std::map<MidiOutConnection*, MidiConnectionListener*> listenersMap;
+        static MidiDeviceMenuListener *midiDeviceMenulistener;
         
         static s_int32 GetNumAvailableOutputs();
         static std::string GetOutputName(s_int32 index);
@@ -37,13 +54,17 @@ namespace Scdf  {
         virtual s_bool SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel) = 0;
         virtual s_bool SendModWheel(s_uint16 value, s_uint16 channel) = 0;
         
-        void SetListener(Listener* _listener){listener = _listener;}
-
-        //virtual ~MidiOutConnection() {}
+        static void AttachListenerConnectionLost(MidiOutConnection* connection, MidiConnectionListener* _listener );
+        static void DetachListenerConnectionLost(MidiOutConnection* connection);
+        static void NotifyListenerConnectionLost(MidiOutConnection *_connection);
+        
+        static void AttachMidiDeviceMenuListener(MidiDeviceMenuListener* _midiDeviceMenulistener );
+        static void NotifyMidiDeviceMenuListener();
+        
 
     protected:
         
-        Listener* listener;
+        
     };
 
     

@@ -16,6 +16,12 @@
 using namespace ScdfCtrl;
 USING_NS_CC;
 
+
+namespace Scdf
+{
+    void createMidiMananager();
+}
+
 AppDelegate::AppDelegate() {
 
 }
@@ -73,6 +79,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->runWithScene(scene);
     
     scdf::theSensorAPI()->InitFramework();
+#ifdef PLATF_IOS
+    Scdf::createMidiMananager();
+#endif
 
     return true;
 }
