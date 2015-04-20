@@ -75,7 +75,7 @@ cocos2d::Size ItemBase::GetControlContentSize()
     return control->getContentSize();
 }
 
-#define LABEL_X_OFFSET 5.0
+#define LABEL_X_OFFSET MainScene::GetUnityBase()/3.0
 
 void ItemBase::CreateItemBaseElements()
 {

@@ -230,6 +230,12 @@ float MainScene::GetUnityBase()
 //    return 16.0;//gridUnity[0];
 }
 
+void MainScene::UpdateMIDIDevicesMenu()
+{
+    if (propertiesPanel.get())
+        propertiesPanel->UpdateDevicesMenu();
+}
+
 int MainScene::GetGridDistance()
 {
     if (0==gridUnity.size()){
@@ -258,7 +264,7 @@ bool MainScene::init()
     //    you may modify it.
     
 //    setColor(Color3B::GRAY);
-#define SCROLLVIEW_WIDTH (10.0*GetUnityBase())
+#define SCROLLVIEW_WIDTH (8.0*GetUnityBase())
 #define PROPERTIES_WIDTH (18.0*GetUnityBase())
 #define TOOLBAR_HEIGHT   (2.0*GetUnityBase())
     
