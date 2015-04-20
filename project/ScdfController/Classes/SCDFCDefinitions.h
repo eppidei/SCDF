@@ -45,7 +45,6 @@
 #define KNOB_SIZE_BASE              cocos2d::Size(8,8)
 #define SWITCH_SIZE_BASE            cocos2d::Size(6,2)
 #define RECT_SENSOR_SIZE_BASE       SLIDER_SIZE_BASE
-#define ITEMS_LABEL_HEIGHT          30.0
 
 //Properties subpanel items ID
 

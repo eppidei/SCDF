@@ -536,6 +536,15 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
     }
 }
 
+void MIDIInfo::UpdateDevicesMenu()
+{
+    std::vector<DropDownMenuData> dropDownData;
+    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
+        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+}
+
 void MIDIInfo::CreateControls()
 {
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
@@ -553,11 +562,7 @@ void MIDIInfo::CreateControls()
     //Create device dropDown
     devices = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(devices);
-    std::vector<DropDownMenuData> dropDownData;
-    dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    UpdateDevicesMenu();
     
     //Create midiMessage label
     CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MIDI MESSAGE", "Arial", 16);
@@ -574,7 +579,8 @@ void MIDIInfo::CreateControls()
     MidiMessageString.push_back("Pitch Bend");
     midiMessage = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(midiMessage);
-    dropDownData.clear();
+    
+    std::vector<DropDownMenuData> dropDownData;
     for (int i=0;i<MidiMessageString.size();++i)
         dropDownData.push_back(DropDownMenuData(MidiMessageString[i],Colors::Instance()->GetUIColor(Colors::DropDownText)));
     midiMessage->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
@@ -865,7 +871,7 @@ void ItemSettings::Update()
     if (item->IsMaster())
     {
        // masterButton->loadTextureNormal("groupMasterBtnHover.png");
-        masterButton->setColor(Color3B::RED);
+        masterButton->setColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     }
     else{
     //    masterButton->loadTextureNormal("groupMasterBtnDefault.png");
@@ -1135,6 +1141,11 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
             UpdateSubpanels();
             break;
     }
+}
+
+void PropertiesPanel::UpdateDevicesMenu()
+{
+    sectionMIDIInfo->UpdateDevicesMenu();
 }
 
 ItemBase *PropertiesPanel::GetSelectedItem()

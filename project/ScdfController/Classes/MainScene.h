@@ -5,6 +5,7 @@
 
 #define PROPERTIES_PANEL_TONGUE_PERCENTAGE 0.22
 #define SCROLLVIEW_TONGUE_PERCENTAGE 0.33
+#define ITEMS_LABEL_HEIGHT MainScene::GetUnityBase()*2.0
 
 namespace ScdfCtrl
 {
@@ -50,6 +51,7 @@ namespace ScdfCtrl
         void AttachItem(ItemBase *item);
         void DetachItem(ItemBase *item);
         void UpdateEditButton();
+        void UpdateMIDIDevicesMenu();
         // implement the "static create()" method manually
         CREATE_FUNC(MainScene);
     };

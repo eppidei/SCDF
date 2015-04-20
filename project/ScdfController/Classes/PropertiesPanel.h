@@ -80,6 +80,7 @@ namespace ScdfCtrl
         void OnTouchEventBegan(cocos2d::Node *widget) override;
         void UpdateElementsVisibilityOnMessageTypeChanged();
         void CheckMessageTypeDependentElementsVisibility(MidiMessageType messageType);
+        void UpdateDevicesMenu();
         MIDIInfo();
         CREATE_FUNC(MIDIInfo);
     };
@@ -124,6 +125,7 @@ namespace ScdfCtrl
         ScdfCtrl::MultiSender *GetCurrentSender();
         ItemBase *GetSelectedItem();
         void UpdateEditButton(bool editMode);
+        void UpdateDevicesMenu();
         CREATE_FUNC(PropertiesPanel);
     protected:
         void OnHideShow();
