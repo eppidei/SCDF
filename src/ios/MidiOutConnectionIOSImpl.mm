@@ -1,6 +1,20 @@
 
 #import "MidiOutConnectionIOSImpl.h"
 #import <mach/mach_time.h>
+#import "Label.h"
+
+
+
+void showTestAlert()
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ROFL"
+                                                    message:@"Dee dee doo doo."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 
 // For some reason, this is nut pulled in by the umbrella header
 #import <CoreMIDI/MIDINetworkSession.h>
@@ -599,12 +613,17 @@ void SCDF_MIDIVirtualDestinationReadProc(const MIDIPacketList *pktlist, void *re
 
 - (void) midiNotify:(const MIDINotification*)notification
 {
+    
+    
     switch (notification->messageID)
     {
         case kMIDIMsgObjectAdded:
             [self midiNotifyAdd:(const MIDIObjectAddRemoveNotification *)notification];
             break;
         case kMIDIMsgObjectRemoved:
+            
+            //Scdf::MidiOutConnection::NotifyListenerConnectionLost(midiOutConnectionIOSImplRef);
+            
             [self midiNotifyRemove:(const MIDIObjectAddRemoveNotification *)notification];
             break;
         case kMIDIMsgPropertyChanged:
@@ -618,6 +637,9 @@ void SCDF_MIDIVirtualDestinationReadProc(const MIDIPacketList *pktlist, void *re
         case kMIDIMsgIOError:
             break;
     }
+    
+    
+    Scdf::MidiOutConnection::NotifyMidiDeviceMenuListener();
 }
 
 void SCDF_MIDINotifyProc(const MIDINotification *message, void *refCon)
@@ -676,6 +698,29 @@ void SCDF_MIDINotifyProc(const MIDINotification *message, void *refCon)
 
 namespace Scdf
 {
+    
+    SCDF_Midi* midiNetworkManager = NULL;
+    
+    void createMidiMananager()
+    {
+        if(NULL==midiNetworkManager)
+            midiNetworkManager = [[SCDF_Midi alloc] init];
+        midiNetworkManager.networkEnabled = YES;
+        
+    }
+    
+    SCDF_Midi* getMidiManager() {return midiNetworkManager;}
+
+    
+    
+    MidiOutConnectionIOSImpl::MidiOutConnectionIOSImpl(int _currentMIDIOutPortIndex)
+    {
+    
+        midiNetwork = getMidiManager();
+        midiNetwork.midiOutputPortIndex = _currentMIDIOutPortIndex;
+        
+        
+    }
     
     s_int32 MidiOutConnectionIOSImpl::GetNumAvailableOutputs()
     {

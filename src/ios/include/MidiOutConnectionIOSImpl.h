@@ -108,6 +108,51 @@ extern NSString * const SCDF_MidiConnectionKey;
 /// SCDF_Midi object if you are running the right version of iOS.
 ///
 /// @see SCDF_MidiDelegate
+
+
+  @class SCDF_Midi;
+
+
+namespace Scdf {
+    
+        
+  
+    
+    class MidiOutConnectionIOSImpl : public MidiOutConnection
+    {
+        
+    private:
+        
+        
+    public:
+        
+        SCDF_Midi* midiNetwork;
+        
+        MidiOutConnectionIOSImpl(int _currentMIDIOutPortIndex);
+        
+        
+        ~MidiOutConnectionIOSImpl()
+        {
+          //  [midiNetwork release];
+           // midiNetwork = nil;
+        }
+        
+        static s_int32 GetNumAvailableOutputs();
+        static std::string GetOutputName(s_int32 index);
+        
+        s_bool SendNoteOn(s_uint16 note, s_uint16 velocity, s_uint16 channel);
+        s_bool SendNoteOff(s_uint16 note, s_uint16 velocity, s_uint16 channel);
+        s_bool SendControlChange(s_uint16 control, s_uint16 value, s_uint16 channel);
+        s_bool SendProgramChange(s_uint16 program, s_uint16 channel);
+        s_bool SendAftertouch(s_uint16 value, s_uint16 channel);
+        s_bool SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel);
+        s_bool SendModWheel(s_uint16 value, s_uint16 channel);
+    };
+    
+    
+}
+
+
 @interface SCDF_Midi : NSObject
 {
     MIDIClientRef      client;
@@ -119,9 +164,11 @@ extern NSString * const SCDF_MidiConnectionKey;
     SCDF_MidiSource      *virtualDestinationSource;
     SCDF_MidiDestination *virtualSourceDestination;
     NSMutableArray    *sources, *destinations;
+    Scdf::MidiOutConnectionIOSImpl *midiOutConnectionIOSImplRef;
 }
 
 + (BOOL)midiAvailable;
+- (void) setMidiOutConnectionRef: (Scdf::MidiOutConnectionIOSImpl *) midiOutRef;
 
 @property (nonatomic,assign)   id<SCDF_MidiDelegate> delegate;
 @property (nonatomic,readonly) NSUInteger         numberOfConnections;
@@ -140,42 +187,3 @@ extern NSString * const SCDF_MidiConnectionKey;
 - (void) sendPacketList:(const MIDIPacketList *)packetList;
 
 @end
-
-namespace Scdf {
-    
-    
-    class MidiOutConnectionIOSImpl : public MidiOutConnection
-    {
-        
-    private:
-        SCDF_Midi* midiNetwork;
-        
-    public:
-        
-        MidiOutConnectionIOSImpl(int _currentMIDIOutPortIndex)
-        {
-            midiNetwork = [[SCDF_Midi alloc] init];
-            midiNetwork.networkEnabled = YES;
-            midiNetwork.midiOutputPortIndex = _currentMIDIOutPortIndex;
-        }
-        
-        ~MidiOutConnectionIOSImpl()
-        {
-            [midiNetwork release];
-            midiNetwork = nil;
-        }
-        
-        static s_int32 GetNumAvailableOutputs();
-        static std::string GetOutputName(s_int32 index);
-        
-        s_bool SendNoteOn(s_uint16 note, s_uint16 velocity, s_uint16 channel);
-        s_bool SendNoteOff(s_uint16 note, s_uint16 velocity, s_uint16 channel);
-        s_bool SendControlChange(s_uint16 control, s_uint16 value, s_uint16 channel);
-        s_bool SendProgramChange(s_uint16 program, s_uint16 channel);
-        s_bool SendAftertouch(s_uint16 value, s_uint16 channel);
-        s_bool SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel);
-        s_bool SendModWheel(s_uint16 value, s_uint16 channel);
-    };
-    
-    
-}

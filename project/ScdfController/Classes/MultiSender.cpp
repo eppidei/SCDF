@@ -142,7 +142,7 @@ s_bool MultiSender::SetMidiOutIndex(s_int32 index)
 	}
 
 	midiConnection = Scdf::MidiOutConnection::Create(index);
-	midiConnection->SetListener(this);
+	Scdf::MidiOutConnection::AttachListenerConnectionLost(midiConnection,this);
 
 	lastOpenedMidiOutIndex = midiConnection ? index : -1;
 
@@ -197,6 +197,7 @@ s_bool MultiSender::SendValue(s_int32 value)
 void MultiSender::OnConnectionLost(Scdf::MidiOutConnection* connection)
 {
 	if (connection==midiConnection) {
+        Scdf::MidiOutConnection::DetachListenerConnectionLost(midiConnection);
 		Scdf::MidiOutConnection::Destroy(midiConnection);
 		midiConnection = NULL;
 		lastOpenedMidiOutIndex = -1;

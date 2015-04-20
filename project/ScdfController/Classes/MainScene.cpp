@@ -254,6 +254,8 @@ bool MainScene::init()
         return false;
     }
     
+    Scdf::MidiOutConnection::AttachMidiDeviceMenuListener(this);
+    
     Director::getInstance()->setDisplayStats(false);
     cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
