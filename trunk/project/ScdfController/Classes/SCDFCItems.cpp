@@ -183,6 +183,8 @@ ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL), groupId(-
 
 ItemBase::~ItemBase()
 {
+    controlUnit->SetInterface(NULL);
+    SetControlUnit(NULL);
     control->removeAllChildren();
     removeAllChildren();
 }
@@ -197,6 +199,9 @@ void ItemBase::SetControlModeImage()
             break;
         case ControlUnit::Blow:
             controlImage->setBackGroundImage("modeBlow.png");
+            break;
+        case ControlUnit::Snap:
+            controlImage->setBackGroundImage("modeSnap.png");
             break;
         default:
             break;

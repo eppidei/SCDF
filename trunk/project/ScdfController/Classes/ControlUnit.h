@@ -26,6 +26,7 @@
 #include "MultiSender.h"
 
 #include "ADE_typedefs.h"
+#include "ThreadUtils.h"
 
 
 namespace ScdfCtrl {
@@ -170,7 +171,6 @@ private:
 
 class ControlUnitDsp : public ControlUnit
 {
-
 public:
 
 	bool OnTouch(TouchEvent ev, float normValue) override;
@@ -184,10 +184,12 @@ public:
 	ControlUnitDsp() : ControlUnit() , ADEcontext(NULL), lastValue(0) { isEnabled = true;}
 
 protected:
-
-	float lastValue;
     
+	float lastValue;
     ADE_T *ADEcontext;
+    
+    void InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_len, ADE_FLOATING_T input_rate);
+    void ReleaseADEContext(ADE_UINT32_T algoFlag);
 
 private:
 

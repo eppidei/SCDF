@@ -102,6 +102,18 @@ bool ControlUnitDsp::IsEnabled()
 	return isEnabled;
 }
 
+void ControlUnitDsp::InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_len, ADE_FLOATING_T input_rate)
+{
+    if (ADEcontext) return;
+    ADE_Init(&ADEcontext, algoFlag, in_buff_len, input_rate);
+}
+void ControlUnitDsp::ReleaseADEContext(ADE_UINT32_T algoFlag)
+{
+    if (!ADEcontext) return;
+    ADE_Release(ADEcontext, algoFlag);
+    ADEcontext=NULL;
+}
+
 void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorType packetType, ADE_SCDF_Input_Int_T &sensorData)
 {
     for (int i=0;i<harvestedData->size();++i)
@@ -123,19 +135,17 @@ void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorTy
 // BLOW
 void ControlUnitBlow::Release()
 {
-    if (!ADEcontext) return;
-    ADE_Release(ADEcontext, BLOW_FLAG);
-    ADEcontext=NULL;
+    ReleaseADEContext(BLOW_FLAG);
 }
 
 void ControlUnitBlow::Init(s_int32 numFrames, s_int32 rate)
 {
-    if (!ADEcontext)
-        ADE_Init(&ADEcontext, BLOW_FLAG, numFrames, rate);
+    InitADEContext(BLOW_FLAG, numFrames, rate);
 }
 
 void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
 {
+    assert(ADEcontext!=NULL);
     ADE_SCDF_Input_Int_T sensorData;
     
     GetSensorData(buffer, scdf::AudioInput, sensorData);
@@ -160,18 +170,18 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
 //SNAP
 void ControlUnitSnap::Release()
 {
-    ADE_Release(ADEcontext, SNAP_FLAG);
-    ADEcontext=NULL;
+    ReleaseADEContext(SNAP_FLAG);
 }
 
 void ControlUnitSnap::Init(s_int32 numFrames, s_int32 rate)
 {
-    if (!ADEcontext)
-        ADE_Init(&ADEcontext, SNAP_FLAG, numFrames, rate);
+    InitADEContext(SNAP_FLAG, numFrames, rate);
 }
 
 void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
 {
+    assert(ADEcontext!=NULL);
+    
     ADE_SCDF_Input_Int_T sensorData;
     
     GetSensorData(buffer, scdf::AudioInput, sensorData);

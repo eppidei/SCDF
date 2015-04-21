@@ -35,10 +35,10 @@ s_bool scdf::SensorAudioInput::Start()
 	s_bool ret = sImpl->Start();
 	if (ret)
     {
-        if (Harvester::Instance()->GetType()==GetType())
-        {
-            Harvester::Instance()->Start();
-        }
+//        if (Harvester::Instance()->GetType()==GetType())
+//        {
+//            Harvester::Instance()->Start();
+//        }
         SetActive(true);
     }
 	return ret;
@@ -50,8 +50,8 @@ s_bool scdf::SensorAudioInput::Stop()
 	if (ret)
     {
         SetActive(false);
-        if (Harvester::Instance()->GetType()==GetType())
-            Harvester::Instance()->Stop();
+//        if (Harvester::Instance()->GetType()==GetType())
+//            Harvester::Instance()->Stop();
     }
 	return ret;
 }
