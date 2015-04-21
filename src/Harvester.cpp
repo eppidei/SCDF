@@ -156,8 +156,8 @@ void Harvester::Stop()
     activated=false;
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to unlock harvester
-    if(IsAudioSyncActive())
-        thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
+    //if(IsAudioSyncActive())
+    thePipesManager()->WriteOnPipe(GetType(),thePipesManager()->ReadFromReturnPipe(GetType()));
     ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
@@ -411,7 +411,7 @@ HarvesterListenerContainer::HarvesterListenerContainer()
 
 void HarvesterListenerContainer::OnHarvesterBufferReady(std::vector<SensorData*> *buffer)
 {
-    
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
         it->first->OnHarvesterBufferReady(buffer);
 
@@ -422,6 +422,8 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
     if(NULL==_listener) return;
     if (0==_typeList.size()) return;
     
+    {
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     listenersMap[_listener]=_typeList;
     
     for(int i = 0; i<_typeList.size(); i++)
@@ -431,13 +433,16 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
         int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
         _listener->Init(numFrames, scdf::theSensorManager()->GetRate(_typeList[i]));
     }
-    
+    }
     CheckRefCountForToStartAndStopHarvester();
 }
 
 void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
 {
     if(NULL==_listener) return;
+   
+    {
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     auto it = listenersMap.find(_listener);
     if (it==listenersMap.end()) return;
     
@@ -450,7 +455,7 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
     }
    
     listenersMap.erase(_listener);
-    
+    }
     CheckRefCountForToStartAndStopHarvester();
 }
 
@@ -479,7 +484,7 @@ void HarvesterListenerContainer::CheckRefCountForToStartAndStopHarvester()
     } else
     {
         if(!Harvester::Instance()->IsActive())
-            scdf::Harvester::Instance()->Stop();
+            scdf::Harvester::Instance()->Start();
     }
     
 }
