@@ -27,15 +27,15 @@ MultiSender::MultiSender()
 	oscTag = "";
 	oscEnabled = false;
 
-	midiMsgType = Invalid;
-	midiChannel = -1;
-	midiControl = -1;
-//    if (Scdf::MidiOutConnection::GetNumAvailableOutputs()!=0)
-//        SetMidiOutIndex(0);
-    //#ifdef _DEBUG
+//	midiMsgType = Invalid;
+//	midiChannel = -1;
+//	midiControl = -1;
+////    if (Scdf::MidiOutConnection::GetNumAvailableOutputs()!=0)
+////        SetMidiOutIndex(0);
+//    //#ifdef _DEBUG
     midiMsgType = NoteOn;
     midiChannel = 0;
-    midiControl = ++controlCounter%127;
+    midiControl = 0;
     //#endif
 	lastOpenedMidiOutIndex = -1;
 }
@@ -66,8 +66,9 @@ std::string MultiSender::GetOscTag()
 		case PolyKeyPressure: ss<<"polypressure/"; break;
 		default: return "[invalid]";
 	}
-	if (-1==midiChannel) return "[no channel]";
-	ss << midiChannel << "/";
+    if (midiChannel<-1) return "[no channel]";
+    else if (midiChannel==-1) ss << "Any" << "/";
+    else ss << midiChannel << "/";
 	return ss.str();
 }
 
@@ -170,6 +171,21 @@ s_bool MultiSender::SendValue(s_int32 number, s_int32 value)
 	return SendValue(value);
 }
 
+s_bool MultiSender::DoSendValue(s_int32 value, s_int32 channel)
+{
+    switch (midiMsgType) {
+        case NoteOn:		return midiConnection->SendNoteOn(GetMidiPitch(),value,channel);
+        case NoteOff:		return midiConnection->SendNoteOff(GetMidiPitch(),value,channel);
+        case ControlChange: return midiConnection->SendControlChange(GetMidiControl(),value,channel);
+        case ProgramChange: return midiConnection->SendProgramChange(value,channel);
+        case PitchBend: 	return midiConnection->SendModWheel(value,channel);
+        case Aftertouch: 	return midiConnection->SendAftertouch(value,channel);
+        case PolyKeyPressure: return midiConnection->SendPolyKeyPressure(GetMidiPitch(),value,channel);
+        default: return false;
+    }
+    return false;
+}
+
 s_bool MultiSender::SendValue(s_int32 value)
 {
 	if (oscEnabled) {
@@ -180,17 +196,16 @@ s_bool MultiSender::SendValue(s_int32 value)
 	if (!midiConnection)
 		return false;
 
-	switch (midiMsgType) {
-		case NoteOn:		return midiConnection->SendNoteOn(GetMidiPitch(),value,midiChannel);
-		case NoteOff:		return midiConnection->SendNoteOff(GetMidiPitch(),value,midiChannel);
-		case ControlChange: return midiConnection->SendControlChange(GetMidiControl(),value,midiChannel);
-		case ProgramChange: return midiConnection->SendProgramChange(value,midiChannel);
-		case PitchBend: 	return midiConnection->SendModWheel(value,midiChannel);
-		case Aftertouch: 	return midiConnection->SendAftertouch(value,midiChannel);
-		case PolyKeyPressure: return midiConnection->SendPolyKeyPressure(GetMidiPitch(),value,midiChannel);
-		default: return false;
-	}
-	return false;
+    s_bool ret=true;
+    if (-1!=midiChannel)
+        ret=DoSendValue(value, midiChannel);
+    else
+    {
+        const int num_MIDI_channels=16;
+        for (int i=0;i<num_MIDI_channels;++i)
+            ret=DoSendValue(value, i);
+    }
+	return ret;
 
 }
 

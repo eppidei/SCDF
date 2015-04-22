@@ -262,7 +262,7 @@ void MIDIInfo::Update()
 //    EnableElement(midiMessageLabel, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
     UpdateElementsVisibilityOnMessageTypeChanged();
 
-    channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel());
+    channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel()+1);
     UpdateVelocity();
 }
 
@@ -481,7 +481,7 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
     else if (menu==octaveMenu)
         dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())->SetCurrentOctave(selectedIndex);
     else if (menu==channel)
-        panel->GetCurrentSender()->SetMidiChannel(selectedIndex);
+        panel->GetCurrentSender()->SetMidiChannel(selectedIndex-1);
     else if (menu==velocity)
         panel->GetSelectedItem()->GetControlUnit()->SetMax(selectedIndex);
     	// this is used for the button, and the button
@@ -608,8 +608,9 @@ void MIDIInfo::CreateControls()
     channel = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(channel);
     dropDownData.clear();
+    dropDownData.push_back(DropDownMenuData("Any",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     const int NUM_MIDI_CHANNELS = 16;
-    for (int i=0;i<NUM_MIDI_CHANNELS;++i)
+    for (int i=1;i<=NUM_MIDI_CHANNELS;++i)
     {
         std::ostringstream os;
         os<<i;
