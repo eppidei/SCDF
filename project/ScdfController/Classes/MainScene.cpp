@@ -221,18 +221,20 @@ void MainScene::CalculateGrid(cocos2d::Size workingPanelSize)
 }
 
 //#define SMARTPHONE
+bool IsTablet();
 float MainScene::GetUnityBase()
 {
-//    if (0==gridUnity.size()){
-//        printf("Error creating grid\n");
-//        exit(EXIT_FAILURE);
-//    }
-    float scaleFactor=0.015;
-#ifdef SMARTPHONE
-    scaleFactor*=1.5;
-#endif
-    return scaleFactor*Director::getInstance()->getVisibleSize().width;
-//    return 16.0;//gridUnity[0];
+////    if (0==gridUnity.size()){
+////        printf("Error creating grid\n");
+////        exit(EXIT_FAILURE);
+////    }
+//    float scaleFactor=0.015;
+//    
+//    if (!IsTablet())
+//        scaleFactor*=1.5;
+//    
+//    return scaleFactor*Director::getInstance()->getVisibleSize().width;
+    return 16.0;//gridUnity[0];
 }
 
 void MainScene::UpdateMIDIDevicesMenu()

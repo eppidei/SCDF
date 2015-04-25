@@ -872,9 +872,9 @@ void ItemSettings::Update()
     char str[256];
     int magValue=item->GetLayoutManager()->GetMagValue();
     if (magValue==0)
-        sprintf(str,"min");
+        sprintf(str,"Min");
     else if (magValue==8)
-        sprintf(str,"max");
+        sprintf(str,"Max");
     else
         sprintf(str,"+ %d",item->GetLayoutManager()->GetMagValue());
     sizeText->SetText(str);

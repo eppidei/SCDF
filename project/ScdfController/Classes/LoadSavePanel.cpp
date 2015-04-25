@@ -65,7 +65,7 @@ void SavePanel::CreateMain()
 void LoadPanel::CreateMain()
 {
     mainPanel=Layout::create();
-    mainPanel->setBackGroundImage("loadPopup.png");
+    mainPanel->setBackGroundImage("LoadPopup.png");
     float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
     float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
     
@@ -213,8 +213,8 @@ void SaveAfterNewPanel::CreateControlButton()
     discard = Button::create();
     discard->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
     mainPanel->addChild(discard,0,DISCARD_ID);
-    discard->loadTextureNormal("btnCloseDefault.png");
-    discard->loadTexturePressed("btnCloseHover.png");
+    discard->loadTextureNormal("discardDefault.png");
+    discard->loadTexturePressed("discardHover.png");
     discard->ignoreContentAdaptWithSize(false);
     discard->setAnchorPoint(Vec2(0,1));
     discard->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));

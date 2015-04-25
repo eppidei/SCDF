@@ -106,6 +106,7 @@ void ControlUnitDsp::InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_
 {
     if (ADEcontext) return;
     ADE_Init(&ADEcontext, algoFlag, in_buff_len, input_rate);
+    ADE_Configure_params(ADEcontext, algoFlag);
 }
 void ControlUnitDsp::ReleaseADEContext(ADE_UINT32_T algoFlag)
 {
