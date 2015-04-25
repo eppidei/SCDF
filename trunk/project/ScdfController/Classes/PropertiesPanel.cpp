@@ -8,12 +8,12 @@
 
 #include "SCDFCItems.h"
 #include "PropertiesPanel.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "MainScene.h"
 #include "MultiSender.h"
 #include "SCDFCItems.h"
-#include "LoadSavePanel.h"
 //#include "PlatformInfo.h"
 
 using namespace ScdfCtrl;
@@ -412,7 +412,7 @@ void MIDIInfo::UpdateControlMenuData(MidiMessageType messageType)
         {
             case NoteOn:
             case NoteOff:
-                controlChangeLabel->SetText("MIDI NOTE");
+                controlChangeLabel->SetText("NOTE");
                 menu=pitchValue;
                 break;
             case PolyKeyPressure:
@@ -556,7 +556,7 @@ void MIDIInfo::CreateControls()
     r.size.width-=GetYPadding();
 
     //Create device label
-    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "MIDI DEVICES", "Arial", 16);
+    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "DEVICES", "Arial", 16);
     addChild(devicesLabel);
     
     //Create device dropDown
@@ -565,7 +565,7 @@ void MIDIInfo::CreateControls()
     UpdateDevicesMenu();
     
     //Create midiMessage label
-    CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MIDI MESSAGE", "Arial", 16);
+    CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MESSAGE", "Arial", 16);
     addChild(midiMessageLabel);
     
     //Create midiMessage dropDown
@@ -645,6 +645,7 @@ ItemSettings::ItemSettings()
     sizeLabel=colorLabel=nameLabel=groupLabel=NULL;
     orientLabel=NULL;
     masterButton=NULL;
+    modes=NULL;
     
 }
 
@@ -734,7 +735,8 @@ void ItemSettings::CreateControls()
     //Create color control
     color = DropDownMenu::CreateMenu<DropDownColorMenu>(r.size, dropDownCallback.get());
     addChild(color,5,PROPERTIES_ITEM_COLOR);
-    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+//    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+    color->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
     
     std::vector<DropDownMenuData> dropDownData;
     for (int i=0;i<Colors::Instance()->CountItemsColor();++i)
@@ -747,40 +749,49 @@ void ItemSettings::CreateControls()
     addChild(controlLabel,6);
     
     //create control modes control
+//
+//    const float numButtons=5.0;
+//    const float numbButtonsPerRow=3.0;
+//    const float numButtonsPerColumn=numButtons-numbButtonsPerRow;
+//    const float xoffset=6.0;
+//    const float yoffset=8.0;
+//    float bSize=(r.size.width-((numbButtonsPerRow+1.0)*xoffset))/numbButtonsPerRow;
+//    cocos2d::Size buttonSize(bSize, bSize);
+//    cocos2d::Rect rToolbar(0,0,r.size.width,buttonSize.height*(numButtonsPerColumn)+(numButtonsPerColumn+1.0)*yoffset);
+//    modes = Toolbar::CreateToolbar(rToolbar, xoffset, yoffset);
+//    addChild(modes,7);
+//    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+//    
+//    std::vector<std::string> images;
+//    images.push_back("modeTouch.png");
+//    images.push_back("modeTouch.png");
+//    modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+//    images.clear();
+//    images.push_back("modeBlow.png");
+//    images.push_back("modeBlow.png");
+//    modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+//    images.clear();
+//    images.push_back("modeSnap.png");
+//    images.push_back("modeSnap.png");
+//    modes->AddButton(PROPERTIES_CONTROLMODE_SNAP, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+//    images.clear();
+//    images.push_back("modeRoll.png");
+//    images.push_back("modeRoll.png");
+//    modes->AddButton(PROPERTIES_CONTROLMODE_ROLL, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+//    images.clear();
+//    images.push_back("modeGesture.png");
+//    images.push_back("modeGesture.png");
+//    modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 
-    const float numButtons=5.0;
-    const float numbButtonsPerRow=3.0;
-    const float numButtonsPerColumn=numButtons-numbButtonsPerRow;
-    const float xoffset=6.0;
-    const float yoffset=8.0;
-    float bSize=(r.size.width-((numbButtonsPerRow+1.0)*xoffset))/numbButtonsPerRow;
-    cocos2d::Size buttonSize(bSize, bSize);
-    cocos2d::Rect rToolbar(0,0,r.size.width,buttonSize.height*(numButtonsPerColumn)+(numButtonsPerColumn+1.0)*yoffset);
-    modes = Toolbar::CreateToolbar(rToolbar, xoffset, yoffset);
+    modes = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(modes,7);
-    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
+    dropDownData.clear();
+    dropDownData.push_back(DropDownMenuData("Touch",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
-    std::vector<std::string> images;
-    images.push_back("modeTouch.png");
-    images.push_back("modeTouch.png");
-    modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    images.clear();
-    images.push_back("modeBlow.png");
-    images.push_back("modeBlow.png");
-    modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    images.clear();
-    images.push_back("modeSnap.png");
-    images.push_back("modeSnap.png");
-    modes->AddButton(PROPERTIES_CONTROLMODE_SNAP, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    images.clear();
-    images.push_back("modeRoll.png");
-    images.push_back("modeRoll.png");
-    modes->AddButton(PROPERTIES_CONTROLMODE_ROLL, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-    images.clear();
-    images.push_back("modeGesture.png");
-    images.push_back("modeGesture.png");
-    modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-
     //Create group label
     CreateLabelWithBackground(this, &groupLabel, PROPERTIES_ITEMSETTINGS_GROUP, r, "GROUP", "Arial", 16);
     addChild(groupLabel,8);
@@ -859,11 +870,18 @@ void ItemSettings::Update()
     if(NULL==item) return;
     std::ostringstream os;
     char str[256];
-    sprintf(str,"x %d",item->GetLayoutManager()->GetMagValue());
+    int magValue=item->GetLayoutManager()->GetMagValue();
+    if (magValue==0)
+        sprintf(str,"min");
+    else if (magValue==8)
+        sprintf(str,"max");
+    else
+        sprintf(str,"+ %d",item->GetLayoutManager()->GetMagValue());
     sizeText->SetText(str);
     color->SetSelectedIndex(item->GetColor());
     name->SetText(item->GetName());
-    modes->CheckButton((int)(item->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
+//    modes->CheckButton((int)(item->GetControlUnit()->GetType())+PROPERTIES_CONTROLMODE_BASE);
+    modes->SetSelectedIndex(item->GetControlUnit()->GetType());
     int orientationIndex=1;
     if (item->GetLayoutManager()->IsVertical())
         orientationIndex=0;
@@ -901,6 +919,12 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
         panel->GetSelectedItem()->SetGroupID(menu->GetSelectedIndex()-1);
         Update();
     }
+    else if (modes==menu)
+    {
+        panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(menu->GetSelectedIndex()));
+        Update();
+    }
+    
 }
 
 void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
@@ -970,8 +994,16 @@ void PropertiesPanel::InitPanel()
     const float numButtons=4.0;
     
     float ypadding=(getContentSize().height*bitmapToolbarHeightPercentage)*0.1;
-    float buttonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
-    float xpadding=(getContentSize().width*bitmapToolbarWidthPercentage-numButtons*buttonDim)/(numButtons+1.0);
+   
+    float buttonPlaceholder=(bitmapToolbarWidthPercentage*getContentSize().width)/numButtons;//-(numButtons+1)*xpadding;
+    float buttonDim=0.7*buttonPlaceholder;
+    float xpadding=((bitmapToolbarWidthPercentage*getContentSize().width)-numButtons*buttonDim)/(numButtons+1.0);
+    
+    float arrowButtonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
+//    float xpadding=(getContentSize().width*bitmapToolbarWidthPercentage-numButtons*buttonDim)/(numButtons+1.0);
+    
+    float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
+    float buttonXPos=xpadding;
     
     setBackGroundImage("panelLeft.png");
     cocos2d::Rect rr(0, 0, getBackGroundImageTextureSize().width-bitmapRightPadding, getBackGroundImageTextureSize().height);
@@ -981,7 +1013,7 @@ void PropertiesPanel::InitPanel()
     float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
     float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-2.0*xpadding;
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
-    scrollView->setPosition(Vec2(xpadding,(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
+    scrollView->setPosition(Vec2(xpadding,buttonYPos-1.5*buttonDim));//(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
     
     selectedItem=NULL;
     sectionOSCInfo=OSCInfo::create();
@@ -996,16 +1028,13 @@ void PropertiesPanel::InitPanel()
     sectionItemSettings->InitWithContent(this, cocos2d::Size(scrollView->getContentSize().width,scrollView->getContentSize().width));
     scrollView->addChild(sectionItemSettings);
     
-    float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
-    float buttonXPos=xpadding;
-    
     auto button = Button::create();
     button->loadTextureNormal("btnPanelRightCloseNew.png");
     button->loadTexturePressed("btnPanelRightCloseNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
+    button->setContentSize(cocos2d::Size(arrowButtonDim, arrowButtonDim));
     button->setPosition(Vec2(getContentSize().width*(1-PROPERTIES_PANEL_TONGUE_PERCENTAGE)+5, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,MAIN_BUTTON_HIDESHOW_PROPERTIES);

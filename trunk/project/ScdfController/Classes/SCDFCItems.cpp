@@ -7,12 +7,11 @@
 //
 
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
-//#include "MultiSender.h"
-#include "LoadSavePanel.h"
 #include "ControlUnit.h"
 #include "MultiSender.h"
 #include "ScdfSensorAPI.h"
@@ -216,6 +215,7 @@ void ItemBase::SetControlModeImage()
 }
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
+    if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
 	SetControlUnit(ControlUnit::Create(t));
 }
 

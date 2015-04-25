@@ -8,10 +8,10 @@
 
 #include "Panel.h"
 #include "MainScene.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
-#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -182,7 +182,7 @@ void SubpanelBase::CalculateHeight()
             height+=(*it)->getContentSize().height;
             lastChildrenYCoord=(*it)->getPositionY();
         }
-        height+=GetYPadding();
+        height+=2*GetYPadding();
     }
     Resize(height);
 }

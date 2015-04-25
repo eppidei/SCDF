@@ -8,13 +8,14 @@
 
 #include "SCDFCDefinitions.h"
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "MultiSender.h"
-#include "LoadSavePanel.h"
+
 //#include "PlatformInfo.h"
 
 using namespace ScdfCtrl;
@@ -192,14 +193,18 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     setBackGroundImageScale9Enabled(true);
     setBackGroundImageCapInsets(rr);
     
-    float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
     float scrollbarWidth=getContentSize().width*(1.0-(SCROLLVIEW_TONGUE_PERCENTAGE))-2.0*xpadding;
     
-    scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
-    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE+xpadding,(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
-
     float buttonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
     float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
+    float buttonDeleteHeight=scrollbarWidth;
+//    float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
+    float scrollbarHeight=(buttonYPos-1.2*buttonDeleteHeight)-getContentSize().height*bitmapBottomTransparencyPercentage;
+    
+    scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
+    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE+xpadding,/*(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height)*/buttonYPos-1.1*buttonDeleteHeight));
+
+
     
     auto button = Button::create();
     button->loadTextureNormal("btnPanelLeftCloseNew.png");
@@ -208,7 +213,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
     button->setContentSize(cocos2d::Size(buttonDim, buttonDim));
-    button->setPosition(Vec2(getContentSize().width*(1.0-bitmapToolbarWidthPercentage)-buttonDim-5.0, buttonYPos));
+    button->setPosition(Vec2(getContentSize().width*(1.0-bitmapToolbarWidthPercentage)-buttonDim-2.0, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,MAIN_BUTTON_HIDESHOW_SCROLLVIEW);
     
@@ -218,7 +223,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(scrollbarWidth, buttonDim));
+    button->setContentSize(cocos2d::Size(scrollbarWidth, buttonDeleteHeight));
     button->setPosition(Vec2(getContentSize().width*(1+SCROLLVIEW_TONGUE_PERCENTAGE)/2.0-button->getContentSize().width/2.0, buttonYPos));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,DELETE_ITEM);
@@ -248,7 +253,6 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
         case Widget::TouchEventType::BEGAN:
         {
             button->loadTextureNormal(ItemType::GetIconPressed());
-            scrollView->setDirection(ScrollView::Direction::NONE);
             Vec2 parentScreenCoord=/*parent->*/convertToWorldSpace(scrollView->getPosition());
             dragStartPoint=Vec2(parentScreenCoord.x+buttonRect.origin.x,parentScreenCoord.y-(scrollView->getContentSize().height-buttonRect.origin.y));
             int diffX=ItemType::GetBaseSize().width*parent->GetGridDistance()-buttonRect.size.width;
@@ -260,6 +264,7 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
         }
         case Widget::TouchEventType::MOVED:
         {
+            scrollView->setDirection(ScrollView::Direction::NONE);
             float diff_x=button->getTouchMovePosition().x-button->getTouchBeganPosition().x;
             float diff_y=button->getTouchMovePosition().y-button->getTouchBeganPosition().y;
             float newX=dragStartPoint.x+diff_x;
@@ -279,7 +284,9 @@ template <class ItemType> void ItemScrollView::DoDragItemOnTouchEvent(cocos2d::u
 }
 void ItemScrollView::DragItemOnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
+    Vec2 parentScreenCoord=/*parent->*/convertToWorldSpace(scrollView->getPosition());
     ui::Button* button = dynamic_cast<ui::Button*>(pSender);
+    if (type==Widget::TouchEventType::MOVED && button->getTouchMovePosition().x>=parentScreenCoord.x) return;
     switch(button->getTag())
     {
         case ITEM_SLIDER_ID:

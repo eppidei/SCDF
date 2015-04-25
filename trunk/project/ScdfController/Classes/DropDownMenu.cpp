@@ -198,7 +198,7 @@ void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
     {
         Layout *model = Layout::create();
         model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width-40,getContentSize().height/2));
+        model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height/2));
         model->ignoreContentAdaptWithSize(false);
         model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
         model->setBackGroundColor(data[i].c);
