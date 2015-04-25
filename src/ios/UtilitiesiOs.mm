@@ -13,6 +13,16 @@
 using std::string;
 
 
+bool IsTablet()
+{
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    {
+        return true; 
+    }
+    return false;
+}
+
+
 s_uint64 now_ns()
 {
     return  mach_absolute_time();
