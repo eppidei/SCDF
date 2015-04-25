@@ -74,7 +74,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     LOGD("Width in inches %f",wInches);
 
-    float phoneFactor = wInches > 7 ? 1.0 : 0.667; //IsTablet() ? 1 : 1.5;
+    const int maxPhoneInches = 6;
+    float phoneFactor = wInches > maxPhoneInches ? 1.0 : 0.667; //IsTablet() ? 1 : 1.5;
 
     float scaleFactor= phoneFactor * ( ((float)Device::getDPI())/132.0 );
     cocos2d::Size s=director->getOpenGLView()->getFrameSize();
