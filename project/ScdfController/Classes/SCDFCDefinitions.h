@@ -37,9 +37,9 @@
 //Working panel items size base
 
 #define SCROLLBAR_ITEM_SIDE_BASE    4
-#define SLIDER_SIZE_BASE            cocos2d::Size(2,8)
+#define SLIDER_SIZE_BASE            cocos2d::Size(2,10)
 #define WHEEL_SIZE_BASE             SLIDER_SIZE_BASE
-#define PAD_SIZE_BASE               cocos2d::Size(4,4)
+#define PAD_SIZE_BASE               cocos2d::Size(5,5)
 #define KEYBOARD_SIZE_BASE          cocos2d::Size(25,15)
 #define MULTIPAD_SIZE_BASE          cocos2d::Size(12,8)
 #define KNOB_SIZE_BASE              cocos2d::Size(8,8)

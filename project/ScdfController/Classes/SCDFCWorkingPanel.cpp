@@ -9,13 +9,13 @@
 
 #include "MainScene.h"
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
 #include "PropertiesPanel.h"
 #include "MultiSender.h"
 #include "Logging.h"
-#include "LoadSavePanel.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -59,13 +59,12 @@ void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
 
 template <class ItemType> void WorkingPanel::CheckAddControl()
 {
-   LOGD("Check add control");
-
 	if (0==draggingRect.size.width || collisionDetected)
     {
         collisionDetected=false;
         return;
     }
+    LOGD("Add control");
     ItemBase* item = ItemBase::CreateItem<ItemType>();
     item->setPosition(draggingRect.origin);
     // we use unique ptr just to let Cereal easily serialize
@@ -80,39 +79,46 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
     parent->AttachItem(item);
 
 }
-
-void WorkingPanel::CheckRemoveControl(Node *n)
+void WorkingPanel::NewPatch()
 {
-//    if (n->getPositionY()<=getPosition().y && (n->getPositionX()>=0/*=getPosition().x*/)
-//        && (n->getPositionX()+n->getContentSize().width)<=getContentSize().width
-//        && (n->getPositionY()-n->getContentSize().height)>=getPosition().y-getContentSize().height)
-//        return;
+    for (int i=0;i<patch->items.size();++i)
+    {
+        parent->DetachItem(patch->items[i]);
+        removeChild(patch->items[i]);
+    }
+    patch->items.clear();
+}
+
+void WorkingPanel::RemoveControl(Node *n)
+{
     if (NULL==n) return;
     for (int i=0;i<patch->items.size();++i)
     {
-//      if (patch->items[i]->GetItem()==n)
         if (patch->items[i]==n)
         {
         	parent->DetachItem((ItemBase*)n);
-            removeChild(n); // does this delete n? if not, we have a leak
-            patch->items.erase(patch->items.begin()+i); // this deletes the unit!
+            removeChild(n);
+            patch->items.erase(patch->items.begin()+i);
             LOGD("Control removed from working space\n");
             break;
-            // remove "return" if you ever plan to put an item in the patch twice
-            // but consider that the index will break after the first deletion
         }
     }
-    //parent->DetachItem((ItemBase*)n);
-    //removeChild(n);
-    //LOGD("Control removed from working space\n");
 }
 
-bool WorkingPanel::SavePatch(std::string patchName)
+void WorkingPanel::OnDiscardPatch()
 {
-	return patch->SaveToFile(patchName);
+    NewPatch();
 }
 
-bool WorkingPanel::LoadPatch(std::string patchName)
+
+void WorkingPanel::OnSavePatch(std::string patchName, bool newProject)
+{
+	patch->SaveToFile(patchName);
+    if (newProject)
+        NewPatch();
+}
+
+void WorkingPanel::OnLoadPatch(std::string patchName)
 {
 	for (int i=0;i<patch->items.size();++i)
 	{
@@ -120,14 +126,13 @@ bool WorkingPanel::LoadPatch(std::string patchName)
 	    removeChild(patch->items[i]);
 	}
     patch->items.clear();
-	bool ret = patch->LoadFromFile(patchName);
+	patch->LoadFromFile(patchName);
 
 	for (int i=0;i<patch->items.size();++i)
 	{
 		addChild(patch->items[i],10);
 	    parent->AttachItem(patch->items[i]);
 	}
-    return ret;
 }
 
 void WorkingPanel::SetActive(bool _active)

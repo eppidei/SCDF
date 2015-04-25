@@ -4,13 +4,13 @@
 #include "MultiSender.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "SCDFCScrollView.h"
 
 #include "PropertiesPanel.h"
 #include <platform/CCDevice.h>
 #include "Logging.h"
-#include "LoadSavePanel.h"
 #include "ScdfSensorAPI.h"
 
 using namespace ScdfCtrl;

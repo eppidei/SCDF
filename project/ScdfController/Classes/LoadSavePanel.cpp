@@ -15,34 +15,27 @@ using namespace ui;
 
 #define ITEM_HEIGHT 30.0
 #define CLOSE_ID -10
+#define MAINPANEL -11
+#define DISCARD_ID -12
 
 Node *LoadSavePanelBase::CreatePanel()
 {
+    discard=NULL;
     CreateMain();
     
-//    close = Button::create();
-//    close->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
-//    mainPanel->addChild(close,0,CLOSE_ID);
-//    close->loadTextureNormal("btnCloseDefault.png");
-//    close->loadTexturePressed("btnCloseHover.png");
-//    close->ignoreContentAdaptWithSize(false);
-//    close->setAnchorPoint(Vec2(0,1));
-//    close->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
-//    close->setPosition(Vec2(mainPanel->getContentSize().width-close->getContentSize().width-20,ITEM_HEIGHT+20));
-    
     CreateControlButton();
-    control->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
+    control->addTouchEventListener(CC_CALLBACK_2(LoadSavePanelBase::OnTouchEvent, this));
     control->ignoreContentAdaptWithSize(false);
     control->setAnchorPoint(Vec2(0,1));
 //    control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
     control->setPosition(Vec2(mainPanel->getContentSize().width-control->getContentSize().width-20,ITEM_HEIGHT+20));
+    SetAdditionalButtonsPos();
     return mainPanel;
 }
 
 void SavePanel::CreateMain()
 {
     mainPanel=Layout::create();
-    addChild(mainPanel);
     mainPanel->setBackGroundImage("SavePopup.png");
     float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
     float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
@@ -72,7 +65,6 @@ void SavePanel::CreateMain()
 void LoadPanel::CreateMain()
 {
     mainPanel=Layout::create();
-    addChild(mainPanel);
     mainPanel->setBackGroundImage("loadPopup.png");
     float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
     float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
@@ -162,7 +154,21 @@ void SavePanel::OnTouchBegan(int nodeTag)
 {
     if (nodeTag==PATCH_SAVE)
     {
-        workingPanel->SavePatch(saveFile->getStringValue());
+        callback->OnSavePatch(saveFile->getStringValue(), false);
+        Close();
+    }
+}
+
+void SaveAfterNewPanel::OnTouchBegan(int nodeTag)
+{
+    if (nodeTag==PATCH_SAVE)
+    {
+        callback->OnSavePatch(saveFile->getStringValue(), true);
+        Close();
+    }
+    else if (nodeTag==DISCARD_ID)
+    {
+        callback->OnDiscardPatch();
         Close();
     }
 }
@@ -177,7 +183,7 @@ void LoadPanel::OnTouchBegan(int nodeTag)
     {
         Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
         if (t)
-            workingPanel->LoadPatch(t->getString());
+            callback->OnLoadPatch(t->getString());
         Close();
     }
     else
@@ -198,4 +204,24 @@ void LoadPanel::HighLightCurrentItem()
     Widget *element=loadFiles->getItem(loadFiles->getCurSelectedIndex());
     if (element)
         element->setHighlighted(true);
+}
+
+void SaveAfterNewPanel::CreateControlButton()
+{
+    SavePanel::CreateControlButton();
+    
+    discard = Button::create();
+    discard->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
+    mainPanel->addChild(discard,0,DISCARD_ID);
+    discard->loadTextureNormal("btnCloseDefault.png");
+    discard->loadTexturePressed("btnCloseHover.png");
+    discard->ignoreContentAdaptWithSize(false);
+    discard->setAnchorPoint(Vec2(0,1));
+    discard->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+
+}
+
+void SaveAfterNewPanel::SetAdditionalButtonsPos()
+{
+    discard->setPosition(Vec2(control->getPositionX()-discard->getContentSize().width - 10,ITEM_HEIGHT+20));
 }

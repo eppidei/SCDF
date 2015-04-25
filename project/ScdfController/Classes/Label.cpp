@@ -233,7 +233,8 @@ void ModalPanel::OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
     switch (type)
     {
         case Widget::TouchEventType::BEGAN:
-            Close();
+            if (dynamic_cast<Node*>(pSender)->getTag()!=1)
+                Close();
             break;
         default:
             break;
@@ -268,6 +269,13 @@ bool ModalPanel::init()
     addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
 
     mainPanel=CreatePanel();
+    addChild(mainPanel,0,1);
+    Layout *mainLayout=dynamic_cast<Layout*>(mainPanel);
+    if (mainLayout!=NULL)
+    {
+        mainLayout->setTouchEnabled(true);
+        mainLayout->addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
+    }
     mainPanel->setScale(0);
     
     auto fadeIn = FadeIn::create(0.2f);

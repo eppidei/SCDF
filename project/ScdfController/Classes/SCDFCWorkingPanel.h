@@ -15,7 +15,7 @@ namespace ScdfCtrl
 {
     class MainScene;
     
-    class WorkingPanel : public cocos2d::ui::Layout
+    class WorkingPanel : public cocos2d::ui::Layout, public LoadSavePanelBaseCallback
     {
         MainScene *parent;
         cocos2d::Rect draggingRect;
@@ -35,8 +35,9 @@ namespace ScdfCtrl
         
     public:
         template <class ItemType> void CheckAddControl();
-        void CheckRemoveControl(Node *n);
+        void RemoveControl(Node *n);
         void SetDraggingRect(cocos2d::Rect _draggingRect);
+        void NewPatch();
         virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags);
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
         void SetActive(bool active);
@@ -44,8 +45,9 @@ namespace ScdfCtrl
         void DetectCollisions(cocos2d::Rect r);
         void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
         
-        bool SavePatch(std::string patchName);
-        bool LoadPatch(std::string patchName);
+        void OnSavePatch(std::string patchName, bool newProject);
+        void OnLoadPatch(std::string patchName);
+        void OnDiscardPatch();
 
         void OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);

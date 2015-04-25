@@ -2,12 +2,12 @@
 #include "SCDFCDefinitions.h"
 #include "SCDFCScrollView.h"
 #include "SCDFCItems.h"
+#include "LoadSavePanel.h"
 #include "SCDFCWorkingPanel.h"
 #include "PropertiesPanel.h"
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "MultiSender.h"
-#include "LoadSavePanel.h"
 
 //#include "PlatformInfo.h"
 
@@ -220,13 +220,18 @@ void MainScene::CalculateGrid(cocos2d::Size workingPanelSize)
         gridUnity.push_back(GetUnityBase());
 }
 
+//#define SMARTPHONE
 float MainScene::GetUnityBase()
 {
 //    if (0==gridUnity.size()){
 //        printf("Error creating grid\n");
 //        exit(EXIT_FAILURE);
 //    }
-    return 0.015*Director::getInstance()->getVisibleSize().width;
+    float scaleFactor=0.015;
+#ifdef SMARTPHONE
+    scaleFactor*=1.5;
+#endif
+    return scaleFactor*Director::getInstance()->getVisibleSize().width;
 //    return 16.0;//gridUnity[0];
 }
 
@@ -485,18 +490,23 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             switch(node->getTag())
             {
                 case MAIN_BUTTON_NEW:
+                {
+                    SaveAfterNewPanel *p=SaveAfterNewPanel::create();
+                    p->SetCallback(customPanel.get());
+                    addChild(p,100);
+                }
                     break;
                 case MAIN_BUTTON_SAVE:
                 {
                     SavePanel *p=SavePanel::create();
-                    p->SetWorkingPanel(customPanel.get());
+                    p->SetCallback(customPanel.get());
                     addChild(p,100);
                 }
                     break;
                 case MAIN_BUTTON_LOAD:
                 {
                     LoadPanel *p=LoadPanel::create();
-                    p->SetWorkingPanel(customPanel.get());
+                    p->SetCallback(customPanel.get());
                     addChild(p,100);
                 }
                     break;
@@ -577,7 +587,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                     break;
                 case DELETE_ITEM:
                     if (type!=Widget::TouchEventType::CANCELED)
-                        customPanel->CheckRemoveControl(propertiesPanel->GetSelectedItem());
+                        customPanel->RemoveControl(propertiesPanel->GetSelectedItem());
                     break;
                 default:
                     break;
