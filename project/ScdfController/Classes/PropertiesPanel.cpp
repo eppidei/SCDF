@@ -229,8 +229,11 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
 void MIDIInfo::UpdateVelocity()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel) return; 
-    velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetValue());
+    if (NULL==panel) return;
+    if (dynamic_cast<ItemPad*>(panel->GetSelectedItem())!=NULL)
+        velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetMax());
+    else
+        velocity->SetSelectedIndex(panel->GetSelectedItem()->GetControlUnit()->GetValue());
     EnableElement(velocity, dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
     EnableElement(velocityLabel, dynamic_cast<ItemSlider*>(panel->GetSelectedItem())==NULL && dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
 }
@@ -654,15 +657,19 @@ void ItemSettings::CheckShowElements()
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     HideElement(nameLabel,collapsed);
     HideElement(name,collapsed);
-    HideElement(colorLabel,collapsed);
-    HideElement(color,collapsed);
-    HideElement(controlLabel,collapsed);
-    HideElement(modes,collapsed);
-    
+
+    HideElement(group,collapsed);
+    HideElement(groupLabel,collapsed);
+    HideElement(masterButton,collapsed || group->GetSelectedIndex()==0);
+
     bool forceHide=false;
     if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
         forceHide=true;
     
+    HideElement(colorLabel,collapsed||forceHide);
+    HideElement(color,collapsed||forceHide);
+    HideElement(controlLabel,collapsed||forceHide);
+    HideElement(modes,collapsed||forceHide);
     HideElement(sizeLabel,collapsed||forceHide);
     HideElement(h_plus,collapsed||forceHide);
     HideElement(sizeText,collapsed||forceHide);
@@ -826,6 +833,7 @@ void ItemSettings::CreateControls()
     //Create orient dropDown
     orientation = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(orientation,12);
+    orientation->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     dropDownData.clear();
     dropDownData.push_back(DropDownMenuData("Vertical",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Horizontal",Colors::Instance()->GetUIColor(Colors::DropDownText)));
@@ -931,7 +939,7 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetSelectedItem()) return;
-    
+    bool update=true;
     switch (widget->getTag())
     {
         case PROPERTIES_ITEM_NAME:
@@ -964,8 +972,10 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             orientation->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         default:
+            update=false;
             break;
     }
+    if (update)
     Update();
 }
 
@@ -1011,7 +1021,7 @@ void PropertiesPanel::InitPanel()
     setBackGroundImageCapInsets(rr);
 
     float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
-    float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-2.0*xpadding;
+    float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-xpadding;
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
     scrollView->setPosition(Vec2(xpadding,buttonYPos-1.5*buttonDim));//(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
     
@@ -1040,7 +1050,7 @@ void PropertiesPanel::InitPanel()
     addChild(button,6,MAIN_BUTTON_HIDESHOW_PROPERTIES);
     
     button = Button::create();
-    button->loadTextureNormal("newDefault.png");
+    button->loadTextureNormal("newDefaultNew.png");
     button->loadTexturePressed("newActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
@@ -1053,7 +1063,7 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("saveDefault.png");
+    button->loadTextureNormal("saveDefaultNew.png");
     button->loadTexturePressed("saveActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
@@ -1066,7 +1076,7 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("loadDefault.png");
+    button->loadTextureNormal("loadDefaultNew.png");
     button->loadTexturePressed("loadActive.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
@@ -1079,8 +1089,8 @@ void PropertiesPanel::InitPanel()
     buttonXPos+=(xpadding+buttonDim);
     
     button = Button::create();
-    button->loadTextureNormal("moveActive.png");
-    button->loadTexturePressed("moveActive.png");
+    button->loadTextureNormal("moveActiveNew.png");
+    button->loadTexturePressed("moveActiveNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1097,13 +1107,13 @@ void PropertiesPanel::UpdateEditButton(bool editMode)
     Button *b=dynamic_cast<Button*>(getChildByTag(MAIN_BUTTON_EDIT));
     if (editMode)
     {
-        b->loadTextureNormal("moveDefault.png");
-        b->loadTexturePressed("moveDefault.png");
+        b->loadTextureNormal("moveDefaultNew.png");
+        b->loadTexturePressed("moveDefaultNew.png");
     }
     else
     {
-        b->loadTextureNormal("moveActive.png");
-        b->loadTexturePressed("moveActive.png");
+        b->loadTextureNormal("moveActiveNew.png");
+        b->loadTexturePressed("moveActiveNew.png");
     }
 }
 

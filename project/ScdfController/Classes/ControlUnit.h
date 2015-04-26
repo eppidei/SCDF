@@ -46,6 +46,7 @@ public:
     ControlUnitInterface *interface;
     void SetInterface(ControlUnitInterface *_interface) {interface=_interface;}
 	enum Type { Wire, Blow, Snap };
+    enum ReceiverType { ReceiverType_stream, ReceiverType_state, ReceiverType_toggle};
 
 	static ControlUnit* Create(Type t);
 	static void Destroy(ControlUnit* cu);
@@ -73,6 +74,7 @@ public:
 	MultiSender* GetSender();
         
     void SetMidiMessageType(MidiMessageType type);
+    void SetReceiverType(ReceiverType rt) { receiverType=rt;}
 	ControlUnit();
 	virtual ~ControlUnit();
 
@@ -82,6 +84,7 @@ protected:
 
 	int min;
 	int max;
+    ReceiverType receiverType;
 
     void UpdateUI() {if (interface) interface->OnValueChanged();}
     virtual void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer) {}
@@ -142,7 +145,7 @@ public:
 	Type GetType() override { return Wire; }
 	bool IsDSP() override { return false; }
 
-	ControlUnitWire() : ControlUnit() { normVal=1;}
+	ControlUnitWire() : ControlUnit() { normVal=0;}
 
 private:
 
@@ -169,10 +172,10 @@ private:
 };
 
 
+
 class ControlUnitDsp : public ControlUnit
 {
 public:
-
 	bool OnTouch(TouchEvent ev, float normValue) override;
 	float GetNormalizedValue() override;
 
@@ -191,6 +194,7 @@ protected:
     void InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_len, ADE_FLOATING_T input_rate);
     void ReleaseADEContext(ADE_UINT32_T algoFlag);
 
+    void SendValue(float value);
 private:
 
 	bool isEnabled;

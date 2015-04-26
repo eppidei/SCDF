@@ -285,14 +285,16 @@ void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEv
                     parent->CollapseAllSubpanelsButThis(this);
                 CheckShowElements();
             }
-            else
-                OnTouchEventBegan(node);
+//            else
+//                OnTouchEventBegan(node);
             break;
         case Widget::TouchEventType::MOVED:
             //OnTouchMoved(node);
             break;
         case Widget::TouchEventType::ENDED:
-            OnTouchEventEnded(node);
+            if (node->getTag()!=PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW)
+                OnTouchEventBegan(node);
+//            OnTouchEventEnded(node);
             break;
         case Widget::TouchEventType::CANCELED:
             break;

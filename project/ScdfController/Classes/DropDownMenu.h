@@ -35,7 +35,7 @@ namespace ScdfCtrl
 
     class DropDownMenu : public cocos2d::ui::ListView, public cocos2d::ActionTweenDelegate
     {
-        bool opened, resizeParent;
+        bool opened, resizeParent, touchEnabled;
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
@@ -47,6 +47,7 @@ namespace ScdfCtrl
         void AfterInitData(int numElements);
         bool CheckDataSize(std::vector<DropDownMenuData> data);
         virtual float GetVerticalMargin() {return 0;}
+        void EnableTouchEvents(bool enable) { touchEnabled=enable;}
     protected:
         DropDownMenu();
         virtual void DoInitData(std::vector<DropDownMenuData> data);

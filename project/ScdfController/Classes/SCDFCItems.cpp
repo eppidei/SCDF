@@ -238,6 +238,7 @@ void ItemBase::SetControlUnit(ControlUnit* cu)
     }
     scdf::theSensorAPI()->AttachHarvesterListener(GetControlUnit(), _typeList);
     SetControlModeImage();
+    SetControlUnitReceiverType();
 }
 
 cocos2d::Size ItemSlider::CalculateNewItemBaseSize(int magValue)
@@ -438,13 +439,20 @@ cocos2d::Size ItemSlider::GetThumbSize(cocos2d::Size currentSize)
 {
     float size=fmin(currentSize.height,currentSize.width);
 //    float size=fmin(GetBaseSize().height,GetBaseSize().width);
-    cocos2d::Size s(size+35, size+5);
+    cocos2d::Size s;
+    if (!IsPitchWheel())
+        s=Size(size+35, size+5);
+    else
+        s=Size(size+10, size+20);
     return s;
 }
 void ItemSlider::DoCreateThumb()
 {
     thumb->setContentSize(GetThumbSize(GetControlContentSize()));
-    thumb->setBackGroundImage("sliderHAT.png");
+    if (IsPitchWheel())
+        thumb->setBackGroundImage("pitchWheelHat.png");
+    else
+        thumb->setBackGroundImage("sliderHAT.png");
     const int bitmapOffsetLeft=0;//64;
     const int bitmapOffsetTop=0;//38;
     const int bitmapOffsetRight=0;//20;
@@ -474,9 +482,13 @@ void ItemSlider::DoSetContentSize(cocos2d::Size contentSize)
     cocos2d::Size temp=contentSize;
     if (slideBar)
     {
-        cocos2d::Size barsSize(temp.height/3.0, temp.width);
+        float reductionFactor=3.0;
+        if (IsPitchWheel())
+            reductionFactor=1.0;
+
+        cocos2d::Size barsSize(temp.height/reductionFactor, temp.width);
         if (GetLayoutManager()->IsVertical())
-            barsSize=cocos2d::Size(temp.width/3.0, temp.height);
+            barsSize=cocos2d::Size(temp.width/reductionFactor, temp.height);
             
         slideBar->setContentSize(barsSize);
         slideBarOff->setContentSize(cocos2d::Size(barsSize.width, slideBarOff->getContentSize().height));
@@ -528,20 +540,30 @@ void ItemSlider::SetPositionOfValueDependentComponent()
     float offset =	thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
     float size=GetLayoutManager()->IsVertical()?GetControlContentSize().height-offset:GetControlContentSize().width-offset;
     float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
-    const int bitmapThumbXOffset=-6;
+    int bitmapThumbXOffset=-6;
+    float slideBarOffOffset=2.0;
+    if (IsPitchWheel())
+    {
+        bitmapThumbXOffset=0;
+        slideBarOffOffset=0;
+    }
     if (GetLayoutManager()->IsVertical())
     {
         thumb->setPosition(Vec2(GetControlContentSize().width/2.0+bitmapThumbXOffset,position));
-        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().height-position+2.0));
-        slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0,position+slideBarOff->getContentSize().height/2.0));
+        if (IsPitchWheel())
+            position=0;
+        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().height-position));
+            slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0,slideBarOffOffset+position+slideBarOff->getContentSize().height/2.0));
         slideBar->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
     }
     else
     {
         thumb->setPosition(Vec2(position,GetControlContentSize().height/2.0-bitmapThumbXOffset));
-        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().width-position+2));
-        slideBarOff->setPosition(Vec2(position+slideBarOff->getContentSize().height/2.0, GetControlContentSize().height/2.0));
-        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2.0));
+        if (IsPitchWheel())
+            position=0;
+        slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().width-position));
+        slideBarOff->setPosition(Vec2(slideBarOffOffset+position+slideBarOff->getContentSize().height/2.0, GetControlContentSize().height/2.0));
+        slideBar->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
     }
 }
 
@@ -581,38 +603,45 @@ void ItemSlider::Create()
     slideBar = Layout::create();
     control->addChild(slideBar);
     slideBar->setTouchEnabled(true);
-   // slideBar->setAnchorPoint(Vec2(0,1));
     slideBar->setAnchorPoint(Vec2(0.5,0.5));
     slideBar->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
-    //slideBar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-    //slideBar->setBackGroundColor(Color3B::BLACK);
-    slideBar->setBackGroundImage("sliderBARStripe.png");
-    const int bitmapcapInsetOffset=5;
+
+    int bitmapcapInsetOffset=5;
+    float reductionFactor=3.0;
+    if (IsPitchWheel())
+    {
+        slideBar->setBackGroundImage("pitchWheelBaseBar.png");
+        bitmapcapInsetOffset=0;
+        reductionFactor=1.0;
+    }
+    else
+        slideBar->setBackGroundImage("sliderBARStripe.png");
+    
     cocos2d::Rect rr(0, bitmapcapInsetOffset, slideBar->getBackGroundImageTextureSize().width, slideBar->getBackGroundImageTextureSize().height-2*bitmapcapInsetOffset);
-    cocos2d::Size s(GetControlContentSize().width/3.0, GetControlContentSize().height);
+    
+    
+    cocos2d::Size s(GetControlContentSize().width/reductionFactor, GetControlContentSize().height);
     slideBar->setBackGroundImageScale9Enabled(true);
     slideBar->setBackGroundImageCapInsets(rr);
     slideBar->setContentSize(s);
     slideBar->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBar->getContentSize().width/2*/, GetControlContentSize().height/2.0));
     
-    
+    slideBarOff=NULL;
+
     slideBarOff = Layout::create();
     control->addChild(slideBarOff);
     slideBarOff->setTouchEnabled(true);
-   // slideBarOff->setAnchorPoint(Vec2(0,1));
     slideBarOff->setAnchorPoint(Vec2(0.5,0.5));
     slideBarOff->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     slideBarOff->setBackGroundColorType(Layout::BackGroundColorType::NONE);
-    //slideBarOff->setBackGroundColor(Color3B::BLACK);
-//    slideBarOff->setBackGroundImageScale9Enabled(true);
-//    slideBarOff->ignoreContentAdaptWithSize(true);
-    slideBarOff->setBackGroundImage("sliderBAR.png");
+    if(IsPitchWheel())
+        slideBarOff->setBackGroundImage("pitchWheelBase.png");
+    else
+        slideBarOff->setBackGroundImage("sliderBAR.png");
     slideBarOff->setBackGroundImageScale9Enabled(true);
     slideBarOff->setBackGroundImageCapInsets(rr);
-    slideBarOff->setContentSize(cocos2d::Size(s.width, s.height+2));
-    slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0/*-slideBarOff->GetControlContentSize().width/2*/, 2+GetControlContentSize().height/2.0));
-    
-    //InitSliderLayout();
+    slideBarOff->setContentSize(cocos2d::Size(s.width, s.height));
+    slideBarOff->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
 
     CreateThumb();
 }
@@ -1004,6 +1033,15 @@ bool ItemPad::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventTy
     GetControlUnit()->OnTouch(ControlUnit::TouchDown,1);
     LOGD("%s sends %d with velocity %d \n", GetName().c_str(), GetControlUnit()->GetSender()->GetMidiMessageType(), GetControlUnit()->GetValue());
     return true;
+}
+
+void ItemPad::UpdateUI()
+{
+    if (!GetControlUnit()) return;
+    if (GetControlUnit()->GetNormalizedValue()>0)
+        pad->loadTextureNormal("padHover.png");
+    else
+        pad->loadTextureNormal("padDefault.png");
 }
 
 bool ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
