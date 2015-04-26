@@ -290,11 +290,11 @@ bool MainScene::init()
                           3.0*getContentSize().height/2.0,
                           2*getContentSize().width,
                           2*getContentSize().height);
-    cocos2d::Rect scrollViewect(getContentSize().width-(SCROLLVIEW_WIDTH*SCROLLVIEW_TONGUE_PERCENTAGE),
+    cocos2d::Rect scrollViewect(getContentSize().width-(SCROLLVIEW_WIDTH*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE),
                        getContentSize().height-toolbarPanelsize.size.height,
                        SCROLLVIEW_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
-    cocos2d::Rect propertiesRect(PROPERTIES_WIDTH*(PROPERTIES_PANEL_TONGUE_PERCENTAGE-1.0),
+    cocos2d::Rect propertiesRect(PROPERTIES_WIDTH*(PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE-1.0),
                        getContentSize().height-toolbarPanelsize.size.height,
                        PROPERTIES_WIDTH,
                        getContentSize().height-toolbarPanelsize.size.height);
@@ -547,11 +547,11 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             {
                 case MAIN_BUTTON_HIDESHOW_SCROLLVIEW:
                     panel=customScrollView.get();
-                    newPosX=fmin(getContentSize().width-(panel->getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE), fmax(getContentSize().width-panel->getContentSize().width, panel->getPositionX()-diff_x));
+                    newPosX=fmin(getContentSize().width-(panel->getContentSize().width*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE), fmax(getContentSize().width-panel->getContentSize().width, panel->getPositionX()-diff_x));
                     break;
                 case MAIN_BUTTON_HIDESHOW_PROPERTIES:
                     panel=propertiesPanel.get();
-                    newPosX=fmax(-panel->getContentSize().width+(panel->getContentSize().width*PROPERTIES_PANEL_TONGUE_PERCENTAGE), fmin(0, panel->getPositionX()-diff_x));
+                    newPosX=fmax(-panel->getContentSize().width+(panel->getContentSize().width*PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE), fmin(0, panel->getPositionX()-diff_x));
                     break;
                 default:
                     break;
@@ -573,7 +573,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                         if (customScrollView->IsOpened())
                             hidePanel=customScrollView->getPositionX()>=(getContentSize().width-3*customScrollView->getContentSize().width/4.0);
                         else
-                            hidePanel=(customScrollView->getPositionX()+(customScrollView->getContentSize().width*SCROLLVIEW_TONGUE_PERCENTAGE))>=(getContentSize().width-customScrollView->getContentSize().width/4.0);
+                            hidePanel=(customScrollView->getPositionX()+(customScrollView->getContentSize().width*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE))>=(getContentSize().width-customScrollView->getContentSize().width/4.0);
                     }
                     customScrollView->HideShow(hidePanel);
                 }
@@ -587,7 +587,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                         if (propertiesPanel->IsVisible())
                             hidePanel=propertiesPanel->getPositionX()<=-propertiesPanel->getContentSize().width/4.0;
                         else
-                            hidePanel=(propertiesPanel->getPositionX()-(propertiesPanel->getContentSize().width*PROPERTIES_PANEL_TONGUE_PERCENTAGE))<=-(3.0*propertiesPanel->getContentSize().width/4.0);
+                            hidePanel=(propertiesPanel->getPositionX()-(propertiesPanel->getContentSize().width*PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE))<=-(3.0*propertiesPanel->getContentSize().width/4.0);
                     }
                     HideShowPropertiesPanel(hidePanel);
                 }

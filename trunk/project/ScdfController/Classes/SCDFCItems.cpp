@@ -249,6 +249,14 @@ cocos2d::Size ItemSlider::CalculateNewItemBaseSize(int magValue)
     return baseSize;
 }
 
+cocos2d::Size ItemSwitch::CalculateNewItemBaseSize(int magValue)
+{
+    cocos2d::Size baseSize=GetStaticBaseSize();
+    baseSize.width+=magValue;
+    baseSize.height=(int)((baseSize.width*baseSize.height)/GetStaticBaseSize().width);
+    return baseSize;
+}
+
 cocos2d::Size ItemLayoutManager::GetSizeConsideringOrientation(const cocos2d::Size resized)
 {
     cocos2d::Size ret;
@@ -540,16 +548,12 @@ void ItemSlider::SetPositionOfValueDependentComponent()
     float offset =	thumb->getContentSize().height; //thumb has same size in both orientation, beacase we simply rotate it
     float size=GetLayoutManager()->IsVertical()?GetControlContentSize().height-offset:GetControlContentSize().width-offset;
     float position=(GetControlUnit()->GetNormalizedValue()*size)+offset/2.0;
-    int bitmapThumbXOffset=-6;
     float slideBarOffOffset=2.0;
     if (IsPitchWheel())
-    {
-        bitmapThumbXOffset=0;
         slideBarOffOffset=0;
-    }
     if (GetLayoutManager()->IsVertical())
     {
-        thumb->setPosition(Vec2(GetControlContentSize().width/2.0+bitmapThumbXOffset,position));
+        thumb->setPosition(Vec2(GetControlContentSize().width/2.0,position));
         if (IsPitchWheel())
             position=0;
         slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().height-position));
@@ -558,7 +562,7 @@ void ItemSlider::SetPositionOfValueDependentComponent()
     }
     else
     {
-        thumb->setPosition(Vec2(position,GetControlContentSize().height/2.0-bitmapThumbXOffset));
+        thumb->setPosition(Vec2(position,GetControlContentSize().height/2.0));
         if (IsPitchWheel())
             position=0;
         slideBarOff->setContentSize(cocos2d::Size(slideBarOff->getContentSize().width,GetControlContentSize().width-position));
@@ -984,7 +988,7 @@ void ItemSwitch::Init()
     control->addChild(backGround,1);
 //    toggle->setTouchEnabled(true);
     // keysHandle->setBackGroundColorType(Layout::BackGroundColorType::NONE);
-    backGround->setAnchorPoint(Vec2(0,1));
+    backGround->setAnchorPoint(Vec2(0.5,0.5));
 //    backGround->setContentSize(GetControlContentSize());
 //    toggle->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
     backGround->setBackGroundImage("switchBase.png");
@@ -994,7 +998,7 @@ void ItemSwitch::Init()
     backGround->setBackGroundImageScale9Enabled(true);
     backGround->setBackGroundImageCapInsets(rr);
     backGround->setContentSize(s);
-    backGround->setPosition(Vec2(0, GetControlContentSize().height));
+    backGround->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
     backGround->addTouchEventListener(CC_CALLBACK_2(ItemBase::ItemsTouchCallback, this));
 
     pad = Button::create();
@@ -1054,12 +1058,18 @@ bool ItemPad::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventTy
 
 void ItemSwitch::DoSetContentSize(cocos2d::Size contentSize)
 {
-    if (pad)
+    if (NULL==pad) return;
+    if (GetLayoutManager()->IsVertical())
+    {
+        pad->setContentSize(cocos2d::Size(contentSize.height/2.0, contentSize.width));
+        backGround->setContentSize(cocos2d::Size(contentSize.height, contentSize.width));
+    }
+    else
     {
         pad->setContentSize(cocos2d::Size(contentSize.width/2.0, contentSize.height));
         backGround->setContentSize(contentSize);
-        UpdateUI();
     }
+    UpdateUI();
 }
 
 void ItemPad::DoSetContentSize(cocos2d::Size contentSize)
@@ -1260,6 +1270,20 @@ void ItemKeyboard::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
     setPosition(Vec2(rotationCenter.x-getContentSize().width/2.0, rotationCenter.y+getContentSize().height/2.0));
 }
 
+void ItemSwitch::InitLayoutOrientation(cocos2d::Vec2 rotationCenter)
+{
+    if (!backGround) return;
+    if ((!GetLayoutManager()->IsVertical() && backGround->getRotation()==0)  ||
+        (GetLayoutManager()->IsVertical() && backGround->getRotation()!=0))
+        return;
+    int rotation=GetLayoutManager()->IsVertical()?-90:0;
+    
+    backGround->setRotation(rotation);
+    pad->setRotation(rotation);
+    
+    setPosition(Vec2(rotationCenter.x-getContentSize().width/2.0, rotationCenter.y+getContentSize().height/2.0));
+}
+
 bool ItemKeyboard::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     if (!ItemBase::OnItemTouchBegan(widget, type)) return false;
@@ -1296,17 +1320,32 @@ bool ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEven
     }
     
     if (!ItemPad::OnItemTouchBegan(widget,type)) return false;
-    pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
+    if (!GetLayoutManager()->IsVertical())
+        pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
+    else
+        pad->setPosition(Vec2(0,0));//pad->getParent()->getContentSize().height/2.0));
     return true;
 }
 
 void ItemSwitch::UpdateUI()
 {
-    backGround->setPosition(Vec2(0, backGround->getParent()->getContentSize().height));
-    if (checked)
-        pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
+    backGround->setPosition(Vec2(GetControlContentSize().width/2.0, GetControlContentSize().height/2.0));
+
+    if (!GetLayoutManager()->IsVertical())
+    {
+        if (checked)
+            pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
+        else
+            pad->setPosition(Vec2(pad->getParent()->getContentSize().width/2.0, pad->getParent()->getContentSize().height));
+    }
     else
-        pad->setPosition(Vec2(pad->getParent()->getContentSize().width/2.0, pad->getParent()->getContentSize().height));
+    {
+        if (checked)
+            pad->setPosition(Vec2(0,0));
+        else
+            pad->setPosition(Vec2(0, pad->getParent()->getContentSize().height/2.0));
+
+    }
 }
 
 bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
