@@ -663,7 +663,7 @@ void ItemSettings::CheckShowElements()
     HideElement(masterButton,collapsed || group->GetSelectedIndex()==0);
 
     bool forceHide=false;
-    if (dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())!=NULL)
+    if (panel->GetSelectedItem()&&panel->GetSelectedItem()->GetID()==ITEM_KEYBOARD_ID)
         forceHide=true;
     
     HideElement(colorLabel,collapsed||forceHide);
@@ -676,8 +676,8 @@ void ItemSettings::CheckShowElements()
     HideElement(h_minus,collapsed||forceHide);
     
     forceHide=false;
-    if (dynamic_cast<ItemPad*>(panel->GetSelectedItem())!=NULL ||
-        dynamic_cast<ItemKnob*>(panel->GetSelectedItem())!=NULL)
+    if ((panel->GetSelectedItem()&&panel->GetSelectedItem()->GetID()==ITEM_PAD_ID) ||
+        (panel->GetSelectedItem()&&panel->GetSelectedItem()->GetID()==ITEM_KNOB_ID))
         forceHide=true;
     
     HideElement(orientation,collapsed||forceHide);
@@ -996,11 +996,11 @@ void ItemSettings::OnTextInput(cocos2d::ui::TextField *widget)
 
 void PropertiesPanel::InitPanel()
 {
-    const float bitmapRightPadding=0;//48.0;
     const float bitmapTopTransparencyPercentage=0.010;
+    const float tongueTopTransparencyPercentage=0.087;
     const float bitmapBottomTransparencyPercentage=0.022;
     const float bitmapToolbarHeightPercentage=0.058;
-    const float bitmapToolbarWidthPercentage=1.0-PROPERTIES_PANEL_TONGUE_PERCENTAGE;
+    const float bitmapToolbarWidthPercentage=1.0-PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE;
     const float numButtons=4.0;
     
     float ypadding=(getContentSize().height*bitmapToolbarHeightPercentage)*0.1;
@@ -1009,19 +1009,19 @@ void PropertiesPanel::InitPanel()
     float buttonDim=0.7*buttonPlaceholder;
     float xpadding=((bitmapToolbarWidthPercentage*getContentSize().width)-numButtons*buttonDim)/(numButtons+1.0);
     
-    float arrowButtonDim=bitmapToolbarHeightPercentage*getContentSize().height-2.0*ypadding;
-//    float xpadding=(getContentSize().width*bitmapToolbarWidthPercentage-numButtons*buttonDim)/(numButtons+1.0);
+    const float tongueBiggerFactor=1.2;
+    cocos2d::Size arrowButtonSize=cocos2d::Size(1.22*buttonDim*tongueBiggerFactor, 1.26*buttonDim*tongueBiggerFactor);
     
     float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;
     float buttonXPos=xpadding;
     
     setBackGroundImage("panelLeft.png");
-    cocos2d::Rect rr(0, 0, getBackGroundImageTextureSize().width-bitmapRightPadding, getBackGroundImageTextureSize().height);
+    cocos2d::Rect rr(0, 0, getBackGroundImageTextureSize().width, getBackGroundImageTextureSize().height);
     setBackGroundImageScale9Enabled(true);
     setBackGroundImageCapInsets(rr);
 
     float scrollbarHeight=getContentSize().height*(1.0-2.0*(bitmapTopTransparencyPercentage+bitmapBottomTransparencyPercentage+bitmapToolbarHeightPercentage));
-    float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_TONGUE_PERCENTAGE))-xpadding;
+    float scrollbarWidth=getContentSize().width*(1.0-(PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE))-2*xpadding;
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
     scrollView->setPosition(Vec2(xpadding,buttonYPos-1.5*buttonDim));//(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height));
     
@@ -1039,19 +1039,19 @@ void PropertiesPanel::InitPanel()
     scrollView->addChild(sectionItemSettings);
     
     auto button = Button::create();
-    button->loadTextureNormal("btnPanelRightCloseNew.png");
-    button->loadTexturePressed("btnPanelRightCloseNew.png");
+    button->loadTextureNormal("leftPanelTongueClosed.png");
+    button->loadTexturePressed("leftPanelTongueClosed.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
-    button->setContentSize(cocos2d::Size(arrowButtonDim, arrowButtonDim));
-    button->setPosition(Vec2(getContentSize().width*(1-PROPERTIES_PANEL_TONGUE_PERCENTAGE)+5, buttonYPos));
+    button->setContentSize(arrowButtonSize);
+    button->setPosition(Vec2(getContentSize().width*(1-PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE), getContentSize().height*(1-bitmapTopTransparencyPercentage)+(tongueTopTransparencyPercentage*arrowButtonSize.height)));
     button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, parent));
     addChild(button,6,MAIN_BUTTON_HIDESHOW_PROPERTIES);
     
     button = Button::create();
     button->loadTextureNormal("newDefaultNew.png");
-    button->loadTexturePressed("newActive.png");
+    button->loadTexturePressed("newActiveNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1064,7 +1064,7 @@ void PropertiesPanel::InitPanel()
     
     button = Button::create();
     button->loadTextureNormal("saveDefaultNew.png");
-    button->loadTexturePressed("saveActive.png");
+    button->loadTexturePressed("saveActiveNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1077,7 +1077,7 @@ void PropertiesPanel::InitPanel()
     
     button = Button::create();
     button->loadTextureNormal("loadDefaultNew.png");
-    button->loadTexturePressed("loadActive.png");
+    button->loadTexturePressed("loadActiveNew.png");
     button->setAnchorPoint(Vec2(0,1));
     button->setTouchEnabled(true);
     button->ignoreContentAdaptWithSize(false);
@@ -1123,13 +1123,13 @@ void PropertiesPanel::OnHideShow()
     if (NULL==b) return;
     if (IsVisible())
     {
-        b->loadTextureNormal("btnPanelRightOpenNew.png");
-        b->loadTexturePressed("btnPanelRightOpenNew.png");
+        b->loadTextureNormal("leftPanelTongueOpened.png");
+        b->loadTexturePressed("leftPanelTongueOpened.png");
     }
     else
     {
-        b->loadTextureNormal("btnPanelRightCloseNew.png");
-        b->loadTexturePressed("btnPanelRightCloseNew.png");
+        b->loadTextureNormal("leftPanelTongueClosed.png");
+        b->loadTexturePressed("leftPanelTongueClosed.png");
     }
 }
 

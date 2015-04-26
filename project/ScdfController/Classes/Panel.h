@@ -27,8 +27,10 @@ namespace ScdfCtrl
         void CalculateInnerHeight();
         virtual void UpdateSubpanels(){}
         virtual void InitPanel(){}
-        
+        bool touchEventsEnabled;
         bool visible;
+        
+        void EnableTouchEvents(bool enable) { touchEventsEnabled=enable;}
     public:
         void InitLayout();
         bool HideShow(bool hide, PanelBase *substitute=NULL);

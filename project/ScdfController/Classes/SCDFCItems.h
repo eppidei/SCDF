@@ -256,7 +256,9 @@ namespace ScdfCtrl
         static int ID() { return ITEM_SWITCH_ID;}
         static std::string GetIcon() { return "iconSwitchDefault.png";}
         static std::string GetIconPressed() { return "iconSwitchPressed.png";}
+        cocos2d::Size CalculateNewItemBaseSize(int magValue) override;
         void DoSetContentSize(cocos2d::Size contentSize) override;
+        void InitLayoutOrientation(cocos2d::Vec2 rotationCenter) override;
         
         CREATE_FUNC(ItemSwitch);
     };

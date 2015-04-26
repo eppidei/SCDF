@@ -27,12 +27,6 @@ template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, co
     return panel;
 }
 
-//void PanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-//{
-//    Color3B cc=Colors::Instance()->GetUIColor(Colors::Main_Background);
-//    DrawPrimitives::drawSolidRect(Vec2(0, getInnerContainerSize().height), Vec2(getInnerContainerSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
-//}
-
 void PanelBase::EnableScrolling(bool enable)
 {
     scrollView->setDirection(enable?cocos2d::ui::ScrollView::Direction::VERTICAL:cocos2d::ui::ScrollView::Direction::NONE);
@@ -76,6 +70,7 @@ void PanelBase::CalculateInnerHeight()
 void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
 {
     visible=false;
+    touchEventsEnabled=true;
     parent=main;
     scrollView=cocos2d::ui::ScrollView::create();
     addChild(scrollView);
@@ -94,15 +89,22 @@ void PanelBase::InitWithContent(MainScene *main,cocos2d::Rect r)
 
 bool PanelBase::HideShow(bool hide, PanelBase *substitute)
 {
+    if (!touchEventsEnabled) return visible;
+    
+    EnableTouchEvents(false);
     MoveTo *action=NULL;
     CallFunc *callback=nullptr;
     if (NULL!=substitute)
         callback = CallFunc::create([hide, substitute](){
             substitute->HideShow(!hide);
         });
+    else
+        callback = CallFunc::create([this](){
+            this->EnableTouchEvents(true);
+        });
     visible=false;
     if (hide)
-        action = MoveTo::create(0.1f, cocos2d::Vec2(getContentSize().width*(PROPERTIES_PANEL_TONGUE_PERCENTAGE-1.0), getPositionY()));
+        action = MoveTo::create(0.1f, cocos2d::Vec2(getContentSize().width*(PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE-1.0), getPositionY()));
     else if (NULL==substitute)
     {
         action = MoveTo::create(0.1f, cocos2d::Vec2(0, getPositionY()));

@@ -28,6 +28,9 @@ namespace ScdfCtrl {
         virtual int GetBackgroundBitmapBottomOffset(){return 80;}
         
         bool isOpened;
+        
+        bool touchEventsEnabled;
+        void EnableTouchEvents(bool enable) { touchEventsEnabled=enable;}
     protected:
         MainScene *parent;
         void DoInit(MainScene *main, cocos2d::Rect r);

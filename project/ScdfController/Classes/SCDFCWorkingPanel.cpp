@@ -41,7 +41,7 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     setTouchEnabled(true);
     addTouchEventListener(CC_CALLBACK_2(WorkingPanel::PanelTouchEvent, this));
     cocos2d::Rect rr(0, 0, r.size.width, r.size.height);
-    auto backGroundImage = Sprite::create("backgroundNew.jpg");
+    auto backGroundImage = Sprite::create("background.png");
     cocos2d::Rect rrr(0, 0, backGroundImage->getTexture()->getContentSizeInPixels().width, backGroundImage->getTexture()->getContentSizeInPixels().height);
     backGroundImage->setAnchorPoint(Vec2(0,1));
     backGroundImage->setPosition(0,r.size.height);
