@@ -53,10 +53,15 @@ template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
 {
     if (NULL==customPanel.get()) return;
 
-    Vec2 coord(convertToNodeSpace(customPanel->getPosition()));
-    cocos2d::Rect workingSpaceRect(fmax(0, customPanel->getPositionX()), fmin(customPanel->getPositionY(), getContentSize().height), fmax(getContentSize().width, getContentSize().width-customPanel->getPositionX()), fmin(getContentSize().height,customPanel->getPositionY()));
+    cocos2d::Rect rrr=customPanel->getBoundingBox();
+    float workingPanelY=fmin(getContentSize().height,rrr.size.height+rrr.origin.y);
+    float workingHeight=workingPanelY-fmax(0,rrr.origin.y);
+    float workingPanelX=fmax(0,rrr.origin.x);
+    float workingWidth=workingPanelX+fmin(getContentSize().width,rrr.size.width+rrr.origin.x);
     cocos2d::Rect rr=cocos2d::Rect::ZERO;
-    
+
+    cocos2d::Rect workingSpaceRect(workingPanelX, workingPanelY, workingWidth, workingHeight);
+
     float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT; //item label
     if (ItemType::ID()!=ITEM_KNOB_ID && ItemType::ID()!=ITEM_KEYBOARD_ID && ItemType::ID()!=ITEM_SWITCH_ID)
         scaledHeight+=ITEMS_LABEL_HEIGHT;   //item control icon on top

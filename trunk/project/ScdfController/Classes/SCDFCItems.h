@@ -59,6 +59,8 @@ namespace ScdfCtrl
         void PlaceItemBaseElements();
         void SetControlModeImage();
         std::unique_ptr<ItemUIUpdater> updater;
+        
+        virtual void SetControlUnitReceiverType() {}
     protected:
 
         std::unique_ptr<ControlUnit> controlUnit;
@@ -128,6 +130,9 @@ namespace ScdfCtrl
         virtual cocos2d::Size GetThumbSize(cocos2d::Size currentSize);
         virtual cocos2d::Vec2 OnMove(cocos2d::ui::Widget *widget);
         virtual void Init();
+        
+        virtual bool IsPitchWheel() { return false;}
+        void SetControlUnitReceiverType() { GetControlUnit()->SetReceiverType(ControlUnit::ReceiverType_stream);}
     protected:
         cocos2d::ui::Layout *thumb;
         cocos2d::ui::Layout *slideBar;
@@ -187,6 +192,7 @@ namespace ScdfCtrl
     {
         virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         void Init() override;
+        bool IsPitchWheel() override{ return true;}
     public:
         
         static cocos2d::Size GetBaseSize() { return WHEEL_SIZE_BASE;}
@@ -206,12 +212,14 @@ namespace ScdfCtrl
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
         
         virtual void Init();
+        
+        void SetControlUnitReceiverType() { GetControlUnit()->SetReceiverType(ControlUnit::ReceiverType_state);}
     protected:
         cocos2d::ui::Button *pad;
         
         virtual bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         virtual bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
-        virtual void UpdateUI() override {};
+        virtual void UpdateUI() override;
     public:
         void SetColor(Colors::ItemsColorsId colorIndex) override;
         //int midiNote;
@@ -240,6 +248,8 @@ namespace ScdfCtrl
         void UpdateUI() override;
         cocos2d::ui::Layout *backGround;
         cocos2d::Size GetStaticBaseSize() override { return GetBaseSize(); }
+        
+        void SetControlUnitReceiverType() { GetControlUnit()->SetReceiverType(ControlUnit::ReceiverType_toggle);}
     public:
         static cocos2d::Size GetBaseSize() { return SWITCH_SIZE_BASE;}
         int GetID() override { return ID();}

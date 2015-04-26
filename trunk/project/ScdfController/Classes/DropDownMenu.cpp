@@ -22,6 +22,7 @@ void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
     auto callback = CallFunc::create([this, disableScrolling](){
         this->ScrollToSelected();
         this->ScrollView::setDirection(disableScrolling?ScrollView::Direction::NONE:ScrollView::Direction::VERTICAL);
+        this->EnableTouchEvents(true);
     });
     auto seq = Sequence::create(modifyHeight, callback, NULL);
     runAction(seq);
@@ -30,6 +31,8 @@ void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 void DropDownMenu::ToggleOpenMenu()
 {
     if (getItems().size()<=1) return;
+    
+    EnableTouchEvents(false);
     float itemHeight=getItem(0)->getContentSize().height;
     bool disableScrolling;
     float newHeight=getContentSize().height;
@@ -88,7 +91,8 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
     switch (type)
     {
         case ListView::EventType::ON_SELECTED_ITEM_END:
-            ToggleOpenMenu();
+            if(touchEnabled)
+                ToggleOpenMenu();
             if (!opened) //on closure
             {
                 SetSelectedIndex(getCurSelectedIndex());
@@ -105,6 +109,7 @@ DropDownMenu::DropDownMenu()
 {
     opened=false;
     callback=NULL;
+    touchEnabled=true;
     resizeParent=true;
     lastSelectedIndex=-1;
 }

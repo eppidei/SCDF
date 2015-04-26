@@ -34,6 +34,7 @@ ControlUnit::ControlUnit()
 	min = 0;
 	max = 127;
 	interface = NULL;
+    receiverType=ReceiverType_stream;
 }
 
 ControlUnit::~ControlUnit()
@@ -102,6 +103,13 @@ bool ControlUnitDsp::IsEnabled()
 	return isEnabled;
 }
 
+void ControlUnitDsp::SendValue(float normValue)
+{
+    lastValue = normValue;
+    GetSender()->SendValue(GetValue());
+    UpdateUI();
+}
+
 void ControlUnitDsp::InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_len, ADE_FLOATING_T input_rate)
 {
     if (ADEcontext) return;
@@ -153,18 +161,27 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
     
     ADE_Step(ADEcontext,BLOW_FLAG,&sensorData);
     ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,BLOW_FLAG);
-
-    int s=0;
-    if (output->state)
-        s=1;
     
     //LOGD("BLOW STATE %d\n",s);
-    for (int i=0;i<output->n_data;++i)
+    switch (receiverType)
     {
-        LOGD("BLOW DATA %f\n",output->p_data[i]);
-        lastValue=output->p_data[i];
-        GetSender()->SendValue(output->p_data[i]);
-        UpdateUI();
+        case ReceiverType_stream:
+            for (int i=0;i<output->n_data;++i)
+            {
+                //LOGD("BLOW DATA %f\n",output->p_data[i]);
+                SendValue(output->p_data[i]);
+            }
+            break;
+        case ReceiverType_state:
+        {
+            int v= output->state ? 1 : 0;
+            SendValue(v);
+        }
+            break;
+        case ReceiverType_toggle:
+            break;
+        default:
+            break;
     }
 }
 
