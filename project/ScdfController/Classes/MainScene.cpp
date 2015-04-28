@@ -52,32 +52,18 @@ template <class ItemType> void MainScene::OnStartDragging(cocos2d::Vec2 dragStar
 template <class ItemType> void MainScene::OnDragging(cocos2d::Rect r)
 {
     if (NULL==customPanel.get()) return;
-
-    cocos2d::Rect rrr=customPanel->getBoundingBox();
-    float workingPanelY=fmin(getContentSize().height,rrr.size.height+rrr.origin.y);
-    float workingHeight=workingPanelY-fmax(0,rrr.origin.y);
-    float workingPanelX=fmax(0,rrr.origin.x);
-    float workingWidth=workingPanelX+fmin(getContentSize().width,rrr.size.width+rrr.origin.x);
-    cocos2d::Rect rr=cocos2d::Rect::ZERO;
-
-    cocos2d::Rect workingSpaceRect(workingPanelX, workingPanelY, workingWidth, workingHeight);
-
+    
     float scaledHeight=ItemType::GetBaseSize().height*GetGridDistance()+ITEMS_LABEL_HEIGHT; //item label
     if (ItemType::ID()!=ITEM_KNOB_ID && ItemType::ID()!=ITEM_KEYBOARD_ID && ItemType::ID()!=ITEM_SWITCH_ID)
         scaledHeight+=ITEMS_LABEL_HEIGHT;   //item control icon on top
     float scaledWidth=ItemType::GetBaseSize().width*GetGridDistance();
 
-    if (r.origin.y<=workingSpaceRect.origin.y && (r.origin.x>=workingSpaceRect.origin.x)
-        && (r.origin.x+scaledWidth)<=workingSpaceRect.size.width
-        && (r.origin.y-scaledHeight)>=workingSpaceRect.origin.y-workingSpaceRect.size.height)
-    {
-        r.origin=customPanel->convertToNodeSpace(r.origin);
-        SnapToGrid(r);
-        r.size=cocos2d::Size(scaledWidth, scaledHeight);
-        rr=r;
-    }
-    customPanel->DetectCollisions(rr);
-    customPanel->SetDraggingRect(rr);
+    r.origin=customPanel->convertToNodeSpace(r.origin);
+    SnapToGrid(r);
+    r.size=cocos2d::Size(scaledWidth, scaledHeight);
+
+    customPanel->DetectCollisions(r);
+    customPanel->SetDraggingRect(r);
 }
 
 template <class ItemType> void MainScene::OnEndDragging()
