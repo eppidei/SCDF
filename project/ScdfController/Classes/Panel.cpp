@@ -18,7 +18,6 @@ using namespace cocos2d;
 using namespace ui;
 
 template PanelBase *PanelBase::CreatePanel<PropertiesPanel>(MainScene *main, cocos2d::Rect r);
-//template PanelBase *PanelBase::CreatePanel<LoadSavePanel>(MainScene *main, cocos2d::Rect r);
 
 template <class PanelType> PanelBase *PanelBase::CreatePanel(MainScene *main, cocos2d::Rect r)
 {
@@ -145,7 +144,6 @@ void PanelBase::CollapseAllSubpanelsButThis(SubpanelBase *subPanel)
 
 void SubpanelBase::DropDownMenuCallbackSubPanel::OnSizeChanged(float oldSize, float newSize)
 {
-//    parent->GetParent()->InitLayout();
     parent->UpdateLayout();
 }
 
@@ -153,21 +151,6 @@ void SubpanelBase::DropDownMenuCallbackSubPanel::OnSelectItem(DropDownMenu *menu
 {
     parent->OnDropDownSelectionChange(menu);
 }
-
-//void SubpanelBase::SubPanelItemCallback::OnItemTouchBegan()
-//{
-//    parent->GetParent()->EnableScrolling(false);
-//}
-//void SubpanelBase::SubPanelItemCallback::OnItemTouchMoved(int value)
-//{
-//    ItemBase *item=parent->GetParent()->GetSelectedItem();
-//    if (NULL==item) return;
-//    item->SetItemMultiply(value);
-//}
-//void SubpanelBase::SubPanelItemCallback::OnItemTouchEnded()
-//{
-//    parent->GetParent()->EnableScrolling(true);
-//}
 
 void SubpanelBase::CalculateHeight()
 {
@@ -240,20 +223,7 @@ void SubpanelBase::updateTweenAction(float value, const std::string& key)
         PositionElements();
         parent->InitLayout();
     }
-    
 }
-
-//void SubpanelBase::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-//{
-////    Color3B cc=Colors::Instance()->GetUIColor(Colors::SubPanel);
-////    DrawPrimitives::drawSolidRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0), Color4F(((float)cc.r)/255.f,((float)cc.g)/255.f,((float)cc.b)/255.f,1.0));
-//    if (flags&FLAGS_CONTENT_SIZE_DIRTY)
-//    {
-////        PositionElements();
-//        // parent->InitLayout();
-//        
-//    }
-//}
 
 void SubpanelBase::InitWithContent(PanelBase *_parent, cocos2d::Size s)
 {
@@ -287,8 +257,6 @@ void SubpanelBase::TouchEventCallback(Ref *pSender, cocos2d::ui::Widget::TouchEv
                     parent->CollapseAllSubpanelsButThis(this);
                 CheckShowElements();
             }
-//            else
-//                OnTouchEventBegan(node);
             break;
         case Widget::TouchEventType::MOVED:
             //OnTouchMoved(node);

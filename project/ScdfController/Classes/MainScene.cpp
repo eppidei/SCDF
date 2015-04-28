@@ -9,8 +9,6 @@
 #include "SCDFCItems.h"
 #include "MultiSender.h"
 
-//#include "PlatformInfo.h"
-
 using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
@@ -20,16 +18,10 @@ std::vector<float> MainScene::gridUnity;
 
 Scene* MainScene::createScene()
 {
-    // 'scene' is an autorelease object
     auto scene = Scene::create();
-    
-    // 'layer' is an autorelease object
     auto layer = MainScene::create();
 
-    // add layer as a child to scene
     scene->addChild(layer);
-
-    // return the scene
     return scene;
 }
 
@@ -93,109 +85,6 @@ void MainScene::EnableScrollView(bool enable)
         customScrollView->SetDirection(ScrollView::Direction::NONE);
 }
 
-void MainScene::AddToolbar(cocos2d::Rect r)
-{
-//    auto toolbar=Layout::create();
-//    toolbar->setContentSize(r.size);
-//    toolbar->setAnchorPoint(Vec2(0,1));
-//    toolbar->setPosition(r.origin);
-//    toolbar->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-//    toolbar->setBackGroundColor(Color3B(50,50,50));
-//  //  toolbar->setClippingEnabled(true);
-//    //toolbar->setClippingType(cocos2d::ui::Layout::ClippingType::SCISSOR);
-//    toolbar->setOpacity(100);
-//    this->addChild(toolbar, 10, ID_TOOLBAR);
-//    
-////    auto buttonShow = Button::create();
-////    buttonShow->setTouchEnabled(true);
-////    buttonShow->setScale9Enabled(true);
-////    buttonShow->loadTextures("CloseNormal.png", "CloseSelected.png", "CloseSelected.png");
-////    buttonShow->setAnchorPoint(Vec2(0,1));
-////    buttonShow->setPosition(Vec2(r.origin.x, toolbar->getContentSize().height));
-////    buttonShow->setContentSize(Size(r.size.height, r.size.height));
-////    buttonShow->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-////    button->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
-//    
-//    int buttonWidth = r.size.height;
-//    int marginOffset = 0;/*toolbar->getContentSize().height/8*/
-//    int marginLeft = 24;
-//    
-//    auto buttonPanel = CheckBox::create();
-//    buttonPanel->setTouchEnabled(true);
-//    buttonPanel->loadTextures("TogglePannelOff.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOff.png");
-//    buttonPanel->ignoreContentAdaptWithSize(false);
-//    buttonPanel->setAnchorPoint(Vec2(0,1));
-//    buttonPanel->setPosition(Vec2(marginLeft, toolbar->getContentSize().height-marginOffset));
-//    buttonPanel->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
-//    buttonPanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-//
-//   
-////    auto buttonShowItems = CheckBox::create();
-////    buttonShowItems->setTouchEnabled(true);
-////    buttonShowItems->loadTextures("ToggleItemsOff.png",
-////                                  "ToggleItemsOn.png",
-////                                  "ToggleItemsOn.png",
-////                                  "ToggleItemsOn.png",
-////                                  "ToggleItemsOff.png");
-////    buttonShowItems->ignoreContentAdaptWithSize(false);
-////    buttonShowItems->setAnchorPoint(Vec2(0,1));
-////    buttonShowItems->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth, toolbar->getContentSize().height- marginOffset));
-////    buttonShowItems->setContentSize(cocos2d::Size(r.size.height, r.size.height-2*marginOffset));
-////    buttonShowItems->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-//    
-//    
-//    //int buttonsWidth = 87;
-//    auto buttonGrid = Button::create();
-//    buttonGrid->setTouchEnabled(true);
-//    //buttonGrid->Sets
-//    //buttonGrid->setScale9Enabled(true);
-//    buttonGrid->ignoreContentAdaptWithSize(false);
-//    buttonGrid->loadTextures("TogglePannelOff.png", "TogglePannelOn.png", "TogglePannelOn.png");
-//    buttonGrid->setAnchorPoint(Vec2(0,1));
-//    buttonGrid->setPosition(Vec2(buttonPanel->getPosition().x+buttonWidth + marginLeft, toolbar->getContentSize().height));
-//    buttonGrid->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
-//    buttonGrid->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-//
-//    auto buttonEdit = CheckBox::create();
-//    buttonEdit->setTouchEnabled(true);
-//    buttonEdit->loadTextures("ToggleEditOff.png",
-//                                  "ToggleEditOn.png",
-//                                  "ToggleEditOn.png",
-//                                  "ToggleEditOn.png",
-//                                  "ToggleEditOff.png");
-//     buttonEdit->ignoreContentAdaptWithSize(false);
-//    //buttonEdit->setScale9Enabled(true);
-//    //buttonEdit->loadTextures("ButtonGrid.png", "ButtonGridOverlay.png", "ButtonGridOverlay.png");
-//    buttonEdit->setAnchorPoint(Vec2(0,1));
-//    buttonEdit->setPosition(Vec2(buttonGrid->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
-//    buttonEdit->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
-//    buttonEdit->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-//    
-//    
-//    auto buttonLoadSavePanel = CheckBox::create();
-//    buttonLoadSavePanel->setTouchEnabled(true);
-//    buttonLoadSavePanel->loadTextures("TogglePannelOff.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOn.png",
-//                              "TogglePannelOff.png");
-//    buttonLoadSavePanel->ignoreContentAdaptWithSize(false);
-//    buttonLoadSavePanel->setAnchorPoint(Vec2(0,1));
-//    buttonLoadSavePanel->setPosition(Vec2(buttonEdit->getPosition().x+buttonWidth +marginLeft, toolbar->getContentSize().height));
-//    buttonLoadSavePanel->setContentSize(cocos2d::Size(buttonWidth, r.size.height));
-//    buttonLoadSavePanel->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-//    
-//    toolbar->addChild(buttonLoadSavePanel,0,TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-//   // toolbar->addChild(buttonShowItems,0,TOOLBAR_BUTTON_HIDESHOW_SCROLLVIEW);
-//   toolbar->addChild(buttonGrid,0,TOOLBAR_BUTTON_GRID);
-//    toolbar->addChild(buttonEdit,0,TOOLBAR_BUTTON_ACTIVATE);
-//    //toolbar->addChild(buttonPanel,0,TOOLBAR_BUTTON_HIDESHOW_PROPERTIES);
-}
-
 void MainScene::CalculateGrid(cocos2d::Size workingPanelSize)
 {
     gridUnity.clear();
@@ -211,21 +100,9 @@ void MainScene::CalculateGrid(cocos2d::Size workingPanelSize)
         gridUnity.push_back(GetUnityBase());
 }
 
-//#define SMARTPHONE
-bool IsTablet();
 float MainScene::GetUnityBase()
 {
-////    if (0==gridUnity.size()){
-////        printf("Error creating grid\n");
-////        exit(EXIT_FAILURE);
-////    }
-//    float scaleFactor=0.015;
-//    
-//    if (!IsTablet())
-//        scaleFactor*=1.5;
-//    
-//    return scaleFactor*Director::getInstance()->getVisibleSize().width;
-    return 16.0;//gridUnity[0];
+    return 16.0;
 }
 
 void MainScene::UpdateMIDIDevicesMenu()
@@ -245,33 +122,17 @@ int MainScene::GetGridDistance()
 
 bool MainScene::init()
 {
-    //////////////////////////////
-    // 1. super init first
     if ( !Layer::init() )
     {
         return false;
     }
     
     Scdf::MidiOutConnection::AttachMidiDeviceMenuListener(this);
-    
     Director::getInstance()->setDisplayStats(false);
-    cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    //draggingImage=NULL;
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-    
-//    setColor(Color3B::GRAY);
 #define SCROLLVIEW_WIDTH (6.0*GetUnityBase())
 #define PROPERTIES_WIDTH (16.0*GetUnityBase())
-//#define TOOLBAR_HEIGHT   (0.0*GetUnityBase())
-    
-//    cocos2d::Rect toolbarPanelsize(0,
-//                          getContentSize().height,
-//                          getContentSize().width,
-//                          TOOLBAR_HEIGHT);
+
     cocos2d::Rect workingPanelsize(-(getContentSize().width/2.0),
                           3.0*getContentSize().height/2.0,
                           2*getContentSize().width,
@@ -287,81 +148,24 @@ bool MainScene::init()
 
     customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
     
-        LOGD("Created custom panel");
+    LOGD("Created custom panel");
+    
     customScrollView.reset(ItemScrollView::CreateCustomScrollView((MainScene*)this, scrollViewect));
+    
     LOGD("Created custom scrollview");
 
-
     propertiesPanel.reset(dynamic_cast<PropertiesPanel*>(PanelBase::CreatePanel<PropertiesPanel>((MainScene*)this,propertiesRect)));
-
-//    loadSavePanel.reset(dynamic_cast<LoadSavePanel*>(PanelBase::CreatePanel<LoadSavePanel>((MainScene*)this,propertiesRect)));
-
-   // AddToolbar(toolbarPanelsize);
 
     LOGD("Added toolbar");
 
     CalculateGrid(customPanel->getContentSize());
 
     LOGD("Calculated grid");
-
-    // add a "close" icon to exit the progress. it's an autorelease object
-    /*auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(MainScene::menuCloseCallback, this));
-    
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1,0);
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    auto label = LabelTTF::create("Hello World", "Arial", 24);
-    
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
-
-    // add the label as a child to this layer
-    this->addChild(label, 1,1);
-
-    // add "MainScene" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
-
-    // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0,2);
-    
-    
-    auto uButton = ui::Button::create();
-    uButton->setTouchEnabled(true);
-    uButton->loadTextures("2_knob_anim0000.png", "2_knob_anim0000.png", "");
-    uButton->setAnchorPoint(Vec2(0,1));
-    uButton->setPosition(Vec2(widgetSize.width-150, widgetSize.height-150));
-    uButton->setContentSize(Size(50, 50));
-    uButton->addTouchEventListener(this, toucheventselector(MainScene::touchEvent));
-//  uButton->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
-    this->addChild(uButton);*/
     
     HideShowPropertiesPanel(false);
     customScrollView->HideShow(false);
     
     return true;
-}
-
-void MainScene::HideShowLoadSavePanel()
-{
-//    propertiesPanel->HideShow(loadSavePanel.get());
 }
 
 void MainScene::HideShowPropertiesPanel(bool hide)
@@ -371,100 +175,9 @@ void MainScene::HideShowPropertiesPanel(bool hide)
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 }
 
-//void MainScene::HideShowToolbar()
+//void MainScene::OnGridButtonClick()
 //{
-//    MoveTo *actToolbar;
-//    CallFunc *callback=nullptr;
-//    Node *toolbar=getChildByTag(ID_TOOLBAR);
-//    if (toolbar->getPositionY()==getContentSize().height)
-//    {
-//        
-//        //customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height));
-//     //   CalculateGrid();
-//        Node *tB=toolbar->getChildByTag(TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-//        if (NULL==tB) return;
-//        tB->retain();
-//        toolbar->removeChild(tB);
-//        addChild(tB, 0, TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-//        tB->setPosition(Vec2(0, customPanel->getContentSize().height));
-//        actToolbar = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height+TOOLBAR_HEIGHT));
-//    }
-//    else
-//    {
-//        actToolbar = MoveTo::create(0.1f, cocos2d::Point(0, getContentSize().height));
-//        callback = CallFunc::create([this,toolbar](){
-//         //   customPanel->setContentSize(Size(customScrollView->getPositionX(), getContentSize().height-TOOLBAR_HEIGHT));
-//        //    CalculateGrid();
-//            Node *tB=getChildByTag(TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-//            if (NULL==tB) return;
-//            tB->retain();
-//            removeChild(tB);
-//            tB->setPosition(Vec2(0, toolbar->getContentSize().height));
-//            toolbar->addChild(tB, 0, TOOLBAR_BUTTON_HIDESHOW_TOOLBAR);
-//        });
-//    }
-//    if (nullptr!=callback){
-//        auto seq = Sequence::create(actToolbar, callback, NULL);
-//        toolbar->runAction(seq);
-//    }
-//    else
-//        toolbar->runAction(actToolbar);
-//}
-
-void MainScene::OnGridButtonClick()
-{
-    gridIndex=++gridIndex%gridUnity.size();
-}
-
-//int position=0;
-//
-//void ChangeBitmap(Ref *pSender, bool left, bool selected)
-//{
-//    Button *b=dynamic_cast<Button*>(pSender);
-//    if (selected)
-//    {
-//        if (left)
-//        {
-//            b->loadTextureNormal("btnPanelLeftClose.png");
-//            b->loadTexturePressed("btnPanelLeftClose.png");
-//        }
-//        else
-//        {
-//            b->loadTextureNormal("btnPanelRightClose.png");
-//            b->loadTexturePressed("btnPanelRightClose.png");
-//        }
-//    }
-//    else
-//    {
-//        if (left)
-//        {
-//            b->loadTextureNormal("btnPanelLeftOpen.png");
-//            b->loadTexturePressed("btnPanelLeftOpen.png");
-//        }
-//        else
-//        {
-//            b->loadTextureNormal("btnPanelRightOpen.png");
-//            b->loadTexturePressed("btnPanelRightOpen.png");
-//        }
-//    }
-//}
-
-//void MainScene::SlideWorkingPanel(bool close)
-//{
-//    float posX=0;
-//    if (customPanel->getPositionX()==0 && !close)
-//        posX=propertiesPanel->getPositionX()+propertiesPanel->getContentSize().width-32;
-//    
-//    if (close && customPanel->getPositionX()==0) return;
-//    MoveTo *action=MoveTo::create(0.1f, cocos2d::Vec2(posX, customPanel->getPositionY()));
-//    CallFunc *callback=nullptr;
-//    
-//    if (nullptr!=callback){
-//        auto seq = Sequence::create(action, callback, NULL);
-//        customPanel->runAction(seq);
-//    }
-//    else
-//        customPanel->runAction(action);
+//    gridIndex=++gridIndex%gridUnity.size();
 //}
 
 void MainScene::UpdateEditButton()
@@ -590,20 +303,6 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
             // TODO
             break;
     }
-}
-
-void menuCloseCallback(Ref* pSender)
-{
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
-#endif
-
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
 }
 
 template void MainScene::OnStartDragging<ItemSlider>(Vec2 dragStartPoint);

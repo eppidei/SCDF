@@ -55,26 +55,11 @@ MultiSender* ControlUnit::GetSender()
 	return sender.get();
 }
 
-//void ControlUnit::SetItem(ItemBase* iv)
-//{
-//	itemView = iv;
-//}
-
-//ItemBase* ControlUnit::GetItem()
-//{
-//	return itemView;
-//}
-
-
-
 bool ControlUnitWire::OnTouch(TouchEvent ev, float normValue)
 {
 	normVal = normValue;
 	GetSender()->SendValue(GetValue());
 }
-
-
-
 
 // DSP
 

@@ -572,27 +572,6 @@ void ItemSlider::SetPositionOfValueDependentComponent()
     }
 }
 
-//bool ItemSlider::IsVertical()
-//{
-//	return isVertical;
-//}
-
-/*void ItemSlider::SetValue(float _value)
-{
-    GetControlUnit()->OnTouch(_value);
-	//#ifdef DEBUG
-    printf("KNOB VALUE %d\n", _value);
-    //#endif
-    SetThumbPosition();
-}*/
-
-//void ItemSlider::SetRange(int _min, int _max)
-//{
-//	GetControlUnit()->SetRange(_min,_max);
-//    SetPositionOfValueDependentComponent();
-//    //SetValue(GetValue());
-//}
-
 void ItemSlider::Init()
 {
     DEFAULT_NAME("Slider")
