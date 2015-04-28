@@ -310,6 +310,28 @@ void MIDIInfo::CheckShowElements()
     UpdateLayout();
 }
 
+std::string GetCCName(int ccNumber)
+{
+    switch (ccNumber)
+    {
+        case 0: return " - Bank";
+        case 1: return " - Mod Wheel";
+        case 2: return " - Breath";
+        case 4: return " - Foot";
+        case 5: return " - Portamento";
+        case 7: return " - Volume";
+        case 8: return " - Balance";
+        case 10: return " - Pan";
+        case 11: return " - Expression";
+        case 64: return " - Damper on/off";
+        case 65: return " - Portamento on/off";
+        case 66: return " - Sostenuto on/off";
+        case 67: return " - Soft Pedal on/off";
+        case 68: return " - Legato on/off";
+        case 69: return " - Hold on/off";
+        default: return "";
+    }
+}
 void MIDIInfo::InitControlMenuData()
 {
     std::vector<DropDownMenuData> dropDownData;
@@ -332,7 +354,7 @@ void MIDIInfo::InitControlMenuData()
     for (int i=0;i<120;++i)
     {
         std::ostringstream os;
-        os<<"CC: "<<i;
+        os<<"CC: "<<i<<GetCCName(i);
         dropDownData.push_back(DropDownMenuData(os.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     }
     controlChange->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
@@ -1009,7 +1031,7 @@ void PropertiesPanel::InitPanel()
     float buttonDim=0.7*buttonPlaceholder;
     float xpadding=((bitmapToolbarWidthPercentage*getContentSize().width)-numButtons*buttonDim)/(numButtons+1.0);
     
-    const float tongueBiggerFactor=1.2;
+    const float tongueBiggerFactor=1.3;
     cocos2d::Size arrowButtonSize=cocos2d::Size(1.22*buttonDim*tongueBiggerFactor, 1.26*buttonDim*tongueBiggerFactor);
     
     float buttonYPos=getContentSize().height*(1.0-bitmapTopTransparencyPercentage) - ypadding;

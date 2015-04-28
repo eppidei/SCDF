@@ -105,7 +105,7 @@ bool ControlUnitDsp::IsEnabled()
 
 void ControlUnitDsp::SendValue(float normValue)
 {
-    lastValue = normValue;
+    lastValue = fmin(1,fmax(0,normValue));
     GetSender()->SendValue(GetValue());
     UpdateUI();
 }
@@ -207,13 +207,24 @@ void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
     ADE_Step(ADEcontext,SNAP_FLAG,&sensorData);
     ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,SNAP_FLAG);
 
-    int s=0;
-    if (output->state)
-        s=1;
-    
-    LOGD("SNAP STATE %d\n",s);
-
-    lastValue=s;
-    GetSender()->SendValue(s*GetMax());
-    UpdateUI();
+    switch (receiverType)
+    {
+        case ReceiverType_stream:
+            for (int i=0;i<output->n_data;++i)
+            {
+                //LOGD("BLOW DATA %f\n",output->p_data[i]);
+                SendValue(output->p_data[i]);
+            }
+            break;
+        case ReceiverType_state:
+        {
+            int v= output->state ? 1 : 0;
+            SendValue(v);
+        }
+            break;
+        case ReceiverType_toggle:
+            break;
+        default:
+            break;
+    }
 }

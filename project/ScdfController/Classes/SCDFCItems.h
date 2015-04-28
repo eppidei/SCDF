@@ -198,8 +198,8 @@ namespace ScdfCtrl
         static cocos2d::Size GetBaseSize() { return WHEEL_SIZE_BASE;}
         int GetID() override { return ID();}
         static int ID() { return ITEM_WHEEL_ID;}
-        static std::string GetIcon() { return "iconPitchWheelDefault.png";}
-        static std::string GetIconPressed() { return "iconPitchWheelPressed.png";}
+        static std::string GetIcon() { return "iconPitchWheelDefaultNew.png";}
+        static std::string GetIconPressed() { return "iconPitchWheelPressedNew.png";}
         
         CREATE_FUNC(ItemWheel);
     };
