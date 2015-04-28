@@ -279,7 +279,8 @@ bool ItemLayoutManager::CheckNewSizeCollision(cocos2d::Rect r)
     
     bool collision;
     w->DoDetectCollisions(item, r, &collision);
-    if (collision)
+    r.origin=w->convertToWorldSpace(r.origin);
+    if (collision || !w->IsInsideVisibleSpace(r))
     {
         item->LaunchCollisionAnimation();
         return true;

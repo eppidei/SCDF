@@ -59,7 +59,9 @@ void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
 
 template <class ItemType> void WorkingPanel::CheckAddControl()
 {
-	if (0==draggingRect.size.width || collisionDetected)
+    cocos2d::Rect rr=draggingRect;
+    rr.origin=convertToWorldSpace(rr.origin);
+	if (!IsInsideVisibleSpace(rr) /*0==draggingRect.size.width*/ || collisionDetected)
     {
         collisionDetected=false;
         return;
@@ -157,15 +159,15 @@ void WorkingPanel::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parent
     if (!active)
         DrawGrid();
     
-    if (0!=draggingRect.size.width)
-    {
-        Color4F color(0.1,0.1,0.1, 1.0);
-        if (collisionDetected)
-            color=Color4F(1.0,0,0, 1.0);
+    cocos2d::Rect rr=draggingRect;
+    rr.origin=convertToWorldSpace(rr.origin);
+    
+    Color4F color(0.1,0.1,0.1, 1.0);
+    if (collisionDetected || !IsInsideVisibleSpace(rr))
+        color=Color4F(1.0,0,0, 1.0);
         
-        DrawPrimitives::drawSolidRect(draggingRect.origin, Vec2(draggingRect.origin.x+draggingRect.size.width,draggingRect.
-            origin.y-draggingRect.size.height),color);
-    }
+    DrawPrimitives::drawSolidRect(draggingRect.origin, Vec2(draggingRect.origin.x+draggingRect.size.width,draggingRect.
+        origin.y-draggingRect.size.height),color);
 }
 
 void WorkingPanel::DetectCollisions(cocos2d::Rect r)
@@ -231,7 +233,8 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
 
             DetectCollisions(item);
             int opacity=255;
-            if (collisionDetected)
+            r.origin=convertToWorldSpace(r.origin);
+            if (collisionDetected || !IsInsideVisibleSpace(r))
                 opacity=80;
             item->setOpacity(opacity);
         }
@@ -240,13 +243,14 @@ bool WorkingPanel::OnControlMove(Ref *pSender, Vec2 touchPos, cocos2d::ui::Widge
         case Widget::TouchEventType::CANCELED:
         {
             parent->EnableScrollView(true);
-            if (collisionDetected)
+            Vec2 itemSpaceCoord=convertToWorldSpace(Vec2(item->getPositionX(), item->getPositionY()));
+            cocos2d::Rect itemRect={itemSpaceCoord.x, itemSpaceCoord.y, item->getContentSize().width, item->getContentSize().height};
+            if (collisionDetected || !IsInsideVisibleSpace(itemRect))
             {
                 item->setPosition(dragStartPoint);
                 item->setOpacity(255);
                 collisionDetected=false;
             }
-          //  CheckRemoveControl(item);
         }
             break;
         default:
@@ -300,6 +304,24 @@ void WorkingPanel::DoOnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::u
             patch->items[i]->OnItemTouchMoved(widget,type);
         }
     }
+}
+
+bool WorkingPanel::IsInsideVisibleSpace(cocos2d::Rect rect)
+{
+    cocos2d::Rect rrr=getBoundingBox();
+    float workingPanelY=fmin(getContentSize().height,rrr.size.height+rrr.origin.y);
+    float workingHeight=workingPanelY-fmax(0,rrr.origin.y);
+    float workingPanelX=fmax(0,rrr.origin.x);
+    float workingWidth=workingPanelX+fmin(getContentSize().width,rrr.size.width+rrr.origin.x);
+    
+    cocos2d::Rect workingSpaceRect(workingPanelX, workingPanelY, workingWidth, workingHeight);
+    
+    if (rect.origin.y<=workingSpaceRect.origin.y && rect.origin.x>=workingSpaceRect.origin.x
+        && (rect.origin.x+rect.size.width)<=workingSpaceRect.size.width
+        && (rect.origin.y-rect.size.height)>=(workingSpaceRect.origin.y-workingSpaceRect.size.height))
+        return true;
+
+    return false;
 }
 
 void WorkingPanel::DoOnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type)

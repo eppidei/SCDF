@@ -42,6 +42,7 @@ namespace ScdfCtrl
         static WorkingPanel *CreateCustomPanel(MainScene *main, cocos2d::Rect r);
         void SetActive(bool active);
         bool IsActive() { return active;};
+        bool IsInsideVisibleSpace(cocos2d::Rect rect);
         void DetectCollisions(cocos2d::Rect r);
         void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
         
