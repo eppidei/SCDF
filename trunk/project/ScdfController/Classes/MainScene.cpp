@@ -264,26 +264,26 @@ bool MainScene::init()
     //    you may modify it.
     
 //    setColor(Color3B::GRAY);
-#define SCROLLVIEW_WIDTH (8.0*GetUnityBase())
-#define PROPERTIES_WIDTH (18.0*GetUnityBase())
-#define TOOLBAR_HEIGHT   (2.0*GetUnityBase())
+#define SCROLLVIEW_WIDTH (6.0*GetUnityBase())
+#define PROPERTIES_WIDTH (16.0*GetUnityBase())
+//#define TOOLBAR_HEIGHT   (0.0*GetUnityBase())
     
-    cocos2d::Rect toolbarPanelsize(0,
-                          getContentSize().height,
-                          getContentSize().width,
-                          TOOLBAR_HEIGHT);
+//    cocos2d::Rect toolbarPanelsize(0,
+//                          getContentSize().height,
+//                          getContentSize().width,
+//                          TOOLBAR_HEIGHT);
     cocos2d::Rect workingPanelsize(-(getContentSize().width/2.0),
                           3.0*getContentSize().height/2.0,
                           2*getContentSize().width,
                           2*getContentSize().height);
     cocos2d::Rect scrollViewect(getContentSize().width-(SCROLLVIEW_WIDTH*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE),
-                       getContentSize().height-toolbarPanelsize.size.height,
+                       getContentSize().height/*-toolbarPanelsize.size.height*/,
                        SCROLLVIEW_WIDTH,
-                       getContentSize().height-toolbarPanelsize.size.height);
+                       getContentSize().height/*-toolbarPanelsize.size.height*/);
     cocos2d::Rect propertiesRect(PROPERTIES_WIDTH*(PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE-1.0),
-                       getContentSize().height-toolbarPanelsize.size.height,
+                       getContentSize().height/*-toolbarPanelsize.size.height*/,
                        PROPERTIES_WIDTH,
-                       getContentSize().height-toolbarPanelsize.size.height);
+                       getContentSize().height/*-toolbarPanelsize.size.height*/);
 
     customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
     

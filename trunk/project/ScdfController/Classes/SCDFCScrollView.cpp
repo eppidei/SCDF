@@ -207,7 +207,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     //SAME CODE OF PROPERTIES PANEL TONGUE
     float buttonPlaceholder=(bitmapToolbarWidthPercentage*getContentSize().width)/4.0;
     float arrowButtonDim=0.7*buttonPlaceholder;
-    const float tongueBiggerFactor=2.5;
+    const float tongueBiggerFactor=3.0;
     cocos2d::Size arrowButtonSize=cocos2d::Size(1.22*arrowButtonDim*tongueBiggerFactor, 1.26*arrowButtonDim*tongueBiggerFactor);
     ////////////////
     
