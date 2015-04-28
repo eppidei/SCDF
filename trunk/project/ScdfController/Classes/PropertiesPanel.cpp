@@ -181,7 +181,6 @@ void OSCInfo::Update()
     oscPort->SetText(os.str());
     oscIP->SetText(panel->GetCurrentSender()->GetOscIp());
     oscTag->SetText(panel->GetCurrentSender()->GetOscTag());
-//    InitChildrensVisibilityAndPos();
 }
 
 void OSCInfo::OnTouchEventBegan(cocos2d::Node *widget)
@@ -261,8 +260,6 @@ void MIDIInfo::Update()
     }
     if (-1!=selectedIndex)
         midiMessage->SetSelectedIndex(selectedIndex);
-//    EnableElement(midiMessage, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
-//    EnableElement(midiMessageLabel, dynamic_cast<ItemKeyboard*>(panel->GetSelectedItem())==NULL);
     UpdateElementsVisibilityOnMessageTypeChanged();
 
     channel->SetSelectedIndex(panel->GetCurrentSender()->GetMidiChannel()+1);
@@ -299,14 +296,7 @@ void MIDIInfo::CheckShowElements()
 {
     HideElement(devicesLabel,collapsed);
     HideElement(devices,collapsed);
-//    HideElement(controlChangeLabel,collapsed);
     UpdateElementsVisibilityOnMessageTypeChanged();
-//    UpdateControlMenuData();
-//    HideElement(channelLabel,collapsed);
-//    HideElement(channel,collapsed);
-//    HideElement(velocityLabel,collapsed);
-//    HideElement(velocity,collapsed);
-
     UpdateLayout();
 }
 

@@ -202,7 +202,7 @@ void ItemScrollView::InitWithContent(MainScene *main,cocos2d::Rect r)
     float scrollbarHeight=(buttonYPos-1.2*buttonDeleteHeight)-getContentSize().height*bitmapBottomTransparencyPercentage;
     
     scrollView->setContentSize(cocos2d::Size(scrollbarWidth, scrollbarHeight));
-    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE+xpadding,/*(1.0-1.5*(bitmapTopTransparencyPercentage+bitmapToolbarHeightPercentage))*getContentSize().height)*/buttonYPos-1.1*buttonDeleteHeight));
+    scrollView->setPosition(Vec2(getContentSize().width*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE+xpadding,buttonYPos-1.1*buttonDeleteHeight));
 
     //SAME CODE OF PROPERTIES PANEL TONGUE
     float buttonPlaceholder=(bitmapToolbarWidthPercentage*getContentSize().width)/4.0;

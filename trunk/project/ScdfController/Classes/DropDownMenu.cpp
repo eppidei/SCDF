@@ -114,12 +114,6 @@ DropDownMenu::DropDownMenu()
     lastSelectedIndex=-1;
 }
 
-//void DropDownMenu::draw(Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags)
-//{
-//    DrawPrimitives::setDrawColor4B(255, 255, 255, 255);
-//    DrawPrimitives::drawRect(Vec2(0, getContentSize().height), Vec2(getContentSize().width, 0));
-//}
-
 template  DropDownMenu *DropDownMenu::CreateMenu<DropDownMenu>(cocos2d::Size s, DropDownMenuCallback *callback);
 template  DropDownMenu *DropDownMenu::CreateMenu<DropDownColorMenu>(cocos2d::Size s, DropDownMenuCallback *callback);
 
