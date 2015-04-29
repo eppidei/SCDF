@@ -48,6 +48,7 @@ namespace ScdfCtrl
         bool CheckDataSize(std::vector<DropDownMenuData> data);
         virtual float GetVerticalMargin() {return 0;}
         void EnableTouchEvents(bool enable) { touchEnabled=enable;}
+        int GetNumItems();
     protected:
         DropDownMenu();
         virtual void DoInitData(std::vector<DropDownMenuData> data);
