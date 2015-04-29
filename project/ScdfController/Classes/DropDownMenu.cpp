@@ -28,9 +28,19 @@ void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
     runAction(seq);
 }
 
+int DropDownMenu::GetNumItems()
+{
+    int num=0;
+    for (int i=0;i<getItems().size();++i)
+    {
+        if (getItem(i)->isVisible())
+            num++;
+    }
+    return num;
+}
 void DropDownMenu::ToggleOpenMenu()
 {
-    if (getItems().size()<=1) return;
+    if (GetNumItems()<=1) return;
     
     EnableTouchEvents(false);
     float itemHeight=getItem(0)->getContentSize().height;
@@ -38,12 +48,12 @@ void DropDownMenu::ToggleOpenMenu()
     float newHeight=getContentSize().height;
     if (opened)
     {
-        newHeight-=fmin(itemHeight*(getItems().size()-1),MAX_OPENED_MENU_HEIGHT);
+        newHeight-=fmin(itemHeight*(GetNumItems()-1),MAX_OPENED_MENU_HEIGHT);
         disableScrolling=true;
     }
     else
     {
-        newHeight+=fmin(itemHeight*(getItems().size()-1),MAX_OPENED_MENU_HEIGHT);
+        newHeight+=fmin(itemHeight*(GetNumItems()-1),MAX_OPENED_MENU_HEIGHT);
         disableScrolling=false;
     }
     opened=!opened;

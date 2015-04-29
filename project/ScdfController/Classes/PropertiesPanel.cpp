@@ -808,7 +808,7 @@ void ItemSettings::CreateControls()
     dropDownData.push_back(DropDownMenuData("Touch",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    //dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create group label
@@ -916,6 +916,8 @@ void ItemSettings::Update()
     //    masterButton->loadTextureNormal("groupMasterBtnDefault.png");
         masterButton->setColor(Color3B::WHITE);
     }
+    modes->getItem(2)->setVisible(dynamic_cast<ItemSlider*>(item)==NULL);
+
     CheckShowElements();
     
 }

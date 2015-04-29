@@ -164,6 +164,10 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
         }
             break;
         case ReceiverType_toggle:
+        {
+            if(output->toggle)
+                SendValue(std::abs(1.0-lastValue));
+        }
             break;
         default:
             break;
@@ -194,13 +198,6 @@ void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
 
     switch (receiverType)
     {
-        case ReceiverType_stream:
-            for (int i=0;i<output->n_data;++i)
-            {
-                //LOGD("BLOW DATA %f\n",output->p_data[i]);
-                SendValue(output->p_data[i]);
-            }
-            break;
         case ReceiverType_state:
         {
             int v= output->state ? 1 : 0;
@@ -208,6 +205,10 @@ void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
         }
             break;
         case ReceiverType_toggle:
+        {
+            if(output->toggle)
+                SendValue(std::abs(1.0-lastValue));
+        }
             break;
         default:
             break;
