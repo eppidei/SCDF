@@ -165,8 +165,11 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
             break;
         case ReceiverType_toggle:
         {
-            if(output->toggle)
-                SendValue(std::abs(1.0-lastValue));
+            static bool lastToggle=-1;
+            if (lastToggle==output->toggle) break;
+            lastToggle = output->toggle;
+            int v= output->toggle ? 1 : 0;
+            SendValue(v);
         }
             break;
         default:
@@ -206,8 +209,11 @@ void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
             break;
         case ReceiverType_toggle:
         {
-            if(output->toggle)
-                SendValue(std::abs(1.0-lastValue));
+            static bool lastToggle=-1;
+            if (lastToggle==output->toggle) break;
+            lastToggle = output->toggle;
+            int v= output->toggle ? 1 : 0;
+            SendValue(v);
         }
             break;
         default:

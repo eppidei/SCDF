@@ -961,7 +961,7 @@ void ItemPad::Init()
 
 void ItemSwitch::Init()
 {
-    checked=0;
+    //checked=0;
     DEFAULT_NAME("Swicth")
     GetLayoutManager()->SetVertical(false);
     backGround = Layout::create();
@@ -1294,17 +1294,21 @@ bool ItemKeyboard::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEv
 
 bool ItemSwitch::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (checked)
+   // if (checked)
+    bool ret;
+    if(GetControlUnit()->GetValue()>0)
     {
-        return ItemBase::OnItemTouchBegan(widget,type);
+        ret= ItemPad::OnItemTouchEnded(widget,type);
     }
-    
-    if (!ItemPad::OnItemTouchBegan(widget,type)) return false;
-    if (!GetLayoutManager()->IsVertical())
-        pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
     else
-        pad->setPosition(Vec2(0,0));//pad->getParent()->getContentSize().height/2.0));
-    return true;
+   // if (!ItemPad::OnItemTouchBegan(widget,type)) return false;
+        ret= ItemPad::OnItemTouchBegan(widget,type);
+    UpdateUI();
+//    if (!GetLayoutManager()->IsVertical())
+//        pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
+//    else
+//        pad->setPosition(Vec2(0,0));//pad->getParent()->getContentSize().height/2.0));
+    return ret;
 }
 
 void ItemSwitch::UpdateUI()
@@ -1313,14 +1317,16 @@ void ItemSwitch::UpdateUI()
 
     if (!GetLayoutManager()->IsVertical())
     {
-        if (checked)
+        //if (checked)
+        if(GetControlUnit()->GetValue()>0)
             pad->setPosition(Vec2(0,pad->getParent()->getContentSize().height));
         else
             pad->setPosition(Vec2(pad->getParent()->getContentSize().width/2.0, pad->getParent()->getContentSize().height));
     }
     else
     {
-        if (checked)
+      //  if (checked)
+        if(GetControlUnit()->GetValue()>0)
             pad->setPosition(Vec2(0,0));
         else
             pad->setPosition(Vec2(0, pad->getParent()->getContentSize().height/2.0));
@@ -1332,13 +1338,14 @@ bool ItemSwitch::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEven
 {
     if (!ItemBase::OnItemTouchEnded(widget, type)) return false;
     
-    if (!checked)
-        checked=true;
-    else{
-        ItemPad::OnItemTouchEnded(widget,type);
-        checked=false;
-        UpdateUI();
-    }
+////    if (!checked)
+////        checked=true;
+////    else{
+//    if(GetControlUnit()->GetValue()>0){
+//        ItemPad::OnItemTouchEnded(widget,type);
+//    //    checked=false;
+//        UpdateUI();
+//    }
     return true;
 }
 

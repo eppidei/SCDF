@@ -147,6 +147,7 @@ void DropDownMenu::ScrollToSelected()
     Node *item=getItem(_curSelectedIndex);
     if(NULL==item) return;
     float elementsHeight=item->getContentSize().height;
+    float innerContainerHeightIncludingNotVisibles=elementsHeight*GetNumItems();
     getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+(-(getItemsMargin()/2)+(_curSelectedIndex)*(elementsHeight+getItemsMargin()))));
 }
 
