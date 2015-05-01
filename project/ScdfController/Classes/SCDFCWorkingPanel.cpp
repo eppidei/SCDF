@@ -353,8 +353,10 @@ void WorkingPanel::PanelTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEvent
             float diff_x=dragStartUpdated.x-getTouchMovePosition().x;
             float diff_y=dragStartUpdated.y-getTouchMovePosition().y;
             cocos2d::Size s=parent->getContentSize();
-            float newPosX=fmax(-(3.0*getContentSize().width/2.0), fmin(parent->getContentSize().width/2.0, getPositionX()-diff_x));
-            float newPosY=fmin(3.0*getContentSize().height/2.0, fmax(parent->getContentSize().height/2.0, getPositionY()-diff_y));
+            float minX=parent->getContentSize().width/2.0-getContentSize().width;
+            float maxY=parent->getContentSize().height/2.0+getContentSize().height;
+            float newPosX=fmax(minX, fmin(parent->getContentSize().width/2.0, getPositionX()-diff_x));
+            float newPosY=fmin(maxY, fmax(parent->getContentSize().height/2.0, getPositionY()-diff_y));
             setPosition(Vec2(newPosX, newPosY));
             dragStartUpdated=getTouchMovePosition();
         }

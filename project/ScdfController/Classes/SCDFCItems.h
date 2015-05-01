@@ -242,8 +242,8 @@ namespace ScdfCtrl
         bool OnItemTouchBegan(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         bool OnItemTouchEnded(cocos2d::ui::Widget* widget, cocos2d::ui::Widget::TouchEventType type) override;
         void Init() override;
-        bool IsChecked();
-        bool checked;
+//        bool IsChecked();
+//        bool checked;
         
         void UpdateUI() override;
         cocos2d::ui::Layout *backGround;
