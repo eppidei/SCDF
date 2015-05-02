@@ -13,38 +13,38 @@ using namespace ScdfCtrl;
 
 std::map<ControlUnit::Type, ControlUnit*> ControlUnit::activeUnits;
 std::vector<ControlUnit*> ControlUnit::activeItemsUnits;
-scdf::ThreadUtils::CustomMutex ControlUnit::controlUnitLock;
+scdf::ThreadUtils::CustomMutex ControlUnit::controlUnitItemLock;
 
 void ControlUnit::AttachUnit(ControlUnit* unit)
 {
     if (NULL==unit) return;
     
-    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
-    
-    activeItemsUnits.push_back(unit);
     auto it=activeUnits.find(unit->GetType());
     
-    if (it!=activeUnits.end()) return;
-
-    std::vector<scdf::SensorType> _typeList;
-    switch (unit->GetType())
+    if (it==activeUnits.end())
     {
-        case ControlUnit::Blow:
-        case ControlUnit::Snap:
-            _typeList.push_back(scdf::AudioInput);
-            break;
-        default:
-            break;
+
+        std::vector<scdf::SensorType> _typeList;
+        switch (unit->GetType())
+        {
+            case ControlUnit::Blow:
+            case ControlUnit::Snap:
+                _typeList.push_back(scdf::AudioInput);
+                break;
+            default:
+                break;
+        }
+        activeUnits[unit->GetType()]=Create(unit->GetType());
+        scdf::theSensorAPI()->AttachHarvesterListener(activeUnits[unit->GetType()], _typeList);
     }
-    activeUnits[unit->GetType()]=Create(unit->GetType());
-    scdf::theSensorAPI()->AttachHarvesterListener(activeUnits[unit->GetType()], _typeList);
+    
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
+    activeItemsUnits.push_back(unit);
 }
 
 void ControlUnit::DetachUnit(ControlUnit* unit)
 {
     if (NULL==unit) return;
-    
-    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
     
     int unitTypeNum=0;
     int unitIndex=-1;
@@ -55,14 +55,17 @@ void ControlUnit::DetachUnit(ControlUnit* unit)
         if (activeItemsUnits[i]->GetType()==unit->GetType())
             unitTypeNum++;
     }
-    if (-1==unitIndex) return;
-    activeItemsUnits.erase(activeItemsUnits.begin()+unitIndex);
+
     if(unitTypeNum==1)
     {
         scdf::theSensorAPI()->DetachHarvesterListener(activeUnits.find(unit->GetType())->second);
         delete activeUnits.find(unit->GetType())->second;
         activeUnits.erase(activeUnits.find(unit->GetType()));
     }
+
+    if (-1==unitIndex) return;
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
+    activeItemsUnits.erase(activeItemsUnits.begin()+unitIndex);
 }
 
 ControlUnit* ControlUnit::Create(Type t)
@@ -184,7 +187,7 @@ void ControlUnitDsp::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buff
 {
     assert(ADEcontext!=NULL);
     
-    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
+    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     
     ADE_SCDF_Input_Int_T sensorData;
     

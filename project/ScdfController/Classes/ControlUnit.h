@@ -83,7 +83,7 @@ class ItemBase;
         
         static std::map<ControlUnit::Type, ControlUnit*> activeUnits;
         static std::vector<ControlUnit*> activeItemsUnits;
-        static scdf::ThreadUtils::CustomMutex controlUnitLock;
+        static scdf::ThreadUtils::CustomMutex controlUnitItemLock;
         
         std::unique_ptr<MultiSender> sender;
 

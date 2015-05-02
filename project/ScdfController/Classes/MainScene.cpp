@@ -170,7 +170,7 @@ bool MainScene::init()
 
 void MainScene::HideShowPropertiesPanel(bool hide)
 {
-    customPanel->SetActive(hide);
+    //customPanel->SetActive(hide);
     propertiesPanel->HideShow(hide);
     propertiesPanel->Update(NULL, SCDFC_EVENTS_Update);
 }
