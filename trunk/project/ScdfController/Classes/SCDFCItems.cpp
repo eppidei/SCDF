@@ -173,7 +173,18 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
     return item;
 }
 
-ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL), groupId(-1), isMaster(false)
+void ItemBase::visit(Renderer *renderer, const Mat4& parentTransform, uint32_t parentFlags)
+//void ItemBase::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
+{
+    Layout::visit(renderer, parentTransform, parentFlags);
+    if (updateUIDeferred)
+    {
+        UpdateUI();
+        updateUIDeferred=false;
+    }
+}
+
+ItemBase::ItemBase() : control(NULL), label(NULL), controlImage(NULL), groupId(-1), isMaster(false), updateUIDeferred(false)
 {
 	ChangeControlUnit(ControlUnit::Wire);
     updater.reset(new ItemUIUpdater(this));
@@ -221,22 +232,14 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 
 void ItemBase::SetControlUnit(ControlUnit* cu)
 {
-    scdf::theSensorAPI()->DetachHarvesterListener(GetControlUnit());
+    //scdf::theSensorAPI()->DetachHarvesterListener(GetControlUnit());
+    ControlUnit::DetachUnit(GetControlUnit());
 	controlUnit.reset(cu); // item becomes the owner of the ctrl unit
     if (NULL==controlUnit.get()) return;
     
     controlUnit->SetInterface(updater.get());
-    std::vector<scdf::SensorType> _typeList;
-    switch (cu->GetType())
-    {
-        case ControlUnit::Blow:
-        case ControlUnit::Snap:
-            _typeList.push_back(scdf::AudioInput);
-            break;
-        default:
-            break;
-    }
-    scdf::theSensorAPI()->AttachHarvesterListener(GetControlUnit(), _typeList);
+
+    ControlUnit::AttachUnit(GetControlUnit());
     SetControlModeImage();
     SetControlUnitReceiverType();
 }

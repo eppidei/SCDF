@@ -411,7 +411,6 @@ HarvesterListenerContainer::HarvesterListenerContainer()
 
 void HarvesterListenerContainer::OnHarvesterBufferReady(std::vector<SensorData*> *buffer)
 {
-    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
         it->first->OnHarvesterBufferReady(buffer);
 
@@ -422,8 +421,6 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
     if(NULL==_listener) return;
     if (0==_typeList.size()) return;
     
-    {
-    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     listenersMap[_listener]=_typeList;
     
     for(int i = 0; i<_typeList.size(); i++)
@@ -433,7 +430,7 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
         int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
         _listener->Init(numFrames, scdf::theSensorManager()->GetRate(_typeList[i]));
     }
-    }
+    
     CheckRefCountForToStartAndStopHarvester();
 }
 
@@ -441,8 +438,6 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
 {
     if(NULL==_listener) return;
    
-    {
-    scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     auto it = listenersMap.find(_listener);
     if (it==listenersMap.end()) return;
     
@@ -455,7 +450,6 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
     }
    
     listenersMap.erase(_listener);
-    }
     CheckRefCountForToStartAndStopHarvester();
 }
 

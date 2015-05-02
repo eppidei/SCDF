@@ -8,9 +8,62 @@
 #include <sstream>
 #include "MultiSender.h"
 #include "SCDFCItems.h"
-#include "headers/ADE.h"
 
 using namespace ScdfCtrl;
+
+std::map<ControlUnit::Type, ControlUnit*> ControlUnit::activeUnits;
+std::vector<ControlUnit*> ControlUnit::activeItemsUnits;
+scdf::ThreadUtils::CustomMutex ControlUnit::controlUnitLock;
+
+void ControlUnit::AttachUnit(ControlUnit* unit)
+{
+    if (NULL==unit) return;
+    
+    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
+    
+    activeItemsUnits.push_back(unit);
+    auto it=activeUnits.find(unit->GetType());
+    
+    if (it!=activeUnits.end()) return;
+
+    std::vector<scdf::SensorType> _typeList;
+    switch (unit->GetType())
+    {
+        case ControlUnit::Blow:
+        case ControlUnit::Snap:
+            _typeList.push_back(scdf::AudioInput);
+            break;
+        default:
+            break;
+    }
+    activeUnits[unit->GetType()]=Create(unit->GetType());
+    scdf::theSensorAPI()->AttachHarvesterListener(activeUnits[unit->GetType()], _typeList);
+}
+
+void ControlUnit::DetachUnit(ControlUnit* unit)
+{
+    if (NULL==unit) return;
+    
+    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
+    
+    int unitTypeNum=0;
+    int unitIndex=-1;
+    for (int i=0;i<activeItemsUnits.size();++i)
+    {
+        if (activeItemsUnits[i]==unit)
+            unitIndex=i;
+        if (activeItemsUnits[i]->GetType()==unit->GetType())
+            unitTypeNum++;
+    }
+    if (-1==unitIndex) return;
+    activeItemsUnits.erase(activeItemsUnits.begin()+unitIndex);
+    if(unitTypeNum==1)
+    {
+        scdf::theSensorAPI()->DetachHarvesterListener(activeUnits.find(unit->GetType())->second);
+        delete activeUnits.find(unit->GetType())->second;
+        activeUnits.erase(activeUnits.find(unit->GetType()));
+    }
+}
 
 ControlUnit* ControlUnit::Create(Type t)
 {
@@ -95,17 +148,18 @@ void ControlUnitDsp::SendValue(float normValue)
     UpdateUI();
 }
 
-void ControlUnitDsp::InitADEContext(ADE_UINT32_T algoFlag, ADE_UINT32_T in_buff_len, ADE_FLOATING_T input_rate)
-{
-    if (ADEcontext) return;
-    ADE_Init(&ADEcontext, algoFlag, in_buff_len, input_rate);
-    ADE_Configure_params(ADEcontext, algoFlag);
-}
-void ControlUnitDsp::ReleaseADEContext(ADE_UINT32_T algoFlag)
+void ControlUnitDsp::Release()
 {
     if (!ADEcontext) return;
-    ADE_Release(ADEcontext, algoFlag);
+    ADE_Release(ADEcontext, GetAlgoFlag());
     ADEcontext=NULL;
+}
+
+void ControlUnitDsp::Init(s_int32 numFrames, s_int32 rate)
+{
+    if (ADEcontext) return;
+    ADE_Init(&ADEcontext, GetAlgoFlag(), numFrames, rate);
+    ADE_Configure_params(ADEcontext, GetAlgoFlag());
 }
 
 void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorType packetType, ADE_SCDF_Input_Int_T &sensorData)
@@ -126,28 +180,29 @@ void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorTy
     }
 }
 
-// BLOW
-void ControlUnitBlow::Release()
-{
-    ReleaseADEContext(BLOW_FLAG);
-}
-
-void ControlUnitBlow::Init(s_int32 numFrames, s_int32 rate)
-{
-    InitADEContext(BLOW_FLAG, numFrames, rate);
-}
-
-void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
+void ControlUnitDsp::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
 {
     assert(ADEcontext!=NULL);
+    
+    scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
+    
     ADE_SCDF_Input_Int_T sensorData;
     
     GetSensorData(buffer, scdf::AudioInput, sensorData);
     
-    ADE_Step(ADEcontext,BLOW_FLAG,&sensorData);
-    ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,BLOW_FLAG);
+    ADE_Step(ADEcontext,GetAlgoFlag(),&sensorData);
+    ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,GetAlgoFlag());
     
-    //LOGD("BLOW STATE %d\n",s);
+    for(int i=0;i<activeItemsUnits.size();++i)
+    {
+        if (activeItemsUnits[i]->GetType()==GetType())
+            ((ControlUnitDsp*)activeItemsUnits[i])->OnHarvesterBufferReadyInstance(output);
+    }
+}
+
+// BLOW
+void ControlUnitBlow::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output)
+{
     switch (receiverType)
     {
         case ReceiverType_stream:
@@ -165,9 +220,8 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
             break;
         case ReceiverType_toggle:
         {
-            static bool lastToggle=-1;
-            if (lastToggle==output->toggle) break;
-            lastToggle = output->toggle;
+            if (lastState==output->toggle) break;
+            lastState = output->toggle;
             int v= output->toggle ? 1 : 0;
             SendValue(v);
         }
@@ -178,27 +232,8 @@ void ControlUnitBlow::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
 }
 
 //SNAP
-void ControlUnitSnap::Release()
+void ControlUnitSnap::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output)
 {
-    ReleaseADEContext(SNAP_FLAG);
-}
-
-void ControlUnitSnap::Init(s_int32 numFrames, s_int32 rate)
-{
-    InitADEContext(SNAP_FLAG, numFrames, rate);
-}
-
-void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
-{
-    assert(ADEcontext!=NULL);
-    
-    ADE_SCDF_Input_Int_T sensorData;
-    
-    GetSensorData(buffer, scdf::AudioInput, sensorData);
-    
-    ADE_Step(ADEcontext,SNAP_FLAG,&sensorData);
-    ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,SNAP_FLAG);
-
     switch (receiverType)
     {
         case ReceiverType_state:
@@ -209,9 +244,8 @@ void ControlUnitSnap::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buf
             break;
         case ReceiverType_toggle:
         {
-            static bool lastToggle=-1;
-            if (lastToggle==output->toggle) break;
-            lastToggle = output->toggle;
+            if (lastState==output->toggle) break;
+            lastState = output->toggle;
             int v= output->toggle ? 1 : 0;
             SendValue(v);
         }
