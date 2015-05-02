@@ -61,6 +61,7 @@ namespace ScdfCtrl
         std::unique_ptr<ItemUIUpdater> updater;
         
         virtual void SetControlUnitReceiverType() {}
+        bool updateUIDeferred;
     protected:
 
         std::unique_ptr<ControlUnit> controlUnit;
@@ -91,6 +92,8 @@ namespace ScdfCtrl
         virtual ~ItemBase();
         virtual void Create()=0;
         static ItemBase* CreateItem(int id);
+        void visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags) override;
+//        void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags) override;
 
         void LaunchCollisionAnimation();
         void ItemsTouchCallback(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
@@ -116,7 +119,8 @@ namespace ScdfCtrl
         virtual cocos2d::Size GetStaticBaseSize()=0;
         virtual int GetID()=0;
         
-        virtual void UpdateUI() = 0;
+        void UpdateUIDeferred() {updateUIDeferred=true;}
+        virtual void UpdateUI()=0;
         
     };
 
@@ -330,7 +334,7 @@ namespace ScdfCtrl
         ItemBase *item;
     public:
         ItemUIUpdater(ItemBase *_item) : item(_item) {}
-        void OnValueChanged() override { item->UpdateUI();}
+        void OnValueChanged() override { item->UpdateUIDeferred();}
     };
 }
 

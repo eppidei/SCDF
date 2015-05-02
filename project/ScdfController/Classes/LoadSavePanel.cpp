@@ -65,7 +65,7 @@ void SavePanel::CreateMain()
 void LoadPanel::CreateMain()
 {
     mainPanel=Layout::create();
-    mainPanel->setBackGroundImage("LoadPopup.png");
+    mainPanel->setBackGroundImage("loadPopup.png");
     float textureWidth=mainPanel->getBackGroundImageTextureSize().width;
     float textureHeight=mainPanel->getBackGroundImageTextureSize().height;
     
