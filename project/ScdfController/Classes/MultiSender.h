@@ -66,6 +66,8 @@ public:
 
 private:
     
+    void DestroyMidiConnection();
+    
     s_bool DoSendValue(s_int32 value, s_int32 channel);
 	static osc::OutboundPacketStream PackOSCValue(s_int32 ctrl, s_int32 value, std::string tag);
 

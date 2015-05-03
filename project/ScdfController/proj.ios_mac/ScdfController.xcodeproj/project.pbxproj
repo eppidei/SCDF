@@ -195,13 +195,13 @@
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
-		DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */; };
 		DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */; };
 		DC4A58C21AE5AA5C0002CD7F /* MidiOutConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */; };
 		DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */; };
 		DC5B533D1AE2B0DE004946D9 /* InAppiOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */; };
 		DC5B53411AE2B0F2004946D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5B53401AE2B0F2004946D9 /* StoreKit.framework */; };
 		DC5CEDD21AEBB3AF0024E143 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */; };
+		DC682E261AF659E2008C89BB /* MidiClientIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC682E251AF659E2008C89BB /* MidiClientIOS.mm */; };
 		DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4741A989B3E006B2EF2 /* Panel.cpp */; };
 		DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */; };
 		DCA9F47E1A989C9F006B2EF2 /* Colors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47D1A989C9F006B2EF2 /* Colors.cpp */; };
@@ -586,7 +586,6 @@
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MidiOutConnectionIOS.mm; path = ../../../src/MidiOutConnectionIOS.mm; sourceTree = "<group>"; };
 		DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ControlUnit.cpp; path = ../Classes/ControlUnit.cpp; sourceTree = "<group>"; };
 		DC175EAC1A4749F6009DCA73 /* PropertiesPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertiesPanel.cpp; path = ../Classes/PropertiesPanel.cpp; sourceTree = "<group>"; };
 		DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiOutConnection.cpp; path = ../../../src/MidiOutConnection.cpp; sourceTree = "<group>"; };
@@ -594,6 +593,7 @@
 		DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InAppiOS.mm; path = ../Classes/IOs/InAppiOS.mm; sourceTree = "<group>"; };
 		DC5B53401AE2B0F2004946D9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.3.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "ScdfController iOS/Images.xcassets"; sourceTree = SOURCE_ROOT; };
+		DC682E251AF659E2008C89BB /* MidiClientIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MidiClientIOS.mm; path = ../Classes/IOs/MidiClientIOS.mm; sourceTree = "<group>"; };
 		DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadSavePanel.cpp; path = ../Classes/LoadSavePanel.cpp; sourceTree = "<group>"; };
 		DCA9F4741A989B3E006B2EF2 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Panel.cpp; path = ../Classes/Panel.cpp; sourceTree = "<group>"; };
 		DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UtilitiesiOs.mm; path = ../../../src/ios/UtilitiesiOs.mm; sourceTree = "<group>"; };
@@ -1084,9 +1084,9 @@
 		DCCA5A2E1A40DB430014FADE /* MIDI */ = {
 			isa = PBXGroup;
 			children = (
+				DC682E251AF659E2008C89BB /* MidiClientIOS.mm */,
 				DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */,
 				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
-				DC175EA31A46E230009DCA73 /* MidiOutConnectionIOS.mm */,
 			);
 			name = MIDI;
 			sourceTree = "<group>";
@@ -1412,7 +1412,6 @@
 				9D39BDDB1AD9768A001B3F39 /* LoadSavePanel.cpp in Sources */,
 				CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */,
 				CCBBE2D21A754ACA00C4B34C /* OscReceivedElements.cpp in Sources */,
-				DC175EA41A46E230009DCA73 /* MidiOutConnectionIOS.mm in Sources */,
 				9D6C01D81ADAF8E000F75A3C /* ADE_interpolator.c in Sources */,
 				CCBBE2B31A7547A400C4B34C /* SensorsManager.cpp in Sources */,
 				9D6C01D11ADAF8E000F75A3C /* ADE_complex.c in Sources */,
@@ -1436,6 +1435,7 @@
 				CCBBE2B51A7547A400C4B34C /* ThreadUtils.cpp in Sources */,
 				CCBBE2D01A754ACA00C4B34C /* OscOutboundPacketStream.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
+				DC682E261AF659E2008C89BB /* MidiClientIOS.mm in Sources */,
 				CCBBE2DA1A754ADE00C4B34C /* IpEndpointName.cpp in Sources */,
 				9D6C01D71ADAF8E000F75A3C /* ADE_iir.c in Sources */,
 			);

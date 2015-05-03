@@ -34,7 +34,7 @@ namespace Scdf {
     
     MidiOutConnection* MidiOutConnection::Create(s_int32 index)
     {
-        return new MidiOutConnectionIOS(index);
+        return new MidiOutConnectionIOSImpl(index);
     }
     void MidiOutConnection::Destroy(MidiOutConnection* connection)
     {
