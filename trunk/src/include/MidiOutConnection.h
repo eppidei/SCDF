@@ -34,8 +34,13 @@ namespace Scdf  {
     
     class MidiOutConnection
     {
+    protected:
+        
+        MidiConnectionListener *listenerConnectionLost;
         
     public:
+        
+        MidiConnectionListener* GetListenerConnectionLost(){return listenerConnectionLost;}
 
         static std::map<MidiOutConnection*, MidiConnectionListener*> listenersMap;
         static MidiDeviceMenuListener *midiDeviceMenulistener;
@@ -54,9 +59,8 @@ namespace Scdf  {
         virtual s_bool SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel) = 0;
         virtual s_bool SendModWheel(s_uint16 value, s_uint16 channel) = 0;
         
-        static void AttachListenerConnectionLost(MidiOutConnection* connection, MidiConnectionListener* _listener );
-        static void DetachListenerConnectionLost(MidiOutConnection* connection);
-        static void NotifyListenerConnectionLost(MidiOutConnection *_connection);
+        virtual void AttachListenerConnectionLost(MidiConnectionListener* _listener ) = 0;
+        virtual void DetachListenerConnectionLost() = 0;
         
         static void AttachMidiDeviceMenuListener(MidiDeviceMenuListener* _midiDeviceMenulistener );
         static void NotifyMidiDeviceMenuListener();

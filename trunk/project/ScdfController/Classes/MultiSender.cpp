@@ -130,11 +130,17 @@ osc::OutboundPacketStream MultiSender::PackOSCValue(s_int32 ctrl, s_int32 value,
     return oscData;
 }
 
+void MultiSender::DestroyMidiConnection()
+{    
+    midiConnection->DetachListenerConnectionLost();
+    Scdf::MidiOutConnection::Destroy(midiConnection);
+    midiConnection = NULL;
+}
+
 s_bool MultiSender::SetMidiOutIndex(s_int32 index)
 {
 	if (midiConnection) {
-		Scdf::MidiOutConnection::Destroy(midiConnection);
-		midiConnection=NULL;
+        DestroyMidiConnection();
 	}
 
 	if (index == -1) {
@@ -143,7 +149,7 @@ s_bool MultiSender::SetMidiOutIndex(s_int32 index)
 	}
 
 	midiConnection = Scdf::MidiOutConnection::Create(index);
-	Scdf::MidiOutConnection::AttachListenerConnectionLost(midiConnection,this);
+	midiConnection->AttachListenerConnectionLost(this);
 
 	lastOpenedMidiOutIndex = midiConnection ? index : -1;
 
@@ -209,12 +215,16 @@ s_bool MultiSender::SendValue(s_int32 value)
 
 }
 
+
+
+void showTestAlert(std::string message);
+
 void MultiSender::OnConnectionLost(Scdf::MidiOutConnection* connection)
 {
 	if (connection==midiConnection) {
-        Scdf::MidiOutConnection::DetachListenerConnectionLost(midiConnection);
-		Scdf::MidiOutConnection::Destroy(midiConnection);
-		midiConnection = NULL;
+        DestroyMidiConnection();
 		lastOpenedMidiOutIndex = -1;
+        
+        showTestAlert("Multi Sender OnConnectionLost");
 	}
 }
