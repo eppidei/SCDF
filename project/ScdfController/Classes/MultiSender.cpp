@@ -222,9 +222,9 @@ void showTestAlert(std::string message);
 void MultiSender::OnConnectionLost(Scdf::MidiOutConnection* connection)
 {
 	if (connection==midiConnection) {
-        DestroyMidiConnection();
+        //DestroyMidiConnection();
 		lastOpenedMidiOutIndex = -1;
         
-        showTestAlert("Multi Sender OnConnectionLost");
+        //showTestAlert("Multi Sender OnConnectionLost");
 	}
 }
