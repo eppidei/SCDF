@@ -15,6 +15,7 @@ namespace scdf {
 
 	std::string GetAppDataDirectory();
 	std::string GetUserDataDirectory();
+    std::string GetDirectoryForFile(std::string file, std::string ext);
 
 	bool CreateDirectory(std::string name);
 	bool SetCurrentDirectory(std::string path);

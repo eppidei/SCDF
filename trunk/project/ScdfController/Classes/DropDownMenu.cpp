@@ -12,7 +12,6 @@ using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
-std::string GetDigitalFontPath();
 
 #define MAX_OPENED_MENU_HEIGHT 200.0
 void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
@@ -175,7 +174,7 @@ bool DropDownMenu::CheckDataSize(std::vector<DropDownMenuData> data)
 {
     if (0==data.size())
     {
-        Text *model = Text::create("No data",GetDigitalFontPath(),20);
+        Text *model = Text::create("No data",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
         model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);
         model->setTextVerticalAlignment(TextVAlignment::CENTER);
@@ -191,7 +190,7 @@ void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
 {
     for (int i=0; i<data.size(); i++)
     {
-        Text *model = Text::create(data[i].text,GetDigitalFontPath(),20);
+        Text *model = Text::create(data[i].text,Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
         model->setTouchEnabled(true);
         model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height));
         model->ignoreContentAdaptWithSize(false);

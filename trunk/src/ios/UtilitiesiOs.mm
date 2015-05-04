@@ -32,6 +32,16 @@ s_uint64 now_ns()
 namespace scdf {
 
     
+    string GetDirectoryForFile(string file, string ext)
+    {
+        NSString* _file = [NSString stringWithUTF8String:file.c_str()];
+        NSString* _ext = [NSString stringWithUTF8String:ext.c_str()];
+        NSString* filePath = [[NSBundle mainBundle] pathForResource:_file
+                                                             ofType:_ext];
+        if (nil==filePath) return "";
+        
+        return [filePath UTF8String];
+    }
     string GetAppDataDirectory()
     {
         NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];

@@ -14,11 +14,13 @@
 #include "MainScene.h"
 #include "MultiSender.h"
 #include "SCDFCItems.h"
-//#include "PlatformInfo.h"
+#include "OsUtilities.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
+
+bool CheckIsInAppPurchased();
 
 #define VISIBILITY_CHECK \
         if (NULL==panel->GetSelectedItem()) \
@@ -29,13 +31,6 @@ using namespace ui;
         } \
         if (!isVisible()) \
             setVisible(true); \
-
-std::string GetDigitalFontPath()
-{
-    return "/Users/andreascuderi/Documents/SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf";
-    std::string s=std::string(getenv("HOME"))+"Documents/SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf";
-    return (FileUtils::getInstance()->getWritablePath()+"SCDF/trunk/project/ScdfController/Resources/fonts/Open24.ttf");
-}
 
 void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **label, int labelID, cocos2d::Rect r, std::string labelText, std::string labelFont, int fontSize, bool header=false)
 {
@@ -89,7 +84,7 @@ void OSCInfo::CreateControls()
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &toggleLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "OSC", "Arial", 18, true);
+    CreateLabelWithBackground(this, &toggleLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "OSC", Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PropHeader), true);
     addChild(toggleLabel,0);
     
     //Create toggle
@@ -105,33 +100,33 @@ void OSCInfo::CreateControls()
     r.size.width-=GetYPadding();
     
     //Create oscPort control
-    oscPort = TextInputWithBackground::CreateText(PROPERTIES_OSC_PORT, r, "No Port",GetDigitalFontPath(),20);
+    oscPort = TextInputWithBackground::CreateText(PROPERTIES_OSC_PORT, r, "No Port",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
     addChild(oscPort,2);
     oscPort->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     oscPort->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     oscPort->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
     //Create oscPort label
-    CreateLabelWithBackground(this, &portLabel, -1, r, "UDP PORT", "Arial", 16);
+    CreateLabelWithBackground(this, &portLabel, -1, r, "UDP PORT", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(portLabel,3);
     
     //Create oscIP control
-    oscIP = TextInputWithBackground::CreateText(PROPERTIES_OSC_IP, r, "No Ip",GetDigitalFontPath(),20);
+    oscIP = TextInputWithBackground::CreateText(PROPERTIES_OSC_IP, r, "No Ip",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
     addChild(oscIP,4);
     oscIP->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     oscIP->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     oscIP->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
 
     //Create oscIP label
-    CreateLabelWithBackground(this, &ipLabel, PROPERTIES_OSC_IP, r, "IP ADDRESS", "Arial", 16);
+    CreateLabelWithBackground(this, &ipLabel, PROPERTIES_OSC_IP, r, "IP ADDRESS", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(ipLabel,5);
 
     //Create OSCtag label
-    CreateLabelWithBackground(this, &oscTagLabel, -1, r, "OSC TAG", "Arial", 16);
+    CreateLabelWithBackground(this, &oscTagLabel, -1, r, "OSC TAG", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(oscTagLabel,6);
     
     //Create OSCtag label
-    oscTag=TextWithBackground::CreateText(-1,r, "",GetDigitalFontPath(),16);
+    oscTag=TextWithBackground::CreateText(-1,r, "",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
     oscTag->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     oscTag->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     addChild(oscTag,7);
@@ -565,13 +560,13 @@ void MIDIInfo::CreateControls()
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", "Arial", 18, true);
+    CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PropHeader), true);
     addChild(midiLabel);
     
     r.size.width-=GetYPadding();
 
     //Create device label
-    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "DEVICES", "Arial", 16);
+    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "DEVICES", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(devicesLabel);
     
     //Create device dropDown
@@ -580,7 +575,7 @@ void MIDIInfo::CreateControls()
     UpdateDevicesMenu();
     
     //Create midiMessage label
-    CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MESSAGE", "Arial", 16);
+    CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MESSAGE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(midiMessageLabel);
     
     //Create midiMessage dropDown
@@ -601,7 +596,7 @@ void MIDIInfo::CreateControls()
     midiMessage->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create ControlChange label
-    CreateLabelWithBackground(this, &controlChangeLabel, PROPERTIES_MIDI_CONTROL, r, "CONTROL CHANGE", "Arial", 16);
+    CreateLabelWithBackground(this, &controlChangeLabel, PROPERTIES_MIDI_CONTROL, r, "CONTROL CHANGE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(controlChangeLabel);
 
     //Create ControlChange dropDown
@@ -616,7 +611,7 @@ void MIDIInfo::CreateControls()
     InitControlMenuData();
     
     //Create channel label
-    CreateLabelWithBackground(this, &channelLabel, PROPERTIES_MIDI_CHANNEL, r, "CHANNEL", "Arial", 16);
+    CreateLabelWithBackground(this, &channelLabel, PROPERTIES_MIDI_CHANNEL, r, "CHANNEL", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(channelLabel);
 
     //Create channel dropDown
@@ -634,7 +629,7 @@ void MIDIInfo::CreateControls()
     channel->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 
     //Create velocity label
-    CreateLabelWithBackground(this, &velocityLabel, PROPERTIES_MIDI_VELOCITY, r, "VELOCITY", "Arial", 16);
+    CreateLabelWithBackground(this, &velocityLabel, PROPERTIES_MIDI_VELOCITY, r, "VELOCITY", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(velocityLabel);
     
     //Create velocity dropDown
@@ -731,24 +726,24 @@ void ItemSettings::CreateControls()
     cocos2d::Rect r(0,0,getContentSize().width,SUBPANEL_ITEM_HEIGHT);
     
     //Create header
-    CreateLabelWithBackground(this, &settingsLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "ITEM SETTINGS", "Arial", 18, true);
+    CreateLabelWithBackground(this, &settingsLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "ITEM SETTINGS", Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PropHeader), true);
     addChild(settingsLabel,1);
     
     r.size.width-=GetYPadding();
 
     //Create name label
-    CreateLabelWithBackground(this, &nameLabel, PROPERTIES_ITEM_NAME, r, "NAME", "Arial", 16);
+    CreateLabelWithBackground(this, &nameLabel, PROPERTIES_ITEM_NAME, r, "NAME", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(nameLabel,2);
     
     //Create name control
-    name = TextInputWithBackground::CreateText(PROPERTIES_ITEM_NAME, r, "No Name",GetDigitalFontPath(),20);
+    name = TextInputWithBackground::CreateText(PROPERTIES_ITEM_NAME, r, "No Name",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
     addChild(name,3);
     name->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     name->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     name->AddEventListener(CC_CALLBACK_2(SubpanelBase::TextFieldEventCallback, this));
     
     //Create color label
-    CreateLabelWithBackground(this, &colorLabel, PROPERTIES_ITEMSETTINGS_COLOR, r, "COLOR", "Arial", 16);
+    CreateLabelWithBackground(this, &colorLabel, PROPERTIES_ITEMSETTINGS_COLOR, r, "COLOR", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(colorLabel,4);
     
     //Create color control
@@ -764,7 +759,7 @@ void ItemSettings::CreateControls()
     color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //create control modes label
-    CreateLabelWithBackground(this, &controlLabel, -1, r, "CONTROL MODE", "Arial", 16);
+    CreateLabelWithBackground(this, &controlLabel, -1, r, "CONTROL MODE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(controlLabel,6);
     
     //create control modes control
@@ -807,12 +802,12 @@ void ItemSettings::CreateControls()
     dropDownData.clear();
     dropDownData.push_back(DropDownMenuData("Touch",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    //dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+//    dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     //dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create group label
-    CreateLabelWithBackground(this, &groupLabel, PROPERTIES_ITEMSETTINGS_GROUP, r, "GROUP", "Arial", 16);
+    CreateLabelWithBackground(this, &groupLabel, PROPERTIES_ITEMSETTINGS_GROUP, r, "GROUP", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(groupLabel,8);
     
     //Create orient dropDown
@@ -839,7 +834,7 @@ void ItemSettings::CreateControls()
     masterButton->ignoreContentAdaptWithSize(false);
     
     //Create orient label
-    CreateLabelWithBackground(this, &orientLabel, PROPERTIES_ITEMSETTINGS_ORIENT, r, "ORIENT", "Arial", 16);
+    CreateLabelWithBackground(this, &orientLabel, PROPERTIES_ITEMSETTINGS_ORIENT, r, "ORIENTATION", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(orientLabel,11);
     
     //Create orient dropDown
@@ -852,7 +847,7 @@ void ItemSettings::CreateControls()
     orientation->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //Create size label
-    CreateLabelWithBackground(this, &sizeLabel, -1, r, "SIZE", "Arial", 16);
+    CreateLabelWithBackground(this, &sizeLabel, -1, r, "SIZE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(sizeLabel,13);
     
     //Create size control
@@ -865,7 +860,7 @@ void ItemSettings::CreateControls()
     h_minus->setContentSize(cocos2d::Size(r.size.height, r.size.height));
     h_minus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     
-    CreateLabelWithBackground(this, &sizeText, -1, r, "", GetDigitalFontPath(), 18);
+    CreateLabelWithBackground(this, &sizeText, -1, r, "", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
     sizeText->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
     sizeText->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
     addChild(sizeText,14);
@@ -969,9 +964,12 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             panel->GetSelectedItem()->SetMaster(!panel->GetSelectedItem()->IsMaster());
             break;
         case PROPERTIES_CONTROLMODE_WIRE:
+            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+            break;
         case PROPERTIES_CONTROLMODE_BLOW:
         case PROPERTIES_CONTROLMODE_SNAP:
-            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+            if (CheckIsInAppPurchased())
+                panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
             break;
         case PROPERTIES_CONTROLMODE_ROLL:
         case PROPERTIES_CONTROLMODE_GESTURE:

@@ -50,10 +50,20 @@ namespace ScdfCtrl {
             Gray,
             ItemsColorsId_Count
         };
+        enum FontsId
+        {
+            PropHeader,
+            DropDownMenuLabel,
+            DropDownMenu,
+            ItemLabel,
+            LoadSaveElement,
+            FontsId_Count
+        };
         static Colors *Instance();
         cocos2d::Color3B GetUIColor(UIColorsId which);
         cocos2d::Color3B GetItemsColor(ItemsColorsId which);
-        
+        std::string GetFontPath(FontsId fID);
+        int GetFontSize(FontsId fID);
         int CountItemsColor();
     };
 }
