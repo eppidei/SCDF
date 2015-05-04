@@ -703,7 +703,7 @@ void SCDF_MIDINotifyProc(const MIDINotification *message, void *refCon)
     
     listenersMap[nameKey].push_back(connection);
     
-    showTestAlert("attachListenerAtIndex");
+   // showTestAlert("attachListenerAtIndex");
     
 #ifdef _DEBUG
     NSLog(@"attachListenerAtIndex");
@@ -734,12 +734,12 @@ void SCDF_MIDINotifyProc(const MIDINotification *message, void *refCon)
         Scdf::MidiOutConnection *connection = connections[i];
         if(NULL==connection) return;
         
-        showTestAlert("connection");
+        //showTestAlert("connection");
         
         Scdf::MidiConnectionListener *listener = connection->GetListenerConnectionLost();
         if(listener)
         {
-            showTestAlert("OnConnectionLost");
+           // showTestAlert("OnConnectionLost");
             listener->OnConnectionLost(connection);
         }
     }
