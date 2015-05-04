@@ -13,6 +13,8 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
+bool CheckIsInAppPurchased();
+
 int MainScene::gridIndex=0;
 std::vector<float> MainScene::gridUnity;
 
@@ -195,27 +197,6 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
         case Widget::TouchEventType::BEGAN:
             switch(node->getTag())
             {
-                case MAIN_BUTTON_NEW:
-                {
-                    SaveAfterNewPanel *p=SaveAfterNewPanel::create();
-                    p->SetCallback(customPanel.get());
-                    addChild(p,100);
-                }
-                    break;
-                case MAIN_BUTTON_SAVE:
-                {
-                    SavePanel *p=SavePanel::create();
-                    p->SetCallback(customPanel.get());
-                    addChild(p,100);
-                }
-                    break;
-                case MAIN_BUTTON_LOAD:
-                {
-                    LoadPanel *p=LoadPanel::create();
-                    p->SetCallback(customPanel.get());
-                    addChild(p,100);
-                }
-                    break;
                 case MAIN_BUTTON_EDIT:
                     customPanel->SetActive(!customPanel->IsActive());
                     break;
@@ -292,8 +273,39 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 }
                     break;
                 case DELETE_ITEM:
-                    if (type!=Widget::TouchEventType::CANCELED)
-                        customPanel->RemoveControl(propertiesPanel->GetSelectedItem());
+                    if (type==Widget::TouchEventType::CANCELED) break;
+                    customPanel->RemoveControl(propertiesPanel->GetSelectedItem());
+                    break;
+                case MAIN_BUTTON_NEW:
+                {
+                    if (type==Widget::TouchEventType::CANCELED) break;
+                    if (!CheckIsInAppPurchased())
+                        customPanel->NewPatch();
+                    else
+                    {
+                        SaveAfterNewPanel *p=SaveAfterNewPanel::create();
+                        p->SetCallback(customPanel.get());
+                        addChild(p,100);
+                    }
+                }
+                    break;
+                case MAIN_BUTTON_SAVE:
+                {
+                    if (type==Widget::TouchEventType::CANCELED) break;
+                    if (!CheckIsInAppPurchased()) break;
+                    
+                    SavePanel *p=SavePanel::create();
+                    p->SetCallback(customPanel.get());
+                    addChild(p,100);
+                }
+                    break;
+                case MAIN_BUTTON_LOAD:
+                {
+                    if (type==Widget::TouchEventType::CANCELED) break;
+                    LoadPanel *p=LoadPanel::create();
+                    p->SetCallback(customPanel.get());
+                    addChild(p,100);
+                }
                     break;
                 default:
                     break;

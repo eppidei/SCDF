@@ -20,6 +20,8 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
+bool CheckIsInAppPurchased();
+
 #define DEFAULT_NAME(x) \
         static int counter=0; \
         std::ostringstream os; \
@@ -79,7 +81,7 @@ cocos2d::Size ItemBase::GetControlContentSize()
 void ItemBase::CreateItemBaseElements()
 {
     cocos2d::Rect lRect(0,getContentSize().height,getContentSize().width,ITEMS_LABEL_HEIGHT);
-    label=TextWithBackground::CreateText(-1,lRect, name,"arial",16);
+    label=TextWithBackground::CreateText(-1,lRect, name, Colors::Instance()->GetFontPath(Colors::FontsId::ItemLabel),Colors::Instance()->GetFontSize(Colors::FontsId::ItemLabel));
     label->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
     label->SetTextColor(Color3B::BLACK);
     label->setTouchEnabled(true);
@@ -227,6 +229,9 @@ void ItemBase::SetControlModeImage()
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
     if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
+    
+    if (t!=ControlUnit::Type::Wire && !CheckIsInAppPurchased()) return;
+    
 	SetControlUnit(ControlUnit::Create(t));
 }
 

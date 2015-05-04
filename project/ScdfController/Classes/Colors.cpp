@@ -7,6 +7,7 @@
 //
 
 #include "Colors.h"
+#include "OsUtilities.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -76,4 +77,50 @@ Colors::Colors()
 {
     InitItemsColors();
     InitUIColors();
+}
+
+int Colors::GetFontSize(FontsId fID)
+{
+    int size=10;
+    switch (fID)
+    {
+        case PropHeader:
+            size=22;
+            break;
+        case DropDownMenuLabel:
+            size=20;
+            break;
+        case ItemLabel:
+            size=15;
+            break;
+        case DropDownMenu:
+            size=20;
+            break;
+        case LoadSaveElement:
+            size=22;
+        default:
+            break;
+    }
+    return size;
+}
+
+std::string Colors::GetFontPath(FontsId fID)
+{
+    std::string filename="";
+    switch (fID)
+    {
+        case PropHeader:
+        case DropDownMenuLabel:
+        case ItemLabel:
+        case LoadSaveElement:
+            filename="OpenSans-CondLight";
+            break;
+        case DropDownMenu:
+            filename="Ds_Digi";
+            break;
+        default:
+            break;
+    }
+    if (!filename.length()) return filename;
+    return scdf::GetDirectoryForFile(filename, "ttf");
 }

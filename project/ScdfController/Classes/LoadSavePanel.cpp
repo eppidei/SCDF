@@ -8,6 +8,7 @@
 
 #include "LoadSavePanel.h"
 #include "OsUtilities.h"
+#include "Colors.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -57,7 +58,8 @@ void SavePanel::CreateMain()
     saveFile->setAnchorPoint(Vec2(0,1));
     saveFile->setTextVerticalAlignment(TextVAlignment::CENTER);
     saveFile->setTextHorizontalAlignment(TextHAlignment::LEFT);
-    saveFile->setFontSize(20);
+    saveFile->setFontName(Colors::Instance()->GetFontPath(Colors::FontsId::LoadSaveElement));
+    saveFile->setFontSize(Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
     saveFile->setTouchEnabled(true);
     saveFile->setColor(cocos2d::Color3B::BLACK);
 }
@@ -114,7 +116,7 @@ void LoadPanel::InitFilesListView()
     scdf::ListFilesInDirectory(scdf::GetUserDataDirectory() + "/patches", files);
     for (int i=0; i<files.size(); i++)
     {
-        Text *model = Text::create(files[i],"Arial",20);
+        Text *model = Text::create(files[i],Colors::Instance()->GetFontPath(Colors::FontsId::ItemLabel),Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
         model->setTouchEnabled(true);
         model->setContentSize(cocos2d::Size(getContentSize().width-6,ITEM_HEIGHT));
         model->ignoreContentAdaptWithSize(false);
