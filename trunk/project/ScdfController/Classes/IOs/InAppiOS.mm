@@ -225,13 +225,33 @@ static InAppPurchaseController purchaseController;
 
 - (void)purchaseProUpgrade
 {
+    if (!purchaseController.CanMakePurchases())
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:
+                                  @"Purchases are disabled in your device" message:nil delegate:
+                                  self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        return;
+    }
+    
     transactionsCount=0;
     transactionSucceeded=false;
     userCancelledTransaction=false;
 
     
     SKProduct *selectedProduct = productPro;
+    
+    if (nil==selectedProduct)
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:
+                                  @"The product is not available" message:nil delegate:
+                                  self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        return;
+    }
+    
     SKPayment *payment = [SKPayment paymentWithProduct:selectedProduct];
+    
     [[SKPaymentQueue defaultQueue] addPayment:payment];
     
     //SKPayment *payment = [SKPayment paymentWithProductIdentifier:kInAppPurchaseProUpgradeProductId];
