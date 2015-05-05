@@ -13,8 +13,8 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased();
-bool CheckIsInAppPurchasedNoPrompt();
+bool CheckIsInAppPurchased(int index);
+bool CheckIsInAppPurchasedNoPrompt(int index);
 
 int MainScene::gridIndex=0;
 std::vector<float> MainScene::gridUnity;
@@ -280,7 +280,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_NEW:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchasedNoPrompt())
+                    if (!CheckIsInAppPurchasedNoPrompt(0))
                         customPanel->NewPatch();
                     else
                     {
@@ -293,7 +293,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_SAVE:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased()) break;
+                    if (!CheckIsInAppPurchased(0)) break;
                     
                     SavePanel *p=SavePanel::create();
                     p->SetCallback(customPanel.get());
@@ -303,7 +303,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_LOAD:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased()) break;
+                    if (!CheckIsInAppPurchased(0)) break;
                     LoadPanel *p=LoadPanel::create();
                     p->SetCallback(customPanel.get());
                     addChild(p,100);

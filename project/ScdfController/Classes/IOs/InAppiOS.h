@@ -14,6 +14,7 @@
 #define kInAppPurchaseManagerTransactionSucceededNotification @"kInAppPurchaseManagerTransactionSucceededNotification"
 
 
+
 @interface InAppPurchaseManager  : NSObject <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 {
     int transactionsCount;
@@ -22,12 +23,13 @@
     
     bool transactionSucceeded;
     bool userCancelledTransaction;
+    
 }
 
 - ( void ) restoreInAppPurchases;
 - ( void ) loadStore;
 - ( BOOL ) canMakePurchases;
-- ( void ) purchaseProUpgrade;
+- ( void ) purchaseProUpgrade: (int) productIndex;
 - ( void ) requestProUpgradeProductData;
 
 @end
