@@ -14,14 +14,14 @@
 
 
 // PRODUCT 1 index == 0
-#define id_product_01 @"com.procuct1"
-#define key_product_01 @"isProduct_1_Purchased"
-#define message_product_01 @"Hey! Do you want to purchase Product 1 "
+#define id_product_saveLoad @"com.saveLoad"
+#define key_product_saveLoad @"isSaveLoad_Purchased"
+#define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet?"
 
 // PRODUCT 2 index == 1
-#define id_product_02 @"com.procuct2"
-#define key_product_02 @"isProduct_2_Purchased"
-#define message_product_02 @"Hey! Do you want to purchase Product 2 "
+#define id_product_blow @"com.algoBlow"
+#define key_product_blow @"isAlgoBlow_Purchased"
+#define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output?"
 
 
 
@@ -110,16 +110,16 @@ public:
             messageList = [[NSMutableArray alloc] init];
             
             // IDs
-            [idList addObject:id_product_01];
-            [idList addObject:id_product_02];
+            [idList addObject:id_product_saveLoad];
+            [idList addObject:id_product_blow];
             
             // KEY
-            [keyList addObject:key_product_01];
-            [keyList addObject:key_product_02];
+            [keyList addObject:key_product_saveLoad];
+            [keyList addObject:key_product_blow];
             
             // MESSAGES
-            [messageList addObject:message_product_01];
-            [messageList addObject:message_product_02];
+            [messageList addObject:message_product_saveLoad];
+            [messageList addObject:message_product_blow];
         }
         
     }
