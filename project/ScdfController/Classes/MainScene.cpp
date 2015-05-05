@@ -14,6 +14,7 @@ USING_NS_CC;
 using namespace ui;
 
 bool CheckIsInAppPurchased();
+bool CheckIsInAppPurchasedNoPrompt();
 
 int MainScene::gridIndex=0;
 std::vector<float> MainScene::gridUnity;
@@ -279,7 +280,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_NEW:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased())
+                    if (!CheckIsInAppPurchasedNoPrompt())
                         customPanel->NewPatch();
                     else
                     {
@@ -302,6 +303,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_LOAD:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
+                    if (!CheckIsInAppPurchased()) break;
                     LoadPanel *p=LoadPanel::create();
                     p->SetCallback(customPanel.get());
                     addChild(p,100);
