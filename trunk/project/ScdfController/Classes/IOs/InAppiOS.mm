@@ -13,14 +13,23 @@
 #endif
 
 
-#define kInAppPurchaseProUpgradeProductId @"com.id"
-#define SCDF_INAPP_DEFAULTS_KEY @"isProVersionPurchased"
-#define SCDF_MSG_INAPP "Hey! Do you want to purchase the full version "
-#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
+// PRODUCT 1 index == 0
+#define id_product_01 @"com.procuct1"
+#define key_product_01 @"isProduct_1_Purchased"
+#define message_product_01 @"Hey! Do you want to purchase Product 1 "
+
+// PRODUCT 2 index == 1
+#define id_product_02 @"com.procuct2"
+#define key_product_02 @"isProduct_2_Purchased"
+#define message_product_02 @"Hey! Do you want to purchase Product 2 "
 
 
-static std::string productPricePro;
-static SKProduct *productPro;
+
+//#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
+
+
+//static std::string productPricePro;
+//static SKProduct *productPro;
 
 
 
@@ -76,8 +85,89 @@ void ShowModalAlert(std::string t)
 
 class InAppPurchaseController
 {
+    
+    NSMutableArray *idList;
+    NSMutableArray *keyList;
+    NSMutableArray *messageList;
+    
+    
+    NSMutableArray *productPricesPro;
+    NSMutableArray *productsPro;
+    
+public:
+    
+    void initializeLists()
+    {
+        if(!productPricesPro)
+        {
+            productPricesPro = [[NSMutableArray alloc] init];
+            productsPro = [[NSMutableArray alloc] init];
+            
+            
+            // PRODUCT LIST:
+            idList = [[NSMutableArray alloc] init];
+            keyList = [[NSMutableArray alloc] init];
+            messageList = [[NSMutableArray alloc] init];
+            
+            // IDs
+            [idList addObject:id_product_01];
+            [idList addObject:id_product_02];
+            
+            // KEY
+            [keyList addObject:key_product_01];
+            [keyList addObject:key_product_02];
+            
+            // MESSAGES
+            [messageList addObject:message_product_01];
+            [messageList addObject:message_product_02];
+        }
+        
+    }
+    
+    NSMutableArray* GetProductsList()
+    {
+        return productsPro;
+    }
+    
+    NSMutableArray* GetProductsPriceList()
+    {
+        return productPricesPro;
+    }
+    
+    NSMutableArray* GetIdList()
+    {
+        return idList;
+    }
+    
+    NSMutableArray* GetKeyList()
+    {
+        return keyList;
+    }
+    
+    NSMutableArray* GetMessageList()
+    {
+        return messageList;
+    }
+    
+    NSString *idAtIndex(int index)
+    {
+        return [idList objectAtIndex:index];
+    }
+    
+    NSString *keyAtIndex(int index)
+    {
+        return [keyList objectAtIndex:index];
+    }
+    
+    NSString *messageAtIndex(int index)
+    {
+        return [messageList objectAtIndex:index];
+    }
+    
+private:
     InAppPurchaseManager *inAppManager;
-   
+    
+    
     UIAlertView *purchaseActivityIndicator;
     
     void Cleanup()
@@ -88,6 +178,7 @@ class InAppPurchaseController
     }
     
 public:
+
     
     InAppPurchaseController()
     {
@@ -110,6 +201,9 @@ public:
     
     void PreloadStore()
     {
+        
+        initializeLists();
+        
         if(inAppManager!=nil) return;
         inAppManager=[[InAppPurchaseManager alloc] init];
         [inAppManager loadStore];        
@@ -134,14 +228,14 @@ public:
         return true;
     }
     
-    void Purchase()
+    void Purchase(int productIndex)
     {
         
         PreloadStore();
         if(!CanMakePurchases())
             return;
         
-        [inAppManager purchaseProUpgrade];
+        [inAppManager purchaseProUpgrade: productIndex];
     }
     
     void OnTransactionFinished(bool transactionSucceeded, bool userCancelledTransaction)
@@ -183,6 +277,7 @@ static InAppPurchaseController purchaseController;
     [super dealloc];
 }
 
+
 - (void) loadStore
 {
     // restarts any purchases if they were interrupted last time the app was open
@@ -223,7 +318,7 @@ static InAppPurchaseController purchaseController;
     ShowModalAlert(errorStr.c_str());
 }
 
-- (void)purchaseProUpgrade
+- (void)purchaseProUpgrade: (int ) productIndex
 {
     if (!purchaseController.CanMakePurchases())
     {
@@ -238,8 +333,17 @@ static InAppPurchaseController purchaseController;
     transactionSucceeded=false;
     userCancelledTransaction=false;
 
+    NSMutableArray *productList = purchaseController.GetProductsList();
+    if(![productList count])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:
+                                  @"The product is not available" message:nil delegate:
+                                  self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        return;
+    }
     
-    SKProduct *selectedProduct = productPro;
+    SKProduct *selectedProduct = [purchaseController.GetProductsList() objectAtIndex:productIndex];
     
     if (nil==selectedProduct)
     {
@@ -260,7 +364,14 @@ static InAppPurchaseController purchaseController;
 
 - (void)requestProUpgradeProductData
 {
-    NSSet *productIdentifiers = [NSSet setWithObjects:kInAppPurchaseProUpgradeProductId, nil ];
+    NSArray *list = [NSArray arrayWithArray:purchaseController.GetIdList()];
+    
+    NSSet *productIdentifiers = [NSSet setWithArray:list];
+    
+    
+
+    
+    //NSSet *productIdentifiers = [NSSet setWithObjects:kInAppPurchaseProUpgradeProductId, nil ];
 
     productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
     productsRequest.delegate = self;
@@ -271,19 +382,41 @@ static InAppPurchaseController purchaseController;
 - (void)recordTransaction:(SKPaymentTransaction *)transaction
 {
     NSString *productId=transaction.payment.productIdentifier;
-    if ([productId isEqualToString:kInAppPurchaseProUpgradeProductId])
-    {
-        transactionsCount++;
-        // save the transaction receipt to disk
-        [[NSUserDefaults standardUserDefaults] setValue:transaction.transactionReceipt forKey:kInAppPurchaseProUpgradeProductId ];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    
+    NSMutableArray *idList = purchaseController.GetIdList();
+    
+    for (NSString * idValue in idList) {
+        
+        if ([productId isEqualToString:idValue])
+        {
+            transactionsCount++;
+            // save the transaction receipt to disk
+            [[NSUserDefaults standardUserDefaults] setValue:transaction.transactionReceipt forKey:idValue ];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        
     }
+
 }
 
 - (void)provideContent:(NSString *)productId
 {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SCDF_INAPP_DEFAULTS_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:SCDF_INAPP_DEFAULTS_KEY];
+    //[[NSUserDefaults standardUserDefaults] synchronize];
+    
+    NSMutableArray *idList = purchaseController.GetIdList();
+    NSMutableArray *keyList;
+    
+    for (NSString * idValue in idList) {
+        
+        if ([productId isEqualToString:idValue])
+        {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[keyList objectAtIndex:[idList indexOfObject:idValue]]];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        
+    }
 
 }
 
@@ -403,8 +536,11 @@ static InAppPurchaseController purchaseController;
         NSLog(@"--");
 #endif
         
-        productPricePro=[[self priceAsString: proUpgradeProduct] UTF8String];
-        productPro = proUpgradeProduct;
+        [purchaseController.GetProductsList() addObject:proUpgradeProduct];
+        [purchaseController.GetProductsPriceList()addObject:[self priceAsString: proUpgradeProduct]];
+        
+        //productPricePro=[[self priceAsString: proUpgradeProduct] UTF8String];
+        //productPro = proUpgradeProduct;
     }
 
     for (NSString *invalidProductId in response.invalidProductIdentifiers)
@@ -429,33 +565,42 @@ void PreloadStore()
     purchaseController.PreloadStore();
 }
 
-bool CheckIsInAppPurchasedNoPrompt()
+bool CheckIsInAppPurchasedNoPrompt(int productIndex)
 {
 #ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
         
-    if([[NSUserDefaults standardUserDefaults] boolForKey: SCDF_INAPP_DEFAULTS_KEY]) return true;
+    if([[NSUserDefaults standardUserDefaults] boolForKey: purchaseController.keyAtIndex(productIndex)]) return true;
     return false;
 }
 
 
-bool CheckIsInAppPurchased()
+bool CheckIsInAppPurchased(int productIndex)
 {
 #ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
     
-    if([[NSUserDefaults standardUserDefaults] boolForKey: SCDF_INAPP_DEFAULTS_KEY])
+    if([[NSUserDefaults standardUserDefaults] boolForKey: purchaseController.keyAtIndex(productIndex)])
         return true;
     
-    std::string msg= SCDF_MSG_INAPP;
-    if(productPricePro.length()>0)
+    NSString *message = purchaseController.messageAtIndex(productIndex);
+    std::string msg= [message UTF8String];
+    
+    NSMutableArray *priceList = purchaseController.GetProductsPriceList();
+    
+    if([priceList count])
     {
-        msg.append(" for ");
-        msg.append(productPricePro);
-        msg.append("?");
+        std::string productPrice = [[priceList objectAtIndex:productIndex] UTF8String];
+        if(productPrice.length()>0)
+        {
+            msg.append(" for ");
+            msg.append(productPrice);
+            msg.append("?");
+        }
     }
+    
     
     CFRunLoopRef currentLoop = CFRunLoopGetCurrent();
     
@@ -476,7 +621,7 @@ bool CheckIsInAppPurchased()
     
     if(0!=answer)
     {
-         purchaseController.Purchase();
+         purchaseController.Purchase(productIndex);
     }
     
     return false;

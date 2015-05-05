@@ -20,7 +20,7 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased();
+bool CheckIsInAppPurchased(int index);
 
 #define DEFAULT_NAME(x) \
         static int counter=0; \
@@ -230,7 +230,7 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
     if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
     
-    if (t!=ControlUnit::Type::Wire && !CheckIsInAppPurchased()) return;
+    if (t!=ControlUnit::Type::Wire && !CheckIsInAppPurchased(1)) return;
     
 	SetControlUnit(ControlUnit::Create(t));
 }
