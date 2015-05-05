@@ -225,6 +225,6 @@ void MultiSender::OnConnectionLost(Scdf::MidiOutConnection* connection)
         //DestroyMidiConnection();
 		lastOpenedMidiOutIndex = -1;
         
-        //showTestAlert("Multi Sender OnConnectionLost");
+        showTestAlert("Multi Sender OnConnectionLost");
 	}
 }
