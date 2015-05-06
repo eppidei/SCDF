@@ -7,6 +7,7 @@
 
 #include "OsUtilities.h"
 #include "JniGlue.h"
+#include <sstream>
 
 std::string scdf::GetAppDataDirectory()
 {
@@ -41,7 +42,10 @@ std::string scdf::GetUserDataDirectory()
 
 std::string scdf::GetDirectoryForFile(std::string file, std::string ext)
 {
-	return file;
+	std::stringstream ss;
+	ss << file << "." << ext;
+	//ss << "fonts/" << file << "." << ext;
+	return ss.str();
 }
 
 
