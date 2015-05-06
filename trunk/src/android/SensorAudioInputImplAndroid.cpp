@@ -10,7 +10,7 @@
 #include "UDPSender.h"
 #include "ThreadUtils.h"
 
-#define TEST_ANDROID_AUDIO_SEND_DIRECT
+//#define TEST_ANDROID_AUDIO_SEND_DIRECT
 
 #define POSITION_UPDATE_PERIOD 5000 // ms
 SLuint32 recEventsMask = SL_RECORDEVENT_HEADATLIMIT | SL_RECORDEVENT_HEADATMARKER
@@ -26,7 +26,7 @@ s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
 void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-	//LOGI("----> Audio callback");
+	LOGI("----> Audio callback");
 
 	s_uint64 now = now_ns();
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;

@@ -43,11 +43,11 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value>NDK_DEBUG=1</value>
+					<value>${ProjDirPath}/build_native.py -b debug</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>
-					<value>/home/athos/Devel/android-ndk-r9d/ndk-build</value>
+					<value>python</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
@@ -108,6 +108,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
 	<linkedResources>
+		<link>
+			<name>ADE_src</name>
+			<type>2</type>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ext/ADE_API/API/src</locationURI>
+		</link>
 		<link>
 			<name>Classes</name>
 			<type>2</type>

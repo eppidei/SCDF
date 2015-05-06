@@ -196,8 +196,8 @@ s_bool ScdfSensorAPI::IsSensorActive(SensorType sensorType)
 void ScdfSensorAPI::AttachHarvesterListener(HarvesterListener* _listener,std::vector<SensorType> _typeList )
 {
     Harvester::Instance()->GetListeners()->Attach(_listener, _typeList);
-    
 }
+
 void ScdfSensorAPI::DetachHarvesterListener(HarvesterListener* _listener)
 {
     Harvester::Instance()->GetListeners()->Detach(_listener);

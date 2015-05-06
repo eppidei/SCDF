@@ -32,6 +32,7 @@ bool CheckIsInAppPurchased(int index);
         if (!isVisible()) \
             setVisible(true); \
 
+
 void CreateLabelWithBackground(SubpanelBase *subPanel, TextWithBackground **label, int labelID, cocos2d::Rect r, std::string labelText, std::string labelFont, int fontSize, bool header=false)
 {
     (*label)=TextWithBackground::CreateText(labelID,r, labelText,labelFont,fontSize);

@@ -64,7 +64,6 @@ namespace Scdf  {
         
         static void AttachMidiDeviceMenuListener(MidiDeviceMenuListener* _midiDeviceMenulistener );
         static void NotifyMidiDeviceMenuListener();
-        
 
     protected:
         

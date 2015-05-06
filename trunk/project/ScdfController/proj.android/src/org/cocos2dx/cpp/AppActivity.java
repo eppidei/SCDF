@@ -40,11 +40,12 @@ public class AppActivity extends Cocos2dxActivity {
 	static
 	{
 		System.loadLibrary("usbcustom");
-		Log.d("sc","usbcustom loaded");
-		//System.loadLibrary("scdfusb");
-		//Log.d("sc","scdfusb loaded");
+		System.loadLibrary("blas");
+		System.loadLibrary("fftw3");
+		System.loadLibrary("fftw_threads");
+		System.loadLibrary("ade");
 		System.loadLibrary("scdf");
-		Log.d("sc","SCDF loaded");
+		Log.i("sc","SCDF native libraries loaded");
 	}
 	
     @Override

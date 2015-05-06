@@ -50,8 +50,17 @@ void MidiOutConnectionAndroid::OnUsbInterfaceDestroyed(Usb::AudioInterface* dest
 	if (destroyedItf==itf)
 		itf = NULL;
 
-	if (listener)
-		listener->OnConnectionLost(this);
+	//NotifyListenerConnectionLost(this);
+}
+
+void MidiOutConnectionAndroid::AttachListenerConnectionLost(MidiConnectionListener* _listener )
+{
+
+}
+
+void MidiOutConnectionAndroid::DetachListenerConnectionLost()
+{
+
 }
 
 /*

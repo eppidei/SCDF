@@ -37,3 +37,15 @@ std::string scdf::GetUserDataDirectory()
 	env->ReleaseStringUTFChars(jpath,path);
 	return pathString;
 }
+
+
+std::string scdf::GetDirectoryForFile(std::string file, std::string ext)
+{
+	return file;
+}
+
+
+void showTestAlert(std::string msg)
+{
+	//LOGD(mgs.c_str());
+}
