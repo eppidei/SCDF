@@ -1,3 +1,7 @@
+FFTW3_BUILD_SHARED:=true
+FFTW3_PRECISION:=float
+FFTW3_ENABLE_NEON:=false
+
 JNI_DIR := $(call my-dir)
 FFTW3_VERSION = 3.3.4
 FFTW3_BASE_PATH := $(JNI_DIR)/../fftw-$(FFTW3_VERSION)
@@ -34,7 +38,7 @@ ifeq ($(FFTW3_ENABLE_NEON),true)
  endif
 endif
 
-RES := $(shell ($(JNI_DIR)/config-android.sh $(FFTW3_VERSION) $(FFTW3_CONFIG_FLAGS) ) )
+#RES := $(shell ($(JNI_DIR)/config-android.sh $(FFTW3_VERSION) $(FFTW3_CONFIG_FLAGS) ) )
 
 include $(CLEAR_VARS)
 
@@ -50,10 +54,10 @@ else
  include $(BUILD_STATIC_LIBRARY)
 endif
 
-
 # Threads lib
-#include $(CLEAR_VARS)
-#LOCAL_MODULE    := fftw_threads
-#include $(LOCAL_PATH)/threads_src.mk
-#include $(LOCAL_PATH)/inc.mk
-#include $(BUILD_STATIC_LIBRARY)
+include $(CLEAR_VARS)
+LOCAL_MODULE := fftw_threads
+LOCAL_SHARED_LIBRARIES := fftw3 
+include $(JNI_DIR)/threads_src.mk
+include $(JNI_DIR)/inc.mk
+include $(BUILD_SHARED_LIBRARY)

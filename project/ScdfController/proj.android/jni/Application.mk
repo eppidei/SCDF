@@ -1,20 +1,19 @@
+APP_ABI := armeabi-v7a
 APP_STL := c++_static
 NDK_TOOLCHAIN_VERSION=clang3.4
 
 APP_CPPFLAGS := -fexceptions -frtti -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -std=c++11 -fsigned-char
-APP_LDFLAGS := -latomic
-APP_PLATFORM := android-9
+APP_LDFLAGS := -latomic -lstdc++
+APP_PLATFORM := android-14
 
-APP_DEBUG := $(strip $(NDK_DEBUG))
+#APP_DEBUG := $(strip $(NDK_DEBUG))
 
 ifeq ($(NDK_DEBUG),1)
 	APP_OPTIM := debug
-	APP_CFLAGS += -lstdc++
-	APP_CPPFLAGS += -DCOCOS2D_DEBUG=1
+	APP_CPPFLAGS += -DCOCOS2D_DEBUG=1 -g3 -D_DEBUG
 else # release
-	APP_CPPFLAGS += -DNDEBUG
+	APP_CPPFLAGS += -DNDEBUG -g0
 	APP_OPTIM := release
-	APP_CFLAGS += -lstdc++ -g0
 endif
 
 #ifeq ($(APP_DEBUG),1)

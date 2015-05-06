@@ -10,7 +10,7 @@
 
 namespace ScdfCtrl{
 enum MidiMessageType {
-	Invalid = 0x0,
+	InvalidMsg = 0x0,
 	NoteOn = 0x90,
 	NoteOff = 0x80,
 	Aftertouch = 0xA0,

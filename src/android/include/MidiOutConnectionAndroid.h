@@ -24,6 +24,9 @@ namespace Scdf  {
 
         void OnUsbInterfaceDestroyed(Usb::AudioInterface* destroyedItf);
 
+        void AttachListenerConnectionLost(MidiConnectionListener* _listener );
+        void DetachListenerConnectionLost();
+
     private:
 
         MidiOutConnectionAndroid(s_int32 index);

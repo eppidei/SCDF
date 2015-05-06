@@ -428,8 +428,15 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
     
     for(int i = 0; i<_typeList.size(); i++)
     {
+        bool success = scdf::theSensorManager()->StartSensor(_typeList[i]);
+
+        if (!success) {
+        	LOGE("HarvesterListenerContainer::Attach error: could not start sensor!");
+        	assert(false);
+        	continue;
+        }
+
         listenersRefCount[_typeList[i]]++;
-        scdf::theSensorManager()->StartSensor(_typeList[i]);
         int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
         _listener->Init(numFrames, scdf::theSensorManager()->GetRate(_typeList[i]));
     }

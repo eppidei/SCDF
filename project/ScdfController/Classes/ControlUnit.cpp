@@ -115,7 +115,9 @@ bool ControlUnitWire::OnTouch(TouchEvent ev, float normValue)
 {
 	normVal = normValue;
 	GetSender()->SendValue(GetValue());
+	return true;
 }
+
 
 // DSP
 
