@@ -1,20 +1,17 @@
 SCDF_CTRL_LOCAL_PATH := $(call my-dir)
 
-SCDF_SRC_PATH := /home/athos/SCDF/trunk/src/
-LIBUSB_DIR := /home/athos/SCDF/trunk/lib/LibUsbCustom
+SCDF_TRUNK := $(SCDF_CTRL_LOCAL_PATH)/../../../..
+SCDF_SRC := ${SCDF_TRUNK}/src
+LIBUSB_DIR := $(SCDF_TRUNK)/lib/LibUsbCustom
 LIBUSB_SRC := $(LIBUSB_DIR)/libusb
 LIBUSB_INCLUDES := $(LIBUSB_SRC) $(LIBUSB_SRC)/os $(LIBUSB_SRC)/android
 
-
 # SCDF:
 
-SCDF_TRUNK := /home/athos/SCDF/trunk
 SCDF_INCLUDES := $(SCDF_TRUNK)/src/include \
 				$(SCDF_TRUNK)/src/android/include \
 				$(SCDF_TRUNK)/lib/cereal-1.1.0/include
 					
-SCDF_SRC := $(SCDF_TRUNK)/src
-
 OSCPACK_PATH := $(SCDF_TRUNK)/lib/oscpack_1_1_0
 OSCPACK_INCLUDES := $(OSCPACK_PATH) $(OSCPACK_PATH)/ip $(OSCPACK_PATH)/ip/posix $(OSCPACK_PATH)/osc
 
@@ -180,8 +177,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 LOCAL_LDLIBS += -landroid -llog
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes \
-					$(SCDF_SRC_PATH)/android/include \
-					$(SCDF_SRC_PATH)/include \
+					$(SCDF_SRC)/android/include \
+					$(SCDF_SRC)/include \
 					$(LIBUSB_INCLUDES)\
 					$(SCDF_TRUNK)/lib/cereal-1.1.0/include \
 					$(OSCPACK_PATH)
