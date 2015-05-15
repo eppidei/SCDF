@@ -269,7 +269,7 @@ bool ModalPanel::init()
     addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
 
     mainPanel=CreatePanel();
-    addChild(mainPanel,0,1);
+   // addChild(mainPanel,0,1);
     Layout *mainLayout=dynamic_cast<Layout*>(mainPanel);
     if (mainLayout!=NULL)
     {
@@ -287,16 +287,34 @@ bool ModalPanel::init()
 
 Node *ModalPanel::CreatePanel()
 {
-    close = Button::create();
-    addChild(close);
-    close->loadTextureNormal("CloseNormal.png");
-    close->loadTexturePressed("CloseSelected.png");
-    close->setAnchorPoint(Vec2(0.5,0.5));
-    close->ignoreContentAdaptWithSize(false);
-    close->setColor(Color3B::WHITE);
-    //button->setScale9Enabled(true);
-    close->setContentSize(cocos2d::Size(50, 50));
-    close->setPosition(Vec2(getContentSize().width/2.0, getContentSize().height/2.0));
-    close->addTouchEventListener(CC_CALLBACK_2(ModalPanel::OnTouch, this));
-    return close;
+    panel=Layout::create();
+    panel->setBackGroundImage("popupPanel.png");
+    float textureWidth=panel->getBackGroundImageTextureSize().width;
+    float textureHeight=panel->getBackGroundImageTextureSize().height;
+    
+    cocos2d::Rect rr(15, 13, textureWidth-15-23, textureHeight-13-25);
+    panel->setBackGroundImageScale9Enabled(true);
+    panel->setBackGroundImageCapInsets(rr);
+    panel->setAnchorPoint(Vec2(0.5,0.5));
+    float sizeBase=250.0;
+    panel->setContentSize(cocos2d::Size(1.512*sizeBase, sizeBase));
+    panel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
+
+    text = Text::create("text",Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PopupPanelText));
+    panel->addChild(text);
+    text->ignoreContentAdaptWithSize(false);
+    text->setTextHorizontalAlignment(TextHAlignment::CENTER);
+    text->setAnchorPoint(Vec2(0.5,0.5));
+    text->setTextVerticalAlignment(TextVAlignment::CENTER);
+    text->setContentSize(cocos2d::Size(panel->getContentSize().width-20,panel->getContentSize().height-20));
+    text->setPosition(cocos2d::Vec2(panel->getContentSize().width/2.0,panel->getContentSize().height/2.0));
+    text->setColor(Colors::Instance()->GetUIColor(Colors::ModalPanelText));
+    
+    addChild(panel);
+    return panel;
+}
+
+void ModalPanel::SetText(std::string _text)
+{
+    text->setString(_text);
 }

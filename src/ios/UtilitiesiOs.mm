@@ -9,6 +9,7 @@
 #include <string>
 #include <mach/mach_time.h>
 #include "TypeDefinitions.h"
+#include "OsUtilities.h"
 
 using std::string;
 
@@ -112,5 +113,20 @@ namespace scdf {
             fileList.push_back([directoryContents[i] UTF8String]);
         }
         return true;
+    }
+    bool DeleteFile(std::string filename)
+    {
+        NSError *error;
+        NSFileManager *fileMgr = [NSFileManager defaultManager];
+        NSString* patchesPath = [NSString stringWithUTF8String:GetPatchesDirectory().c_str()];
+        NSString *filePath = [patchesPath stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+        return [fileMgr removeItemAtPath:filePath error:&error];
+    }
+    bool DoesFileExist(std::string filename)
+    {
+        NSString* patchesPath = [NSString stringWithUTF8String:GetPatchesDirectory().c_str()];
+        NSString* file = [patchesPath stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:file];
+        return fileExists==TRUE;
     }
 }

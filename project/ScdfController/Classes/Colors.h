@@ -35,6 +35,7 @@ namespace ScdfCtrl {
             LabelHeaderBackGround,
             WidgetBackGround,
             SubpanelGenericItem,
+            ModalPanelText,
             UIColorsId_Count
         };
         enum ItemsColorsId
@@ -57,6 +58,7 @@ namespace ScdfCtrl {
             DropDownMenu,
             ItemLabel,
             LoadSaveElement,
+            PopupPanelText,
             FontsId_Count
         };
         static Colors *Instance();

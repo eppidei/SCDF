@@ -15,13 +15,6 @@
 
 namespace ScdfCtrl
 {
-    class LoadSavePanelBaseCallback
-    {
-    public:
-        virtual void OnLoadPatch(std::string patch)=0;
-        virtual void OnSavePatch(std::string patch, bool newProject)=0;
-        virtual void OnDiscardPatch()=0;
-    };
     class LoadSavePanelBase : public ModalPanel
     {
         Node *CreatePanel() override;
@@ -30,23 +23,29 @@ namespace ScdfCtrl
         virtual void SetAdditionalButtonsPos(){}
         virtual void OnTouchBegan(int nodeTag) = 0;
         virtual void OnTouchEnded(int nodeTag) = 0;
+        virtual void SetCurrentPatchName(std::string name) {}
     protected:
         LoadSavePanelBaseCallback *callback;
         cocos2d::ui::Layout *mainPanel;
-        cocos2d::ui::Button *control, *discard;
+        cocos2d::ui::Button *control, *discard, *deleteBtn;
         
+        virtual Node *GetMainControl() =0;
     public:
         void OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
-        void SetCallback(LoadSavePanelBaseCallback *_callback) { callback=_callback;}
+        void SetCallback(LoadSavePanelBaseCallback *_callback) override;
     };
     class SavePanel : public LoadSavePanelBase
     {
         void CreateMain() override;
         void OnTouchBegan(int nodeTag) override;
         void OnTouchEnded(int nodeTag) override;
+        void CheckFileExists(std::string _text);
     protected:
         cocos2d::ui::TextField* saveFile;
         void CreateControlButton() override;
+        void SetCurrentPatchName(std::string name) override;
+        Node *GetMainControl() override {return saveFile;}
+        void TextFieldEventCallback(Ref *pSender, cocos2d::ui::TextField::EventType type);
     public:
         CREATE_FUNC(SavePanel);
     };
@@ -69,6 +68,9 @@ namespace ScdfCtrl
         void OnTouchEnded(int nodeTag) override;
         void InitFilesListView();
         void HighLightCurrentItem();
+        void SetAdditionalButtonsPos() override;
+    protected:
+        Node *GetMainControl() override {return loadFiles;}
     public:
         CREATE_FUNC(LoadPanel);
     };
