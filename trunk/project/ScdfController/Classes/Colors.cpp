@@ -49,6 +49,7 @@ void Colors::InitUIColors()
         Color3B(171,171,171),   //LabelHeaderBackGround
         Color3B(165,204,47),    //WidgetBackGround
         Color3B::WHITE,         //SubpanelGenericItem
+        Color3B(100,100,100)    //ModalPanelText
     };
     
     for(int i=0; i<UIColorsId_Count; ++i)
@@ -97,7 +98,11 @@ int Colors::GetFontSize(FontsId fID)
             size=20;
             break;
         case LoadSaveElement:
-            size=22;
+            size=26;
+            break;
+        case PopupPanelText:
+            size=32;
+            break;
         default:
             break;
     }

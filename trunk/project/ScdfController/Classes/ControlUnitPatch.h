@@ -28,7 +28,10 @@ public:
 	float y;
 	int magValue;
 	int color;
+    int groupId;
 	bool isVertical;
+    bool isMaster;
+    int octave;
     ControlUnit::Type type;
 	ControlUnit* unit;
 
@@ -53,6 +56,9 @@ public:
 		ar(CEREAL_NVP(magValue));
 		ar(CEREAL_NVP(isVertical));
 		ar(CEREAL_NVP(color));
+        ar(CEREAL_NVP(groupId));
+        ar(CEREAL_NVP(isMaster));
+        ar(CEREAL_NVP(octave));
 	}
 
 	SerializableItemData(ItemBase* item)
@@ -66,6 +72,10 @@ public:
 		magValue = item->GetLayoutManager()->GetMagValue();
 		isVertical = item->GetLayoutManager()->IsVertical();
         type = item->GetControlUnit()->GetType();
+        groupId = item->GetGroupID();
+        isMaster = item->IsMaster();
+        if (item->GetID()==ITEM_KEYBOARD_ID)
+            octave=dynamic_cast<ItemKeyboard*>(item)->GetCurrentOctave();
 	}
 
 	SerializableItemData()
@@ -79,6 +89,9 @@ public:
 		magValue = 1;
 		isVertical = false;
         type=ControlUnit::Type::Wire;
+        groupId=-1;
+        isMaster=false;
+        octave=0;
 	}
 
 

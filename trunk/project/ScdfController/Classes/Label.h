@@ -84,17 +84,30 @@ namespace ScdfCtrl
         void RemoveButton(int ctrlID);
         CREATE_FUNC(Toolbar);
     };
+    
+    class LoadSavePanelBaseCallback
+    {
+    public:
+        virtual void OnLoadPatch(std::string patch)=0;
+        virtual void OnSavePatch(std::string patch, bool newProject)=0;
+        virtual void OnDiscardPatch()=0;
+        virtual std::string GetCurrentPatchName()=0;
+    };
+    
     class ModalPanel : public cocos2d::ui::Layout
     {
-        cocos2d::ui::Button *close;
+        cocos2d::ui::Layout *panel;
         
         void OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
         virtual Node *CreatePanel();
         Node *mainPanel;
     protected:
+        cocos2d::ui::Text *text;
         bool init() override;
         void Close();
     public:
+        void SetText(std::string text);
+        virtual void SetCallback(LoadSavePanelBaseCallback *_callback) {}
         CREATE_FUNC(ModalPanel);
     };
 

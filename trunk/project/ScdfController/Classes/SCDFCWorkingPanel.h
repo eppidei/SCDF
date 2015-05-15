@@ -21,6 +21,7 @@ namespace ScdfCtrl
         cocos2d::Rect draggingRect;
         bool collisionDetected, active;
         std::unique_ptr<ControlUnitPatch> patch;
+        std::string currentPatchName;
         
         void InitWithContent(MainScene *main, cocos2d::Rect r);
         void DrawGrid();
@@ -53,6 +54,8 @@ namespace ScdfCtrl
         void OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
+        
+        std::string GetCurrentPatchName() { return currentPatchName;}
         
         CREATE_FUNC(WorkingPanel);
     };

@@ -9,7 +9,7 @@
 #include <string>
 
 #ifdef _DEBUG
-//#define SCDF_NOPURCHASE_NEEDED
+#define SCDF_NOPURCHASE_NEEDED
 #endif
 
 

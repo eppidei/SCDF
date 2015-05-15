@@ -8,6 +8,7 @@
 #include "MainScene.h"
 #include "SCDFCItems.h"
 #include "MultiSender.h"
+#include "OsUtilities.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;
@@ -141,13 +142,13 @@ bool MainScene::init()
                           2*getContentSize().width,
                           2*getContentSize().height);
     cocos2d::Rect scrollViewect(getContentSize().width-(SCROLLVIEW_WIDTH*SCROLLVIEW_PANEL_LEFT_TRANSPARENCY_PERCENTAGE),
-                       getContentSize().height/*-toolbarPanelsize.size.height*/,
+                       getContentSize().height,
                        SCROLLVIEW_WIDTH,
-                       getContentSize().height/*-toolbarPanelsize.size.height*/);
+                       getContentSize().height);
     cocos2d::Rect propertiesRect(PROPERTIES_WIDTH*(PROPERTIES_PANEL_RIGHT_TRANSPARENCY_PERCENTAGE-1.0),
-                       getContentSize().height/*-toolbarPanelsize.size.height*/,
+                       getContentSize().height,
                        PROPERTIES_WIDTH,
-                       getContentSize().height/*-toolbarPanelsize.size.height*/);
+                       getContentSize().height);
 
     customPanel.reset(WorkingPanel::CreateCustomPanel((MainScene*)this,workingPanelsize));
     
@@ -304,7 +305,16 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
                     if (!CheckIsInAppPurchased(0)) break;
-                    LoadPanel *p=LoadPanel::create();
+                    std::vector<std::string> files;
+                    scdf::ListFilesInDirectory(scdf::GetPatchesDirectory(), files);
+                    ModalPanel *p;
+                    if (files.size())
+                        p=LoadPanel::create();
+                    else
+                    {
+                        p=ModalPanel::create();
+                        p->SetText("No patches to load");
+                    }
                     p->SetCallback(customPanel.get());
                     addChild(p,100);
                 }

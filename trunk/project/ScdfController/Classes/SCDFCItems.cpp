@@ -152,13 +152,21 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
 {
 	ItemBase* i = CreateItem(sitem->id);
 
-	i->setPosition(Vec2(sitem->x,sitem->y));
 	i->SetName(sitem->name);
 	i->SetColor((Colors::ItemsColorsId)sitem->color);
 	i->GetLayoutManager()->SetMagValue(sitem->magValue);
 	i->GetLayoutManager()->SetVertical(sitem->isVertical);
+    i->setPosition(Vec2(sitem->x,sitem->y));
+    
+    i->SetGroupID(sitem->groupId);
+    i->SetMaster(sitem->isMaster);
+    i->setPosition(Vec2(sitem->x,sitem->y));
 
 	i->SetControlUnit(sitem->unit);
+    
+    if (i->GetID()==ITEM_KEYBOARD_ID)
+        dynamic_cast<ItemKeyboard*>(i)->SetCurrentOctave(sitem->octave);
+    
     i->UpdateUI();
     return i;
 }

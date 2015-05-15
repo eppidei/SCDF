@@ -12,11 +12,11 @@
 #include "Logging.h"
 #include "OsUtilities.h"
 
+std::string scdf::GetPatchesDirectory() {return scdf::GetUserDataDirectory() + "/patches";}
 
 bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 {
-	std::string patchesDir =  + "/patches";
-	std::string file = scdf::GetUserDataDirectory()+"/patches/"+patchName;
+	std::string file = scdf::GetPatchesDirectory()+"/"+patchName;
 
 	LOGD("Load patch from %s",file.c_str());
 
@@ -47,7 +47,7 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 
 bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 {
-	std::string patchesDir = scdf::GetUserDataDirectory() + "/patches";
+    std::string patchesDir = scdf::GetPatchesDirectory();
 	bool res = scdf::CreateDirectory(patchesDir);
 
 	LOGD("Patch - create dir result: %d",res);

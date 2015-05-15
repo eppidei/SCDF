@@ -83,6 +83,7 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
 }
 void WorkingPanel::NewPatch()
 {
+    currentPatchName.clear();
     for (int i=0;i<patch->items.size();++i)
     {
         parent->DetachItem(patch->items[i]);
@@ -115,6 +116,7 @@ void WorkingPanel::OnDiscardPatch()
 
 void WorkingPanel::OnSavePatch(std::string patchName, bool newProject)
 {
+    currentPatchName=patchName;
 	patch->SaveToFile(patchName);
     if (newProject)
         NewPatch();
@@ -122,6 +124,7 @@ void WorkingPanel::OnSavePatch(std::string patchName, bool newProject)
 
 void WorkingPanel::OnLoadPatch(std::string patchName)
 {
+    currentPatchName=patchName;
 	for (int i=0;i<patch->items.size();++i)
 	{
 		parent->DetachItem(patch->items[i]);
