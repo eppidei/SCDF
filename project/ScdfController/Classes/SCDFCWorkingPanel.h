@@ -14,7 +14,6 @@
 namespace ScdfCtrl
 {
     class MainScene;
-    class SerializableAppData;
     
     class WorkingPanel : public cocos2d::ui::Layout, public LoadSavePanelBaseCallback
     {
@@ -57,7 +56,6 @@ namespace ScdfCtrl
         void OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         
         std::string GetCurrentPatchName() override { return currentPatchName;}
-        void Deserialize(SerializableAppData *appdata);
         
         CREATE_FUNC(WorkingPanel);
     };

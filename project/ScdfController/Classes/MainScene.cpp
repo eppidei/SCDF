@@ -329,6 +329,12 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
     }
 }
 
+void MainScene::Deserialize(SerializableAppData *appdata)
+{
+    customPanel->setPositionX(appdata->patch_x);
+    customPanel->setPositionY(appdata->patch_y);
+}
+
 template void MainScene::OnStartDragging<ItemSlider>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemPad>(Vec2 dragStartPoint);
 template void MainScene::OnStartDragging<ItemKnob>(Vec2 dragStartPoint);

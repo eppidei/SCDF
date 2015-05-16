@@ -49,7 +49,7 @@ void WorkingPanel::InitWithContent(MainScene *main, cocos2d::Rect r)
     backGroundImage->setBlendFunc(cocos2d::BlendFunc::ADDITIVE);
     addChild(backGroundImage,-3);
 
-    patch.reset(new ControlUnitPatch(this));
+    patch.reset(new ControlUnitPatch(main));
 }
 
 void WorkingPanel::SetDraggingRect(cocos2d::Rect _draggingRect)
@@ -370,12 +370,6 @@ void WorkingPanel::PanelTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEvent
         default:
             break;
     }
-}
-
-void WorkingPanel::Deserialize(SerializableAppData *appdata)
-{
-    setPositionX(appdata->patch_x);
-    setPositionY(appdata->patch_y);
 }
 
 template void WorkingPanel::CheckAddControl<ItemSlider>();

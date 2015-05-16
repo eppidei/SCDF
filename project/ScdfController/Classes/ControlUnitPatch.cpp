@@ -11,7 +11,10 @@
 #include <fstream>
 #include "Logging.h"
 #include "OsUtilities.h"
+#include "MainScene.h"
+#include "SCDFCScrollView.h"
 #include "SCDFCWorkingPanel.h"
+#include "PropertiesPanel.h"
 
 std::string scdf::GetPatchesDirectory() {return scdf::GetUserDataDirectory() + "/patches";}
 
@@ -43,7 +46,7 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 	{
 		items.push_back(ItemBase::DeserializeItem(&sItems[i]));
 	}
-    wPanel->Deserialize(&appdata);
+    mainScene->Deserialize(&appdata);
 	return true;
 }
 
@@ -60,7 +63,7 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	LOGD("Save patch as %s",file.c_str());
 
 	std::vector<SerializableItemData> sItems;
-    SerializableAppData appdata(wPanel);
+    SerializableAppData appdata(mainScene);
 
 	for (int i=0; i<items.size(); i++)
 		sItems.push_back( SerializableItemData(items[i]) );
@@ -82,10 +85,10 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	return true;
 }
 
-ScdfCtrl::SerializableAppData::SerializableAppData(WorkingPanel *wPanel)
+ScdfCtrl::SerializableAppData::SerializableAppData(MainScene *scene)
 {
-    patch_x=wPanel->getPositionX();
-    patch_y=wPanel->getPositionY();
+    patch_x=scene->GetWorkingPanel()->getPositionX();
+    patch_y=scene->GetWorkingPanel()->getPositionY();
 }
 
 
