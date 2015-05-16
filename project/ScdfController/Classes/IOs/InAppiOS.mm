@@ -9,19 +9,20 @@
 #include <string>
 
 #ifdef _DEBUG
-#define SCDF_NOPURCHASE_NEEDED
+//#define SCDF_NOPURCHASE_NEEDED
 #endif
 
 
-// PRODUCT 1 index == 0
-#define id_product_saveLoad @"com.saveLoad"
-#define key_product_saveLoad @"isSaveLoad_Purchased"
-#define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet?"
-
-// PRODUCT 2 index == 1
-#define id_product_blow @"com.algoBlow"
+// PRODUCT 2 index == 0
+#define id_product_blow @"fzn_amidi_blow_00"
 #define key_product_blow @"isAlgoBlow_Purchased"
 #define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output?"
+
+
+// PRODUCT 1 index == 1
+#define id_product_saveLoad @"fzn_amidi_ls_00"
+#define key_product_saveLoad @"isSaveLoad_Purchased"
+#define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet?"
 
 // PRODUCT 3 index == 2
 #define id_product_snap @"com.algoSnap"
@@ -113,18 +114,18 @@ public:
             messageList = [[NSMutableArray alloc] init];
             
             // IDs
-            [idList addObject:id_product_saveLoad];
             [idList addObject:id_product_blow];
+            [idList addObject:id_product_saveLoad];
 //            [idList addObject:id_product_snap];
             
             // KEY
-            [keyList addObject:key_product_saveLoad];
             [keyList addObject:key_product_blow];
+            [keyList addObject:key_product_saveLoad];
 //            [keyList addObject:key_product_snap];
             
             // MESSAGES
+             [messageList addObject:message_product_blow];
             [messageList addObject:message_product_saveLoad];
-            [messageList addObject:message_product_blow];
 //            [messageList addObject:message_product_snap];
         }
         
@@ -525,6 +526,15 @@ static InAppPurchaseController purchaseController;
     NSString *str = [formatter stringFromNumber:[product price]];
     [formatter release];
     return str;
+}
+
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error
+{
+    NSLog(@"request:(SKRequest *)request didFailWithError:(NSError *)error");
+}
+- (void)requestDidFinish:(SKRequest *)request
+{
+    NSLog(@"request:(SKRequest *)request didFailWithError:(NSError *)error");
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
