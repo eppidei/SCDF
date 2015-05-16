@@ -79,6 +79,11 @@ void TextWithBackground::SetText(std::string s)
     text->setString(s);
 }
 
+std::string TextWithBackground::GetText()
+{
+    return text->getString();
+}
+
 void TextWithBackground::SetAlignement(TextHAlignment hAlign, TextVAlignment vAlign)
 {
     text->setTextVerticalAlignment(vAlign);

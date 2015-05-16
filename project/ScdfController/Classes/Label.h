@@ -30,6 +30,7 @@ namespace ScdfCtrl
         static TextWithBackground *CreateText(int ctrlID, cocos2d::Rect r, std::string text, std::string fontName, int fontSize);
         void AddTouchCallback(Widget::ccWidgetTouchCallback callback);
         void SetText(std::string s);
+        std::string GetText();
         void SetAlignement(cocos2d::TextHAlignment hAlign=cocos2d::TextHAlignment::CENTER, cocos2d::TextVAlignment vAlign=cocos2d::TextVAlignment::CENTER);
         CREATE_FUNC(TextWithBackground);
         void setPosition(const cocos2d::Vec2& position) override;

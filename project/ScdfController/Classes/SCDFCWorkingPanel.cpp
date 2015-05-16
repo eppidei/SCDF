@@ -84,6 +84,7 @@ template <class ItemType> void WorkingPanel::CheckAddControl()
 void WorkingPanel::NewPatch()
 {
     currentPatchName.clear();
+    parent->ResetWorkingPanelPos();
     for (int i=0;i<patch->items.size();++i)
     {
         parent->DetachItem(patch->items[i]);

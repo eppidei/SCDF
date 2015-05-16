@@ -189,6 +189,11 @@ void MainScene::UpdateEditButton()
     propertiesPanel->UpdateEditButton(!customPanel->IsActive());
 }
 
+void MainScene::ResetWorkingPanelPos()
+{
+    customPanel->setPosition(Vec2(-(getContentSize().width/2.0), 3.0*getContentSize().height/2.0));
+}
+
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
     static Vec2 dragStartUpdated;
