@@ -146,10 +146,12 @@ bool ControlUnitDsp::IsEnabled()
 	return isEnabled;
 }
 
-void ControlUnitDsp::SendValue(float normValue)
+void ControlUnitDsp::TrySendValue(float normValue)
 {
     lastValue = fmin(1,fmax(0,normValue));
-    GetSender()->SendValue(GetValue());
+    if (lastSentValue==GetValue()) return;
+    lastSentValue = GetValue();
+    GetSender()->SendValue(lastSentValue);
     UpdateUI();
 }
 
@@ -212,23 +214,18 @@ void ControlUnitBlow::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *outp
     {
         case ReceiverType_stream:
             for (int i=0;i<output->n_data;++i)
-            {
-                //LOGD("BLOW DATA %f\n",output->p_data[i]);
-                SendValue(output->p_data[i]);
-            }
+                TrySendValue(output->p_data[i]);
             break;
         case ReceiverType_state:
         {
             int v= output->state ? 1 : 0;
-            SendValue(v);
+            TrySendValue(v);
         }
             break;
         case ReceiverType_toggle:
         {
-            if (lastState==output->toggle) break;
-            lastState = output->toggle;
             int v= output->toggle ? 1 : 0;
-            SendValue(v);
+            TrySendValue(v);
         }
             break;
         default:
@@ -244,15 +241,13 @@ void ControlUnitSnap::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *outp
         case ReceiverType_state:
         {
             int v= output->state ? 1 : 0;
-            SendValue(v);
+            TrySendValue(v);
         }
             break;
         case ReceiverType_toggle:
         {
-            if (lastState==output->toggle) break;
-            lastState = output->toggle;
             int v= output->toggle ? 1 : 0;
-            SendValue(v);
+            TrySendValue(v);
         }
             break;
         default:

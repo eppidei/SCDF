@@ -190,7 +190,7 @@ class ItemBase;
 
         bool IsDSP() override { return true; }
 
-        ControlUnitDsp() : ControlUnit() , ADEcontext(NULL), lastValue(0), lastState(-1) { isEnabled = true;}
+        ControlUnitDsp() : ControlUnit() , ADEcontext(NULL), lastValue(0), lastSentValue(-1) { isEnabled = true;}
 
         void Init(s_int32 numFrames, s_int32 rate) override;
         void Release() override;
@@ -200,10 +200,10 @@ class ItemBase;
     protected:
         
         float lastValue;
-        float lastState;
+        int lastSentValue;
         ADE_T *ADEcontext;
         
-        void SendValue(float value);
+        void TrySendValue(float value);
         virtual void OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output) = 0;
     private:
 
