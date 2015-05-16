@@ -14,8 +14,8 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased(int index);
-bool CheckIsInAppPurchasedNoPrompt(int index);
+bool CheckIsInAppPurchased(PurchaseProductIndex index);
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 
 int MainScene::gridIndex=0;
 std::vector<float> MainScene::gridUnity;
@@ -286,7 +286,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_NEW:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchasedNoPrompt(1))
+                    if (!CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex_saveload))
                         customPanel->NewPatch();
                     else
                     {
@@ -299,7 +299,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_SAVE:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased(1)) break;
+                    if (!CheckIsInAppPurchased(PurchaseProductIndex_saveload)) break;
                     
                     SavePanel *p=SavePanel::create();
                     p->SetCallback(customPanel.get());
@@ -309,7 +309,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_LOAD:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased(1)) break;
+                    if (!CheckIsInAppPurchased(PurchaseProductIndex_saveload)) break;
                     std::vector<std::string> files;
                     scdf::ListFilesInDirectory(scdf::GetPatchesDirectory(), files);
                     ModalPanel *p;
