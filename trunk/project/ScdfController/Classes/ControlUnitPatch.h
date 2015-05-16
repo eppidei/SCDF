@@ -19,7 +19,7 @@
 
 namespace ScdfCtrl {
 
-    class WorkingPanel;
+    class MainScene;
 class SerializableItemData {
 
 public:
@@ -108,7 +108,7 @@ public:
         ar(CEREAL_NVP(patch_y));
     }
     
-    SerializableAppData(WorkingPanel *wPanel);
+    SerializableAppData(MainScene *wPanel);
     
     SerializableAppData()
     {
@@ -121,12 +121,12 @@ public:
 class ControlUnitPatch {
 
 public:
-    WorkingPanel *wPanel;
+    MainScene *mainScene;
 	std::vector<ItemBase*> items;
 
 	bool LoadFromFile(std::string patchName); // pass patch name only, without path!
 	bool SaveToFile(std::string patchName);
-    ControlUnitPatch(WorkingPanel *panel) : wPanel(panel) {}
+    ControlUnitPatch(MainScene *scene) : mainScene(scene) {}
 private:
 
 //	friend class cereal::access;
