@@ -11,6 +11,7 @@
 #include <fstream>
 #include "Logging.h"
 #include "OsUtilities.h"
+#include "SCDFCWorkingPanel.h"
 
 std::string scdf::GetPatchesDirectory() {return scdf::GetUserDataDirectory() + "/patches";}
 
@@ -28,20 +29,21 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 	// for each element, create the corresponding item
 
 	std::vector<SerializableItemData> sItems;
-
+    SerializableAppData appdata;
+    
 	std::ifstream stream( file );
     if (!stream) return false;
 	//std::stringstream stream;
 	{
 		cereal::XMLInputArchive inArchive(stream);
-		inArchive(sItems);
+		inArchive(sItems, appdata);
 	}
 
 	for (int i=0; i<sItems.size(); i++)
 	{
 		items.push_back(ItemBase::DeserializeItem(&sItems[i]));
 	}
-
+    wPanel->Deserialize(&appdata);
 	return true;
 }
 
@@ -58,6 +60,7 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	LOGD("Save patch as %s",file.c_str());
 
 	std::vector<SerializableItemData> sItems;
+    SerializableAppData appdata(wPanel);
 
 	for (int i=0; i<items.size(); i++)
 		sItems.push_back( SerializableItemData(items[i]) );
@@ -66,7 +69,7 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	//std::stringstream stream;
 	{
 		cereal::XMLOutputArchive outArchive(stream);
-		outArchive(sItems);
+		outArchive(sItems, appdata);
 	}
 
 	//LOGD("YO - %s",stream.str().c_str());
@@ -79,7 +82,11 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	return true;
 }
 
-
+ScdfCtrl::SerializableAppData::SerializableAppData(WorkingPanel *wPanel)
+{
+    patch_x=wPanel->getPositionX();
+    patch_y=wPanel->getPositionY();
+}
 
 
 

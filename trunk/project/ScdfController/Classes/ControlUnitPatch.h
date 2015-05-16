@@ -19,6 +19,7 @@
 
 namespace ScdfCtrl {
 
+    class WorkingPanel;
 class SerializableItemData {
 
 public:
@@ -92,19 +93,40 @@ public:
         groupId=-1;
         isMaster=false;
         octave=0;
-	}
+    }
+};
 
-
+class SerializableAppData {
+    
+public:
+    float patch_x;
+    float patch_y;
+    
+    template<class Archive>	void serialize(Archive & ar, std::uint32_t const version)
+    {
+        ar(CEREAL_NVP(patch_x));
+        ar(CEREAL_NVP(patch_y));
+    }
+    
+    SerializableAppData(WorkingPanel *wPanel);
+    
+    SerializableAppData()
+    {
+        patch_x = 0;
+        patch_y = 0;
+    }
 };
 
 
 class ControlUnitPatch {
 
 public:
+    WorkingPanel *wPanel;
 	std::vector<ItemBase*> items;
 
 	bool LoadFromFile(std::string patchName); // pass patch name only, without path!
 	bool SaveToFile(std::string patchName);
+    ControlUnitPatch(WorkingPanel *panel) : wPanel(panel) {}
 private:
 
 //	friend class cereal::access;
@@ -178,7 +200,8 @@ public:
 
 } // namespace end
 
-CEREAL_CLASS_VERSION(ScdfCtrl::ControlUnitPatch,0);
+CEREAL_CLASS_VERSION(ScdfCtrl::SerializableItemData,0);
+CEREAL_CLASS_VERSION(ScdfCtrl::SerializableAppData,0);
 CEREAL_CLASS_VERSION(ScdfCtrl::CerealTest,1); // change version when you modify struct
 // Object versioning, more at:
 // http://uscilab.github.io/cereal/assets/doxygen/group__Utility.html

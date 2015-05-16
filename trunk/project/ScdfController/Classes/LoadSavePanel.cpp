@@ -49,7 +49,7 @@ void SavePanel::CreateMain()
     mainPanel->setAnchorPoint(Vec2(0.5,0.5));
     float sizeBase=250.0;
     mainPanel->setContentSize(cocos2d::Size(1.512*sizeBase, sizeBase));
-    mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
+  //  mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     saveFile=TextField::create();
     mainPanel->addChild(saveFile);
@@ -90,7 +90,8 @@ void SavePanel::TextFieldEventCallback(Ref *pSender, TextField::EventType type)
     TextField *text=dynamic_cast<TextField*>(pSender);
     switch (type)
     {
-        case TextField::EventType::DETACH_WITH_IME:
+        case TextField::EventType::INSERT_TEXT:
+        case TextField::EventType::DELETE_BACKWARD:
             CheckFileExists(text->getStringValue());
             break;
         default:
@@ -117,7 +118,7 @@ void LoadPanel::CreateMain()
     mainPanel->setAnchorPoint(Vec2(0.5,0.5));
     float sizeBase=250.0;
     mainPanel->setContentSize(cocos2d::Size(1.214*sizeBase, sizeBase));
-    mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
+  //  mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     loadFiles = ListView::create();
     mainPanel->addChild(loadFiles);

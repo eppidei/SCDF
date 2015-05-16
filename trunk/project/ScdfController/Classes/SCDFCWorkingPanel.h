@@ -14,6 +14,7 @@
 namespace ScdfCtrl
 {
     class MainScene;
+    class SerializableAppData;
     
     class WorkingPanel : public cocos2d::ui::Layout, public LoadSavePanelBaseCallback
     {
@@ -47,15 +48,16 @@ namespace ScdfCtrl
         void DetectCollisions(cocos2d::Rect r);
         void DoDetectCollisions(Node *_item, cocos2d::Rect r, bool *collision);
         
-        void OnSavePatch(std::string patchName, bool newProject);
-        void OnLoadPatch(std::string patchName);
-        void OnDiscardPatch();
+        void OnSavePatch(std::string patchName, bool newProject) override;
+        void OnLoadPatch(std::string patchName) override;
+        void OnDiscardPatch() override;
 
         void OnItemTouchBegan(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchMoved(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         void OnItemTouchEnded(ItemBase *item, Widget* widget, cocos2d::ui::Widget::TouchEventType type);
         
-        std::string GetCurrentPatchName() { return currentPatchName;}
+        std::string GetCurrentPatchName() override { return currentPatchName;}
+        void Deserialize(SerializableAppData *appdata);
         
         CREATE_FUNC(WorkingPanel);
     };
