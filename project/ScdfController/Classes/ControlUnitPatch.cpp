@@ -32,14 +32,22 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 	// for each element, create the corresponding item
 
 	std::vector<SerializableItemData> sItems;
-    SerializableAppData appdata;
+    SerializableAppData appdata(mainScene);
     
 	std::ifstream stream( file );
     if (!stream) return false;
 	//std::stringstream stream;
 	{
 		cereal::XMLInputArchive inArchive(stream);
-		inArchive(sItems, appdata);
+        //inArchive(sItems, appdata);
+        try{
+            inArchive( cereal::make_nvp("SerializableItemData", sItems) );
+        }
+        catch(...){}
+        try{
+            inArchive( cereal::make_nvp("SerializableAppData", appdata) );
+        }
+        catch(...){}
 	}
 
 	for (int i=0; i<sItems.size(); i++)
@@ -72,7 +80,9 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	//std::stringstream stream;
 	{
 		cereal::XMLOutputArchive outArchive(stream);
-		outArchive(sItems, appdata);
+        //outArchive(sItems, appdata);
+        outArchive( cereal::make_nvp("SerializableItemData", sItems) );
+        outArchive( cereal::make_nvp("SerializableAppData", appdata) );
 	}
 
 	//LOGD("YO - %s",stream.str().c_str());
