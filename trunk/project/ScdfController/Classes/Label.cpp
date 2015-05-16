@@ -112,6 +112,8 @@ void TextInputWithBackground::InitWithContent(int ctrlID, cocos2d::Rect r, std::
     text->setContentSize(cocos2d::Size(r.size.width-5,r.size.height));
     text->setPosition(cocos2d::Vec2(5,r.size.height));
     text->setColor(Colors::Instance()->GetUIColor(Colors::LabelText));
+    text->setMaxLength(15);
+    text->setMaxLengthEnabled(true);
 }
 
 void TextInputWithBackground::AddEventListener(TextField::ccTextFieldCallback callback)

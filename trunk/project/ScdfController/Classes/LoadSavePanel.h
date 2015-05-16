@@ -53,7 +53,7 @@ namespace ScdfCtrl
     {
         void CreateControlButton() override;
         void SetAdditionalButtonsPos() override;
-        void OnTouchBegan(int nodeTag) override;
+        void OnTouchEnded(int nodeTag) override;
     public:
         CREATE_FUNC(SaveAfterNewPanel);
     };
