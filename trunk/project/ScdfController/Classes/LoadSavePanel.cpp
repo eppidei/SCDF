@@ -123,8 +123,8 @@ void LoadPanel::CreateMain()
     loadFiles = ListView::create();
     mainPanel->addChild(loadFiles);
     loadFiles->setAnchorPoint(Vec2(0,1));
-    loadFiles->setContentSize(cocos2d::Size(0.747*mainPanel->getContentSize().width, 0.372*mainPanel->getContentSize().height));
-    loadFiles->setPosition(Vec2(0.103*mainPanel->getContentSize().width, mainPanel->getContentSize().height*0.687/*-(0.313*mainPanel->getContentSize().height)*/));
+    loadFiles->setContentSize(cocos2d::Size(0.775*mainPanel->getContentSize().width, 0.377*mainPanel->getContentSize().height));
+    loadFiles->setPosition(Vec2(0.09*mainPanel->getContentSize().width, mainPanel->getContentSize().height*0.689/*-(0.313*mainPanel->getContentSize().height)*/));
     InitFilesListView();
     loadFiles->ScrollView::setDirection(ScrollView::Direction::VERTICAL);
     loadFiles->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
@@ -171,17 +171,12 @@ void LoadPanel::InitFilesListView()
     scdf::ListFilesInDirectory(scdf::GetPatchesDirectory(), files);
     for (int i=0; i<files.size(); i++)
     {
-        Text *model = Text::create(files[i],Colors::Instance()->GetFontPath(Colors::FontsId::ItemLabel),Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
-        model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width-6,ITEM_HEIGHT));
-        model->ignoreContentAdaptWithSize(false);
-        model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::CENTER);
-        model->setColor(cocos2d::Color3B::BLACK);
-        model->setBright(true);
-        model->setTouchScaleChangeEnabled(true);
+        cocos2d::Rect r(0,0,loadFiles->getContentSize().width-6,ITEM_HEIGHT);
+        TextWithBackground *model=TextWithBackground::CreateText(0,r, files[i], Colors::Instance()->GetFontPath(Colors::FontsId::ItemLabel),Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
+        model->SetAlignement();
+        model->SetTextColor(cocos2d::Color3B::BLACK);
+        model->AddTouchCallback(CC_CALLBACK_2(LoadSavePanelBase::OnTouchEvent, this));
         loadFiles->pushBackCustomItem(model);
-        model->addTouchEventListener(CC_CALLBACK_2(LoadSavePanelBase::OnTouchEvent, this));
     }
     loadFiles->refreshView();
     HighLightCurrentItem();
@@ -245,19 +240,19 @@ void LoadPanel::OnTouchBegan(int nodeTag)
 {
     if (nodeTag==PATCH_LOAD)
     {
-        Text *t=(Text*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
+        TextWithBackground *t=(TextWithBackground*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
         if (t)
-            callback->OnLoadPatch(t->getString());
+            callback->OnLoadPatch(t->GetText());
         Close();
     }
     else if (nodeTag==PATCH_DELETE)
     {
         int index=loadFiles->getCurSelectedIndex();
-        Text *t=(Text*)(loadFiles->getItem(index));
+        TextWithBackground *t=(TextWithBackground*)(loadFiles->getItem(index));
         if (t)
         {
-            scdf::DeleteFile(t->getString());
-            loadFiles->removeItem(loadFiles->getCurSelectedIndex());
+            scdf::DeleteFile(t->GetText());
+            loadFiles->removeItem(index);
             if (loadFiles->getItems().size()<=0)
                 Close();
         }
@@ -275,11 +270,15 @@ void LoadPanel::OnTouchEnded(int nodeTag)
 void LoadPanel::HighLightCurrentItem()
 {
     for (int i=0;i<loadFiles->getItems().size();++i)
-        loadFiles->getItem(i)->setHighlighted(false);
-    
-    Widget *element=loadFiles->getItem(loadFiles->getCurSelectedIndex());
-    if (element)
-        element->setHighlighted(true);
+    {
+        TextWithBackground *model=dynamic_cast<TextWithBackground*>(loadFiles->getItem(i));
+        if (NULL==model) continue;
+        model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::NONE);
+    }
+    TextWithBackground *model=dynamic_cast<TextWithBackground*>(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
+    if (NULL==model) return;
+    model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    model->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
 }
 
 void SaveAfterNewPanel::CreateControlButton()
@@ -294,7 +293,6 @@ void SaveAfterNewPanel::CreateControlButton()
     discard->ignoreContentAdaptWithSize(false);
     discard->setAnchorPoint(Vec2(0,1));
     discard->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
-
 }
 
 void SaveAfterNewPanel::SetAdditionalButtonsPos()
