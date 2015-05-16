@@ -44,7 +44,10 @@ class ItemBase;
     public:
         ControlUnitInterface *interface;
         void SetInterface(ControlUnitInterface *_interface) {interface=_interface;}
+        
+        //enum mirrored with PurchaseProductIndex enum
         enum Type { Wire, Blow, Snap };
+        
         enum ReceiverType { ReceiverType_stream, ReceiverType_state, ReceiverType_toggle};
 
         static ControlUnit* Create(Type t);

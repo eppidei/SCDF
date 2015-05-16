@@ -20,7 +20,7 @@ using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
-bool CheckIsInAppPurchased(int index);
+bool CheckIsInAppPurchased(PurchaseProductIndex index);
 
 #define VISIBILITY_CHECK \
         if (NULL==panel->GetSelectedItem()) \
@@ -939,6 +939,11 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
     }
     else if (modes==menu)
     {
+        int controlUnitType=menu->GetSelectedIndex();
+//        bool change=true;
+////        if (controlUnitType>0&&!CheckIsInAppPurchased((PurchaseProductIndex)controlUnitType))
+////            change=false;
+//        if (!change) return;
         panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(menu->GetSelectedIndex()));
         Update();
     }
@@ -964,17 +969,17 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
         case PROPERTIES_ITEMSETTINGS_MASTER:
             panel->GetSelectedItem()->SetMaster(!panel->GetSelectedItem()->IsMaster());
             break;
-        case PROPERTIES_CONTROLMODE_WIRE:
-            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
-            break;
-        case PROPERTIES_CONTROLMODE_BLOW:
-        case PROPERTIES_CONTROLMODE_SNAP:
-            if (CheckIsInAppPurchased(/*widget->getTag()-PROPERTIES_CONTROLMODE_BASE*/0))
-                panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
-            break;
-        case PROPERTIES_CONTROLMODE_ROLL:
-        case PROPERTIES_CONTROLMODE_GESTURE:
-            break;
+//        case PROPERTIES_CONTROLMODE_WIRE:
+//            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+//            break;
+//        case PROPERTIES_CONTROLMODE_BLOW:
+//        case PROPERTIES_CONTROLMODE_SNAP:
+//            if (CheckIsInAppPurchased(/*widget->getTag()-PROPERTIES_CONTROLMODE_BASE*/0))
+//                panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
+//            break;
+//        case PROPERTIES_CONTROLMODE_ROLL:
+//        case PROPERTIES_CONTROLMODE_GESTURE:
+//            break;
         case PROPERTIES_ITEMSETTINGS_GROUP:
             group->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;

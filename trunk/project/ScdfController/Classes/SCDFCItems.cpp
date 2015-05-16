@@ -20,7 +20,8 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased(int index);
+bool CheckIsInAppPurchased(PurchaseProductIndex index);
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 
 #define DEFAULT_NAME(x) \
         static int counter=0; \
@@ -162,6 +163,16 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
     i->SetMaster(sitem->isMaster);
     i->setPosition(Vec2(sitem->x,sitem->y));
 
+    bool useControlUnit=true;
+    if (sitem->unit->GetType()>0)
+        useControlUnit=CheckIsInAppPurchasedNoPrompt((PurchaseProductIndex)(sitem->unit->GetType()));
+    
+    if (!useControlUnit)
+    {
+        delete sitem->unit;
+        sitem->unit=ControlUnit::Create(ControlUnit::Wire);
+    }
+
 	i->SetControlUnit(sitem->unit);
     
     if (i->GetID()==ITEM_KEYBOARD_ID)
@@ -238,9 +249,11 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
     if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
     
-    if (t==ControlUnit::Type::Blow && !CheckIsInAppPurchased(0)) return;
+    bool change=true;
+    if (t>0) change=CheckIsInAppPurchased((PurchaseProductIndex)t);
     
-	SetControlUnit(ControlUnit::Create(t));
+    if (change)
+        SetControlUnit(ControlUnit::Create(t));
 }
 
 void ItemBase::SetControlUnit(ControlUnit* cu)

@@ -79,5 +79,7 @@
 #define PROPERTIES_MIDI_CHANNEL 47
 #define PROPERTIES_MIDI_VELOCITY 48
 
-
+//enum mirrored with ControlUnit type enum
+//In ControlUnit type enum 0 is Wire, that isn't under purchase...so we can use 0 index for saveload purchase
+enum PurchaseProductIndex { PurchaseProductIndex_saveload, PurchaseProductIndex_blow, PurchaseProductIndex_snap};
 #endif

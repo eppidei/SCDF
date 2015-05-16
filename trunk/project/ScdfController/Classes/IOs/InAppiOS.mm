@@ -7,6 +7,7 @@
 
 #import "InAppiOS.h"
 #include <string>
+#include "SCDFCDefinitions.h"
 
 #ifdef _DEBUG
 //#define SCDF_NOPURCHASE_NEEDED
@@ -16,18 +17,18 @@
 // PRODUCT 2 index == 0
 #define id_product_blow @"fzn_amidi_blow_00"
 #define key_product_blow @"isAlgoBlow_Purchased"
-#define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output?"
+#define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output"
 
 
 // PRODUCT 1 index == 1
 #define id_product_saveLoad @"fzn_amidi_ls_00"
 #define key_product_saveLoad @"isSaveLoad_Purchased"
-#define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet?"
+#define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet"
 
 // PRODUCT 3 index == 2
 #define id_product_snap @"com.algoSnap"
 #define key_product_snap @"isAlgoSnap_Purchased"
-#define message_product_snap @"Hey! Do you want to purchase the Snap control to use as MIDI output?"
+#define message_product_snap @"Hey! Do you want to purchase the Snap control to use as MIDI output"
 
 //#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
 
@@ -333,6 +334,7 @@ static InAppPurchaseController purchaseController;
                                   @"Purchases are disabled in your device" message:nil delegate:
                                   self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alertView show];
+        [alertView release];
         return;
     }
     
@@ -347,6 +349,7 @@ static InAppPurchaseController purchaseController;
                                   @"The product is not available" message:nil delegate:
                                   self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alertView show];
+        [alertView release];
         return;
     }
     
@@ -358,6 +361,7 @@ static InAppPurchaseController purchaseController;
                                   @"The product is not available" message:nil delegate:
                                   self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alertView show];
+        [alertView release];
         return;
     }
     
@@ -581,23 +585,34 @@ void PreloadStore()
     purchaseController.PreloadStore();
 }
 
-bool CheckIsInAppPurchasedNoPrompt(int productIndex)
+int GetRealIndex(PurchaseProductIndex productIndex)
+{
+    switch(productIndex)
+    {
+        case PurchaseProductIndex_saveload: return 1;
+        case PurchaseProductIndex_blow: return 0;
+        default: return productIndex;
+    }
+    return productIndex;
+}
+
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex _productIndex)
 {
 #ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
-        
+    int productIndex=GetRealIndex(_productIndex);
     if([[NSUserDefaults standardUserDefaults] boolForKey: purchaseController.keyAtIndex(productIndex)]) return true;
     return false;
 }
 
 
-bool CheckIsInAppPurchased(int productIndex)
+bool CheckIsInAppPurchased(PurchaseProductIndex _productIndex)
 {
 #ifdef SCDF_NOPURCHASE_NEEDED
     return true;
 #endif
-    
+    int productIndex=GetRealIndex(_productIndex);
     if([[NSUserDefaults standardUserDefaults] boolForKey: purchaseController.keyAtIndex(productIndex)])
         return true;
     
@@ -640,6 +655,8 @@ bool CheckIsInAppPurchased(int productIndex)
          purchaseController.Purchase(productIndex);
     }
     
+    [alertView release];
+    [madelegate release];
     return false;
 }
 
