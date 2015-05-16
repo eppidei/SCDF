@@ -23,7 +23,10 @@
 #define key_product_blow @"isAlgoBlow_Purchased"
 #define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output?"
 
-
+// PRODUCT 3 index == 2
+#define id_product_snap @"com.algoSnap"
+#define key_product_snap @"isAlgoSnap_Purchased"
+#define message_product_snap @"Hey! Do you want to purchase the Snap control to use as MIDI output?"
 
 //#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
 
@@ -112,14 +115,17 @@ public:
             // IDs
             [idList addObject:id_product_saveLoad];
             [idList addObject:id_product_blow];
+//            [idList addObject:id_product_snap];
             
             // KEY
             [keyList addObject:key_product_saveLoad];
             [keyList addObject:key_product_blow];
+//            [keyList addObject:key_product_snap];
             
             // MESSAGES
             [messageList addObject:message_product_saveLoad];
             [messageList addObject:message_product_blow];
+//            [messageList addObject:message_product_snap];
         }
         
     }

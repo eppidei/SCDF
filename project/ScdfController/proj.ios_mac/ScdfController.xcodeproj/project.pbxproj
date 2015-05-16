@@ -519,7 +519,6 @@
 		9D6C01F81ADAF9C200F75A3C /* ADE_upsampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_upsampler.h; path = ../../../ext/ADE_API/API/src/headers/ADE_upsampler.h; sourceTree = "<group>"; };
 		9D6C01F91ADAF9C200F75A3C /* ADE_Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Utils.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Utils.h; sourceTree = "<group>"; };
 		9D6C01FA1ADAF9C200F75A3C /* ADE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE.h; path = ../../../ext/ADE_API/API/src/headers/ADE.h; sourceTree = "<group>"; };
-		9D6C01FB1ADB028E00F75A3C /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../ext/ADE_API/API/prjs/codeblocks/blow_tb/main.cpp; sourceTree = "<group>"; };
 		9D82C2CD1A1C04EB00FF1243 /* SCDFCItems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCDFCItems.cpp; path = ../Classes/SCDFCItems.cpp; sourceTree = "<group>"; };
 		9D82C2CE1A1C04EB00FF1243 /* SCDFCItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDFCItems.h; path = ../Classes/SCDFCItems.h; sourceTree = "<group>"; };
 		9D82C2D21A1C073100FF1243 /* SCDFCDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDFCDefinitions.h; path = ../Classes/SCDFCDefinitions.h; sourceTree = "<group>"; };
@@ -915,7 +914,6 @@
 		9D6C01B41ADAF0D000F75A3C /* ADE */ = {
 			isa = PBXGroup;
 			children = (
-				9D6C01FB1ADB028E00F75A3C /* main.cpp */,
 				9D6C01E01ADAF9C200F75A3C /* ADE_accelerate_framework_wrapper.h */,
 				9D6C01E11ADAF9C200F75A3C /* ADE_Bench_Utils.h */,
 				9D6C01E21ADAF9C200F75A3C /* ADE_blas_level1.h */,
@@ -1535,6 +1533,7 @@
 					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
 					PLATF_IOS,
 					_DEBUG,
+					"ADE_TARGET_TYPE=ADE_IOS",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1580,6 +1579,7 @@
 					CC_TARGET_OS_IPHONE,
 					"CC_ENABLE_CHIPMUNK_INTEGRATION=1",
 					PLATF_IOS,
+					"ADE_TARGET_TYPE=ADE_IOS",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (

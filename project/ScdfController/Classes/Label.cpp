@@ -243,6 +243,7 @@ void ModalPanel::OnTouch(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 
 void ModalPanel::Close()
 {
+    Director::getInstance()->getOpenGLView()->setIMEKeyboardState(false);
     auto fadeOut = FadeOut::create(0.2f);
     auto scale = ScaleTo::create(0.15f, 0.0f);
     auto callback = CallFunc::create([this](){
@@ -270,6 +271,7 @@ bool ModalPanel::init()
 
     mainPanel=CreatePanel();
    // addChild(mainPanel,0,1);
+    mainPanel->setPosition(Vec2(getContentSize().width/2.0,2.0*getContentSize().height/3.0));
     Layout *mainLayout=dynamic_cast<Layout*>(mainPanel);
     if (mainLayout!=NULL)
     {
@@ -298,7 +300,7 @@ Node *ModalPanel::CreatePanel()
     panel->setAnchorPoint(Vec2(0.5,0.5));
     float sizeBase=250.0;
     panel->setContentSize(cocos2d::Size(1.512*sizeBase, sizeBase));
-    panel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
+//    panel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
 
     text = Text::create("text",Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PopupPanelText));
     panel->addChild(text);
