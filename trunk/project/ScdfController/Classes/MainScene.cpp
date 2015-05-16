@@ -286,7 +286,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_NEW:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchasedNoPrompt(0))
+                    if (!CheckIsInAppPurchasedNoPrompt(1))
                         customPanel->NewPatch();
                     else
                     {
@@ -299,7 +299,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_SAVE:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased(0)) break;
+                    if (!CheckIsInAppPurchased(1)) break;
                     
                     SavePanel *p=SavePanel::create();
                     p->SetCallback(customPanel.get());
@@ -309,7 +309,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                 case MAIN_BUTTON_LOAD:
                 {
                     if (type==Widget::TouchEventType::CANCELED) break;
-                    if (!CheckIsInAppPurchased(0)) break;
+                    if (!CheckIsInAppPurchased(1)) break;
                     std::vector<std::string> files;
                     scdf::ListFilesInDirectory(scdf::GetPatchesDirectory(), files);
                     ModalPanel *p;

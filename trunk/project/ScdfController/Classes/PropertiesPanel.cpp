@@ -969,7 +969,7 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             break;
         case PROPERTIES_CONTROLMODE_BLOW:
         case PROPERTIES_CONTROLMODE_SNAP:
-            if (CheckIsInAppPurchased(widget->getTag()-PROPERTIES_CONTROLMODE_BASE))
+            if (CheckIsInAppPurchased(/*widget->getTag()-PROPERTIES_CONTROLMODE_BASE*/0))
                 panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
             break;
         case PROPERTIES_CONTROLMODE_ROLL:

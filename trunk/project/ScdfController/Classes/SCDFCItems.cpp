@@ -238,7 +238,7 @@ void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
     if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
     
-    if (t==ControlUnit::Type::Blow && !CheckIsInAppPurchased(1)) return;
+    if (t==ControlUnit::Type::Blow && !CheckIsInAppPurchased(0)) return;
     
 	SetControlUnit(ControlUnit::Create(t));
 }
