@@ -15,9 +15,13 @@ using namespace cocos2d;
 using namespace ui;
 
 #define ITEM_HEIGHT 35.0
+#define PANEL_SIZE_BASE 300.0
+#define CONTROL_BTN_WIDTH_MULTIPLY 2.75
+#define CONTROL_BTN_SAVE_WIDTH_MULTIPLY 1.84
 #define CLOSE_ID -10
 #define MAINPANEL -11
 #define DISCARD_ID -12
+
 
 Node *LoadSavePanelBase::CreatePanel()
 {
@@ -30,7 +34,7 @@ Node *LoadSavePanelBase::CreatePanel()
     control->ignoreContentAdaptWithSize(false);
     control->setAnchorPoint(Vec2(0,1));
 //    control->setPosition(Vec2(close->getPositionX()-control->getContentSize().width-10,ITEM_HEIGHT+20));
-    control->setPosition(Vec2(GetMainControl()->getPositionX()+GetMainControl()->getContentSize().width+4-control->getContentSize().width,ITEM_HEIGHT+20));
+    control->setPosition(Vec2(GetMainControl()->getPositionX()+GetMainControl()->getContentSize().width-control->getContentSize().width,ITEM_HEIGHT+20));
     SetAdditionalButtonsPos();
     addChild(mainPanel,0,1);
     return mainPanel;
@@ -47,24 +51,26 @@ void SavePanel::CreateMain()
     mainPanel->setBackGroundImageScale9Enabled(true);
     mainPanel->setBackGroundImageCapInsets(rr);
     mainPanel->setAnchorPoint(Vec2(0.5,0.5));
-    float sizeBase=250.0;
-    mainPanel->setContentSize(cocos2d::Size(1.512*sizeBase, sizeBase));
+    
+    mainPanel->setContentSize(cocos2d::Size(1.512*PANEL_SIZE_BASE, PANEL_SIZE_BASE));
   //  mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     saveFile=TextField::create();
     mainPanel->addChild(saveFile);
     saveFile->ignoreContentAdaptWithSize(false);
-    saveFile->setPlaceHolder("Patch name");
-    saveFile->setContentSize(cocos2d::Size(0.787*mainPanel->getContentSize().width,0.198*mainPanel->getContentSize().height));
-    saveFile->setPosition(Vec2(0.102*mainPanel->getContentSize().width,0.603*mainPanel->getContentSize().height));
+    saveFile->setPlaceHolder("Insert patch name");
+    saveFile->setContentSize(cocos2d::Size(0.817*mainPanel->getContentSize().width,0.198*mainPanel->getContentSize().height));
+    saveFile->setPosition(Vec2(0.084*mainPanel->getContentSize().width,0.603*mainPanel->getContentSize().height));
     saveFile->setAnchorPoint(Vec2(0,1));
     saveFile->setTextVerticalAlignment(TextVAlignment::CENTER);
-    saveFile->setTextHorizontalAlignment(TextHAlignment::LEFT);
+    saveFile->setTextHorizontalAlignment(TextHAlignment::CENTER);
     saveFile->setFontName(Colors::Instance()->GetFontPath(Colors::FontsId::LoadSaveElement));
     saveFile->setFontSize(Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
     saveFile->setTouchEnabled(true);
     saveFile->setColor(cocos2d::Color3B::BLACK);
     saveFile->addEventListener(CC_CALLBACK_2(SavePanel::TextFieldEventCallback, this));
+    saveFile->setMaxLength(25);
+    saveFile->setMaxLengthEnabled(true);
     
     text = Text::create("",Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::LoadSaveElement));
     mainPanel->addChild(text);
@@ -79,10 +85,21 @@ void SavePanel::CreateMain()
 
 void SavePanel::CheckFileExists(std::string _text)
 {
-    if(scdf::DoesFileExist(_text))
-        SetText("This file already exists");
-    else
+    if(0==_text.size()||!scdf::DoesFileExist(_text))
+    {
         SetText("");
+        control->loadTextureNormal("btnSaveDefault.png");
+        control->loadTexturePressed("btnSaveHover.png");
+        control->setContentSize(cocos2d::Size(CONTROL_BTN_SAVE_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
+    }
+    else
+    {
+        SetText("This file already exists");
+        control->loadTextureNormal("overwriteDefault.png");
+        control->loadTexturePressed("overwriteHover.png");
+        control->setContentSize(cocos2d::Size(CONTROL_BTN_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
+    }
+    control->setPosition(Vec2(GetMainControl()->getPositionX()+GetMainControl()->getContentSize().width-control->getContentSize().width,ITEM_HEIGHT+20));
 }
 
 void SavePanel::TextFieldEventCallback(Ref *pSender, TextField::EventType type)
@@ -116,15 +133,15 @@ void LoadPanel::CreateMain()
     mainPanel->setBackGroundImageScale9Enabled(true);
     mainPanel->setBackGroundImageCapInsets(rr);
     mainPanel->setAnchorPoint(Vec2(0.5,0.5));
-    float sizeBase=250.0;
-    mainPanel->setContentSize(cocos2d::Size(1.214*sizeBase, sizeBase));
+
+    mainPanel->setContentSize(cocos2d::Size(1.214*PANEL_SIZE_BASE, PANEL_SIZE_BASE));
   //  mainPanel->setPosition(Vec2(getContentSize().width/2.0,getContentSize().height/2.0));
     
     loadFiles = ListView::create();
     mainPanel->addChild(loadFiles);
     loadFiles->setAnchorPoint(Vec2(0,1));
-    loadFiles->setContentSize(cocos2d::Size(0.775*mainPanel->getContentSize().width, 0.377*mainPanel->getContentSize().height));
-    loadFiles->setPosition(Vec2(0.09*mainPanel->getContentSize().width, mainPanel->getContentSize().height*0.689/*-(0.313*mainPanel->getContentSize().height)*/));
+    loadFiles->setContentSize(cocos2d::Size(0.788*mainPanel->getContentSize().width, 0.385*mainPanel->getContentSize().height));
+    loadFiles->setPosition(Vec2(0.086*mainPanel->getContentSize().width, mainPanel->getContentSize().height*0.689/*-(0.313*mainPanel->getContentSize().height)*/));
     InitFilesListView();
     loadFiles->ScrollView::setDirection(ScrollView::Direction::VERTICAL);
     loadFiles->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
@@ -145,14 +162,14 @@ void LoadPanel::CreateControlButton()
     deleteBtn->addTouchEventListener(CC_CALLBACK_2(LoadPanel::OnTouchEvent, this));
     deleteBtn->ignoreContentAdaptWithSize(false);
     deleteBtn->setAnchorPoint(Vec2(0,1));
-    deleteBtn->loadTextureNormal("discardDefault.png");
-    deleteBtn->loadTexturePressed("discardHover.png");
-    deleteBtn->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+    deleteBtn->loadTextureNormal("deleteFileDefault.png");
+    deleteBtn->loadTexturePressed("deleteFileHover.png");
+    deleteBtn->setContentSize(cocos2d::Size(CONTROL_BTN_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
 }
 
 void LoadPanel::SetAdditionalButtonsPos()
 {
-    deleteBtn->setPosition(Vec2(GetMainControl()->getPositionX()-4,ITEM_HEIGHT+20));
+    deleteBtn->setPosition(Vec2(GetMainControl()->getPositionX(),ITEM_HEIGHT+20));
 }
 
 void SavePanel::CreateControlButton()
@@ -161,7 +178,7 @@ void SavePanel::CreateControlButton()
     mainPanel->addChild(control,0,PATCH_SAVE);
     control->loadTextureNormal("btnSaveDefault.png");
     control->loadTexturePressed("btnSaveHover.png");
-    control->setContentSize(cocos2d::Size(1.84*ITEM_HEIGHT,ITEM_HEIGHT));
+    control->setContentSize(cocos2d::Size(CONTROL_BTN_SAVE_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
 }
 
 void LoadPanel::InitFilesListView()
@@ -194,7 +211,7 @@ void LoadSavePanelBase::OnTouchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEve
                 Close();
             break;
         case Widget::TouchEventType::ENDED:
-        case Widget::TouchEventType::CANCELED:
+//        case Widget::TouchEventType::CANCELED:
             OnTouchEnded(node->getTag());
             break;
         default:
@@ -209,21 +226,31 @@ void LoadSavePanelBase::SetCallback(LoadSavePanelBaseCallback *_callback)
         SetCurrentPatchName(callback->GetCurrentPatchName());
 }
 
-void SavePanel::OnTouchBegan(int nodeTag)
+void SavePanel::OnTouchEnded(int nodeTag)
 {
     if (nodeTag==PATCH_SAVE)
     {
-        callback->OnSavePatch(saveFile->getStringValue(), false);
-        Close();
+        if (saveFile->getStringValue().size())
+        {
+            callback->OnSavePatch(saveFile->getStringValue(), false);
+            Close();
+        }
+        else
+            SetText("Please insert patch name");
     }
 }
 
-void SaveAfterNewPanel::OnTouchBegan(int nodeTag)
+void SaveAfterNewPanel::OnTouchEnded(int nodeTag)
 {
     if (nodeTag==PATCH_SAVE)
     {
-        callback->OnSavePatch(saveFile->getStringValue(), true);
-        Close();
+        if (saveFile->getStringValue().size())
+        {
+            callback->OnSavePatch(saveFile->getStringValue(), true);
+            Close();
+        }
+        else
+            SetText("Please insert patch name");
     }
     else if (nodeTag==DISCARD_ID)
     {
@@ -232,11 +259,24 @@ void SaveAfterNewPanel::OnTouchBegan(int nodeTag)
     }
 }
 
-void SavePanel::OnTouchEnded(int nodeTag)
+void SavePanel::OnTouchBegan(int nodeTag)
 {
 }
 
 void LoadPanel::OnTouchBegan(int nodeTag)
+{
+//    if (nodeTag==PATCH_LOAD)
+//    {
+//        TextWithBackground *t=(TextWithBackground*)(loadFiles->getItem(loadFiles->getCurSelectedIndex()));
+//        if (t)
+//            callback->OnLoadPatch(t->GetText());
+//        Close();
+//    }
+//    else if (nodeTag!=PATCH_DELETE)
+//        HighLightCurrentItem();
+}
+
+void LoadPanel::OnTouchEnded(int nodeTag)
 {
     if (nodeTag==PATCH_LOAD)
     {
@@ -257,13 +297,7 @@ void LoadPanel::OnTouchBegan(int nodeTag)
                 Close();
         }
     }
-    else
-        HighLightCurrentItem();
-}
-
-void LoadPanel::OnTouchEnded(int nodeTag)
-{
-    if (nodeTag!=PATCH_LOAD)
+    else //if (nodeTag!=PATCH_LOAD)
         HighLightCurrentItem();
 }
 
@@ -292,10 +326,10 @@ void SaveAfterNewPanel::CreateControlButton()
     discard->loadTexturePressed("discardHover.png");
     discard->ignoreContentAdaptWithSize(false);
     discard->setAnchorPoint(Vec2(0,1));
-    discard->setContentSize(cocos2d::Size(2.75*ITEM_HEIGHT,ITEM_HEIGHT));
+    discard->setContentSize(cocos2d::Size(CONTROL_BTN_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
 }
 
 void SaveAfterNewPanel::SetAdditionalButtonsPos()
 {
-    discard->setPosition(Vec2(GetMainControl()->getPositionX()-4,ITEM_HEIGHT+20));
+    discard->setPosition(Vec2(GetMainControl()->getPositionX(),ITEM_HEIGHT+20));
 }

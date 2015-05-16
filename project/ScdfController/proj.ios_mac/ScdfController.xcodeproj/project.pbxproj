@@ -167,6 +167,10 @@
 		9DEEDD671AED5E2600BB7082 /* rightPanelTongueClosed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD651AED5E2600BB7082 /* rightPanelTongueClosed.png */; };
 		9DEEDD681AED5E2600BB7082 /* rightPanelTongueOpened.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD661AED5E2600BB7082 /* rightPanelTongueOpened.png */; };
 		9DF072291ADEF2EB00F2699D /* ControlUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */; };
+		9DF27D5A1B079C3B00BF15B7 /* overwriteDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D581B079C3B00BF15B7 /* overwriteDefault.png */; };
+		9DF27D5B1B079C3B00BF15B7 /* overwriteHover.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D591B079C3B00BF15B7 /* overwriteHover.png */; };
+		9DF27D5E1B079C4A00BF15B7 /* deleteFileDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D5C1B079C4A00BF15B7 /* deleteFileDefault.png */; };
+		9DF27D5F1B079C4A00BF15B7 /* deleteFileHover.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D5D1B079C4A00BF15B7 /* deleteFileHover.png */; };
 		9DFAC8021ABD6E77007658E0 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DFAC8001ABD6E77007658E0 /* Label.cpp */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -543,6 +547,10 @@
 		9DEEDD621AED585D00BB7082 /* leftPanelTongueOpened.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftPanelTongueOpened.png; sourceTree = "<group>"; };
 		9DEEDD651AED5E2600BB7082 /* rightPanelTongueClosed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightPanelTongueClosed.png; sourceTree = "<group>"; };
 		9DEEDD661AED5E2600BB7082 /* rightPanelTongueOpened.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightPanelTongueOpened.png; sourceTree = "<group>"; };
+		9DF27D581B079C3B00BF15B7 /* overwriteDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overwriteDefault.png; sourceTree = "<group>"; };
+		9DF27D591B079C3B00BF15B7 /* overwriteHover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overwriteHover.png; sourceTree = "<group>"; };
+		9DF27D5C1B079C4A00BF15B7 /* deleteFileDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteFileDefault.png; sourceTree = "<group>"; };
+		9DF27D5D1B079C4A00BF15B7 /* deleteFileHover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteFileHover.png; sourceTree = "<group>"; };
 		9DFAC8001ABD6E77007658E0 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = ../Classes/Label.cpp; sourceTree = "<group>"; };
 		9DFAC8011ABD6E77007658E0 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Label.h; path = ../Classes/Label.h; sourceTree = "<group>"; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -888,7 +896,11 @@
 				9D9A6F4C1AEF9BE400DEBF64 /* iconPitchWheelPressedNew.png */,
 				9DEEDD571AED488800BB7082 /* saveActiveNew.png */,
 				9DEEDD591AED489400BB7082 /* newActiveNew.png */,
+				9DF27D5C1B079C4A00BF15B7 /* deleteFileDefault.png */,
+				9DF27D5D1B079C4A00BF15B7 /* deleteFileHover.png */,
 				9DEEDD5B1AED489C00BB7082 /* loadActiveNew.png */,
+				9DF27D581B079C3B00BF15B7 /* overwriteDefault.png */,
+				9DF27D591B079C3B00BF15B7 /* overwriteHover.png */,
 				9DEEDD4F1AECF7B900BB7082 /* moveDefaultNew.png */,
 				9D21250B1AEBFDE2007AB0E0 /* deleteDefault.png */,
 				9D21250C1AEBFDE2007AB0E0 /* deleteHover.png */,
@@ -1279,6 +1291,7 @@
 				9D2124A51AE4296A007AB0E0 /* iconPadDefault.png in Resources */,
 				9D2124A31AE4296A007AB0E0 /* iconKnobDefault.png in Resources */,
 				9D2124BC1AE4296A007AB0E0 /* knobVOL15.png in Resources */,
+				9DF27D5E1B079C4A00BF15B7 /* deleteFileDefault.png in Resources */,
 				9D21252A1AEC0DBD007AB0E0 /* SavePopup.png in Resources */,
 				9D2124DA1AE4296A007AB0E0 /* sliderHAT.png in Resources */,
 				9D2124551AE42951007AB0E0 /* btnOFFSimple.png in Resources */,
@@ -1306,6 +1319,7 @@
 				9D2124AB1AE4296A007AB0E0 /* iconSwitchDefault.png in Resources */,
 				9D2124B71AE4296A007AB0E0 /* knobVOL10.png in Resources */,
 				9D2124D81AE4296A007AB0E0 /* sliderBAR.png in Resources */,
+				9DF27D5F1B079C4A00BF15B7 /* deleteFileHover.png in Resources */,
 				9D2124B31AE4296A007AB0E0 /* knobVOL6.png in Resources */,
 				9D2124D11AE4296A007AB0E0 /* panelRight.png in Resources */,
 				9D21245C1AE42951007AB0E0 /* btnSaveHover.png in Resources */,
@@ -1316,6 +1330,7 @@
 				9D2124A71AE4296A007AB0E0 /* iconPianoDefault.png in Resources */,
 				9DEEDD671AED5E2600BB7082 /* rightPanelTongueClosed.png in Resources */,
 				9D2124C81AE4296A007AB0E0 /* modeSnap.png in Resources */,
+				9DF27D5A1B079C3B00BF15B7 /* overwriteDefault.png in Resources */,
 				9D2124B11AE4296A007AB0E0 /* knobVOL4.png in Resources */,
 				9DEEDD681AED5E2600BB7082 /* rightPanelTongueOpened.png in Resources */,
 				9DEEDD501AECF7B900BB7082 /* moveDefaultNew.png in Resources */,
@@ -1334,6 +1349,7 @@
 				9D2124BF1AE4296A007AB0E0 /* knobVOLPOINT.png in Resources */,
 				9DEEDD641AED585D00BB7082 /* leftPanelTongueOpened.png in Resources */,
 				9D2124CB1AE4296A007AB0E0 /* moveDefault.png in Resources */,
+				9DF27D5B1B079C3B00BF15B7 /* overwriteHover.png in Resources */,
 				9D2124AF1AE4296A007AB0E0 /* knobVOL2.png in Resources */,
 				9D2124C01AE4296A007AB0E0 /* leftMenuPanel.png in Resources */,
 				9D2124C91AE4296A007AB0E0 /* modeTouch.png in Resources */,
