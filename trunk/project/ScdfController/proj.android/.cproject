@@ -18,7 +18,7 @@
 					<folderInfo id="0.1230402123." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1911072326" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1911072326.2087917918" name=""/>
-							<builder arguments="${ProjDirPath}/build_native.py -b debug" buildPath="${ProjDirPath}" command="python" id="org.eclipse.cdt.build.core.settings.default.builder.1038735572" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder">
+							<builder arguments="${ProjDirPath}/build_native.py -b release" buildPath="${ProjDirPath}" command="python" id="org.eclipse.cdt.build.core.settings.default.builder.1038735572" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
 								</outputEntries>
@@ -71,6 +71,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="0.1230402123.474320799" name="Android.mk" rcbsApplicability="disable" resourcePath="jni/Android.mk" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="Classes|cocos2d" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Classes"/>
@@ -230,6 +231,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="0.1230402123.1377291156.854711726" name="Android.mk" rcbsApplicability="disable" resourcePath="jni/Android.mk" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="Classes|cocos2d" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Classes"/>

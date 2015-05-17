@@ -1,23 +1,21 @@
-LOCAL_PATH := $(call my-dir)
-ADE_TEST_JNI_DIR := $(LOCAL_PATH)
+ADE_TEST_JNI_DIR := $(call my-dir)
+SCDF_TRUNK := /home/athos/SCDF/trunk
+#SCDF_TRUNK := $(ADE_TEST_JNI_DIR)/../../../..
 
-SCDF_TRUNK:=/home/athos/SCDF/trunk
 BLAS_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/CLAPACK/jni
 FFTW3_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/FFTw3/jni
-ADE_SRC_PATH:=$(SCDF_TRUNK)/../API/src
+ADE_SRC_PATH:=$(SCDF_TRUNK)/ext/ADE_API/API/src
 
-BLAS_BUILD_SHARED:=false
 include $(BLAS_MAKEFILE_PATH)/Android.mk
-
-FFTW3_BUILD_SHARED:=false
 include $(FFTW3_MAKEFILE_PATH)/Android.mk
 
 include $(CLEAR_VARS)
 LOCAL_PATH := $(ADE_SRC_PATH)
 LOCAL_C_INCLUDES := $(ADE_SRC_PATH) $(ADE_SRC_PATH)/headers
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
-LOCAL_SHARED_LIBRARIES := blas fftw3
-#LOCAL_CFLAGS := -DADE_BLAS_IMPLEMENTATION=1 -DADE_FP_PRECISION=1
+LOCAL_SHARED_LIBRARIES := blas fftw3 fftw_threads
+#LOCAL_CFLAGS := -DADE_TARGET_TYPE=3 #ADE_ANDROID 
+#-DADE_BLAS_IMPLEMENTATION=1 -DADE_FP_PRECISION=1
 LOCAL_MODULE    := ade
 LOCAL_SRC_FILES :=  ADE.c \
 					ADE_Bench_Utils.c \
@@ -29,8 +27,13 @@ LOCAL_SRC_FILES :=  ADE.c \
 					ADE_Blow.c \
 					ADE_iir.c \
 					ADE_fir.c \
-					ADE_polyfit.c					
-include $(BUILD_STATIC_LIBRARY)
+					ADE_polyfit.c \
+					ADE_Error_Handler.c \
+					ADE_Snap.c \
+					ADE_fft.c \
+					ADE_nrutil.c			
+include $(BUILD_SHARED_LIBRARY)
+
 
 include $(CLEAR_VARS)
 LOCAL_PATH := $(ADE_TEST_JNI_DIR)

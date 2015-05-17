@@ -81,27 +81,7 @@ LOCAL_SRC_FILES := 	Sensor.cpp \
 					
 include $(BUILD_SHARED_LIBRARY)
 
-# USB AND COCOS2D APP:
 
-#include $(CLEAR_VARS)
-#LOCAL_MODULE    := scdfusb
-#LOCAL_PATH := $(SCDF_SRC_PATH)/android
-#LOCAL_C_INCLUDES += $(SCDF_SRC_PATH)/android/include \
-					$(SCDF_SRC_PATH)/include \
-					$(LIBUSB_INCLUDES)
-					 
-#LOCAL_SHARED_LIBRARIES += usbcustom
-#LOCAL_LDLIBS += -landroid -llog
-#LOCAL_SRC_FILES := 	JniGlue.cpp \
-					UsbHandler.cpp \
-					usb/UsbHelper.cpp \
-					usb/UsbAudioEndpoint.cpp \
-					usb/UsbAudioInterfaces.cpp \
-					usb/UsbMidiInterface.cpp \
-					usb/UsbAudioDevice.cpp \
-					MidiOutConnectionAndroid.cpp
-
-#include $(BUILD_SHARED_LIBRARY)
 
 BLAS_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/CLAPACK/jni
 FFTW3_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/FFTw3/jni
