@@ -189,9 +189,10 @@ void MainScene::UpdateEditButton()
     propertiesPanel->UpdateEditButton(!customPanel->IsActive());
 }
 
-void MainScene::ResetWorkingPanelPos()
+void MainScene::ResetPatchUI()
 {
     customPanel->setPosition(Vec2(-(getContentSize().width/2.0), 3.0*getContentSize().height/2.0));
+    propertiesPanel->UpdateOSCInfo();
 }
 
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type)

@@ -47,7 +47,7 @@ namespace ScdfCtrl
         void UpdateMIDIDevicesMenu();
         WorkingPanel *GetWorkingPanel() { return customPanel.get();}
         void Deserialize(SerializableAppData *appdata);
-        void ResetWorkingPanelPos();
+        void ResetPatchUI();
         CREATE_FUNC(MainScene);
     };
 }
