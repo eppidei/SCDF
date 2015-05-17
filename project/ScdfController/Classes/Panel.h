@@ -14,7 +14,6 @@
 #include "DropDownMenu.h"
 
 #define SUBPANEL_DISTANCE MainScene::GetUnityBase()//20
-#define SUBPANEL_ITEM_HEIGHT 2*MainScene::GetUnityBase()//30.0
 
 namespace ScdfCtrl
 {

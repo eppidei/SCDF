@@ -292,6 +292,7 @@ CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnit);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitWire);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitDsp);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitBlow);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitSnap);
 
 CEREAL_CLASS_VERSION(ScdfCtrl::ControlUnit,0);
 

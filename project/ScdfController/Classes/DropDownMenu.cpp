@@ -14,7 +14,7 @@ using namespace ui;
 
 
 #define MAX_OPENED_MENU_HEIGHT 200.0
-void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
+void DropDownMenu::DoResizeAndScroll(float newHeight, bool disableScrolling)
 {
     parentHeightWithoutMenu=getParent()->getContentSize().height-getContentSize().height;
     auto modifyHeight = ActionTween::create(0.1, "height", getContentSize().height, newHeight);
@@ -29,34 +29,39 @@ void DropDownMenu::ResizeAndScroll(float newHeight, bool disableScrolling)
 
 int DropDownMenu::GetNumItems()
 {
-    int num=0;
-    for (int i=0;i<getItems().size();++i)
-    {
-        if (getItem(i)->isVisible())
-            num++;
-    }
-    return num;
+    return getItems().size();
 }
+
+void DropDownMenu::HideItem(int itemIndex, bool hide)
+{
+    if (itemIndex>=itemsData.size()) return;
+    
+    if ((hide && itemsData[itemIndex].hidden) || (!hide && !itemsData[itemIndex].hidden)) return;
+
+    if (hide)
+        removeItem(itemIndex);
+    else
+        insertCustomItem(CreateElement(itemIndex,SUBPANEL_ITEM_HEIGHT), itemIndex);
+    
+    itemsData[itemIndex].hidden=hide;
+    refreshView();
+    Resize();
+}
+
+void DropDownMenu::Resize()
+{
+    float itemHeight=getItem(0)->getContentSize().height+getItemsMargin();
+    float newHeight=opened ? fmin(itemHeight*GetNumItems(),MAX_OPENED_MENU_HEIGHT) : itemHeight;
+    DoResizeAndScroll(newHeight,!opened);
+}
+
 void DropDownMenu::ToggleOpenMenu()
 {
     if (GetNumItems()<=1) return;
     
     EnableTouchEvents(false);
-    float itemHeight=getItem(0)->getContentSize().height;
-    bool disableScrolling;
-    float newHeight=getContentSize().height;
-    if (opened)
-    {
-        newHeight-=fmin(itemHeight*(GetNumItems()-1),MAX_OPENED_MENU_HEIGHT);
-        disableScrolling=true;
-    }
-    else
-    {
-        newHeight+=fmin(itemHeight*(GetNumItems()-1),MAX_OPENED_MENU_HEIGHT);
-        disableScrolling=false;
-    }
     opened=!opened;
-    ResizeAndScroll(newHeight,disableScrolling);
+    Resize();
 }
 
 void DropDownMenu::SetCallback(DropDownMenuCallback *_callback)
@@ -145,9 +150,9 @@ void DropDownMenu::ScrollToSelected()
 {
     Node *item=getItem(_curSelectedIndex);
     if(NULL==item) return;
-    float elementsHeight=item->getContentSize().height;
-    float innerContainerHeightIncludingNotVisibles=elementsHeight*GetNumItems();
-    getInnerContainer()->setPosition(Vec2(0,-getInnerContainerSize().height+getContentSize().height+(-(getItemsMargin()/2)+(_curSelectedIndex)*(elementsHeight+getItemsMargin()))));
+    float elementsHeight=item->getContentSize().height+getItemsMargin();
+    
+    getInnerContainer()->setPosition(Vec2(0,(getContentSize().height-getInnerContainerSize().height-getItemsMargin()/2.0)+(_curSelectedIndex*elementsHeight)));
 }
 
 DropDownMenu::~DropDownMenu()
@@ -158,71 +163,65 @@ DropDownMenu::~DropDownMenu()
 void DropDownMenu::BeforeInitData(float itemHeight)
 {
     if (itemHeight!=getContentSize().height)
-        ResizeAndScroll(itemHeight, true);
+        DoResizeAndScroll(itemHeight, true);
     removeAllItems();
 }
 
-void DropDownMenu::AfterInitData(int numElements)
+void DropDownMenu::AfterInitData()
 {
-    SetSelectedIndex(0);
     setItemsMargin(GetVerticalMargin());
+    SetSelectedIndex(0);
     refreshView();
     ScrollView::setDirection(Direction::NONE);
 }
 
-bool DropDownMenu::CheckDataSize(std::vector<DropDownMenuData> data)
+void DropDownMenu::InitNullData()
 {
-    if (0==data.size())
-    {
-        Text *model = Text::create("No data",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
-        model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
-        model->ignoreContentAdaptWithSize(false);
-        model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::LEFT);
-        model->setColor(Color3B::WHITE);
-        pushBackCustomItem(model);
-        return false;
-    }
-    return true;
+    Text *model = Text::create("No data",Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
+    model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height));
+    model->ignoreContentAdaptWithSize(false);
+    model->setTextVerticalAlignment(TextVAlignment::CENTER);
+    model->setTextHorizontalAlignment(TextHAlignment::LEFT);
+    model->setColor(Color3B::WHITE);
+    pushBackCustomItem(model);
 }
 
-void DropDownMenu::DoInitData(std::vector<DropDownMenuData> data)
+Widget *DropDownMenu::CreateElement(int itemIndex, int itemHeight)
 {
-    for (int i=0; i<data.size(); i++)
-    {
-        Text *model = Text::create(data[i].text,Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
-        model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width-6,getContentSize().height));
-        model->ignoreContentAdaptWithSize(false);
-        model->setTextVerticalAlignment(TextVAlignment::CENTER);
-        model->setTextHorizontalAlignment(TextHAlignment::LEFT);
-        model->setColor(data[i].c);
-        pushBackCustomItem(model);
-    }
+    Text *model = Text::create(itemsData[itemIndex].text,Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenu),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenu));
+    model->setTouchEnabled(true);
+    model->setContentSize(cocos2d::Size(getContentSize().width-6,itemHeight));
+    model->ignoreContentAdaptWithSize(false);
+    model->setTextVerticalAlignment(TextVAlignment::CENTER);
+    model->setTextHorizontalAlignment(TextHAlignment::LEFT);
+    model->setColor(itemsData[itemIndex].c);
+    return model;
 }
 
-void DropDownColorMenu::DoInitData(std::vector<DropDownMenuData> data)
+void DropDownMenu::DoInitData()
 {
-    for (int i=0; i<data.size(); i++)
-    {
-        Layout *model = Layout::create();
-        model->setTouchEnabled(true);
-        model->setContentSize(cocos2d::Size(getContentSize().width,getContentSize().height/2));
-        model->ignoreContentAdaptWithSize(false);
-        model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-        model->setBackGroundColor(data[i].c);
-        pushBackCustomItem(model);
-    }
+    for (int i=0; i<itemsData.size(); i++)
+        pushBackCustomItem(CreateElement(i,SUBPANEL_ITEM_HEIGHT));
+}
+
+Widget *DropDownColorMenu::CreateElement(int dataIndex, int itemHeight)
+{
+    Layout *model = Layout::create();
+    model->setTouchEnabled(true);
+    model->setContentSize(cocos2d::Size(getContentSize().width,2*itemHeight/3));
+    model->ignoreContentAdaptWithSize(false);
+    model->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+    model->setBackGroundColor(itemsData[dataIndex].c);
+    return model;
 }
 
 void DropDownMenu::InitData(std::vector<DropDownMenuData> data, float itemHeight)
 {
+    itemsData=data;
     BeforeInitData(itemHeight);
-    int numElements=1;
-    if (CheckDataSize(data))
-    {
-        DoInitData(data);
-        numElements=data.size();
-    }
-    AfterInitData(numElements);
+    if (0==data.size())
+        InitNullData();
+    else
+        DoInitData();
+    AfterInitData();
 }
