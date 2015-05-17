@@ -159,8 +159,7 @@ void OSCInfo::PositionElements()
 void OSCInfo::UpdateOSCToggle()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
-    if (NULL==panel->GetCurrentSender()) return;
-    if (panel->GetCurrentSender()->IsOscEnabled())
+    if (NULL!=panel->GetCurrentSender() && panel->GetCurrentSender()->IsOscEnabled())
         oscToggle->loadTextureNormal("btnONSimple.png");
     else
         oscToggle->loadTextureNormal("btnOFFSimple.png");
@@ -168,10 +167,10 @@ void OSCInfo::UpdateOSCToggle()
 
 void OSCInfo::Update()
 {
+    UpdateOSCToggle();
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (panel->GetSelectedItem()==NULL) return;//VISIBILITY_CHECK
     
-    UpdateOSCToggle();
     std::ostringstream os;
     os<<(panel->GetCurrentSender()->GetOscPort());
     oscPort->SetText(os.str());
@@ -187,6 +186,12 @@ void OSCInfo::OnTouchEventBegan(cocos2d::Node *widget)
     {
         case PROPERTIES_OSC_TOGGLE:
         {
+            bool change=true;
+            if (panel->GetSelectedItem()->GetControlUnit()->GetType()!=ControlUnit::Wire)
+                change=CheckIsInAppPurchased((PurchaseProductIndex)panel->GetSelectedItem()->GetControlUnit()->GetType());
+            
+            if (!change) break;
+
             panel->GetCurrentSender()->SetOscEnabled(!panel->GetCurrentSender()->IsOscEnabled());
             UpdateOSCToggle();
             break;
@@ -498,7 +503,14 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
     	// this is used for the button, and the button
     	// sends the max value when pressed
     else if (menu==devices)
-        panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
+    {
+        bool change=true;
+        if (panel->GetSelectedItem()->GetControlUnit()->GetType()!=ControlUnit::Wire)
+            change=CheckIsInAppPurchased((PurchaseProductIndex)panel->GetSelectedItem()->GetControlUnit()->GetType());
+        if (change)
+            panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
+        Update();
+    }
 
     panel->UpdateOSCInfo();
 }
@@ -940,10 +952,8 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
     else if (modes==menu)
     {
         int controlUnitType=menu->GetSelectedIndex();
-//        bool change=true;
-////        if (controlUnitType>0&&!CheckIsInAppPurchased((PurchaseProductIndex)controlUnitType))
-////            change=false;
-//        if (!change) return;
+        if (controlUnitType!=ControlUnit::Wire)
+            CheckIsInAppPurchased((PurchaseProductIndex)controlUnitType);
         panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(menu->GetSelectedIndex()));
         Update();
     }
@@ -969,17 +979,6 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
         case PROPERTIES_ITEMSETTINGS_MASTER:
             panel->GetSelectedItem()->SetMaster(!panel->GetSelectedItem()->IsMaster());
             break;
-//        case PROPERTIES_CONTROLMODE_WIRE:
-//            panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
-//            break;
-//        case PROPERTIES_CONTROLMODE_BLOW:
-//        case PROPERTIES_CONTROLMODE_SNAP:
-//            if (CheckIsInAppPurchased(/*widget->getTag()-PROPERTIES_CONTROLMODE_BASE*/0))
-//                panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(widget->getTag()-PROPERTIES_CONTROLMODE_BASE));
-//            break;
-//        case PROPERTIES_CONTROLMODE_ROLL:
-//        case PROPERTIES_CONTROLMODE_GESTURE:
-//            break;
         case PROPERTIES_ITEMSETTINGS_GROUP:
             group->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;

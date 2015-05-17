@@ -20,9 +20,6 @@ using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased(PurchaseProductIndex index);
-bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
-
 #define DEFAULT_NAME(x) \
         static int counter=0; \
         std::ostringstream os; \
@@ -149,6 +146,17 @@ ItemBase *ItemBase::CreateItem(int id)
 	}
 }
 
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
+void CheckForPurchase(ControlUnit *unit)
+{
+    if (unit->GetType()==ControlUnit::Wire) return;
+
+    if (CheckIsInAppPurchasedNoPrompt((PurchaseProductIndex)unit->GetType())) return;
+    
+    unit->GetSender()->SetOscEnabled(false);
+    unit->GetSender()->SetMidiOutIndex(-1);
+}
+
 ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
 {
 	ItemBase* i = CreateItem(sitem->id);
@@ -163,17 +171,8 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
     i->SetMaster(sitem->isMaster);
     i->setPosition(Vec2(sitem->x,sitem->y));
 
-    bool useControlUnit=true;
-    if (sitem->unit->GetType()>0)
-        useControlUnit=CheckIsInAppPurchasedNoPrompt((PurchaseProductIndex)(sitem->unit->GetType()));
-    
-    if (!useControlUnit)
-    {
-        delete sitem->unit;
-        sitem->unit=ControlUnit::Create(ControlUnit::Wire);
-    }
-
 	i->SetControlUnit(sitem->unit);
+    CheckForPurchase(i->GetControlUnit());
     
     if (i->GetID()==ITEM_KEYBOARD_ID)
         dynamic_cast<ItemKeyboard*>(i)->SetCurrentOctave(sitem->octave);
@@ -248,12 +247,7 @@ void ItemBase::SetControlModeImage()
 void ItemBase::ChangeControlUnit(ControlUnit::Type t)
 {
     if (GetControlUnit()&&GetControlUnit()->GetType()==t) return;
-    
-    bool change=true;
-    if (t>0) change=CheckIsInAppPurchased((PurchaseProductIndex)t);
-    
-    if (change)
-        SetControlUnit(ControlUnit::Create(t));
+    SetControlUnit(ControlUnit::Create(t));
 }
 
 void ItemBase::SetControlUnit(ControlUnit* cu)
@@ -434,24 +428,28 @@ void ItemBase::Select(bool select)
 
 bool ItemBase::OnItemTouchBegan(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (widget==controlImage || widget==label) return false;
+   // if (widget==controlImage || widget==label) return false;
     
-    if (widget->getParent()==control)
+    //if (widget->getParent()==control)
         NotifyEvent(SCDFC_EVENTS_Select_Item);
+    
+    if (controlUnit->GetType()!=ControlUnit::Wire) return false;
     
     dragStartPos=dragPosUpdated=widget->getTouchBeganPosition();
     return true;
 }
 bool ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (widget==controlImage || widget==label) return false;
+    //if (widget==controlImage || widget==label) return false;
+    if (controlUnit->GetType()!=ControlUnit::Wire) return false;
     dragPosUpdated=widget->getTouchMovePosition();
     return true;
 }
 
 bool ItemBase::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
-    if (widget==controlImage || widget==label) return false;
+    //if (widget==controlImage || widget==label) return false;
+    if (controlUnit->GetType()!=ControlUnit::Wire) return false;
     return true;
 }
 
