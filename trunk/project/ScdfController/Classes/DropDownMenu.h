@@ -21,7 +21,8 @@ namespace ScdfCtrl
     {
         cocos2d::Color3B c;
         std::string text;
-        DropDownMenuData(std::string _text, cocos2d::Color3B _c) : text(_text), c(_c) {}
+        bool hidden;
+        DropDownMenuData(std::string _text, cocos2d::Color3B _c) : text(_text), c(_c), hidden(false) {}
     };
     
     class DropDownMenu;
@@ -39,19 +40,21 @@ namespace ScdfCtrl
         float parentHeightWithoutMenu;
         DropDownMenuCallback *callback;
         int lastSelectedIndex;
-        //std::vector<DropDownMenuDataBase> itemsData;
         void ScrollToSelected();
-        void ResizeAndScroll(float newHeight, bool disableScrolling);
+        void Resize();
+        void DoResizeAndScroll(float newHeight, bool disableScrolling);
         void ToggleOpenMenu();
         void BeforeInitData(float itemHeight);
-        void AfterInitData(int numElements);
-        bool CheckDataSize(std::vector<DropDownMenuData> data);
+        void AfterInitData();
+        void InitNullData();
         virtual float GetVerticalMargin() {return 0;}
         void EnableTouchEvents(bool enable) { touchEnabled=enable;}
         int GetNumItems();
+        virtual Widget *CreateElement(int dataIndex, int itemHeight);
     protected:
         DropDownMenu();
-        virtual void DoInitData(std::vector<DropDownMenuData> data);
+        std::vector<DropDownMenuData> itemsData;
+        void DoInitData();
     public:
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         int GetSelectedIndex();
@@ -63,14 +66,14 @@ namespace ScdfCtrl
         void updateTweenAction(float value, const std::string& key);
         ~DropDownMenu();
         template <class DropDownType> static DropDownMenu *CreateMenu(cocos2d::Size s, DropDownMenuCallback *callback);
+        void HideItem(int itemIndex, bool hide);
         CREATE_FUNC(DropDownMenu);
     };
     class DropDownColorMenu : public DropDownMenu
     {
         DropDownColorMenu() : DropDownMenu() {}
-        float GetVerticalMargin() override {return getContentSize().height/2.0;}
-    protected:
-        void DoInitData(std::vector<DropDownMenuData> data) override;
+        float GetVerticalMargin() override {return getContentSize().height/3.0;}
+        Widget *CreateElement(int dataIndex, int itemHeight) override;
     public:
         CREATE_FUNC(DropDownColorMenu);
     };

@@ -772,50 +772,19 @@ void ItemSettings::CreateControls()
     color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
     //create control modes label
-    CreateLabelWithBackground(this, &controlLabel, -1, r, "CONTROL MODE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
+    CreateLabelWithBackground(this, &controlLabel, PROPERTIES_ITEMSETTINGS_MODES, r, "CONTROL MODE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
     addChild(controlLabel,6);
     
     //create control modes control
-//
-//    const float numButtons=5.0;
-//    const float numbButtonsPerRow=3.0;
-//    const float numButtonsPerColumn=numButtons-numbButtonsPerRow;
-//    const float xoffset=6.0;
-//    const float yoffset=8.0;
-//    float bSize=(r.size.width-((numbButtonsPerRow+1.0)*xoffset))/numbButtonsPerRow;
-//    cocos2d::Size buttonSize(bSize, bSize);
-//    cocos2d::Rect rToolbar(0,0,r.size.width,buttonSize.height*(numButtonsPerColumn)+(numButtonsPerColumn+1.0)*yoffset);
-//    modes = Toolbar::CreateToolbar(rToolbar, xoffset, yoffset);
-//    addChild(modes,7);
-//    color->setBackGroundColor(Colors::Instance()->GetUIColor(Colors::UIColorsId::SubpanelGenericItem));
-//    
-//    std::vector<std::string> images;
-//    images.push_back("modeTouch.png");
-//    images.push_back("modeTouch.png");
-//    modes->AddButton(PROPERTIES_CONTROLMODE_WIRE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-//    images.clear();
-//    images.push_back("modeBlow.png");
-//    images.push_back("modeBlow.png");
-//    modes->AddButton(PROPERTIES_CONTROLMODE_BLOW, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-//    images.clear();
-//    images.push_back("modeSnap.png");
-//    images.push_back("modeSnap.png");
-//    modes->AddButton(PROPERTIES_CONTROLMODE_SNAP, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-//    images.clear();
-//    images.push_back("modeRoll.png");
-//    images.push_back("modeRoll.png");
-//    modes->AddButton(PROPERTIES_CONTROLMODE_ROLL, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
-//    images.clear();
-//    images.push_back("modeGesture.png");
-//    images.push_back("modeGesture.png");
-//    modes->AddButton(PROPERTIES_CONTROLMODE_GESTURE, buttonSize, images, CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 
     modes = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(modes,7);
     dropDownData.clear();
     dropDownData.push_back(DropDownMenuData("Touch",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-//    dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+#ifdef _DEBUG
+    dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+#endif
     //dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
     
@@ -916,15 +885,11 @@ void ItemSettings::Update()
     orientation->SetSelectedIndex(orientationIndex);
     group->SetSelectedIndex(item->GetGroupID()+1);
     if (item->IsMaster())
-    {
-       // masterButton->loadTextureNormal("groupMasterBtnHover.png");
         masterButton->setColor(Colors::Instance()->GetUIColor(Colors::WidgetBackGround));
-    }
-    else{
-    //    masterButton->loadTextureNormal("groupMasterBtnDefault.png");
+    else
         masterButton->setColor(Color3B::WHITE);
-    }
-    //modes->getItem(2)->setVisible(dynamic_cast<ItemSlider*>(item)==NULL);
+
+    modes->HideItem(ControlUnit::Snap, dynamic_cast<ItemSlider*>(item)!=NULL);
 
     CheckShowElements();
     
@@ -984,6 +949,9 @@ void ItemSettings::OnTouchEventBegan(cocos2d::Node *widget)
             break;
         case PROPERTIES_ITEMSETTINGS_COLOR:
             color->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+            break;
+        case PROPERTIES_ITEMSETTINGS_MODES:
+            modes->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         case PROPERTIES_ITEMSETTINGS_ORIENT:
             orientation->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
