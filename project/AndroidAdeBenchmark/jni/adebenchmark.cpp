@@ -36,19 +36,19 @@ int TestAde()
 
 	char test_case[20]="sbmv";
 
-    ADE_API_RET_T ret = ADE_DEFAULT_RET;
+    //ADE_API_RET_T ret = ADE_DEFAULT_RET;
     ADE_UINT32_T i = 0;
 
     if (!strcmp(test_case,"axpy"))
     {
-		ADE_Blas_level1_Init(&p_Blas_L1,ADE_REAL);
-		ADE_Blas_level1_setALPHA(p_Blas_L1,&alpha);
-		ADE_Blas_level1_setN(p_Blas_L1,N);
-		ADE_Blas_level1_setINCX(p_Blas_L1,incx);
-		ADE_Blas_level1_setINCY(p_Blas_L1,incy);
-		ADE_Blas_level1_setX(p_Blas_L1,x);
-		ADE_Blas_level1_setY(p_Blas_L1,y);
-		ADE_Blas_level1_Print(p_Blas_L1);
+//		ADE_Blas_level1_Init(&p_Blas_L1,ADE_REAL);
+//		ADE_Blas_level1_setALPHA(p_Blas_L1,&alpha);
+//		ADE_Blas_level1_setN(p_Blas_L1,N);
+//		ADE_Blas_level1_setINCX(p_Blas_L1,incx);
+//		ADE_Blas_level1_setINCY(p_Blas_L1,incy);
+//		ADE_Blas_level1_setX(p_Blas_L1,x);
+//		ADE_Blas_level1_setY(p_Blas_L1,y);
+//		ADE_Blas_level1_Print(p_Blas_L1);
 		ADE_Blas_level1_axpy(p_Blas_L1);
 		ADE_Blas_level1_Release(p_Blas_L1);
 		PRINT_ARRAY(y,i,DIM,"%f");
@@ -60,20 +60,20 @@ int TestAde()
 	else if (!strcmp(test_case,"sbmv"))
 	{
 		/*Init*/
-		ADE_Blas_level2_Init(&p_Blas_L2,ADE_REAL);
+//		ADE_Blas_level2_Init(&p_Blas_L2,ADE_REAL);
 		/*Config*/
 		ADE_Blas_Level2_SetUplo(p_Blas_L2,'L');
 		ADE_Blas_Level2_SetN(p_Blas_L2,DIM);
 		ADE_Blas_Level2_SetK(p_Blas_L2,k);
-		ADE_Blas_level2_SetAlpha(p_Blas_L2,&alpha);
+//		ADE_Blas_level2_SetAlpha(p_Blas_L2,&alpha);
 		ADE_Blas_level2_SetA(p_Blas_L2,A);
 		ADE_Blas_Level2_SetLda(p_Blas_L2,k+1);
 		ADE_Blas_level2_SetX(p_Blas_L2,x);
-		ADE_Blas_Level2_SetIncx(p_Blas_L2,1);
-		ADE_Blas_level2_SetBeta(p_Blas_L2,&beta);
+//		ADE_Blas_Level2_SetIncx(p_Blas_L2,1);
+//		ADE_Blas_level2_SetBeta(p_Blas_L2,&beta);
 		ADE_Blas_level2_SetY(p_Blas_L2,y);
-		ADE_Blas_Level2_SetIncy(p_Blas_L2,1);
-		ADE_Blas_level2_Print(p_Blas_L2);
+//		ADE_Blas_Level2_SetIncy(p_Blas_L2,1);
+//		ADE_Blas_level2_Print(p_Blas_L2);
 
 		/*Process*/
 		ADE_Blas_level2_sbmv(p_Blas_L2);
@@ -88,7 +88,7 @@ int TestAde()
 	{
 		return -1;
 	}
-	return ret;
+	return 0;//ret;
 }
 
 #define FNAME "/data/data/ade.benchmark/files/benchlog"
