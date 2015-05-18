@@ -31,30 +31,29 @@ bool ScdfCtrl::ControlUnitPatch::LoadFromFile(std::string patchName)
 	// deserialize the vector of temporary serializable objects
 	// for each element, create the corresponding item
 
-	std::vector<SerializableItemData> sItems;
-    SerializableAppData appdata(mainScene);
+    SerializablePatchData patchData(mainScene);
     
 	std::ifstream stream( file );
     if (!stream) return false;
 	//std::stringstream stream;
 	{
 		cereal::XMLInputArchive inArchive(stream);
-        //inArchive(sItems, appdata);
-        try{
-            inArchive( cereal::make_nvp("SerializableItemData", sItems) );
-        }
-        catch(...){}
-        try{
-            inArchive( cereal::make_nvp("SerializableAppData", appdata) );
-        }
-        catch(...){}
+        inArchive(patchData);
+////        try{
+////            inArchive( cereal::make_nvp("SerializableItemData", sItems) );
+////        }
+////        catch(...){}
+//        try{
+//            inArchive( cereal::make_nvp("SerializablePatchData", patchData) );
+//        }
+//        catch(...){}
 	}
 
-	for (int i=0; i<sItems.size(); i++)
+	for (int i=0; i<patchData.sItems.size(); i++)
 	{
-		items.push_back(ItemBase::DeserializeItem(&sItems[i]));
+		items.push_back(ItemBase::DeserializeItem(&patchData.sItems[i]));
 	}
-    mainScene->Deserialize(&appdata);
+    mainScene->Deserialize(&patchData);
 	return true;
 }
 
@@ -70,19 +69,19 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 
 	LOGD("Save patch as %s",file.c_str());
 
-	std::vector<SerializableItemData> sItems;
-    SerializableAppData appdata(mainScene);
+//	std::vector<SerializableItemData> sItems;
+    SerializablePatchData patchData(mainScene);
 
 	for (int i=0; i<items.size(); i++)
-		sItems.push_back( SerializableItemData(items[i]) );
+		patchData.sItems.push_back( SerializableItemData(items[i]) );
 
 	std::ofstream stream( file );
 	//std::stringstream stream;
 	{
 		cereal::XMLOutputArchive outArchive(stream);
-        //outArchive(sItems, appdata);
-        outArchive( cereal::make_nvp("SerializableItemData", sItems) );
-        outArchive( cereal::make_nvp("SerializableAppData", appdata) );
+        outArchive(patchData);
+//        outArchive( cereal::make_nvp("SerializableItemData", sItems) );
+//        outArchive( cereal::make_nvp("SerializablePatchData", patchData) );
 	}
 
 	//LOGD("YO - %s",stream.str().c_str());
@@ -95,7 +94,7 @@ bool ScdfCtrl::ControlUnitPatch::SaveToFile(std::string patchName)
 	return true;
 }
 
-ScdfCtrl::SerializableAppData::SerializableAppData(MainScene *scene)
+ScdfCtrl::SerializablePatchData::SerializablePatchData(MainScene *scene)
 {
     patch_x=scene->GetWorkingPanel()->getPositionX();
     patch_y=scene->GetWorkingPanel()->getPositionY();

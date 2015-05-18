@@ -15,7 +15,7 @@ namespace ScdfCtrl
     class PropertiesPanel;
     class ItemBase;
     class LoadSavePanel;
-    class SerializableAppData;
+    class SerializablePatchData;
 
     class MainScene : public cocos2d::Layer, public Scdf::MidiDeviceMenuListener
     {
@@ -46,7 +46,7 @@ namespace ScdfCtrl
         void UpdateEditButton();
         void UpdateMIDIDevicesMenu();
         WorkingPanel *GetWorkingPanel() { return customPanel.get();}
-        void Deserialize(SerializableAppData *appdata);
+        void Deserialize(SerializablePatchData *appdata);
         void ResetPatchUI();
         CREATE_FUNC(MainScene);
     };
