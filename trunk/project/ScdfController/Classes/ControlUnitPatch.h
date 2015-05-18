@@ -96,21 +96,25 @@ public:
     }
 };
 
-class SerializableAppData {
-    
+class SerializablePatchData
+{
 public:
     float patch_x;
     float patch_y;
+    
+    std::vector<SerializableItemData> sItems;
     
     template<class Archive>	void serialize(Archive & ar, std::uint32_t const version)
     {
         ar(CEREAL_NVP(patch_x));
         ar(CEREAL_NVP(patch_y));
+        
+        ar( cereal::make_nvp("SerializableItemData", sItems) );
     }
     
-    SerializableAppData(MainScene *wPanel);
+    SerializablePatchData(MainScene *wPanel);
     
-    SerializableAppData()
+    SerializablePatchData()
     {
         patch_x = 0;
         patch_y = 0;
@@ -200,8 +204,8 @@ public:
 
 } // namespace end
 
-CEREAL_CLASS_VERSION(ScdfCtrl::SerializableItemData,0);
-CEREAL_CLASS_VERSION(ScdfCtrl::SerializableAppData,0);
+//CEREAL_CLASS_VERSION(ScdfCtrl::SerializableItemData,0);
+CEREAL_CLASS_VERSION(ScdfCtrl::SerializablePatchData,0);
 CEREAL_CLASS_VERSION(ScdfCtrl::CerealTest,1); // change version when you modify struct
 // Object versioning, more at:
 // http://uscilab.github.io/cereal/assets/doxygen/group__Utility.html
