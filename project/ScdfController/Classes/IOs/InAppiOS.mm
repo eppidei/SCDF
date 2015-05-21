@@ -538,7 +538,7 @@ static InAppPurchaseController purchaseController;
 }
 - (void)requestDidFinish:(SKRequest *)request
 {
-    NSLog(@"request:(SKRequest *)request didFailWithError:(NSError *)error");
+    NSLog(@"requestDidFinish:(SKRequest *)request");
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
