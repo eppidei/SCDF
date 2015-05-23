@@ -56,24 +56,6 @@ void Colors::InitUIColors()
         theUIColors.push_back(scdfc_ui_Colors[i]);
 }
 
-void Colors::InitItemsColors()
-{
-    cocos2d::Color3B scdfc_items_Colors[]={
-        Color3B::WHITE,
-        Color3B::YELLOW,
-        Color3B::BLUE,
-        Color3B::GREEN,
-        Color3B::RED,
-        Color3B::MAGENTA,
-        Color3B::BLACK,
-        Color3B::ORANGE,
-        Color3B::GRAY
-    };
-    
-    for(int i=0; i<ItemsColorsId_Count; ++i)
-        theItemsColors.push_back(scdfc_items_Colors[i]);
-}
-
 Colors::Colors()
 {
     InitItemsColors();

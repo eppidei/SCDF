@@ -320,6 +320,7 @@ Node *ModalPanel::CreatePanel()
     text->setColor(Colors::Instance()->GetUIColor(Colors::ModalPanelText));
     
     addChild(panel);
+    Director::getInstance()->getRunningScene()->addChild(this);
     return panel;
 }
 

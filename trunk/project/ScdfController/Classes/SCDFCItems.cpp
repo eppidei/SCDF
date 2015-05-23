@@ -189,7 +189,7 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
     item->CreateItemBaseElements();
     item->GetLayoutManager()->SetMagValue(0);
     item->Create();
-    item->SetColor(Colors::ItemsColorsId::Orange);
+    item->SetColor(Colors::ItemsColorsId::DarkGrey);
     return item;
 }
 
