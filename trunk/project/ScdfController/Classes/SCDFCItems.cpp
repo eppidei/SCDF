@@ -189,12 +189,11 @@ template <class ItemType> ItemBase *ItemBase::CreateItem()
     item->CreateItemBaseElements();
     item->GetLayoutManager()->SetMagValue(0);
     item->Create();
-    item->SetColor(Colors::ItemsColorsId::DarkGrey);
+    item->SetColor(Colors::ItemsColorsId::GreenUI);
     return item;
 }
 
 void ItemBase::visit(Renderer *renderer, const Mat4& parentTransform, uint32_t parentFlags)
-//void ItemBase::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
 {
     Layout::visit(renderer, parentTransform, parentFlags);
     if (updateUIDeferred)

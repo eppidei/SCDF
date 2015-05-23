@@ -293,7 +293,6 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                     {
                         SaveAfterNewPanel *p=SaveAfterNewPanel::create();
                         p->SetCallback(customPanel.get());
-                        addChild(p,100);
                     }
                 }
                     break;
@@ -304,7 +303,6 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                     
                     SavePanel *p=SavePanel::create();
                     p->SetCallback(customPanel.get());
-                    addChild(p,100);
                 }
                     break;
                 case MAIN_BUTTON_LOAD:
@@ -322,7 +320,6 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                         p->SetText("No patches to load");
                     }
                     p->SetCallback(customPanel.get());
-                    addChild(p,100);
                 }
                     break;
                 default:

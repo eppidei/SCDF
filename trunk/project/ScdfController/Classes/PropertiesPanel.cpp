@@ -32,7 +32,7 @@ void CheckControlUnitPurchased(ControlUnit::Type cType)
         if (!CheckIsInAppPurchased((PurchaseProductIndex)cType))
         {
             ModalPanel *p=ModalPanel::create();
-            p->SetText("You can try the control type, but you cannot use it with the MIDI/OSC sender");
+            p->SetText("You can try the control type,\nbut you cannot use it with the MIDI/OSC sender");
         }
     }
 }
@@ -731,7 +731,9 @@ void ItemSettings::PositionElements()
     DoPosition(nameLabel, xOffset, yPos);
     DoPosition(name, xOffset, yPos);
     DoPosition(colorLabel, xOffset, yPos);
+    yPos-=SUBPANEL_ITEM_HEIGHT/3;
     DoPosition(color, xOffset, yPos);
+    yPos-=SUBPANEL_ITEM_HEIGHT/3;
     DoPosition(controlLabel, xOffset, yPos);
     DoPosition(modes, xOffset, yPos);
     DoPosition(groupLabel, xOffset, yPos);
@@ -783,7 +785,7 @@ void ItemSettings::CreateControls()
     for (int i=0;i<Colors::Instance()->CountItemsColor();++i)
         dropDownData.push_back(DropDownMenuData("",Colors::Instance()->GetItemsColor((Colors::ItemsColorsId)i)));
     
-    color->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    color->InitData(dropDownData, 2.0*SUBPANEL_ITEM_HEIGHT/3.0);
     
     //create control modes label
     CreateLabelWithBackground(this, &controlLabel, PROPERTIES_ITEMSETTINGS_MODES, r, "CONTROL MODE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));

@@ -83,7 +83,7 @@ int Colors::GetFontSize(FontsId fID)
             size=26;
             break;
         case PopupPanelText:
-            size=32;
+            size=28;
             break;
         default:
             break;

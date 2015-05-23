@@ -44,18 +44,21 @@ namespace ScdfCtrl
         void Resize();
         void DoResizeAndScroll(float newHeight, bool disableScrolling);
         void ToggleOpenMenu();
-        void BeforeInitData(float itemHeight);
+        void BeforeInitData();
         void AfterInitData();
         void InitNullData();
         virtual float GetVerticalMargin() {return 0;}
         void EnableTouchEvents(bool enable) { touchEnabled=enable;}
         int GetNumItems();
-        virtual Widget *CreateElement(int dataIndex, int itemHeight);
+        virtual Widget *CreateElement(int dataIndex);
     protected:
+        float itemHeight;
         DropDownMenu();
         std::vector<DropDownMenuData> itemsData;
         void DoInitData();
         virtual void OnToggleOpenMenu();
+        void handleMoveLogic(cocos2d::Touch *touch) override;
+        void handleReleaseLogic(cocos2d::Touch *touch) override;
     public:
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         int GetSelectedIndex();
@@ -68,13 +71,17 @@ namespace ScdfCtrl
         ~DropDownMenu();
         template <class DropDownType> static DropDownMenu *CreateMenu(cocos2d::Size s, DropDownMenuCallback *callback);
         void HideItem(int itemIndex, bool hide);
+        void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unusedEvent) override;
+        void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unusedEvent) override;
+
+        void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *unusedEvent) override;
         CREATE_FUNC(DropDownMenu);
     };
     class DropDownColorMenu : public DropDownMenu
     {
         DropDownColorMenu() : DropDownMenu() {}
-        float GetVerticalMargin() override {return getContentSize().height/3.0;}
-        Widget *CreateElement(int dataIndex, int itemHeight) override;
+        float GetVerticalMargin() override {return itemHeight/2.0;}
+        Widget *CreateElement(int dataIndex) override;
     protected:
         void OnToggleOpenMenu(){}
     public:
