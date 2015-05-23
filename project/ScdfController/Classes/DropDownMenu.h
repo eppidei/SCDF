@@ -55,6 +55,7 @@ namespace ScdfCtrl
         DropDownMenu();
         std::vector<DropDownMenuData> itemsData;
         void DoInitData();
+        virtual void OnToggleOpenMenu();
     public:
         void OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType type);
         int GetSelectedIndex();
@@ -74,6 +75,8 @@ namespace ScdfCtrl
         DropDownColorMenu() : DropDownMenu() {}
         float GetVerticalMargin() override {return getContentSize().height/3.0;}
         Widget *CreateElement(int dataIndex, int itemHeight) override;
+    protected:
+        void OnToggleOpenMenu(){}
     public:
         CREATE_FUNC(DropDownColorMenu);
     };

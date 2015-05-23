@@ -21,7 +21,21 @@ using namespace cocos2d;
 using namespace ui;
 
 bool CheckIsInAppPurchased(PurchaseProductIndex index);
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 
+void CheckControlUnitPurchased(ControlUnit::Type cType)
+{
+    if (cType==ControlUnit::Wire) return;
+    
+    if(!CheckIsInAppPurchasedNoPrompt((PurchaseProductIndex)cType))
+    {
+        if (!CheckIsInAppPurchased((PurchaseProductIndex)cType))
+        {
+            ModalPanel *p=ModalPanel::create();
+            p->SetText("You can try the control type, but you cannot use it with the MIDI/OSC sender");
+        }
+    }
+}
 #define VISIBILITY_CHECK \
         if (NULL==panel->GetSelectedItem()) \
         {   \
@@ -916,10 +930,9 @@ void ItemSettings::OnDropDownSelectionChange(DropDownMenu *menu)
     }
     else if (modes==menu)
     {
-        int controlUnitType=menu->GetSelectedIndex();
-        if (controlUnitType!=ControlUnit::Wire)
-            CheckIsInAppPurchased((PurchaseProductIndex)controlUnitType);
-        panel->GetSelectedItem()->ChangeControlUnit((ControlUnit::Type)(menu->GetSelectedIndex()));
+        ControlUnit::Type controlUnitType=(ControlUnit::Type)menu->GetSelectedIndex();
+        CheckControlUnitPurchased(controlUnitType);
+        panel->GetSelectedItem()->ChangeControlUnit(controlUnitType);
         Update();
     }
     

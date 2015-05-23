@@ -55,12 +55,21 @@ void DropDownMenu::Resize()
     DoResizeAndScroll(newHeight,!opened);
 }
 
+void DropDownMenu::OnToggleOpenMenu()
+{
+    for(int i=0;i<getItems().size();++i)
+        getItem(i)->setColor(Colors::Instance()->GetUIColor(Colors::DropDownText));
+    if (opened)
+        getItem(_curSelectedIndex)->setColor(Color3B::BLACK);
+}
+
 void DropDownMenu::ToggleOpenMenu()
 {
     if (GetNumItems()<=1) return;
     
     EnableTouchEvents(false);
     opened=!opened;
+    OnToggleOpenMenu();
     Resize();
 }
 
