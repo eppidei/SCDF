@@ -278,6 +278,7 @@ bool ModalPanel::init()
 
     mainPanel=CreatePanel();
    // addChild(mainPanel,0,1);
+    Director::getInstance()->getRunningScene()->addChild(this);
     mainPanel->setPosition(Vec2(getContentSize().width/2.0,2.0*getContentSize().height/3.0));
     Layout *mainLayout=dynamic_cast<Layout*>(mainPanel);
     if (mainLayout!=NULL)
@@ -320,7 +321,6 @@ Node *ModalPanel::CreatePanel()
     text->setColor(Colors::Instance()->GetUIColor(Colors::ModalPanelText));
     
     addChild(panel);
-    Director::getInstance()->getRunningScene()->addChild(this);
     return panel;
 }
 
