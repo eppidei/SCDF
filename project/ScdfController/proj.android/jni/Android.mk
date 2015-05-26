@@ -102,7 +102,6 @@ LOCAL_SHARED_LIBRARIES := blas fftw3 fftw_threads
 #-DADE_BLAS_IMPLEMENTATION=1 -DADE_FP_PRECISION=1
 LOCAL_MODULE    := ade
 LOCAL_SRC_FILES :=  ADE.c \
-					ADE_Bench_Utils.c \
 					ADE_blas_level1.c \
 					ADE_blas_level2.c \
 					ADE_blas_level3.c \
@@ -116,6 +115,8 @@ LOCAL_SRC_FILES :=  ADE.c \
 					ADE_Snap.c \
 					ADE_fft.c \
 					ADE_nrutil.c			
+					#ADE_Bench_Utils.c \
+					
 include $(BUILD_SHARED_LIBRARY)
 
 

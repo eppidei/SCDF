@@ -15,6 +15,7 @@
 #include "ControlUnit.h"
 #include "MultiSender.h"
 #include "ScdfSensorAPI.h"
+#include "InAppPurchase.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;
@@ -146,7 +147,6 @@ ItemBase *ItemBase::CreateItem(int id)
 	}
 }
 
-bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 void CheckForPurchase(ControlUnit *unit)
 {
     if (unit->GetType()==ControlUnit::Wire) return;
