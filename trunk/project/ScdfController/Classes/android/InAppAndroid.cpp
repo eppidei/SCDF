@@ -5,12 +5,14 @@
  *      Author: athos
  */
 
-bool CheckIsInAppPurchased(int index)
+#include "InAppPurchase.h"
+
+bool CheckIsInAppPurchased(PurchaseProductIndex index)
 {
 	return true;
 }
 
-bool CheckIsInAppPurchasedNoPrompt(int index)
+bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index)
 {
 	return true;
 }

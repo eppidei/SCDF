@@ -9,13 +9,12 @@
 #include "SCDFCItems.h"
 #include "MultiSender.h"
 #include "OsUtilities.h"
+#include "InAppPurchase.h"
 
 using namespace ScdfCtrl;
 USING_NS_CC;
 using namespace ui;
 
-bool CheckIsInAppPurchased(PurchaseProductIndex index);
-bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 
 int MainScene::gridIndex=0;
 std::vector<float> MainScene::gridUnity;

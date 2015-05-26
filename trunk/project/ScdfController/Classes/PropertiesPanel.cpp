@@ -15,13 +15,11 @@
 #include "MultiSender.h"
 #include "SCDFCItems.h"
 #include "OsUtilities.h"
+#include "InAppPurchase.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
-
-bool CheckIsInAppPurchased(PurchaseProductIndex index);
-bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index);
 
 void CheckControlUnitPurchased(ControlUnit::Type cType)
 {
