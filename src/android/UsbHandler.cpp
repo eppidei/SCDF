@@ -15,6 +15,7 @@ bool UsbHandler::InitClass()
 	if (!clazz) return false;
 	tryOpeningFirstUsbDevice = Jni::FindStaticMethod("TryOpeningFirstUsbDevice","()Z",clazz,env);
 	if (!tryOpeningFirstUsbDevice) return false;
+	LOGI("Finding java methods for native USB handler");
 	getDevice = Jni::FindStaticMethod("GetDevice","(I)J",clazz,env);
 	if (!getDevice) return false;
 	getNumOpenDevices = Jni::FindStaticMethod("GetNumOpenDevices","()I",clazz,env);
@@ -47,7 +48,7 @@ int UsbHandler::GetNumOpenDevices()
 {
 	if (!InitClass()) return NULL;
 	JNIEnv* env = Jni::Env();
-	jint res = env->CallStaticIntMethod(GetClass(),getDevice);
+	jint res = env->CallStaticIntMethod(GetClass(),getNumOpenDevices);
 	jboolean exc = Jni::CheckForException(__PRETTY_FUNCTION__,env);
 	return exc ? 0 : res;
 }

@@ -67,12 +67,12 @@ public class UsbHandler {
 	/* Notify native entities that asked to know about usb events */	
 	private static native void CallNativeListeners(int deviceId, int evCode);
 			
-	public int GetNumOpenDevices()
+	public static int GetNumOpenDevices()
 	{
 		return openDevices.size();
 	}
 	
-	public long GetDevice(int index)
+	public static long GetDevice(int index)
 	{
 		if (index <= openDevices.size()) return 0;
 		return openDevices.get(index).nativeHandle;
