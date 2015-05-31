@@ -26,16 +26,21 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.cpp;
 
+import it.scdf.controller.PurchaseManager;
+import it.scdf.controller.PurchaseManager.PurchaseListener;
+import it.scdf.framework.PrefManager;
 import it.scdf.framework.UsbHandler;
 import it.scdf.framework.ForegroundActivity;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class AppActivity extends Cocos2dxActivity {
+public class AppActivity extends Cocos2dxActivity implements PurchaseListener {
 	
 	static
 	{
@@ -54,6 +59,8 @@ public class AppActivity extends Cocos2dxActivity {
         super.onCreate(savedInstanceState);
         ForegroundActivity.Set(this);
         UsbHandler.Setup(this);
+        PrefManager.Setup(this);
+        PurchaseManager.Get().StartSetup(this,this);
     }
     
     @Override
@@ -61,8 +68,10 @@ public class AppActivity extends Cocos2dxActivity {
     {
         super.onDestroy();
         ForegroundActivity.Detach(this);
+        PurchaseManager.Get().Dispose();
+       
     }
-	
+    
     @Override
     public Cocos2dxGLSurfaceView onCreateView()
     {
@@ -70,5 +79,33 @@ public class AppActivity extends Cocos2dxActivity {
     	glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
     	return glSurfaceView;
     } 
-	
+    
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (PurchaseManager.Get().HandleActivityResult(requestCode, resultCode, data)) {
+			Log.d("scdfctrl activity","activity result was related to billing and has been handled accordingly");
+			return;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void OnPurchaseFailed(String itemName, String message)
+	{
+		AlertDialog.Builder bld = new AlertDialog.Builder(this);
+		bld.setTitle("Purchase Error").setMessage("Purchase failed for item: "+itemName+"\n"+message);
+		bld.setNegativeButton("Ok",null);
+		bld.create().show();
+	}
+
+	@Override
+	public void OnItemPurchaseStateChange(String itemName, int state)
+	{
+		if (state!=PurchaseManager.PURCHASED) return;
+		AlertDialog.Builder bld = new AlertDialog.Builder(this);
+		bld.setTitle("Purchase success").setMessage("Item "+itemName+"has been purchased!\nYou may have to restart the app to see the changes");
+		bld.setNegativeButton("Ok",null);
+		bld.create().show();
+	}
 }
