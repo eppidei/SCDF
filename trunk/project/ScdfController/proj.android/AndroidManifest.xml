@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.scdf.controller"
-      android:versionCode="1"
-      android:versionName="1.0"
+      package="it.fuzone.controller"
+      android:versionCode="10000011" 
+      android:versionName="1.0.0"
       android:installLocation="auto">
 
+    <!-- versionCode: vvvbbbbp (v: version, b: build number, p: platform (1=armv7) -->
+    
     <uses-sdk android:minSdkVersion="10"
         android:targetSdkVersion="21" />
     <uses-feature android:glEsVersion="0x00020000" />
