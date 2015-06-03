@@ -84,6 +84,7 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
 
     //LOGD("UDP SENDER - actually send %d bytes to %s [%d]",size,address.c_str(),portBase);
     try {
+        assert(osc::IsMultipleOf4(size));
         transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
     }
     catch (const std::runtime_error& error)
