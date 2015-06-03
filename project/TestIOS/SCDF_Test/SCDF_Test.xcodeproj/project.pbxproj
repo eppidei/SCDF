@@ -27,6 +27,7 @@
 		9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
 		9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
 		9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
+		9DC974A31B1F91E0001EDADB /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC974A21B1F91E0001EDADB /* ScdfSensorAPI.cpp */; };
 		A71B7D8C1A6C292500BEC022 /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A71B7D8B1A6C292500BEC022 /* Receiver.cpp */; };
 		CC5DAC9D1A6C2C4300AFDF5A /* AudioWaveView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
@@ -91,6 +92,7 @@
 		9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
 		9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
 		9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
+		9DC974A21B1F91E0001EDADB /* ScdfSensorAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfSensorAPI.cpp; path = ../../../../src/ScdfSensorAPI.cpp; sourceTree = "<group>"; };
 		A71B7D8B1A6C292500BEC022 /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../../../src/Receiver.cpp; sourceTree = "<group>"; };
 		CC5DAC9B1A6C2C4300AFDF5A /* AudioWaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioWaveView.h; sourceTree = SOURCE_ROOT; };
 		CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioWaveView.mm; sourceTree = SOURCE_ROOT; };
@@ -221,6 +223,7 @@
 		DC151391194487A100DC7BF7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9DC974A21B1F91E0001EDADB /* ScdfSensorAPI.cpp */,
 				A71B7D8B1A6C292500BEC022 /* Receiver.cpp */,
 				9D56F87919634F7F00AD182A /* PipesManager.cpp */,
 				DC2BC2C2195C283A0011521F /* SensorsManager.h */,
@@ -437,6 +440,7 @@
 				9D5E2217194C870700288DD2 /* Harvester.cpp in Sources */,
 				DCE8BEAE194393B300D283E8 /* main.m in Sources */,
 				9D5E223A194DE15A00288DD2 /* UdpSocket.cpp in Sources */,
+				9DC974A31B1F91E0001EDADB /* ScdfSensorAPI.cpp in Sources */,
 				9D9F54211944AC8900EB7E48 /* SensorStandard.cpp in Sources */,
 				9D9F54261944BCED00EB7E48 /* SensorAudioInputIosImpl.mm in Sources */,
 				9D5E22C7194E18DA00288DD2 /* UDPSendersManager.cpp in Sources */,
@@ -566,12 +570,18 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"SCDF_TEST=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$HOME/Documents/SCDF/src/include,
-					$HOME/Documents/SCDF/src/ios/include,
-					$HOME/Documents/SCDF/lib/oscpack_1_1_0,
+					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
+					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					"$HOME/Documents/SCDF/trunk/lib/cereal-1.1.0/include",
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -595,12 +605,14 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "SCDF_TEST=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$HOME/Documents/SCDF/src/include,
-					$HOME/Documents/SCDF/src/ios/include,
-					$HOME/Documents/SCDF/lib/oscpack_1_1_0,
+					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
+					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					"$HOME/Documents/SCDF/trunk/lib/cereal-1.1.0/include",
 				);
 				INFOPLIST_FILE = "SCDF_Test/SCDF_Test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
