@@ -170,7 +170,7 @@ void ControlUnitDsp::Init(s_int32 numFrames, s_int32 rate)
 {
     if (ADEcontext) return;
     ADE_Init(&ADEcontext, GetAlgoFlag(), numFrames, rate);
-    ADE_Configure_params(ADEcontext, GetAlgoFlag());
+    ADE_Configure_params(ADEcontext, GetAlgoFlag(),rate);
 }
 
 void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorType packetType, ADE_SCDF_Input_Int_T &sensorData)
