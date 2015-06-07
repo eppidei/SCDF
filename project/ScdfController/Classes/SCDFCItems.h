@@ -58,6 +58,7 @@ namespace ScdfCtrl
         void CreateItemBaseElements();
         void PlaceItemBaseElements();
         void SetControlModeImage();
+        void CheckForSensorExists();
         std::unique_ptr<ItemUIUpdater> updater;
         
         virtual void SetControlUnitReceiverType() {}

@@ -152,6 +152,7 @@
 		9DC821351AF807C500712B97 /* OpenSans-CondLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821321AF7FA9800712B97 /* OpenSans-CondLight.ttf */; };
 		9DC821371AF80FD800712B97 /* Ds_Digi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821361AF80B4000712B97 /* Ds_Digi.ttf */; };
 		9DC821391AF8A18600712B97 /* loadPopup.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821381AF8A18600712B97 /* loadPopup.png */; };
+		9DC974A61B248899001EDADB /* ADE_proximity.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DC974A51B248899001EDADB /* ADE_proximity.c */; };
 		9DEEDD481AEC5F9400BB7082 /* newDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD471AEC5F9400BB7082 /* newDefaultNew.png */; };
 		9DEEDD4A1AEC5F9E00BB7082 /* saveDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD491AEC5F9E00BB7082 /* saveDefaultNew.png */; };
 		9DEEDD4C1AECF6C900BB7082 /* loadDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD4B1AECF6C900BB7082 /* loadDefaultNew.png */; };
@@ -558,6 +559,7 @@
 		9DC821321AF7FA9800712B97 /* OpenSans-CondLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-CondLight.ttf"; sourceTree = "<group>"; };
 		9DC821361AF80B4000712B97 /* Ds_Digi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ds_Digi.ttf; sourceTree = "<group>"; };
 		9DC821381AF8A18600712B97 /* loadPopup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadPopup.png; sourceTree = "<group>"; };
+		9DC974A51B248899001EDADB /* ADE_proximity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_proximity.c; path = ../../../ext/ADE_API/API/src/ADE_proximity.c; sourceTree = "<group>"; };
 		9DEEDD471AEC5F9400BB7082 /* newDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newDefaultNew.png; sourceTree = "<group>"; };
 		9DEEDD491AEC5F9E00BB7082 /* saveDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = saveDefaultNew.png; sourceTree = "<group>"; };
 		9DEEDD4B1AECF6C900BB7082 /* loadDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadDefaultNew.png; sourceTree = "<group>"; };
@@ -977,6 +979,7 @@
 		9D6C01B41ADAF0D000F75A3C /* ADE */ = {
 			isa = PBXGroup;
 			children = (
+				9DC974A51B248899001EDADB /* ADE_proximity.c */,
 				9D6C01E01ADAF9C200F75A3C /* ADE_accelerate_framework_wrapper.h */,
 				9D6C01E11ADAF9C200F75A3C /* ADE_Bench_Utils.h */,
 				9D6C01E21ADAF9C200F75A3C /* ADE_blas_level1.h */,
@@ -1550,6 +1553,7 @@
 				9D6C01FD1ADB031000F75A3C /* main.m in Sources */,
 				DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */,
 				9D6C01CD1ADAF8E000F75A3C /* ADE_blas_level1.c in Sources */,
+				9DC974A61B248899001EDADB /* ADE_proximity.c in Sources */,
 				9D6C01D31ADAF8E000F75A3C /* ADE_downsampler.c in Sources */,
 				CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */,
 				CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */,

@@ -324,7 +324,8 @@ Node *ModalPanel::CreatePanel()
     return panel;
 }
 
-void ModalPanel::SetText(std::string _text)
+void ModalPanel::CreateModalPanel(std::string _text)
 {
-    text->setString(_text);
+    ModalPanel *p=ModalPanel::create();
+    p->text->setString(_text);
 }

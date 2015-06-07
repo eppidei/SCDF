@@ -107,8 +107,8 @@ namespace ScdfCtrl
         bool init() override;
         void Close();
     public:
-        void SetText(std::string text);
         virtual void SetCallback(LoadSavePanelBaseCallback *_callback) {}
+        static void CreateModalPanel(std::string text);
         CREATE_FUNC(ModalPanel);
     };
 

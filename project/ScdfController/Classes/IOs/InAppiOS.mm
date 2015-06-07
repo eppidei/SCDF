@@ -8,6 +8,7 @@
 #import "InAppiOS.h"
 #include <string>
 #include "SCDFCDefinitions.h"
+#include "InAppPurchase.h"
 
 #ifdef _DEBUG
 #define SCDF_NOPURCHASE_NEEDED

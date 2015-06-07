@@ -46,7 +46,7 @@ class ItemBase;
         void SetInterface(ControlUnitInterface *_interface) {interface=_interface;}
         
         //enum mirrored with PurchaseProductIndex enum
-        enum Type { Wire, Blow, Snap };
+        enum Type { Wire, Blow, Snap, Proximity };
         
         enum ReceiverType { ReceiverType_stream, ReceiverType_state, ReceiverType_toggle};
 
@@ -285,6 +285,33 @@ class ItemBase;
         }
         
     };
+    
+    class ControlUnitProximity : public ControlUnitDsp
+    {
+    protected:
+        void OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output) override;
+    public:
+        ControlUnitProximity() : ControlUnitDsp() {}
+        Type GetType() { return Proximity; }
+        ADE_UINT32_T GetAlgoFlag() { return PROXIMITY_FLAG;}
+        
+    private:
+        
+        friend class ::cereal::access;
+        
+        template <class Archive>
+        void save( Archive & ar, std::uint32_t const version ) const
+        {
+            ar(cereal::base_class<ControlUnitDsp>( this ));
+        }
+        
+        template <class Archive>
+        void load( Archive & ar, std::uint32_t const version )
+        {
+            ar(cereal::base_class<ControlUnitDsp>( this ));
+        }
+        
+    };
 } // ScdfCtrl namespace end
 
 // Register Derived Classes (needed for polymorfism on serialization)
@@ -293,6 +320,7 @@ CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitWire);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitDsp);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitBlow);
 CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitSnap);
+CEREAL_REGISTER_TYPE(ScdfCtrl::ControlUnitProximity);
 
 CEREAL_CLASS_VERSION(ScdfCtrl::ControlUnit,0);
 
