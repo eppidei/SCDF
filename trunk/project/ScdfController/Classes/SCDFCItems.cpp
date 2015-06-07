@@ -157,6 +157,17 @@ void CheckForPurchase(ControlUnit *unit)
     unit->GetSender()->SetMidiOutIndex(-1);
 }
 
+void ItemBase::CheckForSensorExists()
+{
+    if (GetControlUnit()->GetType()!=ControlUnit::Proximity) return;
+    
+    if (!scdf::theSensorAPI()->SensorExists(scdf::Proximity))
+    {
+        ModalPanel::CreateModalPanel("Proximity sensor isn't available on this device");
+        ChangeControlUnit(ControlUnit::Wire);
+    }
+}
+
 ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
 {
 	ItemBase* i = CreateItem(sitem->id);
@@ -172,6 +183,8 @@ ItemBase* ItemBase::DeserializeItem(SerializableItemData* sitem)
     i->setPosition(Vec2(sitem->x,sitem->y));
 
 	i->SetControlUnit(sitem->unit);
+    i->CheckForSensorExists();
+
     CheckForPurchase(i->GetControlUnit());
     
     if (i->GetID()==ITEM_KEYBOARD_ID)
@@ -231,6 +244,9 @@ void ItemBase::SetControlModeImage()
             break;
         case ControlUnit::Snap:
             controlImage->setBackGroundImage("modeSnap.png");
+            break;
+        case ControlUnit::Proximity:
+            controlImage->setBackGroundImage("modeGesture.png");
             break;
         default:
             break;

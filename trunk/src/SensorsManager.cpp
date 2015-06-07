@@ -126,6 +126,21 @@ s_bool SensorsManager::IsSensorActive(SensorType type)
 
 }
 
+s_bool SensorsManager::SensorExists(SensorType type)
+{
+    bool ret = false;
+    Sensor *sensor=GetSensor(type);
+    if(NULL!=sensor)
+    {
+        if (sensor->Start())
+        {
+            sensor->Stop();
+            ret = true;
+        }
+    }
+    return ret;
+}
+
 s_bool SensorsManager::StopSensor(SensorType type)
 {
 	 if (sensors.count(type)==0)

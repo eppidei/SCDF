@@ -188,6 +188,10 @@ s_bool ScdfSensorAPI::IsSensorActive(SensorType sensorType)
     return scdf::theSensorManager()->IsSensorActive(sensorType);
 }
 
+s_bool ScdfSensorAPI::SensorExists(SensorType sensorType)
+{
+    return scdf::theSensorManager()->SensorExists(sensorType);
+}
 // ********************************* Listeners ****************************** //
 
 #pragma mark Listeners

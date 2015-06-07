@@ -31,6 +31,9 @@ void ControlUnit::AttachUnit(ControlUnit* unit)
             case ControlUnit::Snap:
                 _typeList.push_back(scdf::AudioInput);
                 break;
+            case ControlUnit::Proximity:
+                _typeList.push_back(scdf::Proximity);
+                break;
             default:
                 break;
         }
@@ -74,6 +77,7 @@ ControlUnit* ControlUnit::Create(Type t)
 		case Wire: return new ControlUnitWire();
 		case Blow : return new ControlUnitBlow();
         case Snap : return new ControlUnitSnap();
+        case Proximity : return new ControlUnitProximity();
 		default: return nullptr;
 	}
 }
@@ -235,6 +239,28 @@ void ControlUnitBlow::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *outp
 
 //SNAP
 void ControlUnitSnap::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output)
+{
+    switch (receiverType)
+    {
+        case ReceiverType_state:
+        {
+            int v= output->state ? 1 : 0;
+            TrySendValue(v);
+        }
+            break;
+        case ReceiverType_toggle:
+        {
+            int v= output->toggle ? 1 : 0;
+            TrySendValue(v);
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+//PROXIMITY
+void ControlUnitProximity::OnHarvesterBufferReadyInstance(ADE_SCDF_Output_Int_T *output)
 {
     switch (receiverType)
     {

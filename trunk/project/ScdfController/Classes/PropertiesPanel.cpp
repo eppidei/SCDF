@@ -28,10 +28,7 @@ void CheckControlUnitPurchased(ControlUnit::Type cType)
     if(!CheckIsInAppPurchasedNoPrompt((PurchaseProductIndex)cType))
     {
         if (!CheckIsInAppPurchased((PurchaseProductIndex)cType))
-        {
-            ModalPanel *p=ModalPanel::create();
-            p->SetText("You can try the control type,\nbut you cannot use it with the MIDI/OSC sender");
-        }
+            ModalPanel::CreateModalPanel("You can try the control type,\nbut you cannot use it with the MIDI/OSC sender");
     }
 }
 #define VISIBILITY_CHECK \
@@ -798,6 +795,7 @@ void ItemSettings::CreateControls()
     dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
 #ifdef _DEBUG
     dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
 #endif
     //dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
@@ -872,6 +870,14 @@ void ItemSettings::CreateControls()
     h_plus->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
 }
 
+void ItemSettings::CheckAlgoTypePerItem(ItemBase *item)
+{
+    bool isContinuousControl=dynamic_cast<ItemSlider*>(item)!=NULL;
+    bool proximitySensorExists=scdf::theSensorAPI()->SensorExists(scdf::Proximity);
+    modes->HideItem(ControlUnit::Snap, isContinuousControl);
+    modes->HideItem(ControlUnit::Proximity, isContinuousControl || !proximitySensorExists);
+}
+
 void ItemSettings::Update()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
@@ -903,8 +909,7 @@ void ItemSettings::Update()
     else
         masterButton->setColor(Color3B::WHITE);
 
-    modes->HideItem(ControlUnit::Snap, dynamic_cast<ItemSlider*>(item)!=NULL);
-
+    CheckAlgoTypePerItem(item);
     CheckShowElements();
     
 }

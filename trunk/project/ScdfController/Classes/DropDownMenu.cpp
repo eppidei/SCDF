@@ -31,16 +31,28 @@ int DropDownMenu::GetNumItems()
     return (int)(getItems().size());
 }
 
+int DropDownMenu::GetMenuIndexFromDataIndex(int itemDataIndex)
+{
+    int realIndex=itemDataIndex;
+    for (int i=0;i<itemDataIndex;++i)
+    {
+        if (itemsData[i].hidden)
+            realIndex--;
+    }
+    return realIndex;
+}
+
 void DropDownMenu::HideItem(int itemIndex, bool hide)
 {
     if (itemIndex>=itemsData.size()) return;
     
     if ((hide && itemsData[itemIndex].hidden) || (!hide && !itemsData[itemIndex].hidden)) return;
 
+    int realIndex=GetMenuIndexFromDataIndex(itemIndex);
     if (hide)
-        removeItem(itemIndex);
+        removeItem(realIndex);
     else
-        insertCustomItem(CreateElement(itemIndex), itemIndex);
+        insertCustomItem(CreateElement(itemIndex), realIndex);
     
     itemsData[itemIndex].hidden=hide;
     refreshView();
@@ -84,11 +96,18 @@ void DropDownMenu::setPosition(const Vec2 &pos)
 
 int DropDownMenu::GetSelectedIndex()
 {
-    return (int)_curSelectedIndex;
+    int index=_curSelectedIndex;
+    for (int i=0;i<=_curSelectedIndex;++i)
+    {
+        if (itemsData[i].hidden)
+            index++;
+    }
+    return index;//(int)_curSelectedIndex;
 }
 
-void DropDownMenu::SetSelectedIndex(int selected)
+void DropDownMenu::SetSelectedIndex(int _selected)
 {
+    int selected=GetMenuIndexFromDataIndex(_selected);
     if (lastSelectedIndex==selected) return;
     _curSelectedIndex=lastSelectedIndex=selected;
     ScrollToSelected();

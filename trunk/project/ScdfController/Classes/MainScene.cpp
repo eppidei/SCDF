@@ -310,15 +310,10 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
                     if (!CheckIsInAppPurchased(PurchaseProductIndex_saveload)) break;
                     std::vector<std::string> files;
                     scdf::ListFilesInDirectory(scdf::GetPatchesDirectory(), files);
-                    ModalPanel *p;
                     if (files.size())
-                        p=LoadPanel::create();
+                        LoadPanel::create()->SetCallback(customPanel.get());
                     else
-                    {
-                        p=ModalPanel::create();
-                        p->SetText("No patches to load");
-                    }
-                    p->SetCallback(customPanel.get());
+                        ModalPanel::CreateModalPanel("No patches to load");
                 }
                     break;
                 default:

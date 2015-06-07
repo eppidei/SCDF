@@ -87,14 +87,14 @@ void SavePanel::CheckFileExists(std::string _text)
 {
     if(0==_text.size()||!scdf::DoesFileExist(_text))
     {
-        SetText("");
+        text->setString("");
         control->loadTextureNormal("btnSaveDefault.png");
         control->loadTexturePressed("btnSaveHover.png");
         control->setContentSize(cocos2d::Size(CONTROL_BTN_SAVE_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
     }
     else
     {
-        SetText("This file already exists");
+        text->setString("This file already exists");
         control->loadTextureNormal("overwriteDefault.png");
         control->loadTexturePressed("overwriteHover.png");
         control->setContentSize(cocos2d::Size(CONTROL_BTN_WIDTH_MULTIPLY*ITEM_HEIGHT,ITEM_HEIGHT));
@@ -236,7 +236,7 @@ void SavePanel::OnTouchEnded(int nodeTag)
             Close();
         }
         else
-            SetText("Please insert patch name");
+            text->setString("Please insert patch name");
     }
 }
 
@@ -250,7 +250,7 @@ void SaveAfterNewPanel::OnTouchEnded(int nodeTag)
             Close();
         }
         else
-            SetText("Please insert patch name");
+            text->setString("Please insert patch name");
     }
     else if (nodeTag==DISCARD_ID)
     {

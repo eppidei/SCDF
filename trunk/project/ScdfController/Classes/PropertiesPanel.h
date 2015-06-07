@@ -95,7 +95,8 @@ namespace ScdfCtrl
         cocos2d::ui::Button *masterButton;
         TextInputWithBackground *name;
         TextWithBackground *sizeLabel, *colorLabel, *nameLabel, *settingsLabel, *orientLabel, *sizeText, *controlLabel, *groupLabel;
-//        Toolbar *modes;
+
+        void CheckAlgoTypePerItem(ItemBase *item);
         void CreateControls() override;
         void OnDropDownSelectionChange(DropDownMenu *menu) override;
         void PositionElements() override;

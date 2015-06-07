@@ -51,6 +51,7 @@ namespace scdf {
         s_bool StartSensor(SensorType sensorType);
         s_bool StopSensor(SensorType sensorType);
         s_bool IsSensorActive(SensorType sensorType);
+        s_bool SensorExists(SensorType sensorType);
         
         // *********** NETWORK API ******************* //
         void SetUDPOutputPort(s_int32 outputUdpPort);

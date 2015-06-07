@@ -51,6 +51,7 @@ namespace ScdfCtrl
         void EnableTouchEvents(bool enable) { touchEnabled=enable;}
         int GetNumItems();
         virtual Widget *CreateElement(int dataIndex);
+        int GetMenuIndexFromDataIndex(int itemDataIndex);
     protected:
         float itemHeight;
         DropDownMenu();
