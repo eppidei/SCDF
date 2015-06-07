@@ -293,7 +293,7 @@ class ItemBase;
     public:
         ControlUnitProximity() : ControlUnitDsp() {}
         Type GetType() { return Proximity; }
-        ADE_UINT32_T GetAlgoFlag() { return PROXIMITY_FLAG;}
+        ADE_UINT32_T GetAlgoFlag() { return PROXY_FLAG;}
         
     private:
         
