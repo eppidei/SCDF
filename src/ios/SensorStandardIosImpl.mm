@@ -126,8 +126,16 @@ s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
 		case Accelerometer:
 		case Gyroscope:
 		case Magnetometer:
+            return true;
 		case Proximity:
-			return true;
+        {
+            UIDevice *device = [UIDevice currentDevice];
+            BOOL proximityEnabledBack = device.proximityMonitoringEnabled;
+            device.proximityMonitoringEnabled = YES;
+            BOOL proximityEnabledNow = device.proximityMonitoringEnabled;
+            device.proximityMonitoringEnabled=proximityEnabledBack;
+            return proximityEnabledNow;
+        }
 		default:
 			return false;
 	}
