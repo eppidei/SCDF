@@ -9,9 +9,17 @@
 #import <UIKit/UIKit.h>
 
 
+#ifdef SCDF_PLOT
+@class SecondViewController;
+#endif
+
+
 @interface FirstViewController : UIViewController <UIPickerViewDelegate>
 
 {
+#ifdef SCDF_PLOT
+    SecondViewController *networkController;
+#endif
     
     BOOL pickerViewIsVisible;
     

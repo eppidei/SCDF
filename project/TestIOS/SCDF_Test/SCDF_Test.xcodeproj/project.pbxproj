@@ -47,6 +47,53 @@
 		DC70A3C31944C38D0057AED4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */; };
 		DC70A3C81944CD3C0057AED4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
 		DC70A3C91944CD3C0057AED4 /* SecondViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */; };
+		DC7CFF781B28E04200F93CC4 /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54231944BB2900EB7E48 /* SensorAudioInput.cpp */; };
+		DC7CFF791B28E04200F93CC4 /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC15137F194485BE00DC7BF7 /* SensorStandardIosImpl.mm */; };
+		DC7CFF7A1B28E04200F93CC4 /* GraphicViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCF2E3FA1A61AADE00BA6AC5 /* GraphicViewController.mm */; };
+		DC7CFF7B1B28E04200F93CC4 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E1194C6AE200288DD2 /* AppDelegate.mm */; };
+		DC7CFF7C1B28E04200F93CC4 /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D56F87919634F7F00AD182A /* PipesManager.cpp */; };
+		DC7CFF7D1B28E04200F93CC4 /* ThreadUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E223B194DE17200288DD2 /* ThreadUtils.cpp */; };
+		DC7CFF7E1B28E04200F93CC4 /* AudioWaveView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */; };
+		DC7CFF7F1B28E04200F93CC4 /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A71B7D8B1A6C292500BEC022 /* Receiver.cpp */; };
+		DC7CFF801B28E04200F93CC4 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E2234194DE15A00288DD2 /* NetworkingUtils.cpp */; };
+		DC7CFF811B28E04200F93CC4 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
+		DC7CFF821B28E04200F93CC4 /* InitFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E21E3194C6B4800288DD2 /* InitFramework.cpp */; };
+		DC7CFF831B28E04200F93CC4 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E22D6194E41C400288DD2 /* OscReceivedElements.cpp */; };
+		DC7CFF841B28E04200F93CC4 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */; };
+		DC7CFF851B28E04200F93CC4 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
+		DC7CFF861B28E04200F93CC4 /* CustomPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E221E194CB6AC00288DD2 /* CustomPipe.cpp */; };
+		DC7CFF871B28E04200F93CC4 /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E22D1194E41C400288DD2 /* OscOutboundPacketStream.cpp */; };
+		DC7CFF881B28E04200F93CC4 /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC299E59197714DA007F430F /* SaveSettings.mm */; };
+		DC7CFF891B28E04200F93CC4 /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E2215194C870700288DD2 /* Harvester.cpp */; };
+		DC7CFF8A1B28E04200F93CC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE8BEAD194393B300D283E8 /* main.m */; };
+		DC7CFF8B1B28E04200F93CC4 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E2235194DE15A00288DD2 /* UdpSocket.cpp */; };
+		DC7CFF8C1B28E04200F93CC4 /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC974A21B1F91E0001EDADB /* ScdfSensorAPI.cpp */; };
+		DC7CFF8D1B28E04200F93CC4 /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F541F1944AC8900EB7E48 /* SensorStandard.cpp */; };
+		DC7CFF8E1B28E04200F93CC4 /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D9F54251944BCED00EB7E48 /* SensorAudioInputIosImpl.mm */; };
+		DC7CFF8F1B28E04200F93CC4 /* UDPSendersManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E22C5194E18DA00288DD2 /* UDPSendersManager.cpp */; };
+		DC7CFF901B28E04200F93CC4 /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E221A194CB60400288DD2 /* UDPSender.cpp */; };
+		DC7CFF911B28E04200F93CC4 /* SecondViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */; };
+		DC7CFF921B28E04200F93CC4 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4DFF65194CD3590051E311 /* CAStreamBasicDescription.cpp */; };
+		DC7CFF931B28E04200F93CC4 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E222F194DE15A00288DD2 /* IpEndpointName.cpp */; };
+		DC7CFF941B28E04200F93CC4 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E22D8194E41C400288DD2 /* OscTypes.cpp */; };
+		DC7CFF951B28E04200F93CC4 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E22D4194E41C400288DD2 /* OscPrintReceivedElements.cpp */; };
+		DC7CFF971B28E04200F93CC4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2DEC1C1AA9083900C2AC66 /* Accelerate.framework */; };
+		DC7CFF981B28E04200F93CC4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D2E7D9019573A1B001DB7D2 /* QuartzCore.framework */; };
+		DC7CFF991B28E04200F93CC4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF58194CD2A80051E311 /* AudioToolbox.framework */; };
+		DC7CFF9A1B28E04200F93CC4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4DFF56194CD2A10051E311 /* AVFoundation.framework */; };
+		DC7CFF9B1B28E04200F93CC4 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEDF1943970100D283E8 /* CoreMotion.framework */; };
+		DC7CFF9C1B28E04200F93CC4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */; };
+		DC7CFF9D1B28E04200F93CC4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA5194393B300D283E8 /* UIKit.framework */; };
+		DC7CFF9E1B28E04200F93CC4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA1194393B300D283E8 /* Foundation.framework */; };
+		DC7CFFA01B28E04200F93CC4 /* closeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = DC373893198823B3003BA42D /* closeButton.png */; };
+		DC7CFFA11B28E04200F93CC4 /* closeButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC373894198823B3003BA42D /* closeButton@2x.png */; };
+		DC7CFFA21B28E04200F93CC4 /* metalBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1391983DA120033521B /* metalBackground.png */; };
+		DC7CFFA31B28E04200F93CC4 /* greyNoiseBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1371983DA120033521B /* greyNoiseBackground.png */; };
+		DC7CFFA51B28E04200F93CC4 /* greyNoiseBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E1381983DA120033521B /* greyNoiseBackground@2x.png */; };
+		DC7CFFA71B28E04200F93CC4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEBF194393B300D283E8 /* Images.xcassets */; };
+		DC7CFFA81B28E04200F93CC4 /* metalBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E13A1983DA120033521B /* metalBackground@2x.png */; };
+		DC7CFFA91B28E04200F93CC4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEAA194393B300D283E8 /* InfoPlist.strings */; };
+		DC7CFFB11B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7CFFAF1B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard */; };
 		DCE8BEA2194393B300D283E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA1194393B300D283E8 /* Foundation.framework */; };
 		DCE8BEA4194393B300D283E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */; };
 		DCE8BEA6194393B300D283E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA5194393B300D283E8 /* UIKit.framework */; };
@@ -120,6 +167,9 @@
 		DC70A3C51944CD3C0057AED4 /* FirstViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FirstViewController.mm; sourceTree = SOURCE_ROOT; };
 		DC70A3C61944CD3C0057AED4 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = SOURCE_ROOT; };
 		DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SecondViewController.mm; sourceTree = SOURCE_ROOT; };
+		DC7CFFAD1B28E04200F93CC4 /* SCDF_Plot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCDF_Plot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC7CFFAE1B28E04200F93CC4 /* SCDF_Test copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SCDF_Test copy-Info.plist"; path = "/Users/marcobertola/Documents/SCDF/trunk/project/TestIOS/SCDF_Test/SCDF_Test copy-Info.plist"; sourceTree = "<absolute>"; };
+		DC7CFFB01B28E0BA00F93CC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad_Plot.storyboard; sourceTree = "<group>"; };
 		DCE8BE9E194393B300D283E8 /* SCDF_Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCDF_Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCE8BEA1194393B300D283E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -136,6 +186,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DC7CFF961B28E04200F93CC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC7CFF971B28E04200F93CC4 /* Accelerate.framework in Frameworks */,
+				DC7CFF981B28E04200F93CC4 /* QuartzCore.framework in Frameworks */,
+				DC7CFF991B28E04200F93CC4 /* AudioToolbox.framework in Frameworks */,
+				DC7CFF9A1B28E04200F93CC4 /* AVFoundation.framework in Frameworks */,
+				DC7CFF9B1B28E04200F93CC4 /* CoreMotion.framework in Frameworks */,
+				DC7CFF9C1B28E04200F93CC4 /* CoreGraphics.framework in Frameworks */,
+				DC7CFF9D1B28E04200F93CC4 /* UIKit.framework in Frameworks */,
+				DC7CFF9E1B28E04200F93CC4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCE8BE9B194393B300D283E8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -284,6 +349,7 @@
 				DCE8BEA7194393B300D283E8 /* SCDF_Test */,
 				DCE8BEA0194393B300D283E8 /* Frameworks */,
 				DCE8BE9F194393B300D283E8 /* Products */,
+				DC7CFFAE1B28E04200F93CC4 /* SCDF_Test copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -291,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				DCE8BE9E194393B300D283E8 /* SCDF_Test.app */,
+				DC7CFFAD1B28E04200F93CC4 /* SCDF_Plot.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -322,6 +389,7 @@
 				DC70A3C71944CD3C0057AED4 /* SecondViewController.mm */,
 				DCF2E3F91A61AADE00BA6AC5 /* GraphicViewController.h */,
 				DCF2E3FA1A61AADE00BA6AC5 /* GraphicViewController.mm */,
+				DC7CFFAF1B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard */,
 				DC70A3BE1944C38D0057AED4 /* Main_iPad.storyboard */,
 				DC70A3C01944C38D0057AED4 /* Main_iPhone.storyboard */,
 				DC151391194487A100DC7BF7 /* src */,
@@ -346,6 +414,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DC7CFF761B28E04200F93CC4 /* SCDF_Plot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC7CFFAA1B28E04200F93CC4 /* Build configuration list for PBXNativeTarget "SCDF_Plot" */;
+			buildPhases = (
+				DC7CFF771B28E04200F93CC4 /* Sources */,
+				DC7CFF961B28E04200F93CC4 /* Frameworks */,
+				DC7CFF9F1B28E04200F93CC4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SCDF_Plot;
+			productName = SCDF_Test;
+			productReference = DC7CFFAD1B28E04200F93CC4 /* SCDF_Plot.app */;
+			productType = "com.apple.product-type.application";
+		};
 		DCE8BE9D194393B300D283E8 /* SCDF_Test */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DCE8BED6194393B400D283E8 /* Build configuration list for PBXNativeTarget "SCDF_Test" */;
@@ -372,6 +457,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Marco Bertola";
 				TargetAttributes = {
+					DC7CFF761B28E04200F93CC4 = {
+						DevelopmentTeam = S5C22B8JC9;
+					};
 					DCE8BE9D194393B300D283E8 = {
 						DevelopmentTeam = S5C22B8JC9;
 					};
@@ -391,11 +479,28 @@
 			projectRoot = "";
 			targets = (
 				DCE8BE9D194393B300D283E8 /* SCDF_Test */,
+				DC7CFF761B28E04200F93CC4 /* SCDF_Plot */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		DC7CFF9F1B28E04200F93CC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC7CFFA01B28E04200F93CC4 /* closeButton.png in Resources */,
+				DC7CFFA11B28E04200F93CC4 /* closeButton@2x.png in Resources */,
+				DC7CFFA21B28E04200F93CC4 /* metalBackground.png in Resources */,
+				DC7CFFB11B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard in Resources */,
+				DC7CFFA31B28E04200F93CC4 /* greyNoiseBackground.png in Resources */,
+				DC7CFFA51B28E04200F93CC4 /* greyNoiseBackground@2x.png in Resources */,
+				DC7CFFA71B28E04200F93CC4 /* Images.xcassets in Resources */,
+				DC7CFFA81B28E04200F93CC4 /* metalBackground@2x.png in Resources */,
+				DC7CFFA91B28E04200F93CC4 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCE8BE9C194393B300D283E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -416,6 +521,43 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DC7CFF771B28E04200F93CC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC7CFF781B28E04200F93CC4 /* SensorAudioInput.cpp in Sources */,
+				DC7CFF791B28E04200F93CC4 /* SensorStandardIosImpl.mm in Sources */,
+				DC7CFF7A1B28E04200F93CC4 /* GraphicViewController.mm in Sources */,
+				DC7CFF7B1B28E04200F93CC4 /* AppDelegate.mm in Sources */,
+				DC7CFF7C1B28E04200F93CC4 /* PipesManager.cpp in Sources */,
+				DC7CFF7D1B28E04200F93CC4 /* ThreadUtils.cpp in Sources */,
+				DC7CFF7E1B28E04200F93CC4 /* AudioWaveView.mm in Sources */,
+				DC7CFF7F1B28E04200F93CC4 /* Receiver.cpp in Sources */,
+				DC7CFF801B28E04200F93CC4 /* NetworkingUtils.cpp in Sources */,
+				DC7CFF811B28E04200F93CC4 /* SensorsManager.cpp in Sources */,
+				DC7CFF821B28E04200F93CC4 /* InitFramework.cpp in Sources */,
+				DC7CFF831B28E04200F93CC4 /* OscReceivedElements.cpp in Sources */,
+				DC7CFF841B28E04200F93CC4 /* FirstViewController.mm in Sources */,
+				DC7CFF851B28E04200F93CC4 /* Sensor.cpp in Sources */,
+				DC7CFF861B28E04200F93CC4 /* CustomPipe.cpp in Sources */,
+				DC7CFF871B28E04200F93CC4 /* OscOutboundPacketStream.cpp in Sources */,
+				DC7CFF881B28E04200F93CC4 /* SaveSettings.mm in Sources */,
+				DC7CFF891B28E04200F93CC4 /* Harvester.cpp in Sources */,
+				DC7CFF8A1B28E04200F93CC4 /* main.m in Sources */,
+				DC7CFF8B1B28E04200F93CC4 /* UdpSocket.cpp in Sources */,
+				DC7CFF8C1B28E04200F93CC4 /* ScdfSensorAPI.cpp in Sources */,
+				DC7CFF8D1B28E04200F93CC4 /* SensorStandard.cpp in Sources */,
+				DC7CFF8E1B28E04200F93CC4 /* SensorAudioInputIosImpl.mm in Sources */,
+				DC7CFF8F1B28E04200F93CC4 /* UDPSendersManager.cpp in Sources */,
+				DC7CFF901B28E04200F93CC4 /* UDPSender.cpp in Sources */,
+				DC7CFF911B28E04200F93CC4 /* SecondViewController.mm in Sources */,
+				DC7CFF921B28E04200F93CC4 /* CAStreamBasicDescription.cpp in Sources */,
+				DC7CFF931B28E04200F93CC4 /* IpEndpointName.cpp in Sources */,
+				DC7CFF941B28E04200F93CC4 /* OscTypes.cpp in Sources */,
+				DC7CFF951B28E04200F93CC4 /* OscPrintReceivedElements.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCE8BE9A194393B300D283E8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -472,6 +614,14 @@
 			name = Main_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
+		DC7CFFAF1B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DC7CFFB01B28E0BA00F93CC4 /* Base */,
+			);
+			name = Main_iPad_Plot.storyboard;
+			sourceTree = "<group>";
+		};
 		DCE8BEAA194393B300D283E8 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -483,6 +633,72 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		DC7CFFAB1B28E04200F93CC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"SCDF_PLOT=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
+					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					"$HOME/Documents/SCDF/trunk/lib/cereal-1.1.0/include",
+				);
+				INFOPLIST_FILE = "SCDF_Test copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = SCDF_Plot;
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7 armv7s";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		DC7CFFAC1B28E04200F93CC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SCDF_Test/SCDF_Test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "SCDF_PLOT=1";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/Documents/SCDF/trunk/src/include,
+					$HOME/Documents/SCDF/trunk/src/ios/include,
+					$HOME/Documents/SCDF/trunk/lib/oscpack_1_1_0,
+					"$HOME/Documents/SCDF/trunk/lib/cereal-1.1.0/include",
+				);
+				INFOPLIST_FILE = "SCDF_Test copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = SCDF_Plot;
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7 armv7s";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		DCE8BED4194393B400D283E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -626,6 +842,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DC7CFFAA1B28E04200F93CC4 /* Build configuration list for PBXNativeTarget "SCDF_Plot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC7CFFAB1B28E04200F93CC4 /* Debug */,
+				DC7CFFAC1B28E04200F93CC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DCE8BE99194393B300D283E8 /* Build configuration list for PBXProject "SCDF_Test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

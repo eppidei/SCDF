@@ -41,4 +41,7 @@
 - (IBAction) callPickerIpPortView:(id)sender;
 
 
+- (void) setupNetwork;
+
+
 @end
