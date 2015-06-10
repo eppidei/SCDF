@@ -94,6 +94,8 @@
 		DC7CFFA81B28E04200F93CC4 /* metalBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC57E13A1983DA120033521B /* metalBackground@2x.png */; };
 		DC7CFFA91B28E04200F93CC4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE8BEAA194393B300D283E8 /* InfoPlist.strings */; };
 		DC7CFFB11B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7CFFAF1B28E0BA00F93CC4 /* Main_iPad_Plot.storyboard */; };
+		DC96EB141B28F72E0045A8EF /* UIBezierPath+Interpolation.m in Sources */ = {isa = PBXBuildFile; fileRef = DC96EB131B28F72E0045A8EF /* UIBezierPath+Interpolation.m */; };
+		DC96EB171B28F7600045A8EF /* CGPointExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DC96EB161B28F7600045A8EF /* CGPointExtension.m */; };
 		DCE8BEA2194393B300D283E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA1194393B300D283E8 /* Foundation.framework */; };
 		DCE8BEA4194393B300D283E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */; };
 		DCE8BEA6194393B300D283E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8BEA5194393B300D283E8 /* UIKit.framework */; };
@@ -170,6 +172,10 @@
 		DC7CFFAD1B28E04200F93CC4 /* SCDF_Plot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCDF_Plot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7CFFAE1B28E04200F93CC4 /* SCDF_Test copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SCDF_Test copy-Info.plist"; path = "/Users/marcobertola/Documents/SCDF/trunk/project/TestIOS/SCDF_Test/SCDF_Test copy-Info.plist"; sourceTree = "<absolute>"; };
 		DC7CFFB01B28E0BA00F93CC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad_Plot.storyboard; sourceTree = "<group>"; };
+		DC96EB121B28F72E0045A8EF /* UIBezierPath+Interpolation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Interpolation.h"; path = "../../../../lib/Bezier/UIBezierPath+Interpolation.h"; sourceTree = "<group>"; };
+		DC96EB131B28F72E0045A8EF /* UIBezierPath+Interpolation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+Interpolation.m"; path = "../../../../lib/Bezier/UIBezierPath+Interpolation.m"; sourceTree = "<group>"; };
+		DC96EB151B28F7600045A8EF /* CGPointExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CGPointExtension.h; path = ../../../../lib/Bezier/CGPointExtension.h; sourceTree = "<group>"; };
+		DC96EB161B28F7600045A8EF /* CGPointExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGPointExtension.m; path = ../../../../lib/Bezier/CGPointExtension.m; sourceTree = "<group>"; };
 		DCE8BE9E194393B300D283E8 /* SCDF_Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCDF_Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCE8BEA1194393B300D283E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DCE8BEA3194393B300D283E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -341,6 +347,17 @@
 			name = Graphics;
 			sourceTree = "<group>";
 		};
+		DC96EB111B28F7210045A8EF /* BezierDrawer */ = {
+			isa = PBXGroup;
+			children = (
+				DC96EB151B28F7600045A8EF /* CGPointExtension.h */,
+				DC96EB161B28F7600045A8EF /* CGPointExtension.m */,
+				DC96EB121B28F72E0045A8EF /* UIBezierPath+Interpolation.h */,
+				DC96EB131B28F72E0045A8EF /* UIBezierPath+Interpolation.m */,
+			);
+			name = BezierDrawer;
+			sourceTree = "<group>";
+		};
 		DCE8BE95194393B300D283E8 = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +398,7 @@
 		DCE8BEA7194393B300D283E8 /* SCDF_Test */ = {
 			isa = PBXGroup;
 			children = (
+				DC96EB111B28F7210045A8EF /* BezierDrawer */,
 				CC5DAC9B1A6C2C4300AFDF5A /* AudioWaveView.h */,
 				CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */,
 				DC70A3C41944CD3C0057AED4 /* FirstViewController.h */,
@@ -540,6 +558,7 @@
 				DC7CFF841B28E04200F93CC4 /* FirstViewController.mm in Sources */,
 				DC7CFF851B28E04200F93CC4 /* Sensor.cpp in Sources */,
 				DC7CFF861B28E04200F93CC4 /* CustomPipe.cpp in Sources */,
+				DC96EB141B28F72E0045A8EF /* UIBezierPath+Interpolation.m in Sources */,
 				DC7CFF871B28E04200F93CC4 /* OscOutboundPacketStream.cpp in Sources */,
 				DC7CFF881B28E04200F93CC4 /* SaveSettings.mm in Sources */,
 				DC7CFF891B28E04200F93CC4 /* Harvester.cpp in Sources */,
@@ -554,6 +573,7 @@
 				DC7CFF921B28E04200F93CC4 /* CAStreamBasicDescription.cpp in Sources */,
 				DC7CFF931B28E04200F93CC4 /* IpEndpointName.cpp in Sources */,
 				DC7CFF941B28E04200F93CC4 /* OscTypes.cpp in Sources */,
+				DC96EB171B28F7600045A8EF /* CGPointExtension.m in Sources */,
 				DC7CFF951B28E04200F93CC4 /* OscPrintReceivedElements.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
