@@ -33,6 +33,7 @@ public:
     int currentBufferSize;
     
     AudioWaveListener *audioListener;
+    
 
 }
 
