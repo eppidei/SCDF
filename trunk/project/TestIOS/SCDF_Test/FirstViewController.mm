@@ -15,6 +15,12 @@
 #include "SensorsManager.h"
 #include "Harvester.h"
 
+#ifdef SCDF_PLOT
+#import "SecondViewController.h"
+#include "UDPSendersManager.h"
+#include "UdpSender.h"
+#endif
+
 #define MAX_SENSOR_RATE_VALUE 200
 
 
@@ -29,11 +35,27 @@ scdf::SensorsManager *theSensorManager();
 
 - (void) viewDidUnload
 {
+#ifdef SCDF_PLOT
+    [networkController release];
+#endif
+}
+
+
+- (void) initNewtorkOnPlotApp
+{
+#ifdef SCDF_PLOT
+    networkController = [[SecondViewController alloc] init];
+    [networkController setupNetwork];
+#endif
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+#ifdef SCDF_PLOT
+    [self initNewtorkOnPlotApp];
+#endif
     
     [self initSensors];
     
@@ -142,6 +164,11 @@ scdf::SensorsManager *theSensorManager();
 - (IBAction) toggleAudioSensor: (id) sender
 {
     UISwitch *currentSensor = sender;
+    
+#ifdef SCDF_PLOT
+    scdf::UDPSendersManager::Instance()->GetSender()->Activate(currentSensor.on);
+#endif
+    
     [self toggleSensorType:scdf::AudioInput withState:currentSensor.on];
     
 }
