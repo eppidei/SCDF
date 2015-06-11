@@ -15,7 +15,7 @@
 
 @end
 
-const int borderMargin = 160;
+const int borderMargin = 80;
 extern scdf::Receiver *audioReceiver;
 
 @implementation GraphicViewController
