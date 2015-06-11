@@ -1,3 +1,6 @@
+#ifndef _TYPEDEFINITION_H
+#define _TYPEDEFINITION_H
+
 #include <string>
 #include <vector>
 #include <map>
@@ -53,5 +56,5 @@ typedef s_float s_sample;
 #define DEFAULT_SENORS_STANDARD_RATE 100
 #define DEFAULT_AUDIO_BUFFER_SIZE 512
 
-
+#endif
 
