@@ -16,7 +16,7 @@ const int borderSize = 0;
 #define ARC4RANDOM_MAX      0x100000000
 
 #ifdef DEBUG
-#define USE_TIMER_FOR_TESTING
+//#define USE_TIMER_FOR_TESTING
 #endif
 #define TIMER_RATE 0.05
 
