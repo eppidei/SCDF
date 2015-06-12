@@ -58,10 +58,9 @@
 {
     
 }// before animation and hiding view
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
 {
-    [self autorelease];
-    [alertView autorelease];
+
 }
 // Initialize with the supplied run loop
 -(id) initWithRunLoop: (CFRunLoopRef)runLoop
@@ -641,6 +640,7 @@ bool CheckIsInAppPurchased(PurchaseProductIndex _productIndex)
     ModalAlertDelegate *madelegate = [[ModalAlertDelegate alloc] initWithRunLoop:currentLoop];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithUTF8String:msg.c_str()] message:nil delegate:madelegate cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil, nil];
     [alertView show];
+   
     alertView.hidden=NO;
     
     // Wait for response
@@ -657,7 +657,6 @@ bool CheckIsInAppPurchased(PurchaseProductIndex _productIndex)
     }
     
     [alertView release];
-    [madelegate release];
     return false;
 }
 
