@@ -11,7 +11,7 @@
 #include "InAppPurchase.h"
 
 #ifdef _DEBUG
-#define SCDF_NOPURCHASE_NEEDED
+//#define SCDF_NOPURCHASE_NEEDED
 #endif
 
 
@@ -418,7 +418,7 @@ static InAppPurchaseController purchaseController;
     //[[NSUserDefaults standardUserDefaults] synchronize];
     
     NSMutableArray *idList = purchaseController.GetIdList();
-    NSMutableArray *keyList;
+    NSMutableArray *keyList = purchaseController.GetKeyList();
     
     for (NSString * idValue in idList) {
         
