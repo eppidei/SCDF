@@ -15,22 +15,15 @@
 
 @end
 
-const int borderMargin = 80;
 extern scdf::Receiver *audioReceiver;
 
 @implementation GraphicViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
-    topLabel = [[UILabel alloc]init];
-    [topLabel setFont:[UIFont systemFontOfSize:20]];
-    [topLabel setText:@"Wave data:"];
-    
-    topView = [[UIView alloc ]init];
-    [topView setBackgroundColor:[UIColor whiteColor]];
-    
-     waveView  = [[AudioWaveView alloc] initWithFrame:self.view.frame];
+    [waveView initPlot];
     
     AudioWaveListener *listener = new AudioWaveListener();
     listener->SetViewRef(waveView);
@@ -38,30 +31,29 @@ extern scdf::Receiver *audioReceiver;
         audioReceiver->SetListener(listener);
     
     
-    bottomView = [[UIView alloc ]init];
-    [bottomView setBackgroundColor:[UIColor whiteColor]];
-   
-    // Do any additional setup after loading the view.
+    [fillToggle setOn:(BOOL)[waveView IsFillPlot]];
+    [bezierToggle setOn:(BOOL)[waveView IsDrawBezier]];
+    [coordsToggle setOn:(BOOL)[waveView IsShowCoordinates]];
+    
+}
+
+- (IBAction) toggleDrawBezier: (id) sender
+{
+    [waveView setDrawBezier:bezierToggle.on];
+}
+
+- (IBAction) toggleFillPlot: (id) sender
+{
+    [waveView setFillPlot:fillToggle.on];
+}
+
+- (IBAction) toggleShowCoord: (id) sender
+{
+     [waveView setShowCoordinates:coordsToggle.on];
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
-    [topView setFrame:CGRectMake(0, 0, self.view.frame.size.width, borderMargin)];
-    [self.view addSubview:topView];
-    
-    [waveView setFrame:CGRectMake(0, borderMargin, self.view.frame.size.width, self.view.frame.size.height- (2*borderMargin)- TAB_BAR_SIZE)];
-    [self.view addSubview:waveView];
-    
-    [bottomView setFrame:CGRectMake(0, self.view.frame.size.height- borderMargin-TAB_BAR_SIZE, self.view.frame.size.width, borderMargin)];
-    [self.view addSubview:waveView];
-    
-    
-    int offsetLeftLabel = 10;
-    CGRect frameLabel = topView.frame;
-    frameLabel.origin.x = offsetLeftLabel;
-    frameLabel.size.width -= offsetLeftLabel;
-    [topView addSubview:topLabel];
-    [topLabel setFrame:frameLabel];
 }
 
 - (void)didReceiveMemoryWarning {
