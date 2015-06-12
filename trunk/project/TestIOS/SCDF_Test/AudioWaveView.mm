@@ -16,7 +16,7 @@ const int borderSize = 0;
 #define ARC4RANDOM_MAX      0x100000000
 
 #ifdef DEBUG
-//#define USE_TIMER_FOR_TESTING
+#define USE_TIMER_FOR_TESTING
 #endif
 #define TIMER_RATE 0.05
 
@@ -32,39 +32,124 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
     audioListener = listener;
 }
 
+- (bool) IsShowCoordinates;
+{
+    return showCoordinates;
+}
+
+- (void) setShowCoordinates: (bool) show
+{
+    showCoordinates = show;
+}
+
+
+- (bool) IsDrawBezier
+{
+    return drawBezier;
+}
+
+- (bool) IsFillPlot
+{
+    return fillPlot;
+}
+
+- (void) setDrawBezier: (bool) draw
+{
+    drawBezier = draw;
+}
+
+- (void) setFillPlot: (bool) doFill
+{
+    fillPlot = doFill;
+}
+
+- (void) initPlot
+{
+    // Initialization code
+    audioListener = nil;
+    drawBezier = true;
+    fillPlot = true;
+    showCoordinates = true;
+    
+    [self setBackgroundColor:[UIColor grayColor]];
+    
+    bufferData = (s_sample*)malloc(bufferSize*sizeof(s_sample));
+    bufferDataTemp = (s_sample*)malloc(bufferSize*sizeof(s_sample));
+    for(int i = 0; i<bufferSize; i++)
+    {
+        s_sample value = (s_sample)i/bufferSize;
+        value = 0;
+        bufferData[i]=(value);
+        bufferDataTemp[i]=(value);
+    }
+    
+    currentBufferSize = bufferSize;
+    bufferLock = [[NSObject alloc] init];
+    
+    CGRect screenRect = [[UIScreen mainScreen]bounds];
+    
+    int numberOfSection = 4;
+    int sectionSize = (fmax((int)screenRect.size.width, (int)screenRect.size.height))/numberOfSection;
+    int labelOffset = 10;
+    
+    
+    CGRect frame1;
+    frame1.origin.x = labelOffset ;
+    frame1.origin.y = 10;
+    frame1.size.height = 20;
+    frame1.size.width = 100;
+    label1 = [[UILabel alloc] initWithFrame:frame1];
+    [label1 setText: [NSString stringWithFormat:@"%d",0]];
+    [self addSubview:label1];
+    
+    
+    frame1.origin.x = sectionSize + labelOffset ;
+    label2 = [[UILabel alloc] initWithFrame:frame1];
+    [label2 setText:[NSString stringWithFormat:@"%d",(bufferSize/4)]];
+    [self addSubview:label2];
+    
+    frame1.origin.x = 2*sectionSize + labelOffset ;
+    label3 = [[UILabel alloc] initWithFrame:frame1];
+    [label3 setText:[NSString stringWithFormat:@"%d",2*(bufferSize/4)]];
+    [self addSubview:label3];
+    
+    frame1.origin.x = 3*sectionSize + labelOffset ;
+    label4 = [[UILabel alloc] initWithFrame:frame1];
+    [label4 setText:[NSString stringWithFormat:@"%d",3*(bufferSize/4)]];
+    [self addSubview:label4];
+    
+    frame1.origin.x = 4*sectionSize - 50 ;
+    label5 = [[UILabel alloc] initWithFrame:frame1];
+    [label5 setText:[NSString stringWithFormat:@"%d",4*(bufferSize/4)]];
+    [self addSubview:label5];
+    
+    
+    labelsContainer = [[NSMutableArray alloc] init];
+    [labelsContainer addObject:label1];
+    [labelsContainer addObject:label2];
+    [labelsContainer addObject:label3];
+    [labelsContainer addObject:label4];
+    [labelsContainer addObject:label5];
+    
+    
+    
+#ifdef USE_TIMER_FOR_TESTING
+    bufferDataTest = (s_sample*)malloc(bufferSize*sizeof(s_sample));
+    [self generateRandomBuffer];
+    [NSTimer scheduledTimerWithTimeInterval:TIMER_RATE
+                                     target:self
+                                   selector:@selector(onTimerTriggered:)
+                                   userInfo:nil
+                                    repeats:YES];
+#endif
+
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-        audioListener = nil;
-        
-        [self setBackgroundColor:[UIColor grayColor]];
-        
-        bufferData = (s_sample*)malloc(bufferSize*sizeof(s_sample));
-        bufferDataTemp = (s_sample*)malloc(bufferSize*sizeof(s_sample));
-        for(int i = 0; i<bufferSize; i++)
-        {
-            s_sample value = (s_sample)i/bufferSize;
-            value = 0;
-            bufferData[i]=(value);
-            bufferDataTemp[i]=(value);
         }
-        
-        currentBufferSize = bufferSize;
-        bufferLock = [[NSObject alloc] init];
-        
-        
-#ifdef USE_TIMER_FOR_TESTING
-        bufferDataTest = (s_sample*)malloc(bufferSize*sizeof(s_sample));
-        [self generateRandomBuffer];
-        [NSTimer scheduledTimerWithTimeInterval:TIMER_RATE
-                                         target:self
-                                       selector:@selector(onTimerTriggered:)
-                                       userInfo:nil
-                                        repeats:YES];
-#endif
-    }
     return self;
 }
 
@@ -77,6 +162,7 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
     free(bufferDataTest);
     
     [bufferLock release];
+    [labelsContainer release];
     
 }
 
@@ -134,20 +220,23 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
 {
     // Drawing code
     
+    CGFloat alphaValue = 0.5f;
     
-    bool useBezier = true;
-    bool fillPlot = true;
     
     @synchronized (bufferLock){
         memcpy(bufferDataTemp, bufferData, currentBufferSize*sizeof(s_sample));
     }
+    
+    if(NULL==bufferDataTemp)
+        return;
+    
     s_sample bufferStep = (s_sample)currentBufferSize/(s_sample)self.frame.size.width;
     
     CGRect frame = self.frame;
     int yCenter = frame.size.height/2;
     
     
-    if(useBezier)
+    if(drawBezier)
     {
        
         NSMutableArray *interpolationPoints = [[NSMutableArray alloc]init];
@@ -190,7 +279,9 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
                 
                 if(fillPlot)
                 {
-                    [[UIColor blackColor] setFill];
+                    UIColor *color= [UIColor blackColor];
+                    [[color colorWithAlphaComponent:alphaValue] setFill];
+                    
                     path.usesEvenOddFillRule = YES;
                     [path fill];
                 }
@@ -239,6 +330,50 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
     }
     
     
+    // DRAW VERTICAL LINES
+    int numberOfSection = 4;
+
+    if(showCoordinates)
+    {
+        int sectionSize = frame.size.width/numberOfSection;
+        
+        for (int i = 0; i<numberOfSection+1;i++)
+        {
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            
+            float dash[2]={6 ,5};
+            CGContextSetLineDash(context, 0, dash, 2);
+            
+            CGPoint pt1;
+            pt1.x = i*sectionSize;
+            pt1.y = 0;
+            
+            CGPoint pt2;
+            pt2.x = i*sectionSize;
+            pt2.y = frame.size.height;
+            
+            CGMutablePathRef path2 = CGPathCreateMutable();
+            CGPathMoveToPoint(path2, nil, pt1.x, pt1.y);
+            CGPathAddLineToPoint(path2, nil, pt2.x, pt2.y);
+            
+            CGContextAddPath(context, path2);
+            
+            CGContextDrawPath(context, kCGPathStroke);
+            
+            
+            
+            CGPoint ptText;
+            ptText.x = i*sectionSize+ 10;
+            ptText.y = 0 + 10;
+            
+            [[labelsContainer objectAtIndex:i] setText:[NSString stringWithFormat:@"%d",i*(bufferSize/4)]];
+        }
+    }
+    
+    for (int i = 0; i<numberOfSection+1;i++)
+    {
+        [[labelsContainer objectAtIndex:i] setHidden:!showCoordinates];
+    }
     
 
     

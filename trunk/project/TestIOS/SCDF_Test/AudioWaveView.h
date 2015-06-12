@@ -24,6 +24,11 @@ public:
 @interface AudioWaveView : UIView
 
 {
+    
+    bool drawBezier;
+    bool fillPlot;
+    bool showCoordinates;
+    
     s_sample *bufferData;
     s_sample *bufferDataTemp;
     NSObject *bufferLock;
@@ -34,10 +39,25 @@ public:
     
     AudioWaveListener *audioListener;
     
+    UILabel *label1;
+    UILabel *label2;
+    UILabel *label3;
+    UILabel *label4;
+    UILabel *label5;
+    
+    NSMutableArray *labelsContainer;
+    
 
 }
 
 - (void) setListener: (AudioWaveListener* ) listener;
+- (void) initPlot;
+- (bool) IsDrawBezier;
+- (bool) IsFillPlot;
+- (bool) IsShowCoordinates;
+- (void) setDrawBezier: (bool) draw;
+- (void) setFillPlot: (bool) doFill;
+- (void) setShowCoordinates: (bool) show;
 
 @end
 

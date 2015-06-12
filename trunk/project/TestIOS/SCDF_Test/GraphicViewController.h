@@ -12,11 +12,16 @@
 @interface GraphicViewController : UIViewController
 
 {
-    AudioWaveView      *waveView;
-    UIView             *topView;
-    UIView             *bottomView;
+    IBOutlet    AudioWaveView      *waveView;
     
-    UILabel            *topLabel;
+    IBOutlet    UISwitch        *bezierToggle;
+    IBOutlet    UISwitch        *fillToggle;
+    IBOutlet    UISwitch        *coordsToggle;
 }
+
+
+- (IBAction) toggleDrawBezier: (id) sender;
+- (IBAction) toggleFillPlot: (id) sender;
+- (IBAction) toggleShowCoord: (id) sender;
 
 @end
