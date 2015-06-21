@@ -57,9 +57,9 @@ typedef s_float s_sample;
 #define DEFAULT_AUDIO_BUFFER_SIZE 512
 
 #ifdef PLATF_IOS
-#define EXPORT_SYM __attribute__((visibility("default")))
+#define SCDF_API __attribute__((visibility("default")))
 #else
-#define EXPORT_SYM
+#define SCDF_API
 #endif
 
 #endif
