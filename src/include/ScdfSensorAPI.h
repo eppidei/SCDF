@@ -29,7 +29,7 @@ namespace scdf {
             virtual void Release() = 0;
     };
     
-    class ScdfSensorAPI
+    class EXPORT_SYM ScdfSensorAPI
     {
         ScdfSensorAPI(){}
         
@@ -66,7 +66,7 @@ namespace scdf {
     };
 
     
-    ScdfSensorAPI *theSensorAPI();
+    ScdfSensorAPI * EXPORT_SYM theSensorAPI();
 }
 
 

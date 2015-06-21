@@ -12,13 +12,13 @@
 		9DC975FE1B357023001EDADB /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975EF1B357023001EDADB /* Harvester.cpp */; };
 		9DC976021B357023001EDADB /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F31B357023001EDADB /* PipesManager.cpp */; };
 		9DC976031B357023001EDADB /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F41B357023001EDADB /* Receiver.cpp */; };
-		9DC976041B357023001EDADB /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F51B357023001EDADB /* ScdfSensorAPI.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC976041B357023001EDADB /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F51B357023001EDADB /* ScdfSensorAPI.cpp */; };
 		9DC976051B357023001EDADB /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F61B357023001EDADB /* Sensor.cpp */; };
 		9DC976061B357023001EDADB /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F71B357023001EDADB /* SensorAudioInput.cpp */; };
 		9DC976071B357023001EDADB /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F81B357023001EDADB /* SensorsManager.cpp */; };
 		9DC976081B357023001EDADB /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F91B357023001EDADB /* SensorStandard.cpp */; };
 		9DC976091B357023001EDADB /* ThreadUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FA1B357023001EDADB /* ThreadUtils.cpp */; };
-		9DC9760A1B357023001EDADB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FB1B357023001EDADB /* UDPSender.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC9760A1B357023001EDADB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FB1B357023001EDADB /* UDPSender.cpp */; };
 		9DC9760B1B357023001EDADB /* UDPSendersManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FC1B357023001EDADB /* UDPSendersManager.cpp */; };
 		9DC976211B357032001EDADB /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976131B357032001EDADB /* SaveSettings.mm */; };
 		9DC976231B357032001EDADB /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976151B357032001EDADB /* SensorAudioInputIosImpl.mm */; };
@@ -432,6 +432,11 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDCF_Framework_iOS/SDCF_Framework_iOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					PLATF_IOS,
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,6 +462,7 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDCF_Framework_iOS/SDCF_Framework_iOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = PLATF_IOS;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

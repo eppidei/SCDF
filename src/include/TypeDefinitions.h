@@ -56,5 +56,12 @@ typedef s_float s_sample;
 #define DEFAULT_SENORS_STANDARD_RATE 100
 #define DEFAULT_AUDIO_BUFFER_SIZE 512
 
+#ifdef PLATF_IOS
+#define EXPORT_SYM __attribute__((visibility("default")))
+#else
+#define EXPORT_SYM
 #endif
+
+#endif
+
 

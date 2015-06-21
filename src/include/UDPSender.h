@@ -25,7 +25,7 @@ namespace osc {
 }
 namespace scdf
 {
-    class UDPSender
+    class EXPORT_SYM UDPSender
     {
         std::auto_ptr<UdpSocket> transmitSocket;
         std::vector<IpEndpointName*> endPoints;
