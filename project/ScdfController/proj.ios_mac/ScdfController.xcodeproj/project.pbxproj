@@ -12,11 +12,7 @@
 		1AC6FB21180E996B004C840B /* libcocos2dx Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2dx Mac.a */; };
 		1AC6FB22180E996B004C840B /* libcocos2dx-extensions Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFB180E9839004C840B /* libcocos2dx-extensions Mac.a */; };
 		1AC6FB23180E996B004C840B /* libCocosDenshion Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB01180E9839004C840B /* libCocosDenshion Mac.a */; };
-		1AC6FB2E180E99EB004C840B /* libbox2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB0D180E9839004C840B /* libbox2d iOS.a */; };
-		1AC6FB2F180E99EB004C840B /* libchipmunk iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB0B180E9839004C840B /* libchipmunk iOS.a */; };
 		1AC6FB30180E99EB004C840B /* libcocos2dx iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2dx iOS.a */; };
-		1AC6FB31180E99EB004C840B /* libcocos2dx-extensions iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB09180E9839004C840B /* libcocos2dx-extensions iOS.a */; };
-		1AC6FB32180E99EB004C840B /* libCocosDenshion iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB0F180E9839004C840B /* libCocosDenshion iOS.a */; };
 		1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
@@ -126,24 +122,6 @@
 		9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D64E9EA1A17935500B83274 /* SCDFCScrollView.cpp */; };
 		9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D64E9ED1A17C54300B83274 /* SCDFCWorkingPanel.cpp */; };
 		9D6C01B71ADAF15000F75A3C /* MultiSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D04A95E1ABE2DB900DEF8BA /* MultiSender.cpp */; };
-		9D6C01CD1ADAF8E000F75A3C /* ADE_blas_level1.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01B91ADAF8E000F75A3C /* ADE_blas_level1.c */; };
-		9D6C01CE1ADAF8E000F75A3C /* ADE_blas_level2.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BA1ADAF8E000F75A3C /* ADE_blas_level2.c */; };
-		9D6C01CF1ADAF8E000F75A3C /* ADE_blas_level3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BB1ADAF8E000F75A3C /* ADE_blas_level3.c */; };
-		9D6C01D01ADAF8E000F75A3C /* ADE_Blow.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BC1ADAF8E000F75A3C /* ADE_Blow.c */; };
-		9D6C01D11ADAF8E000F75A3C /* ADE_complex.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BD1ADAF8E000F75A3C /* ADE_complex.c */; };
-		9D6C01D21ADAF8E000F75A3C /* ADE_decimator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BE1ADAF8E000F75A3C /* ADE_decimator.c */; };
-		9D6C01D31ADAF8E000F75A3C /* ADE_downsampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01BF1ADAF8E000F75A3C /* ADE_downsampler.c */; };
-		9D6C01D41ADAF8E000F75A3C /* ADE_Error_Handler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C01ADAF8E000F75A3C /* ADE_Error_Handler.c */; };
-		9D6C01D51ADAF8E000F75A3C /* ADE_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C11ADAF8E000F75A3C /* ADE_fft.c */; };
-		9D6C01D61ADAF8E000F75A3C /* ADE_fir.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C21ADAF8E000F75A3C /* ADE_fir.c */; };
-		9D6C01D71ADAF8E000F75A3C /* ADE_iir.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C31ADAF8E000F75A3C /* ADE_iir.c */; };
-		9D6C01D81ADAF8E000F75A3C /* ADE_interpolator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C41ADAF8E000F75A3C /* ADE_interpolator.c */; };
-		9D6C01DA1ADAF8E000F75A3C /* ADE_nrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C61ADAF8E000F75A3C /* ADE_nrutil.c */; };
-		9D6C01DB1ADAF8E000F75A3C /* ADE_polyfit.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C71ADAF8E000F75A3C /* ADE_polyfit.c */; };
-		9D6C01DC1ADAF8E000F75A3C /* ADE_Snap.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C81ADAF8E000F75A3C /* ADE_Snap.c */; };
-		9D6C01DD1ADAF8E000F75A3C /* ADE_upsampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01C91ADAF8E000F75A3C /* ADE_upsampler.c */; };
-		9D6C01DE1ADAF8E000F75A3C /* ADE_Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01CA1ADAF8E000F75A3C /* ADE_Utils.c */; };
-		9D6C01DF1ADAF8E000F75A3C /* ADE.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C01CB1ADAF8E000F75A3C /* ADE.c */; };
 		9D6C01FD1ADB031000F75A3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 503AE0FC17EB989F00D1A890 /* main.m */; };
 		9D82C2CF1A1C04EB00FF1243 /* SCDFCItems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D82C2CD1A1C04EB00FF1243 /* SCDFCItems.cpp */; };
 		9D9A6F4D1AEF9BE400DEBF64 /* iconPitchWheelPressedNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D9A6F4C1AEF9BE400DEBF64 /* iconPitchWheelPressedNew.png */; };
@@ -152,7 +130,6 @@
 		9DC821351AF807C500712B97 /* OpenSans-CondLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821321AF7FA9800712B97 /* OpenSans-CondLight.ttf */; };
 		9DC821371AF80FD800712B97 /* Ds_Digi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821361AF80B4000712B97 /* Ds_Digi.ttf */; };
 		9DC821391AF8A18600712B97 /* loadPopup.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC821381AF8A18600712B97 /* loadPopup.png */; };
-		9DC974A61B248899001EDADB /* ADE_proximity.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DC974A51B248899001EDADB /* ADE_proximity.c */; };
 		9DEEDD481AEC5F9400BB7082 /* newDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD471AEC5F9400BB7082 /* newDefaultNew.png */; };
 		9DEEDD4A1AEC5F9E00BB7082 /* saveDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD491AEC5F9E00BB7082 /* saveDefaultNew.png */; };
 		9DEEDD4C1AECF6C900BB7082 /* loadDefaultNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD4B1AECF6C900BB7082 /* loadDefaultNew.png */; };
@@ -168,6 +145,9 @@
 		9DEEDD671AED5E2600BB7082 /* rightPanelTongueClosed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD651AED5E2600BB7082 /* rightPanelTongueClosed.png */; };
 		9DEEDD681AED5E2600BB7082 /* rightPanelTongueOpened.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DEEDD661AED5E2600BB7082 /* rightPanelTongueOpened.png */; };
 		9DF072291ADEF2EB00F2699D /* ControlUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC175EAB1A4749F6009DCA73 /* ControlUnit.cpp */; };
+		9DF21EAE1B36D01A00D3394D /* libSDCF_Framework_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF21EA31B36CFD000D3394D /* libSDCF_Framework_iOS.a */; };
+		9DF21F131B36D71800D3394D /* libADE_Framework.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF21F031B36D6A500D3394D /* libADE_Framework.a */; };
+		9DF21F141B36D88A00D3394D /* libcocos2dx-extensions iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB09180E9839004C840B /* libcocos2dx-extensions iOS.a */; };
 		9DF27D5A1B079C3B00BF15B7 /* overwriteDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D581B079C3B00BF15B7 /* overwriteDefault.png */; };
 		9DF27D5B1B079C3B00BF15B7 /* overwriteHover.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D591B079C3B00BF15B7 /* overwriteHover.png */; };
 		9DF27D5E1B079C4A00BF15B7 /* deleteFileDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF27D5C1B079C4A00BF15B7 /* deleteFileDefault.png */; };
@@ -175,30 +155,6 @@
 		9DFAC8021ABD6E77007658E0 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DFAC8001ABD6E77007658E0 /* Label.cpp */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
-		CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */; };
-		CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE28E1A7546F400C4B34C /* Harvester.cpp */; };
-		CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2901A7546F400C4B34C /* PipesManager.cpp */; };
-		CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2911A7546F400C4B34C /* Receiver.cpp */; };
-		CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2851A7546D700C4B34C /* Sensor.cpp */; };
-		CCBBE2B21A7547A400C4B34C /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */; };
-		CCBBE2B31A7547A400C4B34C /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */; };
-		CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */; };
-		CCBBE2B51A7547A400C4B34C /* ThreadUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */; };
-		CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2801A7546C100C4B34C /* UDPSender.cpp */; };
-		CCBBE2B71A7547A400C4B34C /* UDPSendersManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */; };
-		CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE29D1A75474200C4B34C /* SaveSettings.mm */; };
-		CCBBE2BF1A7547A700C4B34C /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */; };
-		CCBBE2C01A7547A700C4B34C /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */; };
-		CCBBE2C11A7547A700C4B34C /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */; };
-		CCBBE2D01A754ACA00C4B34C /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */; };
-		CCBBE2D11A754ACA00C4B34C /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */; };
-		CCBBE2D21A754ACA00C4B34C /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */; };
-		CCBBE2D31A754ACA00C4B34C /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */; };
-		CCBBE2DA1A754ADE00C4B34C /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */; };
-		CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */; };
-		CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */; };
-		CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */; };
-		CCBBE3751A7561A500C4B34C /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -363,26 +319,47 @@
 			remoteGlobalIDString = A07A4E111783867C0073F6A7;
 			remoteInfo = "cocos2dx-extensions iOS";
 		};
-		1AC6FB28180E99E1004C840B /* PBXContainerItemProxy */ = {
+		9DF21EA21B36CFD000D3394D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A07A4EFD178387670073F6A7;
-			remoteInfo = "chipmunk iOS";
+			containerPortal = 9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DC975D31B356FF2001EDADB;
+			remoteInfo = SDCF_Framework_iOS;
 		};
-		1AC6FB2A180E99E1004C840B /* PBXContainerItemProxy */ = {
+		9DF21EA41B36CFD000D3394D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A07A4F3C1783876B0073F6A7;
-			remoteInfo = "box2d iOS";
+			containerPortal = 9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DC975DE1B356FF3001EDADB;
+			remoteInfo = SDCF_Framework_iOSTests;
 		};
-		1AC6FB2C180E99E1004C840B /* PBXContainerItemProxy */ = {
+		9DF21EA81B36D00100D3394D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
+			containerPortal = 9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = A07A4F9F178387730073F6A7;
-			remoteInfo = "CocosDenshion iOS";
+			remoteGlobalIDString = 9DC975D21B356FF2001EDADB;
+			remoteInfo = SDCF_Framework_iOS;
+		};
+		9DF21F021B36D6A500D3394D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DF21EB81B36D43700D3394D;
+			remoteInfo = ADE_Framework;
+		};
+		9DF21F041B36D6A500D3394D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DF21EC31B36D43700D3394D;
+			remoteInfo = ADE_FrameworkTests;
+		};
+		9DF21F0C1B36D70100D3394D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DF21EB71B36D43700D3394D;
+			remoteInfo = ADE_Framework;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -502,53 +479,6 @@
 		9D64E9EE1A17C54300B83274 /* SCDFCWorkingPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDFCWorkingPanel.h; path = ../Classes/SCDFCWorkingPanel.h; sourceTree = "<group>"; };
 		9D6C01B01ADAB35B00F75A3C /* ControlUnitPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlUnitPatch.h; path = ../Classes/ControlUnitPatch.h; sourceTree = "<group>"; };
 		9D6C01B31ADAB4C700F75A3C /* ControlUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlUnit.h; path = ../Classes/ControlUnit.h; sourceTree = "<group>"; };
-		9D6C01B81ADAF8E000F75A3C /* ADE_Bench_Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Bench_Utils.c; path = ../../../ext/ADE_API/API/src/ADE_Bench_Utils.c; sourceTree = "<group>"; };
-		9D6C01B91ADAF8E000F75A3C /* ADE_blas_level1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level1.c; path = ../../../ext/ADE_API/API/src/ADE_blas_level1.c; sourceTree = "<group>"; };
-		9D6C01BA1ADAF8E000F75A3C /* ADE_blas_level2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level2.c; path = ../../../ext/ADE_API/API/src/ADE_blas_level2.c; sourceTree = "<group>"; };
-		9D6C01BB1ADAF8E000F75A3C /* ADE_blas_level3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level3.c; path = ../../../ext/ADE_API/API/src/ADE_blas_level3.c; sourceTree = "<group>"; };
-		9D6C01BC1ADAF8E000F75A3C /* ADE_Blow.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Blow.c; path = ../../../ext/ADE_API/API/src/ADE_Blow.c; sourceTree = "<group>"; };
-		9D6C01BD1ADAF8E000F75A3C /* ADE_complex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_complex.c; path = ../../../ext/ADE_API/API/src/ADE_complex.c; sourceTree = "<group>"; };
-		9D6C01BE1ADAF8E000F75A3C /* ADE_decimator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_decimator.c; path = ../../../ext/ADE_API/API/src/ADE_decimator.c; sourceTree = "<group>"; };
-		9D6C01BF1ADAF8E000F75A3C /* ADE_downsampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_downsampler.c; path = ../../../ext/ADE_API/API/src/ADE_downsampler.c; sourceTree = "<group>"; };
-		9D6C01C01ADAF8E000F75A3C /* ADE_Error_Handler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Error_Handler.c; path = ../../../ext/ADE_API/API/src/ADE_Error_Handler.c; sourceTree = "<group>"; };
-		9D6C01C11ADAF8E000F75A3C /* ADE_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_fft.c; path = ../../../ext/ADE_API/API/src/ADE_fft.c; sourceTree = "<group>"; };
-		9D6C01C21ADAF8E000F75A3C /* ADE_fir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_fir.c; path = ../../../ext/ADE_API/API/src/ADE_fir.c; sourceTree = "<group>"; };
-		9D6C01C31ADAF8E000F75A3C /* ADE_iir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_iir.c; path = ../../../ext/ADE_API/API/src/ADE_iir.c; sourceTree = "<group>"; };
-		9D6C01C41ADAF8E000F75A3C /* ADE_interpolator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_interpolator.c; path = ../../../ext/ADE_API/API/src/ADE_interpolator.c; sourceTree = "<group>"; };
-		9D6C01C51ADAF8E000F75A3C /* ADE_Matlab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Matlab.c; path = ../../../ext/ADE_API/API/src/ADE_Matlab.c; sourceTree = "<group>"; };
-		9D6C01C61ADAF8E000F75A3C /* ADE_nrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_nrutil.c; path = ../../../ext/ADE_API/API/src/ADE_nrutil.c; sourceTree = "<group>"; };
-		9D6C01C71ADAF8E000F75A3C /* ADE_polyfit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_polyfit.c; path = ../../../ext/ADE_API/API/src/ADE_polyfit.c; sourceTree = "<group>"; };
-		9D6C01C81ADAF8E000F75A3C /* ADE_Snap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Snap.c; path = ../../../ext/ADE_API/API/src/ADE_Snap.c; sourceTree = "<group>"; };
-		9D6C01C91ADAF8E000F75A3C /* ADE_upsampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_upsampler.c; path = ../../../ext/ADE_API/API/src/ADE_upsampler.c; sourceTree = "<group>"; };
-		9D6C01CA1ADAF8E000F75A3C /* ADE_Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Utils.c; path = ../../../ext/ADE_API/API/src/ADE_Utils.c; sourceTree = "<group>"; };
-		9D6C01CB1ADAF8E000F75A3C /* ADE.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE.c; path = ../../../ext/ADE_API/API/src/ADE.c; sourceTree = "<group>"; };
-		9D6C01E01ADAF9C200F75A3C /* ADE_accelerate_framework_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_accelerate_framework_wrapper.h; path = ../../../ext/ADE_API/API/src/headers/ADE_accelerate_framework_wrapper.h; sourceTree = "<group>"; };
-		9D6C01E11ADAF9C200F75A3C /* ADE_Bench_Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Bench_Utils.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Bench_Utils.h; sourceTree = "<group>"; };
-		9D6C01E21ADAF9C200F75A3C /* ADE_blas_level1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_blas_level1.h; path = ../../../ext/ADE_API/API/src/headers/ADE_blas_level1.h; sourceTree = "<group>"; };
-		9D6C01E31ADAF9C200F75A3C /* ADE_blas_level2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_blas_level2.h; path = ../../../ext/ADE_API/API/src/headers/ADE_blas_level2.h; sourceTree = "<group>"; };
-		9D6C01E41ADAF9C200F75A3C /* ADE_blas_level3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_blas_level3.h; path = ../../../ext/ADE_API/API/src/headers/ADE_blas_level3.h; sourceTree = "<group>"; };
-		9D6C01E51ADAF9C200F75A3C /* ADE_blas_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_blas_wrapper.h; path = ../../../ext/ADE_API/API/src/headers/ADE_blas_wrapper.h; sourceTree = "<group>"; };
-		9D6C01E61ADAF9C200F75A3C /* ADE_Blow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Blow.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Blow.h; sourceTree = "<group>"; };
-		9D6C01E71ADAF9C200F75A3C /* ADE_cblas.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_cblas.h; path = ../../../ext/ADE_API/API/src/headers/ADE_cblas.h; sourceTree = "<group>"; };
-		9D6C01E81ADAF9C200F75A3C /* ADE_complex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_complex.h; path = ../../../ext/ADE_API/API/src/headers/ADE_complex.h; sourceTree = "<group>"; };
-		9D6C01E91ADAF9C200F75A3C /* ADE_decimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_decimator.h; path = ../../../ext/ADE_API/API/src/headers/ADE_decimator.h; sourceTree = "<group>"; };
-		9D6C01EA1ADAF9C200F75A3C /* ADE_defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_defines.h; path = ../../../ext/ADE_API/API/src/headers/ADE_defines.h; sourceTree = "<group>"; };
-		9D6C01EB1ADAF9C200F75A3C /* ADE_downsampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_downsampler.h; path = ../../../ext/ADE_API/API/src/headers/ADE_downsampler.h; sourceTree = "<group>"; };
-		9D6C01EC1ADAF9C200F75A3C /* ADE_Error_Handler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Error_Handler.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Error_Handler.h; sourceTree = "<group>"; };
-		9D6C01ED1ADAF9C200F75A3C /* ADE_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_errors.h; path = ../../../ext/ADE_API/API/src/headers/ADE_errors.h; sourceTree = "<group>"; };
-		9D6C01EE1ADAF9C200F75A3C /* ADE_fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_fft.h; path = ../../../ext/ADE_API/API/src/headers/ADE_fft.h; sourceTree = "<group>"; };
-		9D6C01EF1ADAF9C200F75A3C /* ADE_fir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_fir.h; path = ../../../ext/ADE_API/API/src/headers/ADE_fir.h; sourceTree = "<group>"; };
-		9D6C01F01ADAF9C200F75A3C /* ADE_iir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_iir.h; path = ../../../ext/ADE_API/API/src/headers/ADE_iir.h; sourceTree = "<group>"; };
-		9D6C01F11ADAF9C200F75A3C /* ADE_interpolator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_interpolator.h; path = ../../../ext/ADE_API/API/src/headers/ADE_interpolator.h; sourceTree = "<group>"; };
-		9D6C01F21ADAF9C200F75A3C /* ADE_Matlab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Matlab.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Matlab.h; sourceTree = "<group>"; };
-		9D6C01F31ADAF9C200F75A3C /* ADE_nrutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_nrutil.h; path = ../../../ext/ADE_API/API/src/headers/ADE_nrutil.h; sourceTree = "<group>"; };
-		9D6C01F41ADAF9C200F75A3C /* ADE_polyfit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_polyfit.h; path = ../../../ext/ADE_API/API/src/headers/ADE_polyfit.h; sourceTree = "<group>"; };
-		9D6C01F51ADAF9C200F75A3C /* ADE_SCDF_Interface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_SCDF_Interface.h; path = ../../../ext/ADE_API/API/src/headers/ADE_SCDF_Interface.h; sourceTree = "<group>"; };
-		9D6C01F61ADAF9C200F75A3C /* ADE_Snap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Snap.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Snap.h; sourceTree = "<group>"; };
-		9D6C01F71ADAF9C200F75A3C /* ADE_typedefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_typedefs.h; path = ../../../ext/ADE_API/API/src/headers/ADE_typedefs.h; sourceTree = "<group>"; };
-		9D6C01F81ADAF9C200F75A3C /* ADE_upsampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_upsampler.h; path = ../../../ext/ADE_API/API/src/headers/ADE_upsampler.h; sourceTree = "<group>"; };
-		9D6C01F91ADAF9C200F75A3C /* ADE_Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE_Utils.h; path = ../../../ext/ADE_API/API/src/headers/ADE_Utils.h; sourceTree = "<group>"; };
-		9D6C01FA1ADAF9C200F75A3C /* ADE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ADE.h; path = ../../../ext/ADE_API/API/src/headers/ADE.h; sourceTree = "<group>"; };
 		9D82C2CD1A1C04EB00FF1243 /* SCDFCItems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCDFCItems.cpp; path = ../Classes/SCDFCItems.cpp; sourceTree = "<group>"; };
 		9D82C2CE1A1C04EB00FF1243 /* SCDFCItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDFCItems.h; path = ../Classes/SCDFCItems.h; sourceTree = "<group>"; };
 		9D82C2D21A1C073100FF1243 /* SCDFCDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDFCDefinitions.h; path = ../Classes/SCDFCDefinitions.h; sourceTree = "<group>"; };
@@ -559,7 +489,6 @@
 		9DC821321AF7FA9800712B97 /* OpenSans-CondLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-CondLight.ttf"; sourceTree = "<group>"; };
 		9DC821361AF80B4000712B97 /* Ds_Digi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ds_Digi.ttf; sourceTree = "<group>"; };
 		9DC821381AF8A18600712B97 /* loadPopup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadPopup.png; sourceTree = "<group>"; };
-		9DC974A51B248899001EDADB /* ADE_proximity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_proximity.c; path = ../../../ext/ADE_API/API/src/ADE_proximity.c; sourceTree = "<group>"; };
 		9DEEDD471AEC5F9400BB7082 /* newDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newDefaultNew.png; sourceTree = "<group>"; };
 		9DEEDD491AEC5F9E00BB7082 /* saveDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = saveDefaultNew.png; sourceTree = "<group>"; };
 		9DEEDD4B1AECF6C900BB7082 /* loadDefaultNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadDefaultNew.png; sourceTree = "<group>"; };
@@ -574,6 +503,8 @@
 		9DEEDD621AED585D00BB7082 /* leftPanelTongueOpened.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftPanelTongueOpened.png; sourceTree = "<group>"; };
 		9DEEDD651AED5E2600BB7082 /* rightPanelTongueClosed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightPanelTongueClosed.png; sourceTree = "<group>"; };
 		9DEEDD661AED5E2600BB7082 /* rightPanelTongueOpened.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightPanelTongueOpened.png; sourceTree = "<group>"; };
+		9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDCF_Framework_iOS.xcodeproj; path = ../../SDCF_Framework_iOS/SDCF_Framework_iOS.xcodeproj; sourceTree = "<group>"; };
+		9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ADE_Framework.xcodeproj; path = ../../ADE_Framework/ADE_Framework.xcodeproj; sourceTree = "<group>"; };
 		9DF27D581B079C3B00BF15B7 /* overwriteDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overwriteDefault.png; sourceTree = "<group>"; };
 		9DF27D591B079C3B00BF15B7 /* overwriteHover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overwriteHover.png; sourceTree = "<group>"; };
 		9DF27D5C1B079C4A00BF15B7 /* deleteFileDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteFileDefault.png; sourceTree = "<group>"; };
@@ -582,44 +513,6 @@
 		9DFAC8011ABD6E77007658E0 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Label.h; path = ../Classes/Label.h; sourceTree = "<group>"; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadUtils.cpp; path = ../../../src/ThreadUtils.cpp; sourceTree = "<group>"; };
-		CCBBE2801A7546C100C4B34C /* UDPSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSender.cpp; path = ../../../src/UDPSender.cpp; sourceTree = "<group>"; };
-		CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSendersManager.cpp; path = ../../../src/UDPSendersManager.cpp; sourceTree = "<group>"; };
-		CCBBE2851A7546D700C4B34C /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../src/Sensor.cpp; sourceTree = "<group>"; };
-		CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = SensorAudioInput.cpp; path = ../../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
-		CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
-		CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = SensorStandard.cpp; path = ../../../src/SensorStandard.cpp; sourceTree = "<group>"; };
-		CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CustomPipe.cpp; path = ../../../src/CustomPipe.cpp; sourceTree = "<group>"; };
-		CCBBE28E1A7546F400C4B34C /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../../src/Harvester.cpp; sourceTree = "<group>"; };
-		CCBBE2901A7546F400C4B34C /* PipesManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PipesManager.cpp; path = ../../../src/PipesManager.cpp; sourceTree = "<group>"; };
-		CCBBE2911A7546F400C4B34C /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../../src/Receiver.cpp; sourceTree = "<group>"; };
-		CCBBE29D1A75474200C4B34C /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaveSettings.mm; path = ../../../src/ios/SaveSettings.mm; sourceTree = "<group>"; };
-		CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorAudioInputIosImpl.mm; path = ../../../src/ios/SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
-		CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIos.mm; path = ../../../src/ios/SensorStandardIos.mm; sourceTree = "<group>"; };
-		CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIosImpl.mm; path = ../../../src/ios/SensorStandardIosImpl.mm; sourceTree = "<group>"; };
-		CCBBE2C41A754ACA00C4B34C /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../../../lib/oscpack_1_1_0/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
-		CCBBE2C51A754ACA00C4B34C /* OscException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = ../../../lib/oscpack_1_1_0/osc/OscException.h; sourceTree = "<group>"; };
-		CCBBE2C61A754ACA00C4B34C /* OscHostEndianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = ../../../lib/oscpack_1_1_0/osc/OscHostEndianness.h; sourceTree = "<group>"; };
-		CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscOutboundPacketStream.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.cpp; sourceTree = "<group>"; };
-		CCBBE2C81A754ACA00C4B34C /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscOutboundPacketStream.h; path = ../../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.h; sourceTree = "<group>"; };
-		CCBBE2C91A754ACA00C4B34C /* OscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = ../../../lib/oscpack_1_1_0/osc/OscPacketListener.h; sourceTree = "<group>"; };
-		CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscPrintReceivedElements.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.cpp; sourceTree = "<group>"; };
-		CCBBE2CB1A754ACA00C4B34C /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPrintReceivedElements.h; path = ../../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.h; sourceTree = "<group>"; };
-		CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscReceivedElements.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscReceivedElements.cpp; sourceTree = "<group>"; };
-		CCBBE2CD1A754ACA00C4B34C /* OscReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscReceivedElements.h; path = ../../../lib/oscpack_1_1_0/osc/OscReceivedElements.h; sourceTree = "<group>"; };
-		CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscTypes.cpp; path = ../../../lib/oscpack_1_1_0/osc/OscTypes.cpp; sourceTree = "<group>"; };
-		CCBBE2CF1A754ACA00C4B34C /* OscTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscTypes.h; path = ../../../lib/oscpack_1_1_0/osc/OscTypes.h; sourceTree = "<group>"; };
-		CCBBE2D41A754ADE00C4B34C /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../../lib/oscpack_1_1_0/ip/IpEndpointName.h; sourceTree = "<group>"; };
-		CCBBE2D51A754ADE00C4B34C /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../../lib/oscpack_1_1_0/ip/NetworkingUtils.h; sourceTree = "<group>"; };
-		CCBBE2D61A754ADE00C4B34C /* PacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacketListener.h; path = ../../../lib/oscpack_1_1_0/ip/PacketListener.h; sourceTree = "<group>"; };
-		CCBBE2D71A754ADE00C4B34C /* TimerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerListener.h; path = ../../../lib/oscpack_1_1_0/ip/TimerListener.h; sourceTree = "<group>"; };
-		CCBBE2D81A754ADE00C4B34C /* UdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = ../../../lib/oscpack_1_1_0/ip/UdpSocket.h; sourceTree = "<group>"; };
-		CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = ../../../lib/oscpack_1_1_0/ip/IpEndpointName.cpp; sourceTree = "<group>"; };
-		CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkingUtils.cpp; sourceTree = "<group>"; };
-		CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UdpSocket.cpp; sourceTree = "<group>"; };
-		CCBBE2E21A754CC800C4B34C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.h"; sourceTree = "<group>"; };
-		CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = "../../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.cpp"; sourceTree = "<group>"; };
-		CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfSensorAPI.cpp; path = ../../../src/ScdfSensorAPI.cpp; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -670,17 +563,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DF21F141B36D88A00D3394D /* libcocos2dx-extensions iOS.a in Frameworks */,
+				9DF21F131B36D71800D3394D /* libADE_Framework.a in Frameworks */,
+				9DF21EAE1B36D01A00D3394D /* libSDCF_Framework_iOS.a in Frameworks */,
 				DC5B53411AE2B0F2004946D9 /* StoreKit.framework in Frameworks */,
 				9D5BA3121AAB02D800FCDBDA /* CoreMotion.framework in Frameworks */,
 				9D5BA3101AAB02C500FCDBDA /* OpenGLES.framework in Frameworks */,
 				9D5BA30E1AAB02AE00FCDBDA /* UIKit.framework in Frameworks */,
 				DCE4BAFA1A4220C6006C14FE /* Accelerate.framework in Frameworks */,
 				DCCA5A301A40DD150014FADE /* CoreMIDI.framework in Frameworks */,
-				1AC6FB2E180E99EB004C840B /* libbox2d iOS.a in Frameworks */,
-				1AC6FB2F180E99EB004C840B /* libchipmunk iOS.a in Frameworks */,
 				1AC6FB30180E99EB004C840B /* libcocos2dx iOS.a in Frameworks */,
-				1AC6FB31180E99EB004C840B /* libcocos2dx-extensions iOS.a in Frameworks */,
-				1AC6FB32180E99EB004C840B /* libCocosDenshion iOS.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
 				BF1712471292920000B8313A /* libz.dylib in Frameworks */,
@@ -736,6 +628,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DCCA5A2E1A40DB430014FADE /* MIDI */,
 				9D6C01B31ADAB4C700F75A3C /* ControlUnit.h */,
 				9D6C01B01ADAB35B00F75A3C /* ControlUnitPatch.h */,
 				9D39BD821AD92EAA001B3F39 /* ControlUnitPatch.cpp */,
@@ -794,10 +687,9 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				9D6C01B41ADAF0D000F75A3C /* ADE */,
-				CCBBE27B1A75467F00C4B34C /* SCDF Framework */,
-				DCCA5A2E1A40DB430014FADE /* MIDI */,
+				9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
+				9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				080E96DDFE201D6D7F000001 /* ios */,
@@ -976,161 +868,22 @@
 			path = ../Resources;
 			sourceTree = "<group>";
 		};
-		9D6C01B41ADAF0D000F75A3C /* ADE */ = {
+		9DF21E9E1B36CFD000D3394D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9DC974A51B248899001EDADB /* ADE_proximity.c */,
-				9D6C01E01ADAF9C200F75A3C /* ADE_accelerate_framework_wrapper.h */,
-				9D6C01E11ADAF9C200F75A3C /* ADE_Bench_Utils.h */,
-				9D6C01E21ADAF9C200F75A3C /* ADE_blas_level1.h */,
-				9D6C01E31ADAF9C200F75A3C /* ADE_blas_level2.h */,
-				9D6C01E41ADAF9C200F75A3C /* ADE_blas_level3.h */,
-				9D6C01E51ADAF9C200F75A3C /* ADE_blas_wrapper.h */,
-				9D6C01E61ADAF9C200F75A3C /* ADE_Blow.h */,
-				9D6C01E71ADAF9C200F75A3C /* ADE_cblas.h */,
-				9D6C01E81ADAF9C200F75A3C /* ADE_complex.h */,
-				9D6C01E91ADAF9C200F75A3C /* ADE_decimator.h */,
-				9D6C01EA1ADAF9C200F75A3C /* ADE_defines.h */,
-				9D6C01EB1ADAF9C200F75A3C /* ADE_downsampler.h */,
-				9D6C01EC1ADAF9C200F75A3C /* ADE_Error_Handler.h */,
-				9D6C01ED1ADAF9C200F75A3C /* ADE_errors.h */,
-				9D6C01EE1ADAF9C200F75A3C /* ADE_fft.h */,
-				9D6C01EF1ADAF9C200F75A3C /* ADE_fir.h */,
-				9D6C01F01ADAF9C200F75A3C /* ADE_iir.h */,
-				9D6C01F11ADAF9C200F75A3C /* ADE_interpolator.h */,
-				9D6C01F21ADAF9C200F75A3C /* ADE_Matlab.h */,
-				9D6C01F31ADAF9C200F75A3C /* ADE_nrutil.h */,
-				9D6C01F41ADAF9C200F75A3C /* ADE_polyfit.h */,
-				9D6C01F51ADAF9C200F75A3C /* ADE_SCDF_Interface.h */,
-				9D6C01F61ADAF9C200F75A3C /* ADE_Snap.h */,
-				9D6C01F71ADAF9C200F75A3C /* ADE_typedefs.h */,
-				9D6C01F81ADAF9C200F75A3C /* ADE_upsampler.h */,
-				9D6C01F91ADAF9C200F75A3C /* ADE_Utils.h */,
-				9D6C01FA1ADAF9C200F75A3C /* ADE.h */,
-				9D6C01B81ADAF8E000F75A3C /* ADE_Bench_Utils.c */,
-				9D6C01B91ADAF8E000F75A3C /* ADE_blas_level1.c */,
-				9D6C01BA1ADAF8E000F75A3C /* ADE_blas_level2.c */,
-				9D6C01BB1ADAF8E000F75A3C /* ADE_blas_level3.c */,
-				9D6C01BC1ADAF8E000F75A3C /* ADE_Blow.c */,
-				9D6C01BD1ADAF8E000F75A3C /* ADE_complex.c */,
-				9D6C01BE1ADAF8E000F75A3C /* ADE_decimator.c */,
-				9D6C01BF1ADAF8E000F75A3C /* ADE_downsampler.c */,
-				9D6C01C01ADAF8E000F75A3C /* ADE_Error_Handler.c */,
-				9D6C01C11ADAF8E000F75A3C /* ADE_fft.c */,
-				9D6C01C21ADAF8E000F75A3C /* ADE_fir.c */,
-				9D6C01C31ADAF8E000F75A3C /* ADE_iir.c */,
-				9D6C01C41ADAF8E000F75A3C /* ADE_interpolator.c */,
-				9D6C01C51ADAF8E000F75A3C /* ADE_Matlab.c */,
-				9D6C01C61ADAF8E000F75A3C /* ADE_nrutil.c */,
-				9D6C01C71ADAF8E000F75A3C /* ADE_polyfit.c */,
-				9D6C01C81ADAF8E000F75A3C /* ADE_Snap.c */,
-				9D6C01C91ADAF8E000F75A3C /* ADE_upsampler.c */,
-				9D6C01CA1ADAF8E000F75A3C /* ADE_Utils.c */,
-				9D6C01CB1ADAF8E000F75A3C /* ADE.c */,
+				9DF21EA31B36CFD000D3394D /* libSDCF_Framework_iOS.a */,
+				9DF21EA51B36CFD000D3394D /* SDCF_Framework_iOSTests.xctest */,
 			);
-			name = ADE;
+			name = Products;
 			sourceTree = "<group>";
 		};
-		CCBBE27B1A75467F00C4B34C /* SCDF Framework */ = {
+		9DF21EFE1B36D6A500D3394D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CCBBE2E01A754CB000C4B34C /* Utility */,
-				CCBBE2C21A754AB000C4B34C /* Ext_UDP_OSC */,
-				CCBBE2971A75470200C4B34C /* ios */,
-				CCBBE27E1A75469500C4B34C /* src */,
+				9DF21F031B36D6A500D3394D /* libADE_Framework.a */,
+				9DF21F051B36D6A500D3394D /* ADE_FrameworkTests.xctest */,
 			);
-			name = "SCDF Framework";
-			sourceTree = "<group>";
-		};
-		CCBBE27E1A75469500C4B34C /* src */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE3731A7561A500C4B34C /* ScdfSensorAPI.cpp */,
-				CCBBE28D1A7546F400C4B34C /* CustomPipe.cpp */,
-				CCBBE28E1A7546F400C4B34C /* Harvester.cpp */,
-				CCBBE2901A7546F400C4B34C /* PipesManager.cpp */,
-				CCBBE2911A7546F400C4B34C /* Receiver.cpp */,
-				CCBBE2851A7546D700C4B34C /* Sensor.cpp */,
-				CCBBE2861A7546D700C4B34C /* SensorAudioInput.cpp */,
-				CCBBE2871A7546D700C4B34C /* SensorsManager.cpp */,
-				CCBBE2881A7546D700C4B34C /* SensorStandard.cpp */,
-				CCBBE27F1A7546C100C4B34C /* ThreadUtils.cpp */,
-				CCBBE2801A7546C100C4B34C /* UDPSender.cpp */,
-				CCBBE2811A7546C100C4B34C /* UDPSendersManager.cpp */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		CCBBE2971A75470200C4B34C /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE29D1A75474200C4B34C /* SaveSettings.mm */,
-				CCBBE29F1A75474200C4B34C /* SensorAudioInputIosImpl.mm */,
-				CCBBE2A01A75474200C4B34C /* SensorStandardIos.mm */,
-				CCBBE2A11A75474200C4B34C /* SensorStandardIosImpl.mm */,
-			);
-			name = ios;
-			sourceTree = "<group>";
-		};
-		CCBBE2C21A754AB000C4B34C /* Ext_UDP_OSC */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE2DB1A754AE700C4B34C /* posix */,
-				CCBBE2D41A754ADE00C4B34C /* IpEndpointName.h */,
-				CCBBE2D51A754ADE00C4B34C /* NetworkingUtils.h */,
-				CCBBE2D61A754ADE00C4B34C /* PacketListener.h */,
-				CCBBE2D71A754ADE00C4B34C /* TimerListener.h */,
-				CCBBE2D81A754ADE00C4B34C /* UdpSocket.h */,
-				CCBBE2D91A754ADE00C4B34C /* IpEndpointName.cpp */,
-				CCBBE2C31A754ABD00C4B34C /* osc */,
-			);
-			name = Ext_UDP_OSC;
-			sourceTree = "<group>";
-		};
-		CCBBE2C31A754ABD00C4B34C /* osc */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE2C41A754ACA00C4B34C /* MessageMappingOscPacketListener.h */,
-				CCBBE2C51A754ACA00C4B34C /* OscException.h */,
-				CCBBE2C61A754ACA00C4B34C /* OscHostEndianness.h */,
-				CCBBE2C71A754ACA00C4B34C /* OscOutboundPacketStream.cpp */,
-				CCBBE2C81A754ACA00C4B34C /* OscOutboundPacketStream.h */,
-				CCBBE2C91A754ACA00C4B34C /* OscPacketListener.h */,
-				CCBBE2CA1A754ACA00C4B34C /* OscPrintReceivedElements.cpp */,
-				CCBBE2CB1A754ACA00C4B34C /* OscPrintReceivedElements.h */,
-				CCBBE2CC1A754ACA00C4B34C /* OscReceivedElements.cpp */,
-				CCBBE2CD1A754ACA00C4B34C /* OscReceivedElements.h */,
-				CCBBE2CE1A754ACA00C4B34C /* OscTypes.cpp */,
-				CCBBE2CF1A754ACA00C4B34C /* OscTypes.h */,
-			);
-			name = osc;
-			sourceTree = "<group>";
-		};
-		CCBBE2DB1A754AE700C4B34C /* posix */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE2DC1A754AE700C4B34C /* NetworkingUtils.cpp */,
-				CCBBE2DD1A754AE700C4B34C /* UdpSocket.cpp */,
-			);
-			name = posix;
-			path = ../../../lib/oscpack_1_1_0/ip/posix;
-			sourceTree = "<group>";
-		};
-		CCBBE2E01A754CB000C4B34C /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE2E11A754CB500C4B34C /* PublicUtility */,
-			);
-			name = Utility;
-			sourceTree = "<group>";
-		};
-		CCBBE2E11A754CB500C4B34C /* PublicUtility */ = {
-			isa = PBXGroup;
-			children = (
-				CCBBE2E21A754CC800C4B34C /* CAStreamBasicDescription.h */,
-				CCBBE2E31A754CC800C4B34C /* CAStreamBasicDescription.cpp */,
-			);
-			name = PublicUtility;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		DC3F42401B0E5B550084AB62 /* Splash */ = {
@@ -1189,6 +942,7 @@
 				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
 			);
 			name = MIDI;
+			path = ../proj.ios_mac;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1205,11 +959,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				9DF21F0D1B36D70100D3394D /* PBXTargetDependency */,
+				9DF21EA91B36D00100D3394D /* PBXTargetDependency */,
 				1AC6FB25180E99E1004C840B /* PBXTargetDependency */,
 				1AC6FB27180E99E1004C840B /* PBXTargetDependency */,
-				1AC6FB29180E99E1004C840B /* PBXTargetDependency */,
-				1AC6FB2B180E99E1004C840B /* PBXTargetDependency */,
-				1AC6FB2D180E99E1004C840B /* PBXTargetDependency */,
 			);
 			name = "ScdfController iOS";
 			productName = iphone;
@@ -1265,8 +1018,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 9DF21EFE1B36D6A500D3394D /* Products */;
+					ProjectRef = 9DF21EFD1B36D6A500D3394D /* ADE_Framework.xcodeproj */;
+				},
+				{
 					ProductGroup = 1AC6FAE6180E9839004C840B /* Products */;
 					ProjectRef = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
+				},
+				{
+					ProductGroup = 9DF21E9E1B36CFD000D3394D /* Products */;
+					ProjectRef = 9DF21E9D1B36CFD000D3394D /* SDCF_Framework_iOS.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1346,6 +1107,34 @@
 			fileType = archive.ar;
 			path = "libCocosDenshion iOS.a";
 			remoteRef = 1AC6FB0E180E9839004C840B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9DF21EA31B36CFD000D3394D /* libSDCF_Framework_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDCF_Framework_iOS.a;
+			remoteRef = 9DF21EA21B36CFD000D3394D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9DF21EA51B36CFD000D3394D /* SDCF_Framework_iOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SDCF_Framework_iOSTests.xctest;
+			remoteRef = 9DF21EA41B36CFD000D3394D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9DF21F031B36D6A500D3394D /* libADE_Framework.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libADE_Framework.a;
+			remoteRef = 9DF21F021B36D6A500D3394D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9DF21F051B36D6A500D3394D /* ADE_FrameworkTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ADE_FrameworkTests.xctest;
+			remoteRef = 9DF21F041B36D6A500D3394D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1505,71 +1294,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D6C01D61ADAF8E000F75A3C /* ADE_fir.c in Sources */,
 				DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */,
-				9D6C01CE1ADAF8E000F75A3C /* ADE_blas_level2.c in Sources */,
 				DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */,
-				CCBBE2C01A7547A700C4B34C /* SensorStandardIos.mm in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
-				9D6C01D21ADAF8E000F75A3C /* ADE_decimator.c in Sources */,
 				9D6C01B71ADAF15000F75A3C /* MultiSender.cpp in Sources */,
-				9D6C01D51ADAF8E000F75A3C /* ADE_fft.c in Sources */,
-				CCBBE2AF1A7547A400C4B34C /* PipesManager.cpp in Sources */,
 				9DC09E711A06922300997F04 /* MainScene.cpp in Sources */,
-				CCBBE2D11A754ACA00C4B34C /* OscPrintReceivedElements.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
-				CCBBE2B11A7547A400C4B34C /* Sensor.cpp in Sources */,
-				9D6C01DE1ADAF8E000F75A3C /* ADE_Utils.c in Sources */,
-				CCBBE2B01A7547A400C4B34C /* Receiver.cpp in Sources */,
 				9D39BD831AD92EAB001B3F39 /* ControlUnitPatch.cpp in Sources */,
 				DC4A58C21AE5AA5C0002CD7F /* MidiOutConnection.cpp in Sources */,
-				9D6C01D01ADAF8E000F75A3C /* ADE_Blow.c in Sources */,
-				CCBBE2B61A7547A400C4B34C /* UDPSender.cpp in Sources */,
 				9DF072291ADEF2EB00F2699D /* ControlUnit.cpp in Sources */,
 				DC5B533D1AE2B0DE004946D9 /* InAppiOS.mm in Sources */,
-				CCBBE2B71A7547A400C4B34C /* UDPSendersManager.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
-				CCBBE2B21A7547A400C4B34C /* SensorAudioInput.cpp in Sources */,
 				9D82C2CF1A1C04EB00FF1243 /* SCDFCItems.cpp in Sources */,
-				9D6C01D41ADAF8E000F75A3C /* ADE_Error_Handler.c in Sources */,
-				CCBBE2BF1A7547A700C4B34C /* SensorAudioInputIosImpl.mm in Sources */,
 				DCA9F47E1A989C9F006B2EF2 /* Colors.cpp in Sources */,
-				9D6C01DB1ADAF8E000F75A3C /* ADE_polyfit.c in Sources */,
-				CCBBE2AD1A7547A400C4B34C /* Harvester.cpp in Sources */,
-				CCBBE2AC1A7547A400C4B34C /* CustomPipe.cpp in Sources */,
-				9D6C01CF1ADAF8E000F75A3C /* ADE_blas_level3.c in Sources */,
-				9D6C01DA1ADAF8E000F75A3C /* ADE_nrutil.c in Sources */,
-				9D6C01DF1ADAF8E000F75A3C /* ADE.c in Sources */,
 				9D39BDDB1AD9768A001B3F39 /* LoadSavePanel.cpp in Sources */,
-				CCBBE2BD1A7547A700C4B34C /* SaveSettings.mm in Sources */,
-				CCBBE2D21A754ACA00C4B34C /* OscReceivedElements.cpp in Sources */,
-				9D6C01D81ADAF8E000F75A3C /* ADE_interpolator.c in Sources */,
-				CCBBE2B31A7547A400C4B34C /* SensorsManager.cpp in Sources */,
-				9D6C01D11ADAF8E000F75A3C /* ADE_complex.c in Sources */,
 				9DFAC8021ABD6E77007658E0 /* Label.cpp in Sources */,
 				DCCA5A2D1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm in Sources */,
-				CCBBE2D31A754ACA00C4B34C /* OscTypes.cpp in Sources */,
-				CCBBE2C11A7547A700C4B34C /* SensorStandardIosImpl.mm in Sources */,
 				9D6C01FD1ADB031000F75A3C /* main.m in Sources */,
 				DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */,
-				9D6C01CD1ADAF8E000F75A3C /* ADE_blas_level1.c in Sources */,
-				9DC974A61B248899001EDADB /* ADE_proximity.c in Sources */,
-				9D6C01D31ADAF8E000F75A3C /* ADE_downsampler.c in Sources */,
-				CCBBE2B41A7547A400C4B34C /* SensorStandard.cpp in Sources */,
-				CCBBE2DE1A754AE700C4B34C /* NetworkingUtils.cpp in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
-				9D6C01DD1ADAF8E000F75A3C /* ADE_upsampler.c in Sources */,
-				CCBBE3751A7561A500C4B34C /* ScdfSensorAPI.cpp in Sources */,
-				9D6C01DC1ADAF8E000F75A3C /* ADE_Snap.c in Sources */,
-				CCBBE2E41A754CC800C4B34C /* CAStreamBasicDescription.cpp in Sources */,
-				CCBBE2DF1A754AE700C4B34C /* UdpSocket.cpp in Sources */,
 				DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */,
-				CCBBE2B51A7547A400C4B34C /* ThreadUtils.cpp in Sources */,
-				CCBBE2D01A754ACA00C4B34C /* OscOutboundPacketStream.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
 				DC682E261AF659E2008C89BB /* MidiClientIOS.mm in Sources */,
-				CCBBE2DA1A754ADE00C4B34C /* IpEndpointName.cpp in Sources */,
-				9D6C01D71ADAF8E000F75A3C /* ADE_iir.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1620,20 +1366,15 @@
 			name = "cocos2dx-extensions iOS";
 			targetProxy = 1AC6FB26180E99E1004C840B /* PBXContainerItemProxy */;
 		};
-		1AC6FB29180E99E1004C840B /* PBXTargetDependency */ = {
+		9DF21EA91B36D00100D3394D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "chipmunk iOS";
-			targetProxy = 1AC6FB28180E99E1004C840B /* PBXContainerItemProxy */;
+			name = SDCF_Framework_iOS;
+			targetProxy = 9DF21EA81B36D00100D3394D /* PBXContainerItemProxy */;
 		};
-		1AC6FB2B180E99E1004C840B /* PBXTargetDependency */ = {
+		9DF21F0D1B36D70100D3394D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "box2d iOS";
-			targetProxy = 1AC6FB2A180E99E1004C840B /* PBXContainerItemProxy */;
-		};
-		1AC6FB2D180E99E1004C840B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "CocosDenshion iOS";
-			targetProxy = 1AC6FB2C180E99E1004C840B /* PBXContainerItemProxy */;
+			name = ADE_Framework;
+			targetProxy = 9DF21F0C1B36D70100D3394D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

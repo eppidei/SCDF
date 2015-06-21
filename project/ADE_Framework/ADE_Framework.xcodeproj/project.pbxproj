@@ -1,0 +1,487 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9DF21EBC1B36D43700D3394D /* ADE_Framework.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9DF21EBB1B36D43700D3394D /* ADE_Framework.h */; };
+		9DF21EBE1B36D43700D3394D /* ADE_Framework.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EBD1B36D43700D3394D /* ADE_Framework.m */; };
+		9DF21EC41B36D43700D3394D /* libADE_Framework.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF21EB81B36D43700D3394D /* libADE_Framework.a */; };
+		9DF21EE71B36D46400D3394D /* ADE_Bench_Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED21B36D46400D3394D /* ADE_Bench_Utils.c */; };
+		9DF21EE81B36D46400D3394D /* ADE_blas_level1.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED31B36D46400D3394D /* ADE_blas_level1.c */; };
+		9DF21EE91B36D46400D3394D /* ADE_blas_level2.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED41B36D46400D3394D /* ADE_blas_level2.c */; };
+		9DF21EEA1B36D46400D3394D /* ADE_blas_level3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED51B36D46400D3394D /* ADE_blas_level3.c */; };
+		9DF21EEB1B36D46400D3394D /* ADE_Blow.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED61B36D46400D3394D /* ADE_Blow.c */; };
+		9DF21EEC1B36D46400D3394D /* ADE_complex.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED71B36D46400D3394D /* ADE_complex.c */; };
+		9DF21EED1B36D46400D3394D /* ADE_decimator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED81B36D46400D3394D /* ADE_decimator.c */; };
+		9DF21EEE1B36D46400D3394D /* ADE_downsampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21ED91B36D46400D3394D /* ADE_downsampler.c */; };
+		9DF21EEF1B36D46400D3394D /* ADE_Error_Handler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EDA1B36D46400D3394D /* ADE_Error_Handler.c */; };
+		9DF21EF01B36D46400D3394D /* ADE_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EDB1B36D46400D3394D /* ADE_fft.c */; };
+		9DF21EF11B36D46400D3394D /* ADE_fir.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EDC1B36D46400D3394D /* ADE_fir.c */; };
+		9DF21EF21B36D46400D3394D /* ADE_iir.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EDD1B36D46400D3394D /* ADE_iir.c */; };
+		9DF21EF31B36D46400D3394D /* ADE_interpolator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EDE1B36D46400D3394D /* ADE_interpolator.c */; };
+		9DF21EF51B36D46400D3394D /* ADE_nrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE01B36D46400D3394D /* ADE_nrutil.c */; };
+		9DF21EF61B36D46400D3394D /* ADE_polyfit.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE11B36D46400D3394D /* ADE_polyfit.c */; };
+		9DF21EF71B36D46400D3394D /* ADE_proximity.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE21B36D46400D3394D /* ADE_proximity.c */; };
+		9DF21EF81B36D46400D3394D /* ADE_Snap.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE31B36D46400D3394D /* ADE_Snap.c */; };
+		9DF21EF91B36D46400D3394D /* ADE_upsampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE41B36D46400D3394D /* ADE_upsampler.c */; };
+		9DF21EFA1B36D46400D3394D /* ADE_Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE51B36D46400D3394D /* ADE_Utils.c */; };
+		9DF21EFB1B36D46400D3394D /* ADE.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21EE61B36D46400D3394D /* ADE.c */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9DF21EC51B36D43700D3394D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF21EB01B36D43700D3394D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DF21EB71B36D43700D3394D;
+			remoteInfo = ADE_Framework;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9DF21EB61B36D43700D3394D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				9DF21EBC1B36D43700D3394D /* ADE_Framework.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9DF21EB81B36D43700D3394D /* libADE_Framework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libADE_Framework.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF21EBB1B36D43700D3394D /* ADE_Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADE_Framework.h; sourceTree = "<group>"; };
+		9DF21EBD1B36D43700D3394D /* ADE_Framework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADE_Framework.m; sourceTree = "<group>"; };
+		9DF21EC31B36D43700D3394D /* ADE_FrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ADE_FrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF21EC91B36D43700D3394D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9DF21ED21B36D46400D3394D /* ADE_Bench_Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Bench_Utils.c; path = ../../ext/ADE_API/API/src/ADE_Bench_Utils.c; sourceTree = "<group>"; };
+		9DF21ED31B36D46400D3394D /* ADE_blas_level1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level1.c; path = ../../ext/ADE_API/API/src/ADE_blas_level1.c; sourceTree = "<group>"; };
+		9DF21ED41B36D46400D3394D /* ADE_blas_level2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level2.c; path = ../../ext/ADE_API/API/src/ADE_blas_level2.c; sourceTree = "<group>"; };
+		9DF21ED51B36D46400D3394D /* ADE_blas_level3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_blas_level3.c; path = ../../ext/ADE_API/API/src/ADE_blas_level3.c; sourceTree = "<group>"; };
+		9DF21ED61B36D46400D3394D /* ADE_Blow.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Blow.c; path = ../../ext/ADE_API/API/src/ADE_Blow.c; sourceTree = "<group>"; };
+		9DF21ED71B36D46400D3394D /* ADE_complex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_complex.c; path = ../../ext/ADE_API/API/src/ADE_complex.c; sourceTree = "<group>"; };
+		9DF21ED81B36D46400D3394D /* ADE_decimator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_decimator.c; path = ../../ext/ADE_API/API/src/ADE_decimator.c; sourceTree = "<group>"; };
+		9DF21ED91B36D46400D3394D /* ADE_downsampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_downsampler.c; path = ../../ext/ADE_API/API/src/ADE_downsampler.c; sourceTree = "<group>"; };
+		9DF21EDA1B36D46400D3394D /* ADE_Error_Handler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Error_Handler.c; path = ../../ext/ADE_API/API/src/ADE_Error_Handler.c; sourceTree = "<group>"; };
+		9DF21EDB1B36D46400D3394D /* ADE_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_fft.c; path = ../../ext/ADE_API/API/src/ADE_fft.c; sourceTree = "<group>"; };
+		9DF21EDC1B36D46400D3394D /* ADE_fir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_fir.c; path = ../../ext/ADE_API/API/src/ADE_fir.c; sourceTree = "<group>"; };
+		9DF21EDD1B36D46400D3394D /* ADE_iir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_iir.c; path = ../../ext/ADE_API/API/src/ADE_iir.c; sourceTree = "<group>"; };
+		9DF21EDE1B36D46400D3394D /* ADE_interpolator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_interpolator.c; path = ../../ext/ADE_API/API/src/ADE_interpolator.c; sourceTree = "<group>"; };
+		9DF21EE01B36D46400D3394D /* ADE_nrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_nrutil.c; path = ../../ext/ADE_API/API/src/ADE_nrutil.c; sourceTree = "<group>"; };
+		9DF21EE11B36D46400D3394D /* ADE_polyfit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_polyfit.c; path = ../../ext/ADE_API/API/src/ADE_polyfit.c; sourceTree = "<group>"; };
+		9DF21EE21B36D46400D3394D /* ADE_proximity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_proximity.c; path = ../../ext/ADE_API/API/src/ADE_proximity.c; sourceTree = "<group>"; };
+		9DF21EE31B36D46400D3394D /* ADE_Snap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Snap.c; path = ../../ext/ADE_API/API/src/ADE_Snap.c; sourceTree = "<group>"; };
+		9DF21EE41B36D46400D3394D /* ADE_upsampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_upsampler.c; path = ../../ext/ADE_API/API/src/ADE_upsampler.c; sourceTree = "<group>"; };
+		9DF21EE51B36D46400D3394D /* ADE_Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE_Utils.c; path = ../../ext/ADE_API/API/src/ADE_Utils.c; sourceTree = "<group>"; };
+		9DF21EE61B36D46400D3394D /* ADE.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ADE.c; path = ../../ext/ADE_API/API/src/ADE.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9DF21EB51B36D43700D3394D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DF21EC01B36D43700D3394D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DF21EC41B36D43700D3394D /* libADE_Framework.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9DF21EAF1B36D43700D3394D = {
+			isa = PBXGroup;
+			children = (
+				9DF21EFC1B36D46A00D3394D /* Src */,
+				9DF21EBA1B36D43700D3394D /* ADE_Framework */,
+				9DF21EC71B36D43700D3394D /* ADE_FrameworkTests */,
+				9DF21EB91B36D43700D3394D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9DF21EB91B36D43700D3394D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DF21EB81B36D43700D3394D /* libADE_Framework.a */,
+				9DF21EC31B36D43700D3394D /* ADE_FrameworkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9DF21EBA1B36D43700D3394D /* ADE_Framework */ = {
+			isa = PBXGroup;
+			children = (
+				9DF21EBB1B36D43700D3394D /* ADE_Framework.h */,
+				9DF21EBD1B36D43700D3394D /* ADE_Framework.m */,
+			);
+			path = ADE_Framework;
+			sourceTree = "<group>";
+		};
+		9DF21EC71B36D43700D3394D /* ADE_FrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				9DF21EC81B36D43700D3394D /* Supporting Files */,
+			);
+			path = ADE_FrameworkTests;
+			sourceTree = "<group>";
+		};
+		9DF21EC81B36D43700D3394D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9DF21EC91B36D43700D3394D /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9DF21EFC1B36D46A00D3394D /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				9DF21ED21B36D46400D3394D /* ADE_Bench_Utils.c */,
+				9DF21ED31B36D46400D3394D /* ADE_blas_level1.c */,
+				9DF21ED41B36D46400D3394D /* ADE_blas_level2.c */,
+				9DF21ED51B36D46400D3394D /* ADE_blas_level3.c */,
+				9DF21ED61B36D46400D3394D /* ADE_Blow.c */,
+				9DF21ED71B36D46400D3394D /* ADE_complex.c */,
+				9DF21ED81B36D46400D3394D /* ADE_decimator.c */,
+				9DF21ED91B36D46400D3394D /* ADE_downsampler.c */,
+				9DF21EDA1B36D46400D3394D /* ADE_Error_Handler.c */,
+				9DF21EDB1B36D46400D3394D /* ADE_fft.c */,
+				9DF21EDC1B36D46400D3394D /* ADE_fir.c */,
+				9DF21EDD1B36D46400D3394D /* ADE_iir.c */,
+				9DF21EDE1B36D46400D3394D /* ADE_interpolator.c */,
+				9DF21EE01B36D46400D3394D /* ADE_nrutil.c */,
+				9DF21EE11B36D46400D3394D /* ADE_polyfit.c */,
+				9DF21EE21B36D46400D3394D /* ADE_proximity.c */,
+				9DF21EE31B36D46400D3394D /* ADE_Snap.c */,
+				9DF21EE41B36D46400D3394D /* ADE_upsampler.c */,
+				9DF21EE51B36D46400D3394D /* ADE_Utils.c */,
+				9DF21EE61B36D46400D3394D /* ADE.c */,
+			);
+			name = Src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9DF21EB71B36D43700D3394D /* ADE_Framework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF21ECC1B36D43700D3394D /* Build configuration list for PBXNativeTarget "ADE_Framework" */;
+			buildPhases = (
+				9DF21EB41B36D43700D3394D /* Sources */,
+				9DF21EB51B36D43700D3394D /* Frameworks */,
+				9DF21EB61B36D43700D3394D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ADE_Framework;
+			productName = ADE_Framework;
+			productReference = 9DF21EB81B36D43700D3394D /* libADE_Framework.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		9DF21EC21B36D43700D3394D /* ADE_FrameworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF21ECF1B36D43700D3394D /* Build configuration list for PBXNativeTarget "ADE_FrameworkTests" */;
+			buildPhases = (
+				9DF21EBF1B36D43700D3394D /* Sources */,
+				9DF21EC01B36D43700D3394D /* Frameworks */,
+				9DF21EC11B36D43700D3394D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9DF21EC61B36D43700D3394D /* PBXTargetDependency */,
+			);
+			name = ADE_FrameworkTests;
+			productName = ADE_FrameworkTests;
+			productReference = 9DF21EC31B36D43700D3394D /* ADE_FrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9DF21EB01B36D43700D3394D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = fuzone;
+				TargetAttributes = {
+					9DF21EB71B36D43700D3394D = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+					9DF21EC21B36D43700D3394D = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 9DF21EB31B36D43700D3394D /* Build configuration list for PBXProject "ADE_Framework" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9DF21EAF1B36D43700D3394D;
+			productRefGroup = 9DF21EB91B36D43700D3394D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9DF21EB71B36D43700D3394D /* ADE_Framework */,
+				9DF21EC21B36D43700D3394D /* ADE_FrameworkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9DF21EC11B36D43700D3394D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9DF21EB41B36D43700D3394D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DF21EFB1B36D46400D3394D /* ADE.c in Sources */,
+				9DF21EBE1B36D43700D3394D /* ADE_Framework.m in Sources */,
+				9DF21EED1B36D46400D3394D /* ADE_decimator.c in Sources */,
+				9DF21EF01B36D46400D3394D /* ADE_fft.c in Sources */,
+				9DF21EF51B36D46400D3394D /* ADE_nrutil.c in Sources */,
+				9DF21EEC1B36D46400D3394D /* ADE_complex.c in Sources */,
+				9DF21EF11B36D46400D3394D /* ADE_fir.c in Sources */,
+				9DF21EF61B36D46400D3394D /* ADE_polyfit.c in Sources */,
+				9DF21EEA1B36D46400D3394D /* ADE_blas_level3.c in Sources */,
+				9DF21EEB1B36D46400D3394D /* ADE_Blow.c in Sources */,
+				9DF21EE71B36D46400D3394D /* ADE_Bench_Utils.c in Sources */,
+				9DF21EE91B36D46400D3394D /* ADE_blas_level2.c in Sources */,
+				9DF21EF71B36D46400D3394D /* ADE_proximity.c in Sources */,
+				9DF21EF81B36D46400D3394D /* ADE_Snap.c in Sources */,
+				9DF21EF91B36D46400D3394D /* ADE_upsampler.c in Sources */,
+				9DF21EFA1B36D46400D3394D /* ADE_Utils.c in Sources */,
+				9DF21EE81B36D46400D3394D /* ADE_blas_level1.c in Sources */,
+				9DF21EEF1B36D46400D3394D /* ADE_Error_Handler.c in Sources */,
+				9DF21EF21B36D46400D3394D /* ADE_iir.c in Sources */,
+				9DF21EEE1B36D46400D3394D /* ADE_downsampler.c in Sources */,
+				9DF21EF31B36D46400D3394D /* ADE_interpolator.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DF21EBF1B36D43700D3394D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9DF21EC61B36D43700D3394D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9DF21EB71B36D43700D3394D /* ADE_Framework */;
+			targetProxy = 9DF21EC51B36D43700D3394D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9DF21ECA1B36D43700D3394D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9DF21ECB1B36D43700D3394D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9DF21ECD1B36D43700D3394D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"ADE_TARGET_TYPE=ADE_IOS",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../ext/ADE_API/API/src",
+				);
+				MACH_O_TYPE = mh_object;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF21ECE1B36D43700D3394D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "ADE_TARGET_TYPE=ADE_IOS";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../ext/ADE_API/API/src",
+				);
+				MACH_O_TYPE = mh_object;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF21ED01B36D43700D3394D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ADE_FrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9DF21ED11B36D43700D3394D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ADE_FrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9DF21EB31B36D43700D3394D /* Build configuration list for PBXProject "ADE_Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF21ECA1B36D43700D3394D /* Debug */,
+				9DF21ECB1B36D43700D3394D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DF21ECC1B36D43700D3394D /* Build configuration list for PBXNativeTarget "ADE_Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF21ECD1B36D43700D3394D /* Debug */,
+				9DF21ECE1B36D43700D3394D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DF21ECF1B36D43700D3394D /* Build configuration list for PBXNativeTarget "ADE_FrameworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF21ED01B36D43700D3394D /* Debug */,
+				9DF21ED11B36D43700D3394D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9DF21EB01B36D43700D3394D /* Project object */;
+}
