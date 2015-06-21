@@ -395,7 +395,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../ext/ADE_API/API/src",
 				);
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -412,7 +412,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../ext/ADE_API/API/src",
 				);
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
