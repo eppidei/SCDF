@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>652ED173-5B9E-4B1C-9227-48D6076E4239</string>
+	<key>IDESourceControlProjectName</key>
+	<string>test_cocos2d_nanovg</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>http://160.80.80.132:18080/svn/SCDF/trunk</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>project/test_cocos2d_nanovg/proj.ios_mac/test_cocos2d_nanovg.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>6c43cc0a-5ffe-4778-b326-04effe5da469++505</key>
+		<string>http://160.80.80.132:18080/svn/SCDF</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://160.80.80.132:18080/svn/SCDF/trunk/project/test_cocos2d_nanovg/proj.ios_mac/test_cocos2d_nanovg.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6c43cc0a-5ffe-4778-b326-04effe5da469++505</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6c43cc0a-5ffe-4778-b326-04effe5da469++505</string>
+			<key>IDESourceControlWCCName</key>
+			<string>trunk</string>
+		</dict>
+	</array>
+</dict>
+</plist>
