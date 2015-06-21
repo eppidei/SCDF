@@ -1,0 +1,543 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9DC975DF1B356FF3001EDADB /* libSDCF_Framework_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC975D31B356FF2001EDADB /* libSDCF_Framework_iOS.a */; };
+		9DC975FD1B357023001EDADB /* CustomPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975EE1B357023001EDADB /* CustomPipe.cpp */; };
+		9DC975FE1B357023001EDADB /* Harvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975EF1B357023001EDADB /* Harvester.cpp */; };
+		9DC976021B357023001EDADB /* PipesManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F31B357023001EDADB /* PipesManager.cpp */; };
+		9DC976031B357023001EDADB /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F41B357023001EDADB /* Receiver.cpp */; };
+		9DC976041B357023001EDADB /* ScdfSensorAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F51B357023001EDADB /* ScdfSensorAPI.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC976051B357023001EDADB /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F61B357023001EDADB /* Sensor.cpp */; };
+		9DC976061B357023001EDADB /* SensorAudioInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F71B357023001EDADB /* SensorAudioInput.cpp */; };
+		9DC976071B357023001EDADB /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F81B357023001EDADB /* SensorsManager.cpp */; };
+		9DC976081B357023001EDADB /* SensorStandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975F91B357023001EDADB /* SensorStandard.cpp */; };
+		9DC976091B357023001EDADB /* ThreadUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FA1B357023001EDADB /* ThreadUtils.cpp */; };
+		9DC9760A1B357023001EDADB /* UDPSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FB1B357023001EDADB /* UDPSender.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC9760B1B357023001EDADB /* UDPSendersManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC975FC1B357023001EDADB /* UDPSendersManager.cpp */; };
+		9DC976211B357032001EDADB /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976131B357032001EDADB /* SaveSettings.mm */; };
+		9DC976231B357032001EDADB /* SensorAudioInputIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976151B357032001EDADB /* SensorAudioInputIosImpl.mm */; };
+		9DC976251B357032001EDADB /* SensorStandardIosImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976171B357032001EDADB /* SensorStandardIosImpl.mm */; };
+		9DC9762F1B3574F9001EDADB /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976291B3574F9001EDADB /* IpEndpointName.cpp */; };
+		9DC9763C1B35751A001EDADB /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976331B35751A001EDADB /* OscOutboundPacketStream.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC9763D1B35751A001EDADB /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976361B35751A001EDADB /* OscPrintReceivedElements.cpp */; };
+		9DC9763E1B35751A001EDADB /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976381B35751A001EDADB /* OscReceivedElements.cpp */; };
+		9DC9763F1B35751A001EDADB /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9763A1B35751A001EDADB /* OscTypes.cpp */; settings = {COMPILER_FLAGS = "-fvisibility=default"; }; };
+		9DC976421B357525001EDADB /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976401B357525001EDADB /* NetworkingUtils.cpp */; };
+		9DC976431B357525001EDADB /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976411B357525001EDADB /* UdpSocket.cpp */; };
+		9DC976461B357673001EDADB /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976441B357673001EDADB /* CAStreamBasicDescription.cpp */; };
+		9DC976481B36CC4F001EDADB /* SensorStandardIos.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC976471B36CC4F001EDADB /* SensorStandardIos.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9DC975E01B356FF3001EDADB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DC975CB1B356FF2001EDADB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DC975D21B356FF2001EDADB;
+			remoteInfo = SDCF_Framework_iOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9DC975D11B356FF2001EDADB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9DC975D31B356FF2001EDADB /* libSDCF_Framework_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDCF_Framework_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DC975DE1B356FF3001EDADB /* SDCF_Framework_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDCF_Framework_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DC975E41B356FF3001EDADB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9DC975EE1B357023001EDADB /* CustomPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomPipe.cpp; path = ../../src/CustomPipe.cpp; sourceTree = "<group>"; };
+		9DC975EF1B357023001EDADB /* Harvester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Harvester.cpp; path = ../../src/Harvester.cpp; sourceTree = "<group>"; };
+		9DC975F31B357023001EDADB /* PipesManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PipesManager.cpp; path = ../../src/PipesManager.cpp; sourceTree = "<group>"; };
+		9DC975F41B357023001EDADB /* Receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Receiver.cpp; path = ../../src/Receiver.cpp; sourceTree = "<group>"; };
+		9DC975F51B357023001EDADB /* ScdfSensorAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScdfSensorAPI.cpp; path = ../../src/ScdfSensorAPI.cpp; sourceTree = "<group>"; };
+		9DC975F61B357023001EDADB /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../src/Sensor.cpp; sourceTree = "<group>"; };
+		9DC975F71B357023001EDADB /* SensorAudioInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorAudioInput.cpp; path = ../../src/SensorAudioInput.cpp; sourceTree = "<group>"; };
+		9DC975F81B357023001EDADB /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../src/SensorsManager.cpp; sourceTree = "<group>"; };
+		9DC975F91B357023001EDADB /* SensorStandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorStandard.cpp; path = ../../src/SensorStandard.cpp; sourceTree = "<group>"; };
+		9DC975FA1B357023001EDADB /* ThreadUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadUtils.cpp; path = ../../src/ThreadUtils.cpp; sourceTree = "<group>"; };
+		9DC975FB1B357023001EDADB /* UDPSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSender.cpp; path = ../../src/UDPSender.cpp; sourceTree = "<group>"; };
+		9DC975FC1B357023001EDADB /* UDPSendersManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPSendersManager.cpp; path = ../../src/UDPSendersManager.cpp; sourceTree = "<group>"; };
+		9DC976131B357032001EDADB /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaveSettings.mm; path = ../../../src/ios/SaveSettings.mm; sourceTree = "<group>"; };
+		9DC976151B357032001EDADB /* SensorAudioInputIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorAudioInputIosImpl.mm; path = ../../../src/ios/SensorAudioInputIosImpl.mm; sourceTree = "<group>"; };
+		9DC976171B357032001EDADB /* SensorStandardIosImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIosImpl.mm; path = ../../../src/ios/SensorStandardIosImpl.mm; sourceTree = "<group>"; };
+		9DC976291B3574F9001EDADB /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = ../../lib/oscpack_1_1_0/ip/IpEndpointName.cpp; sourceTree = "<group>"; };
+		9DC9762A1B3574F9001EDADB /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../lib/oscpack_1_1_0/ip/IpEndpointName.h; sourceTree = "<group>"; };
+		9DC9762B1B3574F9001EDADB /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../lib/oscpack_1_1_0/ip/NetworkingUtils.h; sourceTree = "<group>"; };
+		9DC9762C1B3574F9001EDADB /* PacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacketListener.h; path = ../../lib/oscpack_1_1_0/ip/PacketListener.h; sourceTree = "<group>"; };
+		9DC9762D1B3574F9001EDADB /* TimerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerListener.h; path = ../../lib/oscpack_1_1_0/ip/TimerListener.h; sourceTree = "<group>"; };
+		9DC9762E1B3574F9001EDADB /* UdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = ../../lib/oscpack_1_1_0/ip/UdpSocket.h; sourceTree = "<group>"; };
+		9DC976301B35751A001EDADB /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../../lib/oscpack_1_1_0/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
+		9DC976311B35751A001EDADB /* OscException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = ../../lib/oscpack_1_1_0/osc/OscException.h; sourceTree = "<group>"; };
+		9DC976321B35751A001EDADB /* OscHostEndianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = ../../lib/oscpack_1_1_0/osc/OscHostEndianness.h; sourceTree = "<group>"; };
+		9DC976331B35751A001EDADB /* OscOutboundPacketStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscOutboundPacketStream.cpp; path = ../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.cpp; sourceTree = "<group>"; };
+		9DC976341B35751A001EDADB /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscOutboundPacketStream.h; path = ../../lib/oscpack_1_1_0/osc/OscOutboundPacketStream.h; sourceTree = "<group>"; };
+		9DC976351B35751A001EDADB /* OscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = ../../lib/oscpack_1_1_0/osc/OscPacketListener.h; sourceTree = "<group>"; };
+		9DC976361B35751A001EDADB /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscPrintReceivedElements.cpp; path = ../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.cpp; sourceTree = "<group>"; };
+		9DC976371B35751A001EDADB /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPrintReceivedElements.h; path = ../../lib/oscpack_1_1_0/osc/OscPrintReceivedElements.h; sourceTree = "<group>"; };
+		9DC976381B35751A001EDADB /* OscReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscReceivedElements.cpp; path = ../../lib/oscpack_1_1_0/osc/OscReceivedElements.cpp; sourceTree = "<group>"; };
+		9DC976391B35751A001EDADB /* OscReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscReceivedElements.h; path = ../../lib/oscpack_1_1_0/osc/OscReceivedElements.h; sourceTree = "<group>"; };
+		9DC9763A1B35751A001EDADB /* OscTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscTypes.cpp; path = ../../lib/oscpack_1_1_0/osc/OscTypes.cpp; sourceTree = "<group>"; };
+		9DC9763B1B35751A001EDADB /* OscTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscTypes.h; path = ../../lib/oscpack_1_1_0/osc/OscTypes.h; sourceTree = "<group>"; };
+		9DC976401B357525001EDADB /* NetworkingUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkingUtils.cpp; path = ../../lib/oscpack_1_1_0/ip/posix/NetworkingUtils.cpp; sourceTree = "<group>"; };
+		9DC976411B357525001EDADB /* UdpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UdpSocket.cpp; path = ../../lib/oscpack_1_1_0/ip/posix/UdpSocket.cpp; sourceTree = "<group>"; };
+		9DC976441B357673001EDADB /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = "../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.cpp"; sourceTree = "<group>"; };
+		9DC976451B357673001EDADB /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = "../../res/iOs Resources/PublicUtility/CAStreamBasicDescription.h"; sourceTree = "<group>"; };
+		9DC976471B36CC4F001EDADB /* SensorStandardIos.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SensorStandardIos.mm; path = ../../../src/ios/SensorStandardIos.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9DC975D01B356FF2001EDADB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DC975DB1B356FF3001EDADB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DC975DF1B356FF3001EDADB /* libSDCF_Framework_iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9DC975CA1B356FF2001EDADB = {
+			isa = PBXGroup;
+			children = (
+				9DC975ED1B35700A001EDADB /* Src */,
+				9DC975D51B356FF2001EDADB /* SDCF_Framework_iOS */,
+				9DC975E21B356FF3001EDADB /* SDCF_Framework_iOSTests */,
+				9DC975D41B356FF2001EDADB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9DC975D41B356FF2001EDADB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DC975D31B356FF2001EDADB /* libSDCF_Framework_iOS.a */,
+				9DC975DE1B356FF3001EDADB /* SDCF_Framework_iOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9DC975D51B356FF2001EDADB /* SDCF_Framework_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				9DC976471B36CC4F001EDADB /* SensorStandardIos.mm */,
+				9DC976131B357032001EDADB /* SaveSettings.mm */,
+				9DC976151B357032001EDADB /* SensorAudioInputIosImpl.mm */,
+				9DC976171B357032001EDADB /* SensorStandardIosImpl.mm */,
+			);
+			path = SDCF_Framework_iOS;
+			sourceTree = "<group>";
+		};
+		9DC975E21B356FF3001EDADB /* SDCF_Framework_iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				9DC975E31B356FF3001EDADB /* Supporting Files */,
+			);
+			path = SDCF_Framework_iOSTests;
+			sourceTree = "<group>";
+		};
+		9DC975E31B356FF3001EDADB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9DC975E41B356FF3001EDADB /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9DC975ED1B35700A001EDADB /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				9DC976441B357673001EDADB /* CAStreamBasicDescription.cpp */,
+				9DC976451B357673001EDADB /* CAStreamBasicDescription.h */,
+				9DC976281B3574DA001EDADB /* OSC */,
+				9DC975F51B357023001EDADB /* ScdfSensorAPI.cpp */,
+				9DC975EE1B357023001EDADB /* CustomPipe.cpp */,
+				9DC975EF1B357023001EDADB /* Harvester.cpp */,
+				9DC975F31B357023001EDADB /* PipesManager.cpp */,
+				9DC975F41B357023001EDADB /* Receiver.cpp */,
+				9DC975F61B357023001EDADB /* Sensor.cpp */,
+				9DC975F71B357023001EDADB /* SensorAudioInput.cpp */,
+				9DC975F81B357023001EDADB /* SensorsManager.cpp */,
+				9DC975F91B357023001EDADB /* SensorStandard.cpp */,
+				9DC975FA1B357023001EDADB /* ThreadUtils.cpp */,
+				9DC975FB1B357023001EDADB /* UDPSender.cpp */,
+				9DC975FC1B357023001EDADB /* UDPSendersManager.cpp */,
+			);
+			name = Src;
+			sourceTree = "<group>";
+		};
+		9DC976281B3574DA001EDADB /* OSC */ = {
+			isa = PBXGroup;
+			children = (
+				9DC976291B3574F9001EDADB /* IpEndpointName.cpp */,
+				9DC9762A1B3574F9001EDADB /* IpEndpointName.h */,
+				9DC9762B1B3574F9001EDADB /* NetworkingUtils.h */,
+				9DC976301B35751A001EDADB /* MessageMappingOscPacketListener.h */,
+				9DC976311B35751A001EDADB /* OscException.h */,
+				9DC976321B35751A001EDADB /* OscHostEndianness.h */,
+				9DC976331B35751A001EDADB /* OscOutboundPacketStream.cpp */,
+				9DC976341B35751A001EDADB /* OscOutboundPacketStream.h */,
+				9DC976401B357525001EDADB /* NetworkingUtils.cpp */,
+				9DC976411B357525001EDADB /* UdpSocket.cpp */,
+				9DC976351B35751A001EDADB /* OscPacketListener.h */,
+				9DC976361B35751A001EDADB /* OscPrintReceivedElements.cpp */,
+				9DC976371B35751A001EDADB /* OscPrintReceivedElements.h */,
+				9DC976381B35751A001EDADB /* OscReceivedElements.cpp */,
+				9DC976391B35751A001EDADB /* OscReceivedElements.h */,
+				9DC9763A1B35751A001EDADB /* OscTypes.cpp */,
+				9DC9763B1B35751A001EDADB /* OscTypes.h */,
+				9DC9762C1B3574F9001EDADB /* PacketListener.h */,
+				9DC9762D1B3574F9001EDADB /* TimerListener.h */,
+				9DC9762E1B3574F9001EDADB /* UdpSocket.h */,
+			);
+			name = OSC;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9DC975D21B356FF2001EDADB /* SDCF_Framework_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DC975E71B356FF3001EDADB /* Build configuration list for PBXNativeTarget "SDCF_Framework_iOS" */;
+			buildPhases = (
+				9DC975CF1B356FF2001EDADB /* Sources */,
+				9DC975D01B356FF2001EDADB /* Frameworks */,
+				9DC975D11B356FF2001EDADB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SDCF_Framework_iOS;
+			productName = SDCF_Framework_iOS;
+			productReference = 9DC975D31B356FF2001EDADB /* libSDCF_Framework_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		9DC975DD1B356FF3001EDADB /* SDCF_Framework_iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DC975EA1B356FF3001EDADB /* Build configuration list for PBXNativeTarget "SDCF_Framework_iOSTests" */;
+			buildPhases = (
+				9DC975DA1B356FF3001EDADB /* Sources */,
+				9DC975DB1B356FF3001EDADB /* Frameworks */,
+				9DC975DC1B356FF3001EDADB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9DC975E11B356FF3001EDADB /* PBXTargetDependency */,
+			);
+			name = SDCF_Framework_iOSTests;
+			productName = SDCF_Framework_iOSTests;
+			productReference = 9DC975DE1B356FF3001EDADB /* SDCF_Framework_iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9DC975CB1B356FF2001EDADB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = fuzone;
+				TargetAttributes = {
+					9DC975D21B356FF2001EDADB = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+					9DC975DD1B356FF3001EDADB = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 9DC975CE1B356FF2001EDADB /* Build configuration list for PBXProject "SDCF_Framework_iOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9DC975CA1B356FF2001EDADB;
+			productRefGroup = 9DC975D41B356FF2001EDADB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9DC975D21B356FF2001EDADB /* SDCF_Framework_iOS */,
+				9DC975DD1B356FF3001EDADB /* SDCF_Framework_iOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9DC975DC1B356FF3001EDADB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9DC975CF1B356FF2001EDADB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DC976251B357032001EDADB /* SensorStandardIosImpl.mm in Sources */,
+				9DC976061B357023001EDADB /* SensorAudioInput.cpp in Sources */,
+				9DC9763C1B35751A001EDADB /* OscOutboundPacketStream.cpp in Sources */,
+				9DC976021B357023001EDADB /* PipesManager.cpp in Sources */,
+				9DC9763D1B35751A001EDADB /* OscPrintReceivedElements.cpp in Sources */,
+				9DC976071B357023001EDADB /* SensorsManager.cpp in Sources */,
+				9DC976041B357023001EDADB /* ScdfSensorAPI.cpp in Sources */,
+				9DC976031B357023001EDADB /* Receiver.cpp in Sources */,
+				9DC975FE1B357023001EDADB /* Harvester.cpp in Sources */,
+				9DC976461B357673001EDADB /* CAStreamBasicDescription.cpp in Sources */,
+				9DC976421B357525001EDADB /* NetworkingUtils.cpp in Sources */,
+				9DC9763E1B35751A001EDADB /* OscReceivedElements.cpp in Sources */,
+				9DC975FD1B357023001EDADB /* CustomPipe.cpp in Sources */,
+				9DC976431B357525001EDADB /* UdpSocket.cpp in Sources */,
+				9DC976091B357023001EDADB /* ThreadUtils.cpp in Sources */,
+				9DC976051B357023001EDADB /* Sensor.cpp in Sources */,
+				9DC9763F1B35751A001EDADB /* OscTypes.cpp in Sources */,
+				9DC976211B357032001EDADB /* SaveSettings.mm in Sources */,
+				9DC9760A1B357023001EDADB /* UDPSender.cpp in Sources */,
+				9DC976231B357032001EDADB /* SensorAudioInputIosImpl.mm in Sources */,
+				9DC976081B357023001EDADB /* SensorStandard.cpp in Sources */,
+				9DC976481B36CC4F001EDADB /* SensorStandardIos.mm in Sources */,
+				9DC9760B1B357023001EDADB /* UDPSendersManager.cpp in Sources */,
+				9DC9762F1B3574F9001EDADB /* IpEndpointName.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DC975DA1B356FF3001EDADB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9DC975E11B356FF3001EDADB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9DC975D21B356FF2001EDADB /* SDCF_Framework_iOS */;
+			targetProxy = 9DC975E01B356FF3001EDADB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9DC975E51B356FF3001EDADB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9DC975E61B356FF3001EDADB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9DC975E81B356FF3001EDADB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SDCF_Framework_iOS/SDCF_Framework_iOS-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../src/include",
+					"$(SRCROOT)/../../src/ios/include",
+					"$(SRCROOT)/../../lib/oscpack_1_1_0",
+					"$(SRCROOT)/../../lib/cereal-1.1.0/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DC975E91B356FF3001EDADB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SDCF_Framework_iOS/SDCF_Framework_iOS-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../src/include",
+					"$(SRCROOT)/../../src/ios/include",
+					"$(SRCROOT)/../../lib/oscpack_1_1_0",
+					"$(SRCROOT)/../../lib/cereal-1.1.0/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DC975EB1B356FF3001EDADB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SDCF_Framework_iOSTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9DC975EC1B356FF3001EDADB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SDCF_Framework_iOSTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9DC975CE1B356FF2001EDADB /* Build configuration list for PBXProject "SDCF_Framework_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DC975E51B356FF3001EDADB /* Debug */,
+				9DC975E61B356FF3001EDADB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DC975E71B356FF3001EDADB /* Build configuration list for PBXNativeTarget "SDCF_Framework_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DC975E81B356FF3001EDADB /* Debug */,
+				9DC975E91B356FF3001EDADB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DC975EA1B356FF3001EDADB /* Build configuration list for PBXNativeTarget "SDCF_Framework_iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DC975EB1B356FF3001EDADB /* Debug */,
+				9DC975EC1B356FF3001EDADB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9DC975CB1B356FF2001EDADB /* Project object */;
+}
