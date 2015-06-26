@@ -726,9 +726,12 @@ void ItemSettings::PositionElements()
     DoPosition(nameLabel, xOffset, yPos);
     DoPosition(name, xOffset, yPos);
     DoPosition(colorLabel, xOffset, yPos);
-    yPos-=SUBPANEL_ITEM_HEIGHT/3;
-    DoPosition(color, xOffset, yPos);
-    yPos-=SUBPANEL_ITEM_HEIGHT/3;
+    if (color && color->isVisible())
+    {
+        yPos-=SUBPANEL_ITEM_HEIGHT/3;
+        DoPosition(color, xOffset, yPos);
+        yPos-=SUBPANEL_ITEM_HEIGHT/3;
+    }
     DoPosition(controlLabel, xOffset, yPos);
     DoPosition(modes, xOffset, yPos);
     DoPosition(groupLabel, xOffset, yPos);
