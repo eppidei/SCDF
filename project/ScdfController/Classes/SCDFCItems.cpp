@@ -991,7 +991,7 @@ void ItemPad::Init()
     pad->setTouchEnabled(true);
     //pad->setScale9Enabled(true);
     pad->ignoreContentAdaptWithSize(false);
-    pad->loadTextures("padDefault.png", "padHover.png","padDefault.png");
+    pad->loadTextures("padDefault.png", "padDefault.png","padDefault.png");
     pad->setAnchorPoint(Vec2(0,1));
     pad->setPosition(Vec2(0,GetControlContentSize().height));
     pad->setContentSize(GetControlContentSize());

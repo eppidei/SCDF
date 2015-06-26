@@ -117,17 +117,17 @@ public:
             // IDs
             [idList addObject:id_product_blow];
             [idList addObject:id_product_saveLoad];
-//            [idList addObject:id_product_snap];
+            [idList addObject:id_product_snap];
             
             // KEY
             [keyList addObject:key_product_blow];
             [keyList addObject:key_product_saveLoad];
-//            [keyList addObject:key_product_snap];
+            [keyList addObject:key_product_snap];
             
             // MESSAGES
              [messageList addObject:message_product_blow];
             [messageList addObject:message_product_saveLoad];
-//            [messageList addObject:message_product_snap];
+            [messageList addObject:message_product_snap];
         }
         
     }
@@ -621,7 +621,7 @@ bool CheckIsInAppPurchased(PurchaseProductIndex _productIndex)
     
     NSMutableArray *priceList = purchaseController.GetProductsPriceList();
     
-    if([priceList count])
+    if([priceList count]>productIndex)
     {
         std::string productPrice = [[priceList objectAtIndex:productIndex] UTF8String];
         if(productPrice.length()>0)
