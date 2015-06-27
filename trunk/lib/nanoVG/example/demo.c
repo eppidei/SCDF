@@ -5,7 +5,7 @@
 #ifdef NANOVG_GLEW
 #  include <GL/glew.h>
 #endif
-#include "../GLFW/glfw3.h"
+//#include "../GLFW/glfw3.h"
 #include "nanovg.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -533,8 +533,8 @@ void drawThumbnails(NVGcontext* vg, float x, float y, float w, float h, const in
 	int imgw, imgh;
 	float stackh = (nimages/2) * (thumb+10) + 10;
 	int i;
-	float u = (1+cosf(t*0.5f))*0.5f;
-	float u2 = (1-cosf(t*0.2f))*0.5f;
+    float u = fmin(1,fmax(0,t/h));//(1+cosf(t/h*0.5f))*0.5f;
+    float u2 =1;// (1-cosf(t*0.2f))*0.5f;
 	float scrollh, dv;
 
 	nvgSave(vg);
@@ -1075,7 +1075,10 @@ void renderDemo(NVGcontext* vg, float mx, float my, float width, float height,
 	drawButton(vg, 0, "Cancel", x+170, y, 110, 28, nvgRGBA(0,0,0,0));
 
 	// Thumbnails box
-	drawThumbnails(vg, 365, popy-30, 160, 300, data->images, 12, t);
+    static float yy=0;
+    if (mx>365&&mx<365+160 &&my>popy-30&&my<popy-30+300)
+        yy=my;
+	drawThumbnails(vg, 365, popy-30, 160, 300, data->images, 12, yy);
 
 	nvgRestore(vg);
 }
@@ -1167,18 +1170,18 @@ static void flipHorizontal(unsigned char* image, int w, int h, int stride)
 	}
 }
 
-void saveScreenShot(int w, int h, int premult, const char* name)
-{
-	unsigned char* image = (unsigned char*)malloc(w*h*4);
-	if (image == NULL)
-		return;
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	if (premult)
-		unpremultiplyAlpha(image, w, h, w*4);
-	else
-		setAlpha(image, w, h, w*4, 255);
-	flipHorizontal(image, w, h, w*4);
- 	stbi_write_png(name, w, h, 4, image, w*4);
- 	free(image);
-}
+//void saveScreenShot(int w, int h, int premult, const char* name)
+//{
+//	unsigned char* image = (unsigned char*)malloc(w*h*4);
+//	if (image == NULL)
+//		return;
+//	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, image);
+//	if (premult)
+//		unpremultiplyAlpha(image, w, h, w*4);
+//	else
+//		setAlpha(image, w, h, w*4, 255);
+//	flipHorizontal(image, w, h, w*4);
+// 	stbi_write_png(name, w, h, 4, image, w*4);
+// 	free(image);
+//}
 
