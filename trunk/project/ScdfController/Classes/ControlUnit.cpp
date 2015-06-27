@@ -194,6 +194,7 @@ void GetSensorData(std::vector<scdf::SensorData*> *harvestedData, scdf::SensorTy
 void ControlUnitDsp::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer)
 {
     assert(ADEcontext!=NULL);
+    if (!ADEcontext) return;
     
     scdf::ThreadUtils::AutoLock kk(&controlUnitItemLock);
     

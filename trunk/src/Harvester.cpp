@@ -432,7 +432,6 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
 
         if (!success) {
         	LOGE("HarvesterListenerContainer::Attach error: could not start sensor!");
-        	assert(false);
         	continue;
         }
 

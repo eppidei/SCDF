@@ -20,16 +20,20 @@
 #define key_product_blow @"isAlgoBlow_Purchased"
 #define message_product_blow @"Hey! Do you want to purchase the Blow control to use as MIDI output"
 
-
 // PRODUCT 1 index == 1
 #define id_product_saveLoad @"fzn_amidi_ls_00"
 #define key_product_saveLoad @"isSaveLoad_Purchased"
 #define message_product_saveLoad @"Hey! Do you want to purchase the Save and Load packet"
 
 // PRODUCT 3 index == 2
-#define id_product_snap @"com.algoSnap"
+#define id_product_snap @"fzn_amidi_snap_00"
 #define key_product_snap @"isAlgoSnap_Purchased"
 #define message_product_snap @"Hey! Do you want to purchase the Snap control to use as MIDI output"
+
+// PRODUCT 4 index == 3
+#define id_product_proxy @"fzn_amidi_proxy_00"
+#define key_product_proxy @"isAlgoProxy_Purchased"
+#define message_product_proxy @"Hey! Do you want to purchase the Proximity control to use as MIDI output"
 
 //#define SCDF_TRANSACTION_RECEIPT @"proVersonTransactionReceipt"
 
@@ -118,16 +122,19 @@ public:
             [idList addObject:id_product_blow];
             [idList addObject:id_product_saveLoad];
             [idList addObject:id_product_snap];
+            [idList addObject:id_product_proxy];
             
             // KEY
             [keyList addObject:key_product_blow];
             [keyList addObject:key_product_saveLoad];
             [keyList addObject:key_product_snap];
+            [keyList addObject:key_product_proxy];
             
             // MESSAGES
              [messageList addObject:message_product_blow];
             [messageList addObject:message_product_saveLoad];
             [messageList addObject:message_product_snap];
+            [messageList addObject:message_product_proxy];
         }
         
     }
