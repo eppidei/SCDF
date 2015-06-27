@@ -53,6 +53,7 @@
 		50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 50EF62A017ECD613001EB2F8 /* Icon-29.png */; };
 		50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 50EF62A117ECD613001EB2F8 /* Icon-50.png */; };
 		9D1B9D151B3ED437001DBEA1 /* libcocos2dx-extensions iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF2201D1B3E9F0C00D3394D /* libcocos2dx-extensions iOS.a */; };
+		9DD64DE01B3F270E00192CB2 /* libSDCF_Framework_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1B9D311B3F232F001DBEA1 /* libSDCF_Framework_iOS.a */; };
 		9DF21F201B37180200D3394D /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21F1F1B37180200D3394D /* nanovg.c */; };
 		9DF21F2D1B37183300D3394D /* demo.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21F261B37183300D3394D /* demo.c */; };
 		9DF21F331B37183300D3394D /* perf.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF21F2C1B37183300D3394D /* perf.c */; };
@@ -83,6 +84,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9D1B9D301B3F232F001DBEA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DC975D31B356FF2001EDADB;
+			remoteInfo = SDCF_Framework_iOS;
+		};
+		9D1B9D321B3F232F001DBEA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DC975DE1B356FF3001EDADB;
+			remoteInfo = SDCF_Framework_iOSTests;
+		};
+		9DD64DDE1B3F270700192CB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DC975D21B356FF2001EDADB;
+			remoteInfo = SDCF_Framework_iOS;
+		};
 		9DF220101B3E9F0C00D3394D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
@@ -215,6 +237,7 @@
 		50EF629517ECD46A001EB2F8 /* Icon-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-100.png"; sourceTree = "<group>"; };
 		50EF62A017ECD613001EB2F8 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
 		50EF62A117ECD613001EB2F8 /* Icon-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-50.png"; sourceTree = "<group>"; };
+		9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDCF_Framework_iOS.xcodeproj; path = ../../SDCF_Framework_iOS/SDCF_Framework_iOS.xcodeproj; sourceTree = "<group>"; };
 		9DF21F1F1B37180200D3394D /* nanovg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nanovg.c; path = ../../../lib/nanoVG/src/nanovg.c; sourceTree = "<group>"; };
 		9DF21F261B37183300D3394D /* demo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = demo.c; path = ../../../lib/nanoVG/example/demo.c; sourceTree = "<group>"; };
 		9DF21F2C1B37183300D3394D /* perf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = perf.c; path = ../../../lib/nanoVG/example/perf.c; sourceTree = "<group>"; };
@@ -250,6 +273,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DD64DE01B3F270E00192CB2 /* libSDCF_Framework_iOS.a in Frameworks */,
 				9D1B9D151B3ED437001DBEA1 /* libcocos2dx-extensions iOS.a in Frameworks */,
 				9DF220241B3EA26300D3394D /* libcocos2dx iOS.a in Frameworks */,
 				D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */,
@@ -331,6 +355,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -435,6 +460,15 @@
 			path = ../Resources;
 			sourceTree = "<group>";
 		};
+		9D1B9D221B3F232F001DBEA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D1B9D311B3F232F001DBEA1 /* libSDCF_Framework_iOS.a */,
+				9D1B9D331B3F232F001DBEA1 /* SDCF_Framework_iOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		9DF220021B3E9F0B00D3394D /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -466,6 +500,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9DD64DDF1B3F270700192CB2 /* PBXTargetDependency */,
 				9DF220C31B3ECF7F00D3394D /* PBXTargetDependency */,
 				9DF220261B3EA29100D3394D /* PBXTargetDependency */,
 			);
@@ -521,6 +556,10 @@
 					ProductGroup = 9DF220021B3E9F0B00D3394D /* Products */;
 					ProjectRef = 1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */;
 				},
+				{
+					ProductGroup = 9D1B9D221B3F232F001DBEA1 /* Products */;
+					ProjectRef = 9D1B9D211B3F232F001DBEA1 /* SDCF_Framework_iOS.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -531,6 +570,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		9D1B9D311B3F232F001DBEA1 /* libSDCF_Framework_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDCF_Framework_iOS.a;
+			remoteRef = 9D1B9D301B3F232F001DBEA1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D1B9D331B3F232F001DBEA1 /* SDCF_Framework_iOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SDCF_Framework_iOSTests.xctest;
+			remoteRef = 9D1B9D321B3F232F001DBEA1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9DF220111B3E9F0C00D3394D /* libcocos2dx Mac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -688,6 +741,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9DD64DDF1B3F270700192CB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SDCF_Framework_iOS;
+			targetProxy = 9DD64DDE1B3F270700192CB2 /* PBXContainerItemProxy */;
+		};
 		9DF220261B3EA29100D3394D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "cocos2dx iOS";
@@ -726,6 +784,7 @@
 					"$(SRCROOT)/../../../lib/cocos2d/cocos/platform/ios",
 					"$(SRCROOT)/../../../lib/cocos2d/cocos/platform/ios/Simulation",
 					"$(SRCROOT)/../../../lib/nanoVG",
+					"$(SRCROOT)/../../../src/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -757,6 +816,7 @@
 					"$(SRCROOT)/../../../lib/cocos2d/cocos/platform/ios",
 					"$(SRCROOT)/../../../lib/cocos2d/cocos/platform/ios/Simulation",
 					"$(SRCROOT)/../../../lib/nanoVG",
+					"$(SRCROOT)/../../../src/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
