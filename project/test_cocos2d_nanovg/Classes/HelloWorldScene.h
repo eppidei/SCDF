@@ -33,7 +33,7 @@ public:
     virtual void onTouchMoved(cocos2d::Touch*, cocos2d::Event*) override;
     virtual void onTouchCancelled(cocos2d::Touch*, cocos2d::Event*) override;
     
-    virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags) override;
+    //virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags) override;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

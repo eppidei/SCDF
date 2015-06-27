@@ -1,8 +1,9 @@
 #include "HelloWorldScene.h"
-#include "nanovg.h"
-#include "nanovg_gl.h"
+//#include "nanovg.h"
+//#include "nanovg_gl.h"
 #include "platform/CCFileUtils.h"
 #include <string>
+#include "NanoControls.h"
 
 USING_NS_CC;
 
@@ -21,106 +22,65 @@ Scene* HelloWorld::createScene()
     return scene;
 }
 
-void HelloWorld::draw(Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
-{
-    //	glfwSwapInterval(0);
-    //
-    //	glfwSetTime(0);
-
-    double t, dt;
-    int winWidth, winHeight;
-    int fbWidth, fbHeight;
-    float pxRatio;
-
-    struct timeval tv;
-    gettimeofday(&tv,NULL);
-    
-    t= tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    dt = t - prevt;
-    prevt = t;
-    updateGraph(&fps, dt);
-
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    winWidth=visibleSize.width;
-    winHeight=visibleSize.height;
-    
-    //glfwGetCursorPos(window, &mx, &my);
-
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &fbWidth);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &fbHeight);
-
-    // Calculate pixel ration for hi-dpi devices.
-    pxRatio = (float)fbWidth / (float)winWidth;
-
-    // Update and render
-    glViewport(0, 0, fbWidth, fbHeight);
-	
-    if (premuto)
-		glClearColor(0,0,0,0);
-	else
-        glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
-    
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-
-    nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
-
-    renderDemo(vg, cursorPoint.x, cursorPoint.y, winWidth,winHeight, t, 0, &data);
-    renderGraph(vg, 5,5, &fps);
-
-    nvgEndFrame(vg);
-
-    glEnable(GL_DEPTH_TEST);
-
-//  glfwSwapBuffers(window);
-//  glfwPollEvents();
-    
-    // On window destroyed
-//    freeDemoData(vg, &data);
+//void HelloWorld::draw(Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
+//{
+//    double t, dt;
+//    int winWidth, winHeight;
+//    int fbWidth, fbHeight;
+//    float pxRatio;
 //
-//    nvgDeleteGLES2(vg);
-}
-// on "init" you need to initialize your instance
-
-int loadDemoData(NVGcontext* vg, DemoData* data)
-{
-    int i;
-    
-    if (vg == NULL)
-        return -1;
-    
-    for (i = 0; i < 12; i++) {
-        char _file[128];
-        snprintf(_file, 128, "image%d.jpg", i+1);
-        std::string file = FileUtils::getInstance()->fullPathForFilename(_file);
-        data->images[i] = nvgCreateImage(vg, file.c_str(), 0);
-        if (data->images[i] == 0) {
-            printf("Could not load %s.\n", file.c_str());
-            return -1;
-        }
-    }
-    
-    data->fontIcons = nvgCreateFont(vg, "icons", FileUtils::getInstance()->fullPathForFilename("entypo.ttf").c_str());
-    if (data->fontIcons == -1) {
-        printf("Could not add font icons.\n");
-        return -1;
-    }
-    data->fontNormal = nvgCreateFont(vg, "sans", FileUtils::getInstance()->fullPathForFilename("Roboto-Regular.ttf").c_str());
-    if (data->fontNormal == -1) {
-        printf("Could not add font italic.\n");
-        return -1;
-    }
-    data->fontBold = nvgCreateFont(vg, "sans-bold", FileUtils::getInstance()->fullPathForFilename("Roboto-Bold.ttf").c_str());
-    if (data->fontBold == -1) {
-        printf("Could not add font bold.\n");
-        return -1;
-    }
-    
-    return 0;
-}
+//    struct timeval tv;
+//    gettimeofday(&tv,NULL);
+//    
+//    t= tv.tv_sec * 1000 + tv.tv_usec / 1000;
+//    dt = t - prevt;
+//    prevt = t;
+//    updateGraph(&fps, dt);
+//
+//    Size visibleSize = Director::getInstance()->getVisibleSize();
+//    winWidth=visibleSize.width;
+//    winHeight=visibleSize.height;
+//    
+//    //glfwGetCursorPos(window, &mx, &my);
+//
+//    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &fbWidth);
+//    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &fbHeight);
+//
+//    // Calculate pixel ration for hi-dpi devices.
+//    pxRatio = (float)fbWidth / (float)winWidth;
+//
+//    // Update and render
+//    glViewport(0, 0, fbWidth, fbHeight);
+//	
+//    if (premuto)
+//		glClearColor(0,0,0,0);
+//	else
+//        glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+//    
+//    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glEnable(GL_CULL_FACE);
+//    glDisable(GL_DEPTH_TEST);
+//
+//    nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+//
+//    renderDemo(vg, cursorPoint.x, cursorPoint.y, winWidth,winHeight, t, 0, &data);
+//    renderGraph(vg, 5,5, &fps);
+//
+//    nvgEndFrame(vg);
+//
+//    glEnable(GL_DEPTH_TEST);
+//
+////  glfwSwapBuffers(window);
+////  glfwPollEvents();
+//    
+//    // On window destroyed
+////    freeDemoData(vg, &data);
+////
+////    nvgDeleteGLES2(vg);
+//}
+//// on "init" you need to initialize your instance
 
 bool HelloWorld::init()
 {
@@ -188,20 +148,27 @@ bool HelloWorld::init()
     
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
-    struct timeval tv;
-    gettimeofday(&tv,NULL);
-    prevt = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    
-    initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
-    vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-    
-    if (vg == NULL) {
-        printf("Could not init nanovg.\n");
-        return false;
-    }
-    
-    if (loadDemoData(vg, &data) == -1)
-        return false;
+    Rect r(0, getContentSize().height, getContentSize().width/2.0, getContentSize().height);
+    addChild(NanoControls::Demo::Create(r));
+    r.origin.x+=r.size.width;
+    r.size.height/=2.0;
+    r.origin.y-=(r.size.height/2.0);
+
+    addChild(NanoControls::Demo::Create(r));
+//    struct timeval tv;
+//    gettimeofday(&tv,NULL);
+//    prevt = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+//    
+//    initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
+//    vg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+//    
+//    if (vg == NULL) {
+//        printf("Could not init nanovg.\n");
+//        return false;
+//    }
+//    
+//    if (loadDemoData(vg, &data) == -1)
+//        return false;
     
     return true;
 }
