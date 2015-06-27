@@ -148,13 +148,29 @@ bool HelloWorld::init()
     
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
-    Rect r(0, getContentSize().height, getContentSize().width/2.0, getContentSize().height);
-    addChild(NanoControls::Demo::Create(r));
-    r.origin.x+=r.size.width;
-    r.size.height/=2.0;
-    r.origin.y-=(r.size.height/2.0);
+    Rect r(0, getContentSize().height, getContentSize().width/2.0, getContentSize().height/2.0);
+//    addChild(NanoControls::Demo::Create(r));
+//    r.origin.x+=r.size.width;
+//    r.size.height/=2.0;
+//    r.origin.y-=(r.size.height/2.0);
 
-    addChild(NanoControls::Demo::Create(r));
+    auto p=NanoControls::AudioPlotter::Create(r);
+    addChild(p);
+    
+    r.origin.x+=r.size.width;
+    p=NanoControls::AudioPlotter::Create(r);
+    p->SetColor(Color4B::RED);
+    addChild(p);
+
+    r.origin.y-=r.size.height;
+    p=NanoControls::AudioPlotter::Create(r);
+    p->SetColor(Color4B::YELLOW);
+    addChild(p);
+
+    r.origin.x-=r.size.width;
+    p=NanoControls::AudioPlotter::Create(r);
+    p->SetColor(Color4B::GREEN);
+    addChild(p);
 //    struct timeval tv;
 //    gettimeofday(&tv,NULL);
 //    prevt = tv.tv_sec * 1000 + tv.tv_usec / 1000;
