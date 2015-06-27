@@ -23,13 +23,6 @@ bool IsTablet()
     return false;
 }
 
-
-s_uint64 now_ns()
-{
-    return  mach_absolute_time();
-    
-}
-
 namespace scdf {
 
     

@@ -17,6 +17,13 @@
 
 using namespace scdf;
 
+
+s_uint64 now_ns()
+{
+    return  mach_absolute_time();
+
+}
+
 s_uint64 getUptimeInMilliseconds(s_uint64 timeToConvert);
 
 @implementation AudioEventsListener

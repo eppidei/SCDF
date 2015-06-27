@@ -202,6 +202,8 @@ void ControlUnitDsp::OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buff
     
     GetSensorData(buffer, scdf::AudioInput, sensorData);
     
+    if(GetAlgoFlag()==PROXY_FLAG)
+        ADE_Configure_bufflength(ADEcontext, GetAlgoFlag(), sensorData.num_frames);
     ADE_Step(ADEcontext,GetAlgoFlag(),&sensorData);
     ADE_SCDF_Output_Int_T *output=ADE_GetOutBuff(ADEcontext,GetAlgoFlag());
     
