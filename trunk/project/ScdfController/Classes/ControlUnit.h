@@ -199,6 +199,7 @@ class ItemBase;
         void Release() override;
         void OnHarvesterBufferReady(std::vector<scdf::SensorData*> *buffer) override;
         virtual ADE_UINT32_T GetAlgoFlag() = 0;
+        virtual scdf::SensorType GetSensorTypeRequired() = 0;
         
     protected:
         
@@ -240,6 +241,7 @@ class ItemBase;
         ControlUnitBlow() : ControlUnitDsp() {}
         Type GetType() { return Blow; }
         ADE_UINT32_T GetAlgoFlag() { return BLOW_FLAG;}
+        scdf::SensorType GetSensorTypeRequired() { return scdf::AudioInput;}
 
     private:
 
@@ -267,6 +269,7 @@ class ItemBase;
         ControlUnitSnap() : ControlUnitDsp() {}
         Type GetType() { return Snap; }
         ADE_UINT32_T GetAlgoFlag() { return SNAP_FLAG;}
+        scdf::SensorType GetSensorTypeRequired() { return scdf::AudioInput;}
         
     private:
         
@@ -294,6 +297,7 @@ class ItemBase;
         ControlUnitProximity() : ControlUnitDsp() {}
         Type GetType() { return Proximity; }
         ADE_UINT32_T GetAlgoFlag() { return PROXY_FLAG;}
+        scdf::SensorType GetSensorTypeRequired() { return scdf::Proximity;}
         
     private:
         
