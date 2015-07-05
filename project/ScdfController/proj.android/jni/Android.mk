@@ -113,6 +113,8 @@ LOCAL_SRC_FILES :=  ADE.c \
 					ADE_polyfit.c \
 					ADE_Error_Handler.c \
 					ADE_Snap.c \
+					ADE_proximity.c \
+					ADE_downsampler.c \
 					ADE_fft.c \
 					ADE_nrutil.c			
 					#ADE_Bench_Utils.c \

@@ -73,10 +73,18 @@ void ScdfSensorAPI::InitSensors()
     scdf::SensorSettings settings;
     settings.rate = DEFAULT_SENSORS_RATE;
     
-    scdf::theSensorManager()->InitSensor(scdf::Accelerometer, settings);
-    scdf::theSensorManager()->InitSensor(scdf::Magnetometer, settings);
-    scdf::theSensorManager()->InitSensor(scdf::Gyroscope, settings);
-    scdf::theSensorManager()->InitSensor(scdf::Proximity, settings);
+    bool ok = true;
+    ok =  scdf::theSensorManager()->InitSensor(scdf::Accelerometer, settings);
+    LOGD("InitSensor Accelerometer ok? %d",ok);
+    ok =  scdf::theSensorManager()->InitSensor(scdf::Magnetometer, settings);
+    LOGD("InitSensor Magnetometer ok? %d",ok);
+    ok =  scdf::theSensorManager()->InitSensor(scdf::Gyroscope, settings);
+    LOGD("InitSensor Gyroscope ok? %d",ok);
+    ok =  scdf::theSensorManager()->InitSensor(scdf::Proximity, settings);
+    LOGD("InitSensor Proximity ok? %d",ok);
+
+    // TODO: handle setup fail for a sensor (may not be present on a specific device)
+    // check for settings.broken flag!!!
     
     scdf::SensorAudioSettings settingsAudio;
     settingsAudio.rate = DEFAULT_SAMPLE_RATE;

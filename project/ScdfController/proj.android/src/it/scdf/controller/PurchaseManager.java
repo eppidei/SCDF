@@ -85,8 +85,8 @@ public class PurchaseManager
 	// ITEMS NAMES (ALWAYS KEEP THIS SYNCHED WITH NATIVE ENUM!) :
 	
 	public static final String SAVELOAD = "augmented_midi_controller_saveload";
-	public static final String BLOW = "augmented_midi_control_blow";
-	public static final String SNAP = "augmented_midi_control_snap";
+	public static final String BLOW = "augmented_midi_controller_blow";
+	public static final String SNAP = "augmented_midi_controller_snap";
 	
 	private Map<String,Integer> availableItemsMap;
 	
