@@ -179,7 +179,8 @@ s_bool SensorsManager::InitSensor(SensorType type, SensorSettings &settings)
 		return false;
 	}
     Sensor *s=GetSensor(type);
-    if (NULL==s) return false;
+    if (NULL==s)
+    	return false;
 	return s->Setup(settings);
 }
 

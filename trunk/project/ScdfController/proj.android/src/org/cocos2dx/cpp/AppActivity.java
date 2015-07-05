@@ -53,11 +53,14 @@ public class AppActivity extends Cocos2dxActivity implements PurchaseListener {
 		Log.i("sc","SCDF native libraries loaded");
 	}
 	
+	private static native boolean SetupScdfSensorAPI();
+	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         ForegroundActivity.Set(this);
+        SetupScdfSensorAPI();
         UsbHandler.Setup(this);
         PrefManager.Setup(this);
         PurchaseManager.Get().StartSetup(this,this);
@@ -102,10 +105,10 @@ public class AppActivity extends Cocos2dxActivity implements PurchaseListener {
 	@Override
 	public void OnItemPurchaseStateChange(String itemName, int state)
 	{
-		if (state!=PurchaseManager.PURCHASED) return;
+		/*if (state!=PurchaseManager.PURCHASED) return;
 		AlertDialog.Builder bld = new AlertDialog.Builder(this);
 		bld.setTitle("Purchase success").setMessage("Item "+itemName+"has been purchased!\nYou may have to restart the app to see the changes");
 		bld.setNegativeButton("Ok",null);
-		bld.create().show();
+		bld.create().show();*/
 	}
 }

@@ -16,6 +16,21 @@
 using namespace ScdfCtrl;
 USING_NS_CC;
 
+#ifdef ANDROID
+
+#include "ScdfSensorAPI.h"
+
+extern "C" JNIEXPORT jboolean JNICALL Java_org_cocos2dx_cpp_AppActivity_SetupScdfSensorAPI
+	(JNIEnv *e, jclass cl)
+{
+	//sleep(5);
+	scdf::theSensorAPI()->InitFramework();
+	return true;
+}
+
+
+#endif
+
 
 namespace Scdf
 {
@@ -90,9 +105,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
-    
-    scdf::theSensorAPI()->InitFramework();
+
 #ifdef PLATF_IOS
+    scdf::theSensorAPI()->InitFramework();
     Scdf::createMidiMananager();
 #endif
 
