@@ -112,10 +112,22 @@ namespace scdf{
         {
             Harvester::Instance()->Stop();
         }
-        ~StopRestartMachine()
+        virtual ~StopRestartMachine()
         {
             if (startMachine)
                 Harvester::Instance()->Start();
+        }
+    };
+    class StopRestartMachineAs : public StopRestartMachine
+    {
+        SensorType type;
+    public:
+        StopRestartMachineAs(SensorType newType) : StopRestartMachine(), type(newType)
+        {
+        }
+        ~StopRestartMachineAs()
+        {
+            Harvester::Instance()->SetType(type);
         }
     };
 }
