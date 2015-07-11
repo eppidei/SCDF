@@ -216,8 +216,8 @@ void Receiver::StartReceivingProcedure(void *param)
         close(*SOCK_sd);
         /*  WSACleanup();*/
 
-
-        exit(0);
+        return;
+        //exit(0);
     }
 
     /* Setting reception timeout ( NON_BLOCKING RECV/RECVFROM ) */

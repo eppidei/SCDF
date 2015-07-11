@@ -16,6 +16,8 @@
 #include "UdpSender.h"
 
 
+std::string getIPAddress();
+
 const int max_number_ip_port = 65535;
 
 @interface SecondViewController ()
@@ -76,7 +78,14 @@ const int max_number_ip_port = 65535;
     [self SetOutputPort:actualPort];
     [self SetOutputAddress:addressString];
     [self setMultiOutputActiove:multiOutput];
+    
+#ifdef SCDF_PLOT
+    [self setRoutingType:1];
+    [self SetOutputAddress:(std::string )DEFAULT_IP_ADDRESS];
+    [self SetOutputPort:(int)DEFAULT_UDP_PORT_BASE];
+#else
     [self setRoutingType:routingType];
+#endif
     
     
     // Update Interface
@@ -147,39 +156,39 @@ const int max_number_ip_port = 65535;
 {
     outputIp.text = [NSString stringWithUTF8String:addressString.c_str()];
     outputPort.text = [NSString stringWithFormat:@"%d", actualPort];
-    inputIp.text = [self getIPAddress];
+    inputIp.text = [NSString stringWithUTF8String:getIPAddress().c_str()];
     
     [buttonPort setTitle:[NSString stringWithFormat:@"%d", actualPort] forState:UIControlStateNormal];
     [buttonPort setTitle:[NSString stringWithFormat:@"%d", actualPort] forState:UIControlStateHighlighted];
     
 }
 
-- (NSString *)getIPAddress {
-    NSString *address = @"error";
-    struct ifaddrs *interfaces = NULL;
-    struct ifaddrs *temp_addr = NULL;
-    int success = 0;
-    // retrieve the current interfaces - returns 0 on success
-    success = getifaddrs(&interfaces);
-    if (success == 0) {
-        // Loop through linked list of interfaces
-        temp_addr = interfaces;
-        while(temp_addr != NULL) {
-            if(temp_addr->ifa_addr->sa_family == AF_INET) {
-                // Check if interface is en0 which is the wifi connection on the iPhone
-                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
-                    // Get NSString from C String
-                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
-                }
-            }
-            temp_addr = temp_addr->ifa_next;
-        }
-    }
-    // Free memory
-    freeifaddrs(interfaces);
-    return address;
-    
-}
+//- (NSString *)getIPAddress {
+//    NSString *address = @"error";
+//    struct ifaddrs *interfaces = NULL;
+//    struct ifaddrs *temp_addr = NULL;
+//    int success = 0;
+//    // retrieve the current interfaces - returns 0 on success
+//    success = getifaddrs(&interfaces);
+//    if (success == 0) {
+//        // Loop through linked list of interfaces
+//        temp_addr = interfaces;
+//        while(temp_addr != NULL) {
+//            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+//                // Check if interface is en0 which is the wifi connection on the iPhone
+//                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
+//                    // Get NSString from C String
+//                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+//                }
+//            }
+//            temp_addr = temp_addr->ifa_next;
+//        }
+//    }
+//    // Free memory
+//    freeifaddrs(interfaces);
+//    return address;
+//    
+//}
 
 #pragma mark IBActions
 

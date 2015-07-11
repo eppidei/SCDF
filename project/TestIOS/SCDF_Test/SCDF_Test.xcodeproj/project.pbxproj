@@ -32,6 +32,8 @@
 		CC5DAC9D1A6C2C4300AFDF5A /* AudioWaveView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC5DAC9C1A6C2C4300AFDF5A /* AudioWaveView.mm */; };
 		DC151397194487AD00DC7BF7 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151393194487AD00DC7BF7 /* Sensor.cpp */; };
 		DC151398194487AD00DC7BF7 /* SensorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC151394194487AD00DC7BF7 /* SensorsManager.cpp */; };
+		DC1ACA181B5177CE00EC8090 /* UtilitiesiOs.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1ACA171B5177CE00EC8090 /* UtilitiesiOs.mm */; };
+		DC1ACA191B5177CE00EC8090 /* UtilitiesiOs.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC1ACA171B5177CE00EC8090 /* UtilitiesiOs.mm */; };
 		DC299E5A197714DA007F430F /* SaveSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC299E59197714DA007F430F /* SaveSettings.mm */; };
 		DC2DEC1D1AA9083900C2AC66 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2DEC1C1AA9083900C2AC66 /* Accelerate.framework */; };
 		DC373895198823B3003BA42D /* closeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = DC373893198823B3003BA42D /* closeButton.png */; };
@@ -152,6 +154,7 @@
 		DC151393194487AD00DC7BF7 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../src/Sensor.cpp; sourceTree = "<group>"; };
 		DC151394194487AD00DC7BF7 /* SensorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensorsManager.cpp; path = ../../../../src/SensorsManager.cpp; sourceTree = "<group>"; };
 		DC15139A194487BE00DC7BF7 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../src/include/Sensor.h; sourceTree = "<group>"; };
+		DC1ACA171B5177CE00EC8090 /* UtilitiesiOs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UtilitiesiOs.mm; path = ../../../src/ios/UtilitiesiOs.mm; sourceTree = "<group>"; };
 		DC299E5819771346007F430F /* SaveSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SaveSettings.h; path = ../../../../src/include/SaveSettings.h; sourceTree = "<group>"; };
 		DC299E59197714DA007F430F /* SaveSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSettings.mm; sourceTree = "<group>"; };
 		DC2BC2C2195C283A0011521F /* SensorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorsManager.h; path = ../../../../src/include/SensorsManager.h; sourceTree = "<group>"; };
@@ -325,6 +328,7 @@
 		DC4DFF5D194CD34B0051E311 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				DC1ACA171B5177CE00EC8090 /* UtilitiesiOs.mm */,
 				DC4DFF5E194CD3590051E311 /* PublicUtility */,
 			);
 			name = Utilities;
@@ -595,6 +599,7 @@
 				DC7CFF8C1B28E04200F93CC4 /* ScdfSensorAPI.cpp in Sources */,
 				DC7CFF8D1B28E04200F93CC4 /* SensorStandard.cpp in Sources */,
 				DC7CFF8E1B28E04200F93CC4 /* SensorAudioInputIosImpl.mm in Sources */,
+				DC1ACA191B5177CE00EC8090 /* UtilitiesiOs.mm in Sources */,
 				DC7CFF8F1B28E04200F93CC4 /* UDPSendersManager.cpp in Sources */,
 				DC7CFF901B28E04200F93CC4 /* UDPSender.cpp in Sources */,
 				DC7CFF911B28E04200F93CC4 /* SecondViewController.mm in Sources */,
@@ -610,6 +615,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC1ACA181B5177CE00EC8090 /* UtilitiesiOs.mm in Sources */,
 				9D9F54241944BB2900EB7E48 /* SensorAudioInput.cpp in Sources */,
 				9D9F54291944D51100EB7E48 /* SensorStandardIosImpl.mm in Sources */,
 				DCF2E3FB1A61AADE00BA6AC5 /* GraphicViewController.mm in Sources */,

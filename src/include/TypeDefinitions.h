@@ -43,8 +43,18 @@ typedef s_float s_sample;
 //#define LOG_HARVEST_STATUS
 //#define LOG_SEM
 
+
+#ifdef SCDF_PLOT
+#define DEFAULT_UDP_PORT_BASE 50000
+#define DEFAULT_IP_ADDRESS "192.168.1.64"
+#else
 #define DEFAULT_UDP_PORT_BASE 9000
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
+
+#endif
+
+
+
 #define RETURN_PIPES_STATIC_INIT 50
 
 #define MAX_SAMP_FREQ 48000

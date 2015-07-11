@@ -14,21 +14,22 @@
 #include "Receiver.h"
 
 
-s_uint64 now_ns(){return 0;}
+//s_uint64 now_ns(){return 0;}
 
-#undef USE_RECEIVER
-//#ifdef USE_RECEIVER
+
+#ifdef SCDF_PLOT
 scdf::Receiver *audioReceiver = NULL;
-//#endif
+std::string getIPAddress();
+#endif
 
 void InitFramework()
 {
     
     scdf::thePipesManager()->CreateReturnPipes();
     scdf::theSensorManager()->CreateAllSensors();
-#ifdef USE_RECEIVER
+#ifdef SCDF_PLOT
     
-    size_t rx_pkt_size=1024;
+    size_t rx_pkt_size=1302;
     unsigned int audio_buf_len = 256;
     unsigned int sensor_buf_len = 64;
     unsigned int graph_buf_len = 4*audio_buf_len;
@@ -36,8 +37,10 @@ void InitFramework()
     scdf::Receiver *p_receiver = new scdf::Receiver( rx_pkt_size,audio_buf_len,sensor_buf_len,graph_buf_len);
     audioReceiver = p_receiver;
     
-    p_receiver->SetRemoteIp(192,168,1,52);
-    p_receiver->SetLocalIp(192,168,1,107);
+    p_receiver->SetRemoteIp(192,168,1,64);
+    
+    std::string ipAdString = getIPAddress();
+    p_receiver->SetLocalIp(192,168,1,65);
     p_receiver->SetPort(55000);
     p_receiver->Start();
 #endif

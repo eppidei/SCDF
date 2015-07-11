@@ -21,9 +21,21 @@
 #include "UdpSender.h"
 #endif
 
+
+#ifdef SCDF_PLOT
+#define MAX_SENSOR_RATE_VALUE 64
+#else
 #define MAX_SENSOR_RATE_VALUE 200
+#endif
 
 
+#ifdef SCDF_PLOT
+bool SequenceActive = false;
+int IsSequenceActive()
+{
+    return (int)SequenceActive;
+}
+#endif
 
 scdf::SensorsManager *theSensorManager();
 
@@ -80,6 +92,14 @@ scdf::SensorsManager *theSensorManager();
     settingsAudio.bufferSize = 512;
     settingsAudio.numChannels = 1;
     scdf::theSensorManager()->InitSensor(scdf::AudioInput, settingsAudio);
+    
+#ifdef SCDF_PLOT
+    scdf::theSensorManager()->SetBufferSize(scdf::AudioInput, 256);
+    
+    scdf::theSensorManager()->StartSensor(scdf::Proximity);
+    scdf::theSensorManager()->StartSensor(scdf::Gyroscope);
+    scdf::theSensorManager()->StartSensor(scdf::Accelerometer);
+#endif
     
 }
 
@@ -175,9 +195,14 @@ scdf::SensorsManager *theSensorManager();
 
 - (IBAction) toggleAccelerometerSensor: (id) sender
 {
-    UISwitch *currentSensor = sender;
-     [self toggleSensorType:scdf::Accelerometer withState:currentSensor.on];
-   
+     UISwitch *currentSensor = sender;
+    
+#ifdef SCDF_PLOT
+    SequenceActive = currentSensor.on;
+#else
+    [self toggleSensorType:scdf::Accelerometer withState:currentSensor.on];
+#endif
+    
 }
 
 - (IBAction) toggleMagnetometerSensor: (id) sender
