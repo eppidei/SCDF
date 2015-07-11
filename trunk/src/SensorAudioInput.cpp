@@ -35,7 +35,7 @@ s_bool scdf::SensorAudioInput::Start()
 	s_bool ret = sImpl->Start();
 	if (ret)
     {
-#ifdef SCDF_TEST
+#if defined ( SCDF_TEST ) || defined (SCDF_PLOT)
         if (Harvester::Instance()->GetType()==GetType())
         {
             Harvester::Instance()->Start();
@@ -52,7 +52,7 @@ s_bool scdf::SensorAudioInput::Stop()
 	if (ret)
     {
         SetActive(false);
-#ifdef SCDF_TEST
+#if defined ( SCDF_TEST ) || defined (SCDF_PLOT)
         if (Harvester::Instance()->GetType()==GetType())
             Harvester::Instance()->Stop();
 #endif

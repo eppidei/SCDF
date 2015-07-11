@@ -19,6 +19,10 @@ using namespace scdf;
 CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 
+#ifdef SCDF_PLOT
+int IsSequenceActive();
+#endif
+
 @interface TimerIos : NSObject
 {
     NSTimeInterval updateInterval;
@@ -29,6 +33,14 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 @end
 
 @implementation TimerIos
+
+- (void)sensorStateChange:(NSNotificationCenter *)notification
+{
+    if ([[UIDevice currentDevice] proximityState] == YES)
+        NSLog(@"Device is close to user.");
+    else
+        NSLog(@"Device is ~not~ closer to user.");
+}
 
 - (id) init
 {
@@ -81,9 +93,19 @@ CMMotionManager *SensorStandardImpl::motionManager=NULL;
 
 - (void) timerFired: (NSTimer *) timer
 {
+    
+     SensorsStandardIOSData data;
+#ifdef SCDF_PLOT
+    data.value1 = IsSequenceActive();
+#else
     UIDevice *device = [UIDevice currentDevice];
-    SensorsStandardIOSData data;
+    [device setProximityMonitoringEnabled:YES];
+    BOOL state = [device proximityState];
     data.value1 = device.proximityState;
+
+#endif
+   
+   
     data.timestamp = [timer timeInterval];
     
     sensorRef->MySensorsCallback(data);
@@ -129,12 +151,16 @@ s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
             return true;
 		case Proximity:
         {
+#ifdef SCDF_PLOT
+            return true;
+#else
             UIDevice *device = [UIDevice currentDevice];
             BOOL proximityEnabledBack = device.proximityMonitoringEnabled;
             device.proximityMonitoringEnabled = YES;
             BOOL proximityEnabledNow = device.proximityMonitoringEnabled;
             device.proximityMonitoringEnabled=proximityEnabledBack;
             return proximityEnabledNow;
+#endif
         }
 		default:
 			return false;
@@ -235,6 +261,7 @@ s_bool SensorStandardImpl::Start()
             break;
         case scdf::Proximity:
         {
+#ifndef SCDF_PLOT
             LOGD("toggle Proximity Sensor ON \n");
             UIDevice *device = [UIDevice currentDevice];
             device.proximityMonitoringEnabled = YES;
@@ -245,6 +272,10 @@ s_bool SensorStandardImpl::Start()
                 return false;
             }
             
+            [[NSNotificationCenter defaultCenter] addObserver:timerProximity selector:@selector(sensorStateChange:)
+                                                         name:@"UIDeviceProximityStateDidChangeNotification" object:nil];
+            
+#endif
             
             [timerProximity Start];
             break;
@@ -254,6 +285,8 @@ s_bool SensorStandardImpl::Start()
     }
     return true;
 }
+
+
 
 s_bool SensorStandardImpl::Stop()
 {
