@@ -15,10 +15,9 @@
 
 using std::string;
 
-#ifdef SCDF_PLOT
+#if defined ( SCDF_TEST ) || defined (SCDF_PLOT)
 std::string scdf::GetPatchesDirectory() {return scdf::GetUserDataDirectory() + "/patches";}
 #endif
-
 
 std::string getIPAddress()
 {
@@ -46,6 +45,43 @@ std::string getIPAddress()
     freeifaddrs(interfaces);
     return [address UTF8String];
     
+}
+
+std::vector<int> ipAddressStringToVector(std::string address)
+{
+     std::vector<int> ipValues;
+    
+    if (address.compare("error")!=0)
+    {
+        std::string delimiter = ".";
+        
+        size_t pos = 0;
+        std::string token;
+        while ((pos = address.find(delimiter)) != std::string::npos) {
+            token = address.substr(0, pos);
+            //std::cout << token << std::endl;
+            ipValues.push_back(atoi(token.c_str()));
+            address.erase(0, pos + delimiter.length());
+        }
+        
+        ipValues.push_back(atoi(address.c_str()));
+    } else
+    {
+        ipValues.push_back(127);
+        ipValues.push_back(0);
+        ipValues.push_back(0);
+        ipValues.push_back(1);
+    }
+    
+    assert(ipValues.size()==4);
+    
+    return ipValues;
+}
+
+
+std::vector<int> getIPAddressAsVector()
+{
+    return ipAddressStringToVector(getIPAddress());
 }
 
 

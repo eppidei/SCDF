@@ -19,12 +19,13 @@ const int borderSize = 0;
 //#define USE_TIMER_FOR_TESTING
 #endif
 #define TIMER_RATE 0.05
+#define TIMER_RATE_ZERO 2.00
 
 
 void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
 {
     if(audioWaveViewRef)
-        [audioWaveViewRef OnNewBufferReady:p_buff withSize:buff_len];
+        [audioWaveViewRef OnNewBufferReady:p_buff withSize:buff_len fromReceiver:true];
 }
 
 - (void) setListener: (AudioWaveListener* ) listener
@@ -70,6 +71,7 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
     drawBezier = true;
     fillPlot = true;
     showCoordinates = true;
+    receiverActive = false;
     
     [self setBackgroundColor:[UIColor grayColor]];
     
@@ -142,6 +144,14 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
                                    userInfo:nil
                                     repeats:YES];
 #endif
+    
+    zeroBuffer = (s_sample*)malloc(bufferSize*sizeof(s_sample));
+    [self generateZeroBuffer];
+    [NSTimer scheduledTimerWithTimeInterval:TIMER_RATE_ZERO
+                                     target:self
+                                   selector:@selector(onTimerTriggeredZero:)
+                                   userInfo:nil
+                                    repeats:YES];
 
 }
 
@@ -186,14 +196,17 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
     
 }
 
-- (void) OnNewBufferReady: (s_sample *) buff withSize: (int) size
+- (void) OnNewBufferReady: (s_sample *) buff withSize: (int) size fromReceiver: (bool) isReceiver
 {
     @synchronized (bufferLock){
         
         [self BufferSizeCheck:size];
         memcpy(bufferData, buff, size*sizeof(s_sample));
     }
-    // [self setNeedsDisplay];
+    
+    if(isReceiver)
+        receiverActive = true;
+    
     [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:NO];
 }
 
@@ -206,14 +219,38 @@ void AudioWaveListener::draw_buffer(s_sample *p_buff, unsigned int buff_len)
         bufferDataTest[i]=((s_sample)arc4random() / ARC4RANDOM_MAX);
     }
     
-    [self OnNewBufferReady:bufferDataTest withSize:bufferSize];
+    [self OnNewBufferReady:bufferDataTest withSize:bufferSize fromReceiver:false];
+}
+
+- (void) generateZeroBuffer
+{
+    for(int i = 0; i<bufferSize; i++)
+    {
+        //s_sample currentSample = (s_sample)i/bufferSize;
+        zeroBuffer[i]=0;
+    }
 }
 
 - (void) onTimerTriggered: (NSTimer *) tm
 {
     [self generateRandomBuffer];
-    [self setNeedsDisplay];
+    [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:NO];
     
+}
+
+- (void) onTimerTriggeredZero: (NSTimer *) tm
+{
+    
+    if(!receiverActive)
+    {
+        [self generateZeroBuffer];
+        [self OnNewBufferReady:zeroBuffer withSize:bufferSize fromReceiver:false];
+        
+        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:NO];
+    }
+    
+    receiverActive = false;
+
 }
 
 - (void)drawRect:(CGRect)rect

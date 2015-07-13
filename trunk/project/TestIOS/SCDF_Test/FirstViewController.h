@@ -19,6 +19,8 @@
 {
 #ifdef SCDF_PLOT
     SecondViewController *networkController;
+    IBOutlet UITextField *outputIp;
+    IBOutlet UILabel     *deviceIp;
 #endif
     
     BOOL pickerViewIsVisible;
@@ -51,6 +53,10 @@
     
     
 }
+
+#ifdef SCDF_PLOT
+@property (nonatomic, retain) IBOutlet UITextField *outputIp;
+#endif
 
 - (IBAction) toggleAudioSensor: (id) sender;
 - (IBAction) toggleAccelerometerSensor: (id) sender;

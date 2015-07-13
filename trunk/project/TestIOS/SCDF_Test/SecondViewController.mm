@@ -14,7 +14,12 @@
 #import <arpa/inet.h>
 #include <string>
 #include "UdpSender.h"
+#include "Receiver.h"
 
+#ifdef SCDF_PLOT
+extern scdf::Receiver *audioReceiver;
+std::vector<int> ipAddressStringToVector(std::string address);
+#endif
 
 std::string getIPAddress();
 
@@ -81,8 +86,9 @@ const int max_number_ip_port = 65535;
     
 #ifdef SCDF_PLOT
     [self setRoutingType:1];
-    [self SetOutputAddress:(std::string )DEFAULT_IP_ADDRESS];
     [self SetOutputPort:(int)DEFAULT_UDP_PORT_BASE];
+    
+    addressString = (std::string )DEFAULT_IP_ADDRESS;
 #else
     [self setRoutingType:routingType];
 #endif
@@ -302,6 +308,13 @@ const int max_number_ip_port = 65535;
 
 -  (void) SetOutputAddress: (std::string) outputUdpIP
 {
+#ifdef SCDF_PLOT
+    if(audioReceiver)
+    {
+        std::vector<int> ipAddress = ipAddressStringToVector(outputUdpIP);
+        audioReceiver->SetRemoteIp(ipAddress[0],ipAddress[1],ipAddress[2],ipAddress[3]);
+    }
+#endif
     scdf::UDPSendersManager::Instance()->SetOutputAddress(outputUdpIP);
 }
 

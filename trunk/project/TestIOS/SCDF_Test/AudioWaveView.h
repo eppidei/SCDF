@@ -28,12 +28,14 @@ public:
     bool drawBezier;
     bool fillPlot;
     bool showCoordinates;
+    bool receiverActive;
     
     s_sample *bufferData;
     s_sample *bufferDataTemp;
     NSObject *bufferLock;
     
     s_sample *bufferDataTest;
+    s_sample *zeroBuffer;
     
     int currentBufferSize;
     

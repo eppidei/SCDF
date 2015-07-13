@@ -17,9 +17,9 @@
 //s_uint64 now_ns(){return 0;}
 
 
-#ifdef SCDF_PLOT
 scdf::Receiver *audioReceiver = NULL;
-std::string getIPAddress();
+#ifdef SCDF_PLOT
+std::vector<int> getIPAddressAsVector();
 #endif
 
 void InitFramework()
@@ -37,10 +37,11 @@ void InitFramework()
     scdf::Receiver *p_receiver = new scdf::Receiver( rx_pkt_size,audio_buf_len,sensor_buf_len,graph_buf_len);
     audioReceiver = p_receiver;
     
-    p_receiver->SetRemoteIp(192,168,1,64);
+    p_receiver->SetRemoteIp(192,168,1,64); // from gui
     
-    std::string ipAdString = getIPAddress();
-    p_receiver->SetLocalIp(192,168,1,65);
+    std::vector<int> ipAddress = getIPAddressAsVector();
+    
+    p_receiver->SetLocalIp(ipAddress[0],ipAddress[1],ipAddress[2],ipAddress[3]); // ip device
     p_receiver->SetPort(55000);
     p_receiver->Start();
 #endif
