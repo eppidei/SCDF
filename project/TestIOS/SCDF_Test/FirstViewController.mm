@@ -19,6 +19,7 @@
 #import "SecondViewController.h"
 #include "UDPSendersManager.h"
 #include "UdpSender.h"
+#include "Receiver.h"
 #endif
 
 
@@ -30,6 +31,8 @@
 
 
 #ifdef SCDF_PLOT
+std::vector<int> ipAddressStringToVector(std::string address);
+extern scdf::Receiver *audioReceiver;
 bool SequenceActive = false;
 int IsSequenceActive()
 {
@@ -38,12 +41,17 @@ int IsSequenceActive()
 #endif
 
 scdf::SensorsManager *theSensorManager();
+std::string getIPAddress();
 
 @interface FirstViewController ()
 
 @end
 
 @implementation FirstViewController
+
+#ifdef SCDF_PLOT
+@synthesize outputIp;
+#endif
 
 - (void) viewDidUnload
 {
@@ -77,6 +85,15 @@ scdf::SensorsManager *theSensorManager();
     
 }
 
+- (void) UpdateIpValue
+{
+#ifdef SCDF_PLOT
+    std::string address =  scdf::UDPSendersManager::Instance()->GetOutputAddress();
+    outputIp.text = [NSString stringWithUTF8String:address.c_str()];
+    deviceIp.text = [NSString stringWithUTF8String:getIPAddress().c_str()];
+#endif
+}
+
 - (void) initSensors
 {
     scdf::SensorSettings settings;
@@ -94,13 +111,50 @@ scdf::SensorsManager *theSensorManager();
     scdf::theSensorManager()->InitSensor(scdf::AudioInput, settingsAudio);
     
 #ifdef SCDF_PLOT
+#ifdef TARGET_IPHONE_SIMULATOR
+    scdf::theSensorManager()->SetBufferSize(scdf::AudioInput, 512);
+#else
     scdf::theSensorManager()->SetBufferSize(scdf::AudioInput, 256);
-    
-    scdf::theSensorManager()->StartSensor(scdf::Proximity);
-    scdf::theSensorManager()->StartSensor(scdf::Gyroscope);
-    scdf::theSensorManager()->StartSensor(scdf::Accelerometer);
 #endif
     
+    scdf::theSensorManager()->StartSensor(scdf::Proximity);
+    scdf::theSensorManager()->SetRate(scdf::Proximity, 30);
+    
+    scdf::theSensorManager()->StartSensor(scdf::Gyroscope);
+    scdf::theSensorManager()->SetRate(scdf::Gyroscope, 20);
+    
+    scdf::theSensorManager()->StartSensor(scdf::Accelerometer);
+    scdf::theSensorManager()->SetRate(scdf::Accelerometer, 40);
+    
+    [self UpdateIpValue];
+#endif
+    
+}
+
+-  (void) SetOutputAddress: (std::string) outputUdpIP
+{
+#ifdef SCDF_PLOT
+    if(audioReceiver)
+    {
+        std::vector<int> ipAddress = ipAddressStringToVector(outputUdpIP);
+        audioReceiver->SetRemoteIp(ipAddress[0],ipAddress[1],ipAddress[2],ipAddress[3]);
+    }
+    scdf::UDPSendersManager::Instance()->SetOutputAddress(outputUdpIP);
+#endif
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+#ifdef SCDF_PLOT
+    if(textField==outputIp){
+        NSString *address = [outputIp text];
+        std::string adressString = [address UTF8String];
+        [self SetOutputAddress:adressString];
+        
+    }
+    [self UpdateIpValue];
+#endif
+
 }
 
 - (void) UpdateSensorsValues
@@ -161,6 +215,14 @@ scdf::SensorsManager *theSensorManager();
     pickerCointainerView.layer.masksToBounds = YES;
     [pickerCointainerView.layer setBorderWidth:1.0];
     [pickerCointainerView.layer setBorderColor:[[UIColor blackColor] CGColor]];
+    
+    
+    
+#ifdef SCDF_PLOT
+    outputIp.delegate = (id <UITextFieldDelegate>)self;
+    outputIp.returnKeyType = UIReturnKeyDone;
+    outputIp.keyboardType = UIKeyboardTypeNumberPad;
+#endif
 }
 
 - (void) viewTapped {
@@ -169,6 +231,9 @@ scdf::SensorsManager *theSensorManager();
     else if(accelRateField.isFirstResponder) {[accelRateField resignFirstResponder];}
     else if(magneRateField.isFirstResponder) {[magneRateField resignFirstResponder];}
     else if(proxyRateField.isFirstResponder) {[proxyRateField resignFirstResponder];}
+#ifdef SCDF_PLOT
+    else if (outputIp.isFirstResponder) {[outputIp resignFirstResponder];}
+#endif
 }
 
 - (void)didReceiveMemoryWarning
