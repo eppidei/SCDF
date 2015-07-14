@@ -118,13 +118,13 @@ std::string getIPAddress();
 #endif
     
     scdf::theSensorManager()->StartSensor(scdf::Proximity);
-    scdf::theSensorManager()->SetRate(scdf::Proximity, 30);
+    scdf::theSensorManager()->SetRate(scdf::Proximity, 2);
     
     scdf::theSensorManager()->StartSensor(scdf::Gyroscope);
-    scdf::theSensorManager()->SetRate(scdf::Gyroscope, 20);
+    scdf::theSensorManager()->SetRate(scdf::Gyroscope, 1);
     
     scdf::theSensorManager()->StartSensor(scdf::Accelerometer);
-    scdf::theSensorManager()->SetRate(scdf::Accelerometer, 40);
+    scdf::theSensorManager()->SetRate(scdf::Accelerometer, 3);
     
     [self UpdateIpValue];
 #endif
