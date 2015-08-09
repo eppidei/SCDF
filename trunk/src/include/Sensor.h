@@ -6,7 +6,7 @@ namespace scdf {
     
     class Sensor;
     
-    enum SensorType { Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
+    enum SensorType { Dummy=-2, Invalid=-1, Accelerometer, Gyroscope, Magnetometer, Proximity, Light, AudioInput, NumTypes };
     static const std::string SensorTypeString[]={"Accelerometer", "Gyroscope", "Magnetometer", "Proximity", "Light", "AudioInput" };
     //static const s_int32 SensorTypeNumChannels[]={3, 3, 3, 1, 1, 1};
 
@@ -46,9 +46,9 @@ namespace scdf {
         ~SensorData()
         {
             if (data)
-                delete data;
+                delete[] data;
             if (timestamp)
-                delete timestamp;
+                delete[] timestamp;
         }
     };
     

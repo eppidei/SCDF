@@ -26,7 +26,7 @@ s_uint64 now_ns(void); // definition in sensorstandardimplandroid.cpp
 
 void scdf::SensorAudioInputImpl::Callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-	LOGI("----> Audio callback");
+	//LOGI("----> Audio callback");
 
 	s_uint64 now = now_ns();
 	SensorAudioInputImpl* ai = (SensorAudioInputImpl*)context;
@@ -488,7 +488,7 @@ s_bool scdf::SensorAudioInputImpl::Start()
 #ifdef TEST_ANDROID_FAKE_THREAD
 	ThreadUtils::CreateThread(DummyThreadCallback,this);
 #else
-
+	LOGD("Android audio sensor START");
 	SLresult result;
 	SLuint32 recorderState;
 	result = (*audioRecorderItf)->GetState(audioRecorderItf, &recorderState);
@@ -529,6 +529,7 @@ s_bool scdf::SensorAudioInputImpl::Stop()
 
 #else
 
+	LOGD("Harvester - Stop android audio sensor!");
 	if (NULL==audioRecorderItf || NULL==recordItf || NULL == inBufferQueue)
 		return false;
 	SLresult result;

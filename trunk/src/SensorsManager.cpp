@@ -141,6 +141,21 @@ s_bool SensorsManager::StopSensor(SensorType type)
 	if (NULL==sensor)
 	   	return false;
 
+
+	// check if sensor is only temporairly stopped:
+	// since we explicitly asked for it to be stopped
+	// we don't want it to be restarted if we are in
+	// the middle of a harvester stop-restart procedure
+
+	for (int i=0;i<wereActive.size();++i)
+	{
+		if (wereActive[i]==sensor->GetType()) {
+			LOGD("StopSensor() : Sensor %d is in wereActive list. remove it",sensor->GetType());
+			wereActive.erase(wereActive.begin()+i);
+			break;
+		}
+	}
+
     return sensor->Stop();
 }
 
@@ -216,14 +231,29 @@ s_bool SensorsManager::StopAllSensors() // stops all created sensors
 	SensorsIterator it;
 	s_bool allok = true;
 	for (it=sensors.begin(); it!=sensors.end(); it++) {
-        if (it->second->IsActive())
+        if (it->second->IsActive()) {
             wereActive.push_back(it->second->GetType());
+            LOGD("StopAllSensors - sensor %d was active, keep in mind...",it->second->GetType());
+        }
 		if (!it->second->Stop())
 			allok = false;
 	}
 	return allok; // if one of the stops failed, we report it
 	// TODO: decide whether to return true or false when no sensors have been created. (now returns true)
 }
+
+void SensorsManager::PutSensorInWereActiveList(SensorType type)
+{
+	s_bool alreadypresent = false;
+	for (int i=0; i<wereActive.size(); i++)
+	{
+		if (wereActive[i]==type)
+			alreadypresent=true;
+	}
+	if (!alreadypresent)
+		wereActive.push_back(type);
+}
+
 
 s_bool SensorsManager::StartAllSensors() // starts all created sensors
 {
@@ -244,8 +274,10 @@ s_bool SensorsManager::StartPrecActiveSensors() // starts all created sensors
 	for (it=sensors.begin(); it!=sensors.end(); it++) {
         bool wasActive=false;
         for (int i=0;i<wereActive.size();++i){
-            if (wereActive[i]==it->second->GetType())
-                wasActive=true;
+            if (wereActive[i]==it->second->GetType()) {
+            	LOGD("StartPrecActiveSensors - sensor %d was active, restart it",it->second->GetType());
+            	wasActive=true;
+            }
         }
         if (!wasActive) continue;
 		if (!it->second->Start())

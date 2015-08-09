@@ -110,12 +110,17 @@ namespace scdf{
     public:
         StopRestartMachine() : startMachine(Harvester::Instance()->IsActive())
         {
-            Harvester::Instance()->Stop();
+            LOGD("Harvester - stoprestartmachine: stop harvester!");
+        	Harvester::Instance()->Stop();
+        	LOGD("  Harvester - stoprestartmachine... harvester has been stopped!");
         }
         virtual ~StopRestartMachine()
         {
-            if (startMachine)
+        	LOGD("Harvester - stoprestartmachine: restart harvester? %d",startMachine);
+            if (startMachine) {
                 Harvester::Instance()->Start();
+                LOGD(" HARVESTER - started harvester in stoprestartmachine");
+            }
         }
     };
     class StopRestartMachineAs : public StopRestartMachine
