@@ -36,7 +36,7 @@ static void StartHarvestingProcedure(void *param)
 {
     Harvester *harvester=((Harvester*)param);
     s_uint64 startTime = now_ns();
-   
+    LOGD("Started Harvester procedure");
     while(harvester->activated)
     {
         
@@ -47,17 +47,25 @@ static void StartHarvestingProcedure(void *param)
         if(harvester->IsAudioSyncActive())
         {
             //LOGD("StartHarvestingProcedure with Audio Synch ON\n")
-            
+            //LOGI("Harvester - read audio pipe...");
             data=thePipesManager()->ReadFromPipe(AudioInput);
+            //LOGI("  Harvester - ... audio pipe read Done!");
+
+        	// can data really be null?!? (it happens sometimes!)
+            if (data && data->type==Dummy) {
+          		LOGD("Dummy packet in harvesting procedure.");
+				delete data;
+				data=NULL;
+				continue;
+            }
         }
         else
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(harvester->GetUpdateInterval()));
-            
-            //LOGD("StartHarvestingProcedure with Audio Synch OFF\n")
-           
+            //LOGD("Harvester - Audio Synch OFF: read audio input return pipe...");
             data=thePipesManager()->ReadFromReturnPipe(AudioInput);
-            
+            //LOGD("  Harvester - ... read audio return pipe done!");
+
             s_uint64 actualTime = now_ns();
             
             data->timestamp[0] = startTime;
@@ -74,6 +82,7 @@ static void StartHarvestingProcedure(void *param)
             harvester->HarvestingProcedure(data);
         
     }
+    LOGD("Harvested procedure over");
 }
 
 std::vector<SensorData*> *Harvester::AllocBufferHarvest()
@@ -157,8 +166,11 @@ void Harvester::Stop()
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to unlock harvester
     //if(IsAudioSyncActive())
-    thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
-    ThreadUtils::JoinThread(handle);
+    SensorData* dummy = new SensorData(Dummy);
+    thePipesManager()->WriteOnPipe(AudioInput,dummy);
+
+    //thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
+    //ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
 }
@@ -189,7 +201,10 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
         SensorData *sd=NULL;
         while (1)
         {
-            sd=thePipesManager()->ReadFromPipe((SensorType)i);
+            //LOGD("Harvester - read from pipe %d...",i);
+        	sd=thePipesManager()->ReadFromPipe((SensorType)i);
+            //LOGD("  Harvester - ... done reading!");
+
             if (NULL==sd) break;
 
 		#ifdef THROW_AWAY_OLD_VALUES
@@ -206,6 +221,13 @@ void Harvester::PipesHarvesting(s_uint64 timestampStart, s_uint64 timestampEnd, 
             }
             else
          #endif
+
+            if (sd->type==Dummy) {
+            	LOGE("Harvester - dummy data: shut down message");
+            	delete sd;
+            	break;
+            }
+
             {
 		    	if (sd->timestamp[0]<=timestampEnd){
 					#ifdef LOG_HARVEST_STATUS
@@ -440,7 +462,8 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
         
         for(int i = 0; i<_typeList.size(); i++)
         {
-            bool success = scdf::theSensorManager()->StartSensor(_typeList[i]);
+        	scdf::theSensorManager()->PutSensorInWereActiveList(_typeList[i]);
+            /*bool success = scdf::theSensorManager()->StartSensor(_typeList[i]);
 
             if (!success) {
                 LOGE("HarvesterListenerContainer::Attach error: could not start sensor!");
@@ -449,7 +472,7 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
                 // should a sensor be started here during the listener attach at all?
                 // what if multiple listeners attach to the sensor? multiple start is ok?
                 continue;
-            }
+            }*/
 
             listenersRefCount[_typeList[i]]++;
             int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
@@ -461,7 +484,9 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
 
 void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
 {
-    if(NULL==_listener) return;
+    LOGD("Harvester - detach listener");
+
+	if(NULL==_listener) return;
    
     auto it = listenersMap.find(_listener);
     if (it==listenersMap.end()) return;
@@ -471,6 +496,7 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
     {
         if (it->second[i]==AudioInput)
         {
+        	LOGD("Harvester - detaching audio sensor!");
             stopAudio=true;
             break;
         }
@@ -481,12 +507,15 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
         StopRestartMachineAs kk(newType);
         
         // scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
-    
+        LOGD("Detach listener - let's look if we need to stop sensor... ");
         for(int i = 0; i<it->second.size(); i++)
         {
             listenersRefCount[it->second[i]]--;
-            if(0==listenersRefCount[it->second[i]])
+            if(0==listenersRefCount[it->second[i]]) {
+            	LOGD("Detach listener - ref count for sensor %d is zero, stop it",it->second[i]);
                 scdf::theSensorManager()->StopSensor(it->second[i]);
+                LOGD("Harvester - listener detach. stopped sensor %d",it->second[i]);
+            }
         }
 
         _listener->Release();
@@ -509,19 +538,25 @@ int HarvesterListenerContainer::GetTotalRefCount()
     int count = 0;
     for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
         count += it->second.size();
-    
+    //LOGD("Harvester listener container total refcount (all sensors): %d",count);
     return count;
 }
 
 void HarvesterListenerContainer::CheckRefCountForToStartAndStopHarvester()
 {
     if (!GetTotalRefCount()) {
-         if(Harvester::Instance()->IsActive())
-            scdf::Harvester::Instance()->Stop();
+    	LOGD("Harvester - check refcount: is ZERO!");
+         if(Harvester::Instance()->IsActive()) {
+        	 LOGD("  Harvester - stop harvester!");
+        	 scdf::Harvester::Instance()->Stop();
+         }
     } else
     {
-        if(!Harvester::Instance()->IsActive())
-            scdf::Harvester::Instance()->Start();
+    	LOGD("Harvester - refcount non zero...");
+    	if(!Harvester::Instance()->IsActive()) {
+    		LOGD("  Harvester - was inactive, start it!");
+    		scdf::Harvester::Instance()->Start();
+    	}
     }
     
 }

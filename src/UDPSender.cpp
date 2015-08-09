@@ -229,15 +229,15 @@ void UDPSenderHelperBase::DoMultiSendData(std::vector<SensorData*> &senderData)
 
 void UDPSenderHelperBase::SendOnThread()
 {
-	//LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - acquiring lock...");
+	LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - acquiring lock...");
     ThreadUtils::AutoLock kk(&activator);
-    //LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - ACQUIRED LOCK, wait for harvest...");
+    LOGD("UDP SENDER - UDPSenderHElperBase::SendOnThread() - ACQUIRED LOCK, wait for harvest...");
 
     Harvester::Instance()->WaitForHarvest();
 
     try{
 
-    	//LOGD("UDP SENDER - UDPSenderHelperBase - SendOnThread()");
+    	LOGD("UDP SENDER - UDPSenderHelperBase - wait for harvest over... SendOnThread()");
 
         std::vector<SensorData*> *buffer=Harvester::Instance()->syncDataQueue.front();
         Harvester::Instance()->syncDataQueue.pop();
@@ -273,7 +273,7 @@ static void UDPSenderHelperProcedure(void *param)
 
 UDPSenderHelperBase::UDPSenderHelperBase() : sender(new UDPSender()), multiOutput(true), oscPackData(true)
 {
-	//LOGD("UDP SENDER HELPER BASE Creation");
+	LOGD("UDP SENDER HELPER BASE Creation");
     activator.Lock();
     handle=ThreadUtils::CreateThread((start_routine)UDPSenderHelperProcedure, this);
 }
@@ -337,12 +337,12 @@ void UDPSenderHelperBase::Activate(s_bool active)
 	LOGD("UDP SENDER - UDPSenderHelperBase::Activate(%d)",active);
 
     if (active){
-    	//LOGD("UDP SENDER - Sender helper base activate: UNLOCKING activator...");
+    	LOGD("UDP SENDER - Sender helper base activate: UNLOCKING activator...");
         activator.Unlock();
     }
     else{
         Harvester::Instance()->SendingQueuePushBuffer(NULL);
-        //LOGD("UDP SENDER - Activate() : Activator LOCK...");
+        LOGD("UDP SENDER - Activate() : Activator LOCK...");
         activator.Lock();
     }
 }

@@ -71,7 +71,7 @@ template <class PipeMessage> PipeMessage CustomPipe::ReadMessage()
     PipeMessage p;
     if (!Read((s_char*)&p, sizeof(PipeMessage), &numBytesRead))
     {
-        //LOGD("Error reading from pipe");
+        //LOGE("Error reading from pipe");
         return NULL;
     }
     if(0==numBytesRead) return NULL;

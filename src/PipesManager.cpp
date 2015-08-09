@@ -117,7 +117,8 @@ s_int32 PipesManager::NumPipes()
 
 s_int32 PipesManager::WriteOnPipe(SensorType type, SensorData *data)
 {
-    return pipes[type]->WriteMessage<SensorData*>(data);
+	assert(data!=NULL);
+	return pipes[type]->WriteMessage<SensorData*>(data);
 }
 
 PipesManager *scdf::thePipesManager()

@@ -46,6 +46,7 @@ void Sensor::AddIncomingDataToQueue(SensorData* data)
 
 	if( 0!=pipesVectorRef->size() && thePipe->GetSize()>1000) {
     	LOGE("Pipe for sensor %d is quite full, stop & restart harvesting",data->type);
+        assert(false); /* such a full pipe reveals a fault! */
         StopRestartMachine kk;
     }
 
