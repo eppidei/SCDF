@@ -142,19 +142,19 @@ s_bool SensorsManager::StopSensor(SensorType type)
 	   	return false;
 
 
-	// check if sensor is only temporairly stopped:
-	// since we explicitly asked for it to be stopped
-	// we don't want it to be restarted if we are in
-	// the middle of a harvester stop-restart procedure
-
-	for (int i=0;i<wereActive.size();++i)
-	{
-		if (wereActive[i]==sensor->GetType()) {
-			LOGD("StopSensor() : Sensor %d is in wereActive list. remove it",sensor->GetType());
-			wereActive.erase(wereActive.begin()+i);
-			break;
-		}
-	}
+//	// check if sensor is only temporairly stopped:
+//	// since we explicitly asked for it to be stopped
+//	// we don't want it to be restarted if we are in
+//	// the middle of a harvester stop-restart procedure
+//
+//	for (int i=0;i<wereActive.size();++i)
+//	{
+//		if (wereActive[i]==sensor->GetType()) {
+//			LOGD("StopSensor() : Sensor %d is in wereActive list. remove it",sensor->GetType());
+//			wereActive.erase(wereActive.begin()+i);
+//			break;
+//		}
+//	}
 
     return sensor->Stop();
 }
@@ -242,17 +242,17 @@ s_bool SensorsManager::StopAllSensors() // stops all created sensors
 	// TODO: decide whether to return true or false when no sensors have been created. (now returns true)
 }
 
-void SensorsManager::PutSensorInWereActiveList(SensorType type)
-{
-	s_bool alreadypresent = false;
-	for (int i=0; i<wereActive.size(); i++)
-	{
-		if (wereActive[i]==type)
-			alreadypresent=true;
-	}
-	if (!alreadypresent)
-		wereActive.push_back(type);
-}
+//void SensorsManager::PutSensorInWereActiveList(SensorType type)
+//{
+//	s_bool alreadypresent = false;
+//	for (int i=0; i<wereActive.size(); i++)
+//	{
+//		if (wereActive[i]==type)
+//			alreadypresent=true;
+//	}
+//	if (!alreadypresent)
+//		wereActive.push_back(type);
+//}
 
 
 s_bool SensorsManager::StartAllSensors() // starts all created sensors
