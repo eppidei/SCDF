@@ -43,7 +43,7 @@ namespace scdf
         s_bool StopAllSensors();
         s_bool StartAllSensors();
         s_bool StartPrecActiveSensors();
-//        void PutSensorInWereActiveList(SensorType type);
+        void PutSensorInWereActiveList(SensorType type);
         
         s_bool IsSensorActive(SensorType type);
         s_bool SensorExists(SensorType type);
