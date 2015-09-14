@@ -46,7 +46,7 @@ s_bool SensorStandard::Start()
 	s_bool ret = sImpl->Start();
     if (ret)
     {
-//        if (Harvester::Instance()->GetType()==GetType())  //removed beacuse of dealock with scdfc
+//        if (Harvester::Instance()->GetType()==GetType())  //removed beacuse of dealock in scdfc
 //            Harvester::Instance()->Start();
     	SetActive(true);
     }
@@ -59,7 +59,7 @@ s_bool SensorStandard::Stop()
     if (ret)
     {
         SetActive(false);
-//        if (Harvester::Instance()->GetType()==GetType())  //removed beacuse of dealock with scdfc
+//        if (Harvester::Instance()->GetType()==GetType())  //removed beacuse of dealock in scdfc
 //            Harvester::Instance()->Stop();
     }
     return ret;

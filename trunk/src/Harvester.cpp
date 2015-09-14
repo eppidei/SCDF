@@ -166,11 +166,11 @@ void Harvester::Stop()
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to unlock harvester
     //if(IsAudioSyncActive())
-//    SensorData* dummy = new SensorData(Dummy);
-//    thePipesManager()->WriteOnPipe(AudioInput,dummy);
+    SensorData* dummy = new SensorData(Dummy);
+    thePipesManager()->WriteOnPipe(AudioInput,dummy);
 
-    thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
-    ThreadUtils::JoinThread(handle);
+    //thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
+    //ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
 }
@@ -433,7 +433,7 @@ HarvesterListenerContainer::HarvesterListenerContainer()
 
 void HarvesterListenerContainer::OnHarvesterBufferReady(std::vector<SensorData*> *buffer)
 {
-    scdf::ThreadUtils::AutoLock kk(&listenersMapLock);
+    //scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
     for(auto it = listenersMap.begin(); it != listenersMap.end(); it++)
         it->first->OnHarvesterBufferReady(buffer);
 
@@ -445,13 +445,25 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
     if (0==_typeList.size()) return;
     
     {
-        scdf::ThreadUtils::AutoLock kk(&listenersMapLock);
+        bool startAudio=false;
+        for (int i=0;i<_typeList.size();++i)
+        {
+            if (_typeList[i]==AudioInput)
+            {
+                startAudio=true;
+                break;
+            }
+        }
+        SensorType newType=scdf::theSensorManager()->IsSensorActive(AudioInput) || startAudio ? AudioInput : Invalid;
+        StopRestartMachineAs kk(newType);
+    
+        //scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
         listenersMap[_listener]=_typeList;
         
         for(int i = 0; i<_typeList.size(); i++)
         {
-        	//scdf::theSensorManager()->PutSensorInWereActiveList(_typeList[i]);
-            bool success = scdf::theSensorManager()->StartSensor(_typeList[i]);
+        	scdf::theSensorManager()->PutSensorInWereActiveList(_typeList[i]);
+            /*bool success = scdf::theSensorManager()->StartSensor(_typeList[i]);
 
             if (!success) {
                 LOGE("HarvesterListenerContainer::Attach error: could not start sensor!");
@@ -460,17 +472,12 @@ void HarvesterListenerContainer::Attach(HarvesterListener* _listener, std::vecto
                 // should a sensor be started here during the listener attach at all?
                 // what if multiple listeners attach to the sensor? multiple start is ok?
                 continue;
-            }
+            }*/
 
             listenersRefCount[_typeList[i]]++;
             int numFrames=scdf::theSensorManager()->GetNumFramesPerCallback(_typeList[i])*scdf::theSensorManager()->GetNumChannels(_typeList[i]);
             _listener->Init(numFrames, scdf::theSensorManager()->GetRate(_typeList[i]));
         }
-    }
-    
-    {
-        SensorType newType=scdf::theSensorManager()->IsSensorActive(AudioInput) ? AudioInput : Invalid;
-        StopRestartMachineAs kk(newType);
     }
     CheckRefCountForToStartAndStopHarvester();
 }
@@ -484,19 +491,22 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
     auto it = listenersMap.find(_listener);
     if (it==listenersMap.end()) return;
     
-//    bool stopAudio=false;
-//    for (int i=0;i<it->second.size();++i)
-//    {
-//        if (it->second[i]==AudioInput)
-//        {
-//        	LOGD("Harvester - detaching audio sensor!");
-//            stopAudio=true;
-//            break;
-//        }
-//    }
-//
+    bool stopAudio=false;
+    for (int i=0;i<it->second.size();++i)
     {
-        scdf::ThreadUtils::AutoLock kk(&listenersMapLock);
+        if (it->second[i]==AudioInput)
+        {
+        	LOGD("Harvester - detaching audio sensor!");
+            stopAudio=true;
+            break;
+        }
+    }
+        
+    SensorType newType=scdf::theSensorManager()->IsSensorActive(AudioInput) && !stopAudio ? AudioInput : Invalid;
+    {
+        StopRestartMachineAs kk(newType);
+        
+        // scdf::ThreadUtils::AutoLock kk(&controlUnitLock);
         LOGD("Detach listener - let's look if we need to stop sensor... ");
         for(int i = 0; i<it->second.size(); i++)
         {
@@ -511,11 +521,6 @@ void HarvesterListenerContainer::Detach(HarvesterListener* _listener )
         _listener->Release();
     
         listenersMap.erase(_listener);
-    }
-    
-    {
-        SensorType newType=scdf::theSensorManager()->IsSensorActive(AudioInput) ? AudioInput : Invalid;
-        StopRestartMachineAs kk(newType);
     }
     CheckRefCountForToStartAndStopHarvester();
 }

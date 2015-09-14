@@ -17,7 +17,7 @@ void PipesManager::CreatePipes()
     for (int i=0;i<NumTypes;++i)
     {
         CustomPipe *p=new CustomPipe();
-        if (i!=Harvester::Instance()->GetType() || !Harvester::Instance()->IsAudioSyncActive())
+        if (i!=Harvester::Instance()->GetType()/* || !Harvester::Instance()->IsAudioSyncActive()*/)
             p->SetNonBlockingReads();
         pipes.push_back(p);
     }

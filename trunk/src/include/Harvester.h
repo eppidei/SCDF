@@ -21,7 +21,7 @@ namespace scdf{
     {
         std::map <SensorType, int> listenersRefCount;
         std::map <HarvesterListener*, std::vector<SensorType>> listenersMap;
-        scdf::ThreadUtils::CustomMutex listenersMapLock;
+        scdf::ThreadUtils::CustomMutex controlUnitLock;
         
         int GetTotalRefCount();
         void CheckRefCountForToStartAndStopHarvester();

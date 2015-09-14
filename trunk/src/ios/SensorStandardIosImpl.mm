@@ -154,12 +154,13 @@ s_bool scdf::SensorStandardImpl::IsAvailable(SensorType type)
 #ifdef SCDF_PLOT
             return true;
 #else
-            UIDevice *device = [UIDevice currentDevice];
-            BOOL proximityEnabledBack = device.proximityMonitoringEnabled;
-            device.proximityMonitoringEnabled = YES;
-            BOOL proximityEnabledNow = device.proximityMonitoringEnabled;
-            device.proximityMonitoringEnabled=proximityEnabledBack;
-            return proximityEnabledNow;
+//            UIDevice *device = [UIDevice currentDevice];
+//            BOOL proximityEnabledBack = device.proximityMonitoringEnabled;
+//            device.proximityMonitoringEnabled = YES;
+//            BOOL proximityEnabledNow = device.proximityMonitoringEnabled;
+//            device.proximityMonitoringEnabled=proximityEnabledBack;
+//            return proximityEnabledNow;
+            return false;
 #endif
         }
 		default:
