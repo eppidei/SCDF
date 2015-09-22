@@ -63,15 +63,15 @@ static void StartHarvestingProcedure(void *param)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(harvester->GetUpdateInterval()));
             //LOGD("Harvester - Audio Synch OFF: read audio input return pipe...");
-            data=thePipesManager()->ReadFromReturnPipe(AudioInput);
+//            data=thePipesManager()->ReadFromReturnPipe(AudioInput);
             //LOGD("  Harvester - ... read audio return pipe done!");
 
+            data = new scdf::SensorData(Invalid);
+            data->timestamp = new s_uint64[1];
             s_uint64 actualTime = now_ns();
             
-            data->timestamp[0] = startTime;
-            data->timestamp[1] = actualTime;
+            data->timestamp[0] = actualTime;
             data->timeid = startTime;
-            
             startTime = actualTime;
         }
 //        s_uint64 elap = now_ns() - start;
@@ -166,11 +166,11 @@ void Harvester::Stop()
     theSensorManager()->StopAllSensors();
     //Write dummy buffer on master queue to unlock harvester
     //if(IsAudioSyncActive())
-    SensorData* dummy = new SensorData(Dummy);
-    thePipesManager()->WriteOnPipe(AudioInput,dummy);
+   // SensorData* dummy = new SensorData(Dummy);
+    //thePipesManager()->WriteOnPipe(AudioInput,dummy);
 
-    //thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
-    //ThreadUtils::JoinThread(handle);
+    thePipesManager()->WriteOnPipe(AudioInput,thePipesManager()->ReadFromReturnPipe(AudioInput));
+    ThreadUtils::JoinThread(handle);
     SentDataRecyclingProcedure(&harvestData);
     SentDataRecyclingProcedure(&nextHarvestData);
 }
@@ -378,6 +378,8 @@ void Harvester::HarvestingProcedure(SensorData *masterData)
     
     SentDataRecyclingProcedure(&harvestData);
     
+    if(masterData->type==Invalid)
+        delete masterData;
     if (/*NULL!=harversterListener*/ GetListeners()->IsAny())
         GetListeners()->OnHarvesterBufferReady(b);
     else
@@ -406,8 +408,11 @@ void Harvester::Harvest(SensorData *masterData)
     InternalBufferHarvesting(masterData->timeid, masterData->timestamp[0]);
     PipesHarvesting(masterData->timeid, masterData->timestamp[0], masterData->type);
     //Sort();
-    harvestData.push_back(masterData);
-    myHarvestInfo.info[masterData->type].push_back(harvestData.size()-1);
+    if(masterData->type!=Invalid)
+    {
+        harvestData.push_back(masterData);
+        myHarvestInfo.info[masterData->type].push_back(harvestData.size()-1);
+    }
 }
 
 void Harvester::SetUpdateIntervalWithNoAudioSynch(int _uptateIntervalMs)
