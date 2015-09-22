@@ -161,7 +161,9 @@ void ControlUnitDsp::TrySendValue(float normValue)
 
 void ControlUnitDsp::Release()
 {
+	return;
     if (!ADEcontext) return;
+    LOGD("4\n");
     ADE_Release(ADEcontext, GetAlgoFlag());
     ADEcontext=NULL;
 }
