@@ -464,6 +464,7 @@ bool ItemBase::OnItemTouchMoved(Widget* widget, cocos2d::ui::Widget::TouchEventT
 bool ItemBase::OnItemTouchEnded(Widget* widget, cocos2d::ui::Widget::TouchEventType type)
 {
     //if (widget==controlImage || widget==label) return false;
+    NotifyEvent(SCDFC_EVENTS_Select_Item);
     if (controlUnit->GetType()!=ControlUnit::Wire) return false;
     return true;
 }
