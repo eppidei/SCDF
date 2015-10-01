@@ -35,6 +35,7 @@ MidiOutConnectionAndroid::MidiOutConnectionAndroid(s_int32 index)
 		itf->DetachAndClaim();
 		itf->AddListener(this);
 	}
+	listenerConnectionLost = NULL;
 }
 
 
@@ -50,17 +51,22 @@ void MidiOutConnectionAndroid::OnUsbInterfaceDestroyed(Usb::AudioInterface* dest
 	if (destroyedItf==itf)
 		itf = NULL;
 
-	//NotifyListenerConnectionLost(this);
+	LOGD("USB - MidiOutConnectionAndroid: usb itf destoyed, notify connection lost listeners!");
+
+	if(listenerConnectionLost)
+		listenerConnectionLost->OnConnectionLost(this);
 }
 
 void MidiOutConnectionAndroid::AttachListenerConnectionLost(MidiConnectionListener* _listener )
 {
-
+	LOGD("USB - ATTACH listener connection lost to midi out connection");
+	listenerConnectionLost = _listener;
 }
 
 void MidiOutConnectionAndroid::DetachListenerConnectionLost()
 {
-
+	LOGD("USB - DETACH listener connection lost from midi out connection");
+	listenerConnectionLost = NULL;
 }
 
 /*

@@ -10,7 +10,7 @@
 
 bool CheckIsInAppPurchased(PurchaseProductIndex index)
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 	return true;
 #else
 	JNIEnv* env = Jni::Env();
@@ -25,7 +25,7 @@ bool CheckIsInAppPurchased(PurchaseProductIndex index)
 
 bool CheckIsInAppPurchasedNoPrompt(PurchaseProductIndex index)
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 	return true;
 #else
 	JNIEnv* env = Jni::Env();

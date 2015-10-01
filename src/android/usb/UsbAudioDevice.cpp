@@ -267,6 +267,7 @@ bool Usb::AudioDevice::InitAudioAndMidiStreamingInterfaces()
 				#endif
 				break;
 			case USB_SUBCLASS_MIDISTREAMING:
+				LOGD("USB - construct midi interface");
 				midiInterfaces.push_back(new MidiInterface(this,interface));
 				break;
 			case USB_SUBCLASS_UNDEFINED:

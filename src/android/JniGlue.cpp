@@ -18,12 +18,15 @@ Lfully-qualified-class;	fully-qualified-class
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved)
 {
-    LOGI("Caching java virtual machine reference");
+    LOGI("USB -Caching java virtual machine reference");
     Jni::InitThreadDetachKey();
 	Jni::SetJvm(jvm);
 
 	bool somethingWrong = false;
-	if ( ! Jni::CacheClass("it/scdf/framework/UsbHandler")) somethingWrong = true;
+	if ( ! Jni::CacheClass("it/scdf/framework/UsbHandler")) {
+		LOGE("USB - error caching usb handler java class!");
+		somethingWrong = true;
+	}
 	if ( ! Jni::CacheClass("it/scdf/framework/ForegroundActivity")) somethingWrong = true;
 
 	if ( ! Jni::CacheClass("it/scdf/controller/PurchaseManager")) somethingWrong = true;

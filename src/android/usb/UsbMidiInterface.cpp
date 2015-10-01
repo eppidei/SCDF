@@ -8,7 +8,7 @@
 Usb::MidiInterface::MidiInterface(AudioDevice* audioDev,libusb_interface itf)
 	: AudioInterface(audioDev,itf), outEp(NULL)
 {
-	//LOGD("USBAUDIO - Audio CONTROL Interface constructor");
+	LOGD("USBAUDIO - Midi Interface constructor");
 	#ifdef ENABLE_MIDI_INPUT
 	inEp(NULL), numUnsupportedEndpoints(0),
 	stopInputThread(true),destroyed(NULL), inputThreadAlive(false)
@@ -17,7 +17,7 @@ Usb::MidiInterface::MidiInterface(AudioDevice* audioDev,libusb_interface itf)
 	#endif
 
 	if (interface.num_altsetting == 0) {
-		LOGE("No alternate setting for this MIDI streaming interface!");
+		LOGE("USB - No alternate setting for this MIDI streaming interface!");
 		return;
 	}
 
@@ -67,7 +67,7 @@ Usb::MidiInterface::MidiInterface(AudioDevice* audioDev,libusb_interface itf)
 	}
 
 	if (!DetachAndClaim()){
-		LOGE("Could not claim MIDI streaming interface!");
+		LOGE("USB - Could not claim MIDI streaming interface!");
 		return;
 	}
 
@@ -248,6 +248,7 @@ bool Usb::MidiInterface::SendMIDIMessage(uint32_t message)
 
 void Usb::MidiInterface::MidiOutTransferCallback(libusb_transfer* xfer)
 {
+	//LOGD("MIDI OUT - transfer completed");
 	if(xfer->status!=LIBUSB_TRANSFER_COMPLETED)
 		LOGE("MIDI OUT USB transfer error: %s",TransferErrorToString(xfer->status).c_str() );
 
