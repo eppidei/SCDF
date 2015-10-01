@@ -14,7 +14,8 @@
         android:label="SCDF USB Test">
         <activity
             android:name=".MainActivity"
-            android:label="SCDF USB Test" >
+            android:label="SCDF USB Test"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

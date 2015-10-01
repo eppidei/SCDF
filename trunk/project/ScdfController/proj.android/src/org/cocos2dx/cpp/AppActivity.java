@@ -59,21 +59,39 @@ public class AppActivity extends Cocos2dxActivity implements PurchaseListener {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Log.i("App activity","USB - activity on crete");
         ForegroundActivity.Set(this);
         SetupScdfSensorAPI();
         UsbHandler.Setup(this);
         PrefManager.Setup(this);
         PurchaseManager.Get().StartSetup(this,this);
+        //UsbHandler.TryOpeningFirstUsbDevice();
+        
+        /*if (getIntent()!=null) {
+        	Log.d("App activity","USB - intent in oncreate...");
+        	UsbHandler.RecognizeAndHandleUsbAttachIntent(getIntent());
+        }*/
     }
     
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
+        Log.i("App activity","USB - activity on destroy");
         ForegroundActivity.Detach(this);
         PurchaseManager.Get().Dispose();
-       
+        UsbHandler.Detach(this);
     }
+    
+    /*@Override
+	protected void onNewIntent(Intent intent)
+    {
+    	Log.i("App activity","USB - on new intent");
+	   if (!UsbHandler.RecognizeAndHandleUsbAttachIntent(intent))
+		   super.onNewIntent(intent);
+	    // getIntent() should always return the most recent:
+	    setIntent(intent);
+	}*/	
     
     @Override
     public Cocos2dxGLSurfaceView onCreateView()

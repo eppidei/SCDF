@@ -532,6 +532,8 @@ MIDIInfo::MIDIInfo()
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
 
+#include "UsbHandler.h"
+
 void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
@@ -539,7 +541,10 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 
     switch (widget->getTag())
     {
-        case PROPERTIES_MIDI_DEVICE: devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+        case PROPERTIES_MIDI_DEVICE:
+        	LOGD("USB - touch event began, PROPERTIES_MIDI_DEVICE");
+        	UsbHandler::TryOpeningFirstUsbDevice();
+        	devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         case PROPERTIES_MIDI_MESSAGE: midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
@@ -570,12 +575,17 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 
 void MIDIInfo::UpdateDevicesMenu()
 {
+	LOGD("USB - midiinfo update devices menu");
     std::vector<DropDownMenuData> dropDownData;
     dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
-        dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i) {
+       LOGD("USB - update devices menu. get name for out %d",i);
+    	dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    }
     devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
+
+#include "UsbHandler.h"
 
 void MIDIInfo::CreateControls()
 {
@@ -594,7 +604,9 @@ void MIDIInfo::CreateControls()
     //Create device dropDown
     devices = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
     addChild(devices);
+    LOGD("USB - midiinfo create control - update devices menu");
     UpdateDevicesMenu();
+
     
     //Create midiMessage label
     CreateLabelWithBackground(this, &midiMessageLabel, PROPERTIES_MIDI_MESSAGE, r, "MESSAGE", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
@@ -798,7 +810,7 @@ void ItemSettings::CreateControls()
     dropDownData.push_back(DropDownMenuData("Blow",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     dropDownData.push_back(DropDownMenuData("Snap",Colors::Instance()->GetUIColor(Colors::DropDownText)));
 //#ifdef _DEBUG
-    dropDownData.push_back(DropDownMenuData("Gesture",Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
 //#endif
     //dropDownData.push_back(DropDownMenuData("Proximity",Colors::Instance()->GetUIColor(Colors::DropDownText)));
     modes->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
@@ -1191,6 +1203,7 @@ void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
 
 void PropertiesPanel::UpdateDevicesMenu()
 {
+	LOGD("USB - properties panel - update devices menu");
     sectionMIDIInfo->UpdateDevicesMenu();
 }
 

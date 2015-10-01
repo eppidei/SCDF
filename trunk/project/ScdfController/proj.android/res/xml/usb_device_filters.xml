@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <usb-device class="1" /> <!-- audio class -->
+    <!-- <usb-device class="0" /> -->     <!-- "per interface" : you will have to check interfaces class -->
+</resources>

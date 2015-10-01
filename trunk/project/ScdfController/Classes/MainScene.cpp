@@ -110,6 +110,7 @@ float MainScene::GetUnityBase()
 
 void MainScene::UpdateMIDIDevicesMenu()
 {
+	LOGD("USB - update mimdi devices menu");
     if (propertiesPanel.get())
         propertiesPanel->UpdateDevicesMenu();
 }
@@ -123,13 +124,15 @@ int MainScene::GetGridDistance()
     return gridUnity[gridIndex];
 }
 
+#include "UsbHandler.h"
+
 bool MainScene::init()
 {
     if ( !Layer::init() )
     {
         return false;
     }
-    
+    LOGD("USB - main scene init: attach midi device menu listener");
     Scdf::MidiOutConnection::AttachMidiDeviceMenuListener(this);
     Director::getInstance()->setDisplayStats(false);
 

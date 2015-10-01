@@ -74,7 +74,8 @@ public class UsbHandler {
 	
 	public static long GetDevice(int index)
 	{
-		if (index <= openDevices.size()) return 0;
+		Log.d(TAG,"USB - get device (java): "+index+". openDevices: "+openDevices.size());
+		if (index >= openDevices.size()) return 0;
 		return openDevices.get(index).nativeHandle;
 	}
 	
@@ -87,13 +88,15 @@ public class UsbHandler {
 	    	
 	    	String action = intent.getAction();
 	        if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+	        	Log.i(TAG,"USB - action usb device detached");
 	    		UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 	    		if (device != null) {
-	    			CloseUsbDevice(device);
+	    			//CloseUsbDevice(device);
 	    		}
+	    		Log.i(TAG, "USB - usb device parcelable extra got");
 	    	}
 	        else if (ACTION_USB_PERMISSION.equals(action)) {
-	            Log.i(TAG,"onReceive: ACTION_USB_PERMISSION");
+	            Log.i(TAG," USB - onReceive: ACTION_USB_PERMISSION");
 	            synchronized (this) {
 	                UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 	                if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
@@ -103,7 +106,7 @@ public class UsbHandler {
 	                    }
 	                }
 	                else {
-	                    Log.e(TAG," Permission denied for device " + device.getVendorId());
+	                    Log.e(TAG," USB - Permission denied for device " + device.getVendorId());
 	                }
 	            }
 	        }
@@ -112,7 +115,7 @@ public class UsbHandler {
 	
 	public static boolean Setup(Activity act)
 	{
-		Log.d(TAG,"Usb Handler Setup");
+		Log.d(TAG,"USB - Handler Setup");
 		hasUsbHostFeature = act.getPackageManager().hasSystemFeature("android.hardware.usb.host");
 		if (!IsUsbSupported()) return false;
 		
@@ -122,10 +125,8 @@ public class UsbHandler {
 		act.registerReceiver(usbReceiver, filter);
 		usbIntent = PendingIntent.getBroadcast(act, 0, new Intent(ACTION_USB_PERMISSION), 0);
 		
-		if (manager==null) {
-			manager = (UsbManager) act.getSystemService(Context.USB_SERVICE);
-			Log.d(TAG,"Requested usb manager. got: " + manager);
-		}
+		manager = (UsbManager) act.getSystemService(Context.USB_SERVICE);
+		Log.d(TAG,"USB - Requested usb manager. got: " + manager);
 		return true;
 	}
 		
@@ -160,7 +161,7 @@ public class UsbHandler {
 		for(int i=0; i < dev.getInterfaceCount(); i++) {
 			UsbInterface itf = dev.getInterface(i);
 	    	if (itf.getInterfaceClass() == UsbConstants.USB_CLASS_AUDIO) {
-	    		Log.i(TAG,"Found device with audio capabilities");		
+	    		Log.i(TAG,"USB - Found device with audio capabilities");		
 	    		return true;
 	    	}
 		}
@@ -170,7 +171,7 @@ public class UsbHandler {
 	public static UsbDevice FindAudioDevice() // finds the first audio or midi device
 	{
 		if (null==manager) {
-			Log.e(TAG,"Cannot look for usb audio device. manager is not set-up");
+			Log.e(TAG,"USB - Cannot look for usb audio device. manager is not set-up");
 			return null;
 		}
 		
@@ -178,13 +179,13 @@ public class UsbHandler {
 				
 		Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
 		if (deviceList.isEmpty()) {
-			Log.e(TAG,"No device connected");
+			Log.e(TAG,"USB - No device connected");
 			return null;
 		}
 		while(deviceIterator.hasNext()){
 		    UsbDevice d = deviceIterator.next();
 		    if ( HasAudioCapabilities(d) ) {
-		    	Log.i(TAG, "USB device with audio capabilities found!");
+		    	Log.i(TAG, "USB - device with audio capabilities found!");
 		    	return d;
 		    }
 		}
@@ -193,19 +194,20 @@ public class UsbHandler {
 	
 	public static boolean TryOpeningDevice(UsbDevice dev)
 	{
-		Log.i(TAG,"Try Opening device : "+ dev);
+		Log.i(TAG,"USB - Try Opening device : "+ dev);
 		
 		if (null==dev) {
-			Log.i(TAG,"no device to open!");
+			Log.i(TAG,"USB - no device to open!");
 			return false;
 		}
 		
 		if (!manager.hasPermission(dev)) {
-			Log.i(TAG,"No permission to access device. Requesting it.");
+			Log.i(TAG,"USB - No permission to access device. Requesting it.");
 			manager.requestPermission(dev, usbIntent);
+			Log.i(TAG,"USB - requested permission to manager");
 			return false;
 		} else {
-			Log.i(TAG,"Already have permission for device ");
+			Log.i(TAG,"USB - Already have permission for device ");
 			OpenUsbDevice(dev);
 			return true;
 		}
@@ -213,15 +215,17 @@ public class UsbHandler {
 		
 	public static boolean TryOpeningFirstUsbDevice()
 	{
+		Log.i(TAG,"USB  - try opening first usb device!");
 		return TryOpeningDevice(FindAudioDevice());
 	}
 	
 	
-	public boolean RecognizeAndHandleUsbAttachIntent(Intent intent)
+	public static boolean RecognizeAndHandleUsbAttachIntent(Intent intent)
 	{
+		Log.d(TAG,"USB - recognize and handle usb attach intent");
 		UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE); 
 	    if (device != null && HasAudioCapabilities(device)) { 
-	    	Log.d(TAG,"Received an USB attached intent");
+	    	Log.d(TAG,"Received an USB attached intent: try opening device!");
 	    	TryOpeningDevice(device); // may return false, but see below...
 	    	return true;
 	    	// returns true even if it didn't open device, to signal that the intent had 
@@ -238,16 +242,17 @@ public class UsbHandler {
 			
 	private static void OpenUsbDevice(UsbDevice dev)
 	{
-		Log.i(TAG,"Open USB device (java) :" +dev);
+		Log.i(TAG,"USB - Open USB device (java) :" +dev);
 		
 		if (dev==null) { 
-			Log.e(TAG,"No audio device to open");
+			Log.e(TAG,"USB - No audio device to open");
+			UsbHandler.CallListeners(dev.getDeviceId(), UsbHandler.DEVICE_OPEN_ERROR);
 			return;
 		}
 		
 		for (UsbDeviceBundle b : openDevices) {
 			if (b.device.getDeviceId() == dev.getDeviceId()) {
-				Log.w(TAG, "Device already opened!");
+				Log.w(TAG, "USB - Device already opened!");
 				return;
 			}
 		}
@@ -255,28 +260,30 @@ public class UsbHandler {
 		UsbDeviceBundle usbBundle = new UsbDeviceBundle();
 		usbBundle.device = dev;
 		usbBundle.connection = manager.openDevice(dev);
-		Log.i(TAG,"Usb connection after opendevice: "+usbBundle.connection);
+		Log.i(TAG,"USB - Usb connection after opendevice: "+usbBundle.connection);
 		
 		if (usbBundle.connection==null) {
-			Log.e(TAG,"Couldn't open connection with usb device");
+			Log.e(TAG,"USB - Couldn't open connection with usb device");
+			UsbHandler.CallListeners(usbBundle.device.getDeviceId(), UsbHandler.DEVICE_OPEN_ERROR);
 			return;
 		}
 		
 		// apri device usando libusb
 		
 		int fd = usbBundle.connection.getFileDescriptor();
-		Log.i(TAG,"Opened device. File descriptor: "+fd);
+		Log.i(TAG,"USB - Opened device. File descriptor: "+fd);
 		usbBundle.nativeHandle = NativeOpenDevice(fd,dev.getVendorId(),dev.getProductId());
 			
 		if (0==usbBundle.nativeHandle) {
-			Log.e(TAG,"Something went wrong in opening usb device on native side");
+			Log.e(TAG,"USB - Something went wrong in opening usb device on native side");
 			usbBundle.connection.close();
+			UsbHandler.CallListeners(usbBundle.device.getDeviceId(), UsbHandler.DEVICE_OPEN_ERROR);
 			return;
 		}
 		
 		//openDevices.put( GetNewOpenedDeviceId() , usbBundle );
 		openDevices.add( usbBundle );
-
+		UsbHandler.CallListeners(usbBundle.device.getDeviceId(), UsbHandler.DEVICE_OPEN_SUCCESS);
 	}
 	
 	/*public static long GetDevicePtr(long id)
@@ -288,23 +295,24 @@ public class UsbHandler {
 			
 	private static void CloseUsbDevice(int index)
 	{
-		Log.d(TAG,"Close usb device (java part)");
+		Log.d(TAG,"USB - Close usb device (java part)");
 		
 		if (openDevices.size()<=index)	return;
 		UsbDeviceBundle ub = openDevices.get(index);
 		
 		if (0!=ub.nativeHandle) {
-			Log.d(TAG,"Close native audio streaming device");
+			Log.d(TAG,"USB - Close native audio streaming device");
 			NativeCloseDevice( ub.nativeHandle );
 		}
 				
 		ub.connection.close();
 		openDevices.remove(index);
+		UsbHandler.CallListeners(ub.device.getDeviceId(), UsbHandler.DEVICE_DISCONNECTED);
 	}
 	
 	private static void CloseUsbDevice(UsbDevice device)
 	{
-		Log.d(TAG,"Close usb device using UsbDevice (java part)");
+		Log.d(TAG,"USB - Close usb device using UsbDevice (java part)");
 		
 		for (int i=openDevices.size(); i>=0; i--)
 		{
@@ -335,10 +343,12 @@ public class UsbHandler {
 		
 	private static void CallListeners(int deviceId, int evCode) 
 	{ 
+		Log.i(TAG,"USB - java handler call java listeners");
 		// java listeners:
 		for (UsbListener list: listeners) 
 			list.OnUsbEvent(deviceId,evCode);
 		// native listeners:
+		Log.i(TAG,"USB java handler- call native listeners");
 		CallNativeListeners(deviceId,evCode);
 	}
 	
