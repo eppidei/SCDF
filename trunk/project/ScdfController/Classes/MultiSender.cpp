@@ -10,6 +10,7 @@
 
 
 #include "MultiSender.h"
+#include "RTPPacket.h"
 #include <sstream>
 
 using namespace ScdfCtrl;
@@ -195,8 +196,34 @@ s_bool MultiSender::DoSendValue(s_int32 value, s_int32 channel)
 s_bool MultiSender::SendValue(s_int32 value)
 {
 	if (oscEnabled) {
+#ifndef _DEBUG
 		osc::OutboundPacketStream oscData = PackOSCValue(GetMidiControl(),value,GetOscTag());
-		udpSender.SendData(oscData.Data(), oscData.Size(),0);
+        udpSender.SendData(oscData.Data(), oscData.Size(),0);
+#else
+        
+#define NOTE_ON 0x90
+#define NOTE_OFF 0x80
+#define POLY_KEY_PRESSURE 0xA0
+#define CONTROL_CHANGE 0xB0
+#define PROGRAM_CHANGE 0xC0
+#define PITCH_BENDER 0xD0
+#define CHANNEL_PRESSURE 0xE0
+#define CHANNEL_MASK 0xF
+        scdf::RTPMIDIPacket p;
+        char channelInt8 = midiChannel&CHANNEL_MASK;
+        char statusByte = NOTE_ON|channelInt8;
+        
+        const s_byte status = statusByte;
+        const s_byte dataByte1    = GetMidiPitch();
+        const s_byte dataByte2 = value;
+        static int sequence=0;
+        const s_byte midiMessage[]  = { status, dataByte1, dataByte2 };
+        p.Create(0, sequence++, sequence, (s_byte*)&midiMessage[0], 3);
+        s_byte *rtp_packet;
+        int packetLength=p.GetPacket(&rtp_packet);
+        udpSender.SendData((s_char*)rtp_packet, packetLength,0);
+        delete [] rtp_packet;
+#endif
 	}
 
 	if (!midiConnection)
