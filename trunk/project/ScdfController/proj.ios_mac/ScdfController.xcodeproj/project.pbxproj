@@ -186,6 +186,8 @@
 		DC5B53411AE2B0F2004946D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5B53401AE2B0F2004946D9 /* StoreKit.framework */; };
 		DC682E261AF659E2008C89BB /* MidiClientIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC682E251AF659E2008C89BB /* MidiClientIOS.mm */; };
 		DC6DBAF61C16ED190038FF9A /* RTPPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC6DBAF51C16ED190038FF9A /* RTPPacket.cpp */; };
+		DC6DBB051C170DBE0038FF9A /* MidiLearnReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC6DBB031C170DBE0038FF9A /* MidiLearnReceiver.cpp */; };
+		DC6DBB071C172F690038FF9A /* MidiInConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC6DBB061C172F690038FF9A /* MidiInConnection.cpp */; };
 		DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F4741A989B3E006B2EF2 /* Panel.cpp */; };
 		DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */; };
 		DCA9F47E1A989C9F006B2EF2 /* Colors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA9F47D1A989C9F006B2EF2 /* Colors.cpp */; };
@@ -511,6 +513,9 @@
 		DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "ScdfController iOS/Images.xcassets"; sourceTree = SOURCE_ROOT; };
 		DC682E251AF659E2008C89BB /* MidiClientIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MidiClientIOS.mm; path = ../Classes/IOs/MidiClientIOS.mm; sourceTree = "<group>"; };
 		DC6DBAF51C16ED190038FF9A /* RTPPacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTPPacket.cpp; path = ../../../src/RTPPacket.cpp; sourceTree = "<group>"; };
+		DC6DBB031C170DBE0038FF9A /* MidiLearnReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiLearnReceiver.cpp; path = ../../../src/MidiLearnReceiver.cpp; sourceTree = "<group>"; };
+		DC6DBB041C170DBE0038FF9A /* MidiLearnReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MidiLearnReceiver.h; path = ../../../src/MidiLearnReceiver.h; sourceTree = "<group>"; };
+		DC6DBB061C172F690038FF9A /* MidiInConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiInConnection.cpp; path = ../../../src/MidiInConnection.cpp; sourceTree = "<group>"; };
 		DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadSavePanel.cpp; path = ../Classes/LoadSavePanel.cpp; sourceTree = "<group>"; };
 		DCA9F4741A989B3E006B2EF2 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Panel.cpp; path = ../Classes/Panel.cpp; sourceTree = "<group>"; };
 		DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UtilitiesiOs.mm; path = ../../../src/ios/UtilitiesiOs.mm; sourceTree = "<group>"; };
@@ -894,10 +899,13 @@
 		DCCA5A2E1A40DB430014FADE /* MIDI */ = {
 			isa = PBXGroup;
 			children = (
+				DC6DBB061C172F690038FF9A /* MidiInConnection.cpp */,
 				DC6DBAF51C16ED190038FF9A /* RTPPacket.cpp */,
 				DC682E251AF659E2008C89BB /* MidiClientIOS.mm */,
 				DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */,
 				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
+				DC6DBB031C170DBE0038FF9A /* MidiLearnReceiver.cpp */,
+				DC6DBB041C170DBE0038FF9A /* MidiLearnReceiver.h */,
 			);
 			name = MIDI;
 			path = ../proj.ios_mac;
@@ -1247,6 +1255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC6DBB051C170DBE0038FF9A /* MidiLearnReceiver.cpp in Sources */,
 				DCA9F47C1A989BE2006B2EF2 /* UtilitiesiOs.mm in Sources */,
 				DCA9F4771A989B3E006B2EF2 /* Panel.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
@@ -1266,6 +1275,7 @@
 				9D6C01FD1ADB031000F75A3C /* main.m in Sources */,
 				DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */,
 				9D64E9EF1A17C54300B83274 /* SCDFCWorkingPanel.cpp in Sources */,
+				DC6DBB071C172F690038FF9A /* MidiInConnection.cpp in Sources */,
 				DC6DBAF61C16ED190038FF9A /* RTPPacket.cpp in Sources */,
 				DC175EAE1A4749F6009DCA73 /* PropertiesPanel.cpp in Sources */,
 				9D64E9EC1A17935500B83274 /* SCDFCScrollView.cpp in Sources */,
