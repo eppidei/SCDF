@@ -35,6 +35,34 @@ NSString *NameOfEndpoint(MIDIEndpointRef ref)
 
 namespace Scdf
 {
+    
+    /// ******* MIDI IN ***********/////////
+    s_int32 MidiInConnection::GetNumAvailableInputs()
+    {
+        return MidiInConnectionIOSImpl::GetNumAvailableInputs();
+    }
+    std::string MidiInConnection::GetInputName(s_int32 index)    {
+        return MidiInConnectionIOSImpl::GetInputName(index);
+    }
+    
+    MidiInConnection* MidiInConnection::Create(s_int32 index)
+    {
+        return new MidiInConnectionIOSImpl(index);
+    }
+    void MidiInConnection::Destroy(MidiInConnection* connection)
+    {
+        MidiInConnectionIOSImpl *myConnection = static_cast<MidiInConnectionIOSImpl*>(connection);
+        if(myConnection){
+            delete myConnection;
+            myConnection = NULL;
+        }
+    }
+
+
+
+    
+    
+    /// ******* MIDI OUT ***********/////////
     s_int32 MidiOutConnection::GetNumAvailableOutputs()
     {
         return MidiOutConnectionIOSImpl::GetNumAvailableOutputs();
@@ -67,6 +95,30 @@ namespace Scdf
     }
     
     SCDF_Midi* getMidiManager() {return midiNetworkManager;}
+    
+    MidiInConnectionIOSImpl::MidiInConnectionIOSImpl(int _currentMIDIInPortIndex)
+    {
+        
+        [getMidiManager() connectSourceEndopointAtIndex:_currentMIDIInPortIndex];
+
+        indexMidiInPort = _currentMIDIInPortIndex;
+    }
+    
+    MidiInConnectionIOSImpl::~MidiInConnectionIOSImpl()
+    {
+        [getMidiManager() disConnectSourceEndopointAtIndex:indexMidiInPort];
+    }
+    
+    s_int32 MidiInConnectionIOSImpl::GetNumAvailableInputs()
+    {
+        return (s_int32)MIDIGetNumberOfSources();
+    };
+    
+    std::string MidiInConnectionIOSImpl::GetInputName(s_int32 index)
+    {
+        NSString *nameOfOutput = NameOfEndpoint(MIDIGetSource(index));
+        return [nameOfOutput UTF8String];
+    }
 
     
     

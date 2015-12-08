@@ -16,6 +16,7 @@
 #include "SCDFCItems.h"
 #include "OsUtilities.h"
 #include "InAppPurchase.h"
+#include "MidiLearnReceiver.h"
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -235,6 +236,15 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
     }
 }
 
+void MIDIInfo::UpdateMidiLearnToggle()
+{
+    if (Scdf::MidiLearnReceiver::Instance()->IsEnable())
+        midiLearnToggle->loadTextureNormal("btnONSimple.png");
+    else
+        midiLearnToggle->loadTextureNormal("btnOFFSimple.png");
+    
+}
+
 void MIDIInfo::UpdateVelocity()
 {
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
@@ -249,12 +259,14 @@ void MIDIInfo::UpdateVelocity()
 
 void MIDIInfo::Update()
 {
+    
+    UpdateMidiLearnToggle();
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     VISIBILITY_CHECK
     
     if (NULL==panel->GetCurrentSender()) return;
     
-    devices->SetSelectedIndex(panel->GetCurrentSender()->GetMidiOutIndex()+1);
+    midiOutDevices->SetSelectedIndex(panel->GetCurrentSender()->GetMidiOutIndex()+1);
     
     int selectedIndex=-1;
     switch(panel->GetCurrentSender()->GetMidiMessageType())
@@ -282,11 +294,13 @@ void MIDIInfo::PositionElements()
     const int xOffset=GetYPadding()/2;
     
     DoPosition(midiLabel, 0, yPos);
+    if (midiLearnToggle)
+        midiLearnToggle->setPosition(Vec2(getContentSize().width-midiLearnToggle->getContentSize().width,getContentSize().height));
     
     yPos-=xOffset;
     
-    DoPosition(devicesLabel, xOffset, yPos);
-    DoPosition(devices, xOffset, yPos);
+    DoPosition(outputDevicesLabel, xOffset, yPos);
+    DoPosition(midiOutDevices, xOffset, yPos);
     DoPosition(midiMessageLabel, xOffset, yPos);
     DoPosition(midiMessage, xOffset, yPos);
     DoPosition(controlChangeLabel, xOffset, yPos);
@@ -304,8 +318,9 @@ void MIDIInfo::PositionElements()
 
 void MIDIInfo::CheckShowElements()
 {
-    HideElement(devicesLabel,collapsed);
-    HideElement(devices,collapsed);
+    HideElement(outputDevicesLabel,collapsed);
+    HideElement(midiOutDevices,collapsed);
+    HideElement(inputDevicesLabel,collapsed);
     UpdateElementsVisibilityOnMessageTypeChanged();
     UpdateLayout();
 }
@@ -511,7 +526,7 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
         panel->GetSelectedItem()->GetControlUnit()->SetMax(selectedIndex);
     	// this is used for the button, and the button
     	// sends the max value when pressed
-    else if (menu==devices)
+    else if (menu==midiOutDevices)
     {
         bool change=true;
         if (panel->GetSelectedItem()->GetControlUnit()->GetType()!=ControlUnit::Wire)
@@ -520,14 +535,15 @@ void MIDIInfo::OnDropDownSelectionChange(DropDownMenu *menu)
             panel->GetCurrentSender()->SetMidiOutIndex(selectedIndex-1);
         Update();
     }
-
     panel->UpdateOSCInfo();
 }
 
 MIDIInfo::MIDIInfo()
 {
-    devices=NULL;
-    devicesLabel=NULL;
+    midiOutDevices=NULL;
+    outputDevicesLabel=NULL;
+    inputDevicesLabel=NULL;
+    midiLearnToggle = NULL;
     midiMessage=controlChange=channel=octaveMenu=pitchValue=programValue=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
@@ -542,12 +558,25 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 
     switch (widget->getTag())
     {
-        case PROPERTIES_MIDI_DEVICE:
-        	LOGD("USB - touch event began, PROPERTIES_MIDI_DEVICE");
+        case PROPERTIES_MIDI_LEARN_TOGGLE:
+        {
+            bool change=true;
+            if (panel->GetSelectedItem()->GetControlUnit()->GetType()!=ControlUnit::Wire)
+                change=CheckIsInAppPurchased((PurchaseProductIndex)panel->GetSelectedItem()->GetControlUnit()->GetType());
+            
+            if (!change) break;
+            
+            Scdf::MidiLearnReceiver::Instance()->ToogleMidiLearn(!Scdf::MidiLearnReceiver::Instance()->IsEnable());
+            UpdateMidiLearnToggle();
+            break;
+        }
+
+        case PROPERTIES_MIDI_OUT_DEVICE:
+        	LOGD("USB - touch event began, PROPERTIES_MIDI_OUT_DEVICE");
 #ifndef PLATF_IOS
         	UsbHandler::TryOpeningFirstUsbDevice();
 #endif
-        	devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+        	midiOutDevices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         case PROPERTIES_MIDI_MESSAGE: midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
@@ -585,7 +614,8 @@ void MIDIInfo::UpdateDevicesMenu()
        LOGD("USB - update devices menu. get name for out %d",i);
     	dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     }
-    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    midiOutDevices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+    
 }
 #ifndef PLATF_IOS
 #include "UsbHandler.h"
@@ -599,16 +629,29 @@ void MIDIInfo::CreateControls()
     CreateLabelWithBackground(this, &midiLabel, PROPERTIES_SUBPANELS_TOGGLE_HIDESHOW, r, "MIDI", Colors::Instance()->GetFontPath(Colors::FontsId::PropHeader),Colors::Instance()->GetFontSize(Colors::FontsId::PropHeader), true);
     addChild(midiLabel);
     
+    
+    //Create toggle
+    midiLearnToggle=Button::create();
+    midiLearnToggle->loadTextures("btnOFFSimple.png", "btnONSimple.png", "");
+    midiLearnToggle->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
+    midiLearnToggle->setTouchEnabled(true);
+    midiLearnToggle->setContentSize(cocos2d::Size(r.size.height,r.size.height));
+    midiLearnToggle->setAnchorPoint(Vec2(0,1));
+    addChild(midiLearnToggle,1,PROPERTIES_MIDI_LEARN_TOGGLE);
+    midiLearnToggle->ignoreContentAdaptWithSize(false);
+    
     r.size.width-=GetYPadding();
 
-    //Create device label
-    CreateLabelWithBackground(this, &devicesLabel, PROPERTIES_MIDI_DEVICE, r, "DEVICES", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
-    addChild(devicesLabel);
+    //Create device out label
+    CreateLabelWithBackground(this, &outputDevicesLabel, PROPERTIES_MIDI_OUT_DEVICE, r, "OUT DEVICES", Colors::Instance()->GetFontPath(Colors::FontsId::DropDownMenuLabel),Colors::Instance()->GetFontSize(Colors::FontsId::DropDownMenuLabel));
+    addChild(outputDevicesLabel);
+    
     
     //Create device dropDown
-    devices = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
-    addChild(devices);
+    midiOutDevices = DropDownMenu::CreateMenu<DropDownMenu>(r.size, dropDownCallback.get());
+    addChild(midiOutDevices);
     LOGD("USB - midiinfo create control - update devices menu");
+
     UpdateDevicesMenu();
 
     

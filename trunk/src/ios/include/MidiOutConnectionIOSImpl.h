@@ -3,6 +3,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreMIDI/CoreMIDI.h>
 #include "MidiOutConnection.h"
+#include "MidiInConnection.h"
 #include "MidiOutConnectionIOS.h"
 
 
@@ -39,6 +40,24 @@ namespace Scdf {
         void AttachListenerConnectionLost(MidiConnectionListener* _listener);
         void DetachListenerConnectionLost();
 
+    };
+    
+    class MidiInConnectionIOSImpl : public MidiInConnection
+    {
+        
+    private:
+        
+        int indexMidiInPort;
+        
+    public:
+        
+        MidiInConnectionIOSImpl(int _currentMIDIInPortIndex);
+        ~MidiInConnectionIOSImpl();
+        
+        
+        static s_int32 GetNumAvailableInputs();
+        static std::string GetInputName(s_int32 index);
+        
     };
     
     

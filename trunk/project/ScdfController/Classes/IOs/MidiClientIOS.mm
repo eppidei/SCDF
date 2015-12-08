@@ -2,6 +2,7 @@
 #import "MidiClientIOS.h"
 #import <mach/mach_time.h>
 #import "Label.h"
+#import "MidiInConnection.h"
 
 
 
@@ -158,11 +159,37 @@ BOOL IsNetworkSession(MIDIEndpointRef ref)
     }
 }
 
+NSString *StringFromPacket(const MIDIPacket *packet)
+{
+    // Note - this is not an example of MIDI parsing. I'm just dumping
+    // some bytes for diagnostics.
+    // See comments in PGMidiSourceDelegate for an example of how to
+    // interpret the MIDIPacket structure.
+    return [NSString stringWithFormat:@"  %u bytes: [%02x,%02x,%02x]",
+            packet->length,
+            (packet->length > 0) ? packet->data[0] : 0,
+            (packet->length > 1) ? packet->data[1] : 0,
+            (packet->length > 2) ? packet->data[2] : 0
+            ];
+}
+
 static
 void SCDF_MIDIReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
 {
-    SCDF_MidiSource *self = (SCDF_MidiSource *)(srcConnRefCon);
-    [self midiRead:pktlist];
+    const MIDIPacket *packet = &pktlist->packet[0];
+    for (int i = 0; i < pktlist->numPackets; ++i) {
+       
+        Scdf::MidiInData data;
+        
+        (packet->length > 0) ? data.statusByte = packet->data[0] :data.statusByte=0;
+        (packet->length > 1) ? data.dataByte1 =packet->data[1] : data.dataByte1=0;
+        (packet->length > 2) ? data.dataByte2 =packet->data[2] : data.dataByte2=0;
+        
+        Scdf::MidiInConnection::NotifyReceiveMidiData(data);
+       
+        packet = MIDIPacketNext(packet);
+    }
+    
 }
 
 static
@@ -718,6 +745,20 @@ void SCDF_MIDINotifyProc(const MIDINotification *message, void *refCon)
     
     if(listenersMap.size());
         listenersMap.erase(nameKey);
+}
+
+- (void) connectSourceEndopointAtIndex: (int) endpointIndex
+{
+    MIDIEndpointRef endpoint = MIDIGetSource(endpointIndex);
+    ItemCount index = endpointIndex;
+    MIDIPortConnectSource(inputPort, endpoint, (void*)&index);
+}
+
+- (void) disConnectSourceEndopointAtIndex: (int) endpointIndex
+{
+    MIDIEndpointRef endpoint = MIDIGetSource(endpointIndex);
+    MIDIPortDisconnectSource(inputPort, endpoint);
+
 }
 
 - (void) onEndPointRemoved: (MIDIEndpointRef) endpoint

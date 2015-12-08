@@ -150,5 +150,7 @@ extern NSString * const SCDF_MidiConnectionKey;
 - (void) attachListenerAtIndex: (int) index forConnection: (Scdf::MidiOutConnection*) connection;
 - (void) detachListenerAtIndex: (int) index;
 - (void) onEndPointRemoved: (MIDIEndpointRef) endpoint;
+- (void) connectSourceEndopointAtIndex: (int) endpointIndex;
+- (void) disConnectSourceEndopointAtIndex: (int) endpointIndex;
 
 @end
