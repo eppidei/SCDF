@@ -65,9 +65,11 @@ namespace ScdfCtrl
     {
         friend class PropertiesPanel;
     
-        DropDownMenu *midiMessage, *controlChange, *octaveMenu, *pitchValue, *programValue, *channel, *velocity, *devices;
-        TextWithBackground *devicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel;
+        DropDownMenu *midiMessage, *controlChange, *octaveMenu, *pitchValue, *programValue, *channel, *velocity, *midiOutDevices;
+        TextWithBackground *outputDevicesLabel, *midiMessageLabel, *controlChangeLabel, *channelLabel, *velocityLabel, *midiLabel,*inputDevicesLabel;
+        cocos2d::ui::Button *midiLearnToggle;
         
+        void UpdateMidiLearnToggle();
         void CreateControls() override;
         void InitControlMenuData();
         void UpdateControlMenuData(MidiMessageType messageType);
