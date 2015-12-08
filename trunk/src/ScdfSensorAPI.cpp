@@ -95,6 +95,10 @@ void ScdfSensorAPI::InitSensors()
     
 }
 
+#ifdef _RTP_MIDI_PROJECT
+#include <thread>
+#endif
+
 void ScdfSensorAPI::InitNetwork()
 {
     // Load values from settings
@@ -123,6 +127,21 @@ void ScdfSensorAPI::InitNetwork()
     SetUDPOutputAddress(addressString);
     SetUDPMultiOutputActive(multiOutput);
     SetRoutingType(routingType);
+
+#ifdef _RTP_MIDI_PROJECT
+    std::thread t([=]() {
+        UDPSender s;
+        s.InitEndpoints(5353,1, "192.168.1.86");
+        const int size=4*4096;
+        while (true)
+        {
+            char *data = new char[size];
+            s.Receive(&data, size);
+            delete [] data;
+        }
+    });
+    t.detach();
+#endif
 }
 
 
