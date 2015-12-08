@@ -124,7 +124,9 @@ int MainScene::GetGridDistance()
     return gridUnity[gridIndex];
 }
 
+#ifndef PLATF_IOS
 #include "UsbHandler.h"
+#endif
 
 bool MainScene::init()
 {
