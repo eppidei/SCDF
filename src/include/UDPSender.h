@@ -10,12 +10,16 @@
 #define __SCDF_Test__UDPSender__
 
 #include "ThreadUtils.h"
+#ifndef _RTP_MIDI_PROJECT
 #include "Sensor.h"
 #include "osc/OscOutboundPacketStream.h"
 
 #include "cereal/archives/xml.hpp"
 #include "cereal/access.hpp"
 #include "cereal/types/string.hpp"
+#else
+#define SCDF_API
+#endif
 
 class UdpSocket;
 class IpEndpointName;
@@ -38,7 +42,8 @@ namespace scdf
         UDPSender();
         void SendData(const s_char* data, s_int32 size, s_int32 endpointIndex);
         void SendData(const s_char* data, s_int32 size);
-
+        std::size_t Receive(char *data, int size, s_int32 endpointIndex);
+        
         void InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::string IP_address);
         s_int32 GetPort();
         std::string GetAddress();
@@ -47,6 +52,7 @@ namespace scdf
         void SetAddress(std::string addr);
         void SetNumEndpoints(s_int32 numEp);
 
+#ifndef _RTP_MIDI_PROJECT
         friend class cereal::access;
 
 		template <class Archive>
@@ -67,9 +73,10 @@ namespace scdf
 			ar(CEREAL_NVP(numEndpoints));
 			InitEndpoints(portBase, numEndpoints, address);
 		}
-
+#endif
     };
-    
+
+#ifndef _RTP_MIDI_PROJECT
     class UDPSenderHelperBase
     {
         friend class UDPSendersManager;
@@ -105,5 +112,6 @@ namespace scdf
         void Activate(bool activate);
         void SendOnThread();
     };
+#endif
 }
 #endif /* defined(__SCDF_Test__UDPSender__) */

@@ -84,7 +84,9 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
 
     //LOGD("UDP SENDER - actually send %d bytes to %s [%d]",size,address.c_str(),portBase);
     try {
+#ifndef _RTP_MIDI_PROJECT
         assert(osc::IsMultipleOf4(size));
+#endif
         transmitSocket->SendTo(*endPoints[endpointIndex],data, size);
     }
     catch (const std::runtime_error& error)
@@ -94,12 +96,33 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
     
 }
 
+std::size_t UDPSender::Receive(char *data, int size, s_int32 endpointIndex)
+{
+    static bool bound=false;
+    if (!CheckCreateSender()) return 0;
+    std::size_t ret=0;
+    if (!bound)
+    {
+        bound=true;
+        transmitSocket->Bind(*endPoints[endpointIndex]);
+    }
+    try {
+        ret=transmitSocket->ReceiveFrom(*endPoints[endpointIndex],data, size);
+    }
+    catch (const std::runtime_error& error)
+    {
+        LOGD("\nUDP SendTo failed with error: %s\n",error.what());
+    }
+    return ret;
+    
+}
 void UDPSender::SendData(const s_char* data, s_int32 size)
 {
 	SendData(data,size,0);
 }
 
 
+#ifndef _RTP_MIDI_PROJECT
 
 void UDPSenderHelperBase::SendData(std::vector<SensorData*> &senderData)
 {
@@ -347,4 +370,5 @@ void UDPSenderHelperBase::Activate(s_bool active)
     }
 }
 
+#endif
 
