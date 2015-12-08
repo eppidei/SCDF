@@ -120,6 +120,20 @@ void setup()
 //    Serial.println("Then open a MIDI listener (eg MIDI-OX) and monitor incoming notes");
     
     // Create a session and wait for a remote host to connect to us
+    
+    std::thread t([=]() {
+        UDPSender s;
+        s.InitEndpoints(5004,1, "192.168.1.86");
+        const int size=4*4096;
+        while (true)
+        {
+            char *data = new char[size];
+            s.Receive(&data, size, 0);
+            delete [] data;
+        }
+    });
+    t.detach();
+    
     AppleMIDI.begin("test");
     
     AppleMIDI.OnConnected(OnAppleMidiConnected);
