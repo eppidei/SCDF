@@ -531,8 +531,9 @@ MIDIInfo::MIDIInfo()
     midiMessage=controlChange=channel=octaveMenu=pitchValue=programValue=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
-
+#ifndef PLATF_IOS
 #include "UsbHandler.h"
+#endif
 
 void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 {
@@ -543,7 +544,9 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
     {
         case PROPERTIES_MIDI_DEVICE:
         	LOGD("USB - touch event began, PROPERTIES_MIDI_DEVICE");
+#ifndef PLATF_IOS
         	UsbHandler::TryOpeningFirstUsbDevice();
+#endif
         	devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         case PROPERTIES_MIDI_MESSAGE: midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
@@ -584,8 +587,9 @@ void MIDIInfo::UpdateDevicesMenu()
     }
     devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
 }
-
+#ifndef PLATF_IOS
 #include "UsbHandler.h"
+#endif
 
 void MIDIInfo::CreateControls()
 {
