@@ -6,7 +6,7 @@
 //  Copyright © 2015 fuzone. All rights reserved.
 //
 
-#include "UdpSender.h"
+#include "UDPSender.h"
 #include "WifiUDP.hpp"
 //#include "WiFiClient.h"
 //#include "WiFiServer.h"
@@ -49,14 +49,15 @@ uint8_t WiFiUDP::begin(uint16_t port)
 {
     try {
         udpSocket.reset(new scdf::UDPSender());
-        udpSocket->InitEndpoints(port, 1 , "192.168.1.67");
+        udpSocket->InitEndpoints(port, 1 , "192.168.1.69");
+        udpSocket->Bind(0);
     }
     catch (const std::runtime_error& error)
     {
         LOGD("\nUDP SendTo failed with error: %s\n",error.what());
         return 0;
     }
-    
+
 //    uint8_t sock = WiFiClass::getSocket();
 //    if (sock != NO_SOCKET_AVAIL)
 //    {
@@ -67,7 +68,7 @@ uint8_t WiFiUDP::begin(uint16_t port)
 //        return 1;
 //    }
     return 1;
-    
+
 }
 
 /* return number of bytes available in the current packet,
@@ -77,7 +78,7 @@ int WiFiUDP::available() {
 //    {
 //        return ServerDrv::availData(_sock);
 //    }
-    
+
     return 1;
 }
 
@@ -86,9 +87,9 @@ int WiFiUDP::available() {
 //{
 //    if (_sock == NO_SOCKET_AVAIL)
 //        return;
-//    
+//
 //    ServerDrv::stopClient(_sock);
-//    
+//
 //    _sock = NO_SOCKET_AVAIL;
 //}
 
@@ -178,7 +179,7 @@ int WiFiUDP::read(unsigned char* buffer, size_t len)
 //    uint8_t b;
 //    if (!available())
 //        return -1;
-//    
+//
 //    ServerDrv::getData(_sock, &b, 1);
 //    return b;
 //}
@@ -192,7 +193,7 @@ appleMidi::IPAddress  WiFiUDP::remoteIP()
 {
     uint8_t _remoteIp[4] = {0};
     uint8_t _remotePort[2] = {0};
-    
+
 //    WiFiDrv::getRemoteData(_sock, _remoteIp, _remotePort);
     appleMidi::IPAddress ip(_remoteIp);
     return ip;
@@ -202,7 +203,7 @@ uint16_t  WiFiUDP::remotePort()
 {
     uint8_t _remoteIp[4] = {0};
     uint8_t _remotePort[2] = {0};
-    
+
 //    WiFiDrv::getRemoteData(_sock, _remoteIp, _remotePort);
     uint16_t port = (_remotePort[0]<<8)+_remotePort[1];
     return port;

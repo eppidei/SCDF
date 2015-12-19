@@ -36,14 +36,14 @@ namespace scdf
         ThreadUtils::CustomMutex endpointsChanger;
         s_int32 portBase;
         std::string address;
-        
+
         s_bool CheckCreateSender();
     public:
         UDPSender();
         void SendData(const s_char* data, s_int32 size, s_int32 endpointIndex);
         void SendData(const s_char* data, s_int32 size);
         std::size_t Receive(char *data, int size, s_int32 endpointIndex);
-        
+        int Bind(int endpointIndex);
         void InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::string IP_address);
         s_int32 GetPort();
         std::string GetAddress();
@@ -84,7 +84,7 @@ namespace scdf
         ThreadUtils::CustomMutex activator;
         ThreadUtils::ThreadHandle handle;
         s_bool multiOutput, oscPackData;
-        
+
         struct TempSensorData
         {
             s_int32 size;
@@ -94,7 +94,7 @@ namespace scdf
             void PrepareBufferToSend(SensorData *data);
         };
         TempSensorData tempSensorData[scdf::NumTypes];
-        
+
         void Init(s_int32 udpPortBase, std::string address);
         void SendData(std::vector<SensorData*> &senderData);
         void DoSendData(std::vector<SensorData*> &senderData);
@@ -106,7 +106,7 @@ namespace scdf
         s_int32 CalculateOSCDataBufferSize(std::vector<SensorData*> &senderData);
         s_int32 GetPort();
         std::string GetAddress();
-        
+
         UDPSenderHelperBase();
     public:
         void Activate(bool activate);
