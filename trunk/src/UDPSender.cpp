@@ -17,7 +17,7 @@ using namespace scdf;
 s_bool UDPSender::CheckCreateSender()
 {
     if (NULL!=transmitSocket.get()) return true;
-    
+
     try{
         transmitSocket.reset(new UdpSocket());
     }
@@ -42,7 +42,7 @@ void UDPSender::InitEndpoints(s_int32 udp_base_num, s_int32 num_endpoints, std::
     for (int i=0;i<endPoints.size();++i)
         delete endPoints[i];
     endPoints.clear();
-    
+
     endPoints.resize(num_endpoints);
     for (int i=0;i<num_endpoints;++i)
         endPoints[i]=new IpEndpointName(address.c_str(),udp_base_num+i);
@@ -93,17 +93,28 @@ void UDPSender::SendData(const s_char* data, s_int32 size, s_int32 endpointIndex
     {
         LOGD("\nUDP SendTo failed with error: %s\n",error.what());
     }
-    
+
+}
+
+int UDPSender::Bind(int endpointIndex)
+{
+    try {
+        transmitSocket->Bind(*endPoints[endpointIndex]);
+    }
+    catch (const std::runtime_error& error)
+    {
+        return errno;
+    }
+    return 0;
+
 }
 
 std::size_t UDPSender::Receive(char *data, int size, s_int32 endpointIndex)
 {
-    static bool bound=false;
     if (!CheckCreateSender()) return 0;
     std::size_t ret=0;
-    if (!bound)
+    if (!transmitSocket->IsBound())
     {
-        bound=true;
         transmitSocket->Bind(*endPoints[endpointIndex]);
     }
     try {
@@ -114,7 +125,7 @@ std::size_t UDPSender::Receive(char *data, int size, s_int32 endpointIndex)
         LOGD("\nUDP SendTo failed with error: %s\n",error.what());
     }
     return ret;
-    
+
 }
 void UDPSender::SendData(const s_char* data, s_int32 size)
 {
@@ -156,7 +167,7 @@ void UDPSenderHelperBase::TempSensorData::PrepareBufferToSend(SensorData *sData)
     s_int32 timestampsBlockSize = numTimestamps*sizeof(s_uint64);
     s_int32 unusedPointersBlockSize = 0;//sizeof(s_sample*) + sizeof(s_uint64*);
     s_int32 sensorDataSize=sizeof(SensorData) -unusedPointersBlockSize + samplesBlockSize + timestampsBlockSize;
-    
+
     if (size!=sensorDataSize)
     {
     	//LOGD("type %d current size: %d, new size: %d",sData->type,size,sensorDataSize);
@@ -205,7 +216,7 @@ s_int32 CalculateOSCDataSingleBufferSize(SensorData *data)
     s_int32 numTimestamps=2;
     if (AudioInput!=data->type)
         numTimestamps=data->num_frames;
-    
+
     s_int32 samplesBlockSize = data->num_frames*data->num_channels*sizeof(s_sample);
     s_int32 timestampsBlockSize = numTimestamps*sizeof(s_uint64);
     s_int32 sensorDataStructMembersSize=sizeof(data->rate) + sizeof(data->timeid) + sizeof(data->num_frames) + sizeof(data->num_channels);
@@ -228,7 +239,7 @@ void UDPSenderHelperBase::DoMultiSendDataOSCPacked(std::vector<SensorData*> &sen
         LOGD("MultiSend OSC packed data");//: %s sensor send %d samples at rate %d\n", SensorTypeString[i].c_str(), senderData[i]->num_frames, senderData[i]->rate);
 #endif
         if (0==senderData[i]->num_frames) continue;
-        
+
         s_int32 oscSingleBufferSize=CalculateOSCDataSingleBufferSize(senderData[i]);
         s_char buffer[oscSingleBufferSize];
         osc::OutboundPacketStream oscData( buffer, oscSingleBufferSize);
@@ -324,19 +335,19 @@ void UDPSenderHelperBase::OSCPackData(const std::vector<SensorData*> &sData, osc
     std::string timeIDTag("/TimeID");
     std::string dataTag("/Data");
     std::string timestampsTag("/Timestamps");
-    
+
     oscData << osc::BeginBundle();
     for (int i=0;i<sData.size();++i)
     {
         if (0==sData[i]->num_frames) continue;
-        
+
         SensorData *data=sData[i];
         s_int32 numTimestamps=2;
         if (AudioInput!=data->type)
         	numTimestamps=data->num_frames;
-        
+
         std::string sensorTag=std::string("/") + SensorTypeString[i];
-        
+
         oscData << osc::BeginMessage( std::string(sensorTag+rateTag).c_str() ) << data->rate << osc::EndMessage
         << osc::BeginMessage( std::string(sensorTag+channelsTag).c_str() ) << data->num_channels << osc::EndMessage
         << osc::BeginMessage( std::string(sensorTag+samplesTag).c_str() ) << data->num_frames << osc::EndMessage
@@ -351,7 +362,7 @@ void UDPSenderHelperBase::OSCSinglePackData(SensorData *data, osc::OutboundPacke
 {
     std::vector<SensorData*> tempData;
     tempData.push_back(data);
-    
+
     OSCPackData(tempData,oscData);
 }
 

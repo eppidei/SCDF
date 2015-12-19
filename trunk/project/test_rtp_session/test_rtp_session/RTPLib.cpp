@@ -6,8 +6,8 @@
 //#include <WiFiUdp.h>
 
 #include "AppleMidi.h"
-#include "UdpSender.h"
-#include "WifiUdp.hpp"
+#include "UDPSender.h"
+#include "WifiUDP.hpp"
 BEGIN_APPLEMIDI_NAMESPACE
 int status = 0;//WL_IDLE_STATUS;
 char ssid[] = "yourNetwork"; //  your network SSID (name)
@@ -71,10 +71,11 @@ void OnAppleMidiNoteOff(byte channel, byte note, byte velocity) {
     Serial.print(velocity);
     Serial.println();
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+bool binding=true;
 void setup()
 {
 //    // Serial communications and wait for port to open:
@@ -82,66 +83,78 @@ void setup()
 //    while (!Serial) {
 //        ; // wait for serial port to connect. Needed for Leonardo only
 //    }
-//    
+//
 //    Serial.print("Getting IP address...");
-//    
-//    
+//
+//
 //    // check for the presence of the shield:
 //    if (WiFi.status() == WL_NO_SHIELD) {
 //        Serial.println("WiFi shield not present");
 //        // don't continue:
 //        while (true);
 //    }
-//    
+//
 //    String fv = WiFi.firmwareVersion();
 //    if ( fv != "1.1.0" )
 //        Serial.println("Please upgrade the firmware");
-//    
+//
 //    // attempt to connect to Wifi network:
 //    while ( status != WL_CONNECTED) {
 //        Serial.print("Attempting to connect to SSID: ");
 //        Serial.println(ssid);
 //        // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
 //        status = WiFi.begin(ssid);
-//        
+//
 //        // wait 10 seconds for connection:
 //        delay(10000);
 //    }
-//    
+//
 //    Serial.println();
 //    Serial.print("IP address is ");
 //    Serial.println(WiFi.localIP());
-//    
+//
 //    Serial.println("OK, now make sure you an rtpMIDI session that is Enabled");
 //    Serial.print("Add device named Arduino with Host/Port ");
 //    Serial.print(WiFi.localIP());
 //    Serial.println(":5004");
 //    Serial.println("Then press the Connect button");
 //    Serial.println("Then open a MIDI listener (eg MIDI-OX) and monitor incoming notes");
-    
+
     // Create a session and wait for a remote host to connect to us
-    
-    std::thread t([=]() {
-        UDPSender s;
-        s.InitEndpoints(5004,1, "192.168.1.86");
-        const int size=4*4096;
+
+
+    const int size=4*4096;
+
+   /* std::thread t([=]() {
+        scdf::UDPSender s;
+        s.InitEndpoints(5004,1, "192.168.1.69");
+        int err=s.Bind(0);
+        if (0==err)
+            binding=false;
+        else
+        {
+            printf("Binding error %d\n", err);
+            return;
+        }
+
         while (true)
         {
-            char *data = new char[size];
-            s.Receive(&data, size, 0);
-            delete [] data;
+            char data[size];
+            s.Receive((char*)&data, size, 0);
+
         }
     });
-    t.detach();
-    
+    t.detach();*/
+
+   // while(binding);
     AppleMIDI.begin("test");
-    
+
     AppleMIDI.OnConnected(OnAppleMidiConnected);
     AppleMIDI.OnDisconnected(OnAppleMidiDisconnected);
-    
+
     AppleMIDI.OnReceiveNoteOn(OnAppleMidiNoteOn);
     AppleMIDI.OnReceiveNoteOff(OnAppleMidiNoteOff);
-    
+
     Serial.println("Sending NoteOn/Off of note 45, every second");
 }
 
@@ -151,29 +164,29 @@ void setup()
 
 void loop()
 {
-    std::thread t([=]() {
+   // std::thread t([=]() {
         while (true)
         {
             // Listen to incoming notes
             AppleMIDI.run();
-        
+
             // send a note every second
             // (dont cáll delay(1000) as it will stall the pipeline)
             if (isConnected && (millis() - t0) > 1000)
             {
                 t0 = millis();
                 //   Serial.print(".");
-                
+
                 int note = 45;
                 int velocity = 55;
                 int channel = 1;
-                
+
                 AppleMIDI.noteOn(note, velocity, channel);
                 AppleMIDI.noteOff(note, velocity, channel);
             }
         }
-    });
-    t.detach();
+  //  });
+  //  t.detach();
 
 }
 END_APPLEMIDI_NAMESPACE

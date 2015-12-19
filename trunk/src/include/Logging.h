@@ -27,7 +27,7 @@
 
 #else
 
-#ifdef ANDROID
+#if defined(ANDROID) && !defined(_RTP_MIDI_PROJECT)
 #include <android/log.h>
 #define  LOG_TAG    "SCDF"
 #define  LOGD(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -35,8 +35,8 @@
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #else
 #define LOGD(...)
-#define LOGE(...) 
-#define LOGI(...) 
+#define LOGE(...)
+#define LOGI(...)
 #endif
 
 #endif
