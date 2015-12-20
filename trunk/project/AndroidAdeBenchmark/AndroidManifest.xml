@@ -5,14 +5,17 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="14" />
+        android:minSdkVersion="23"
+        android:targetSdkVersion="23" />
+    <permission android:name="CHANGE_NETWORK_STATE"></permission>
+    <permission android:name="INTERNET"></permission>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" 
+        android:permission="android.permission.INTERNET">
         <activity
             android:name=".BenchmarkActivity"
             android:label="@string/app_name" >

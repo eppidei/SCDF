@@ -1,43 +1,41 @@
-ADE_TEST_JNI_DIR := $(call my-dir)
-SCDF_TRUNK := /home/athos/SCDF/trunk
-#SCDF_TRUNK := $(ADE_TEST_JNI_DIR)/../../../..
+mDNS_TEST_JNI_DIR := $(call my-dir)
+SCDF_TRUNK := /Users/leonardo/Documents/SCDF2.0
+#SCDF_TRUNK := $(mDNS_TEST_JNI_DIR)/../../../..
 
 BLAS_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/CLAPACK/jni
 FFTW3_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/FFTw3/jni
-ADE_SRC_PATH:=$(SCDF_TRUNK)/ext/ADE_API/API/src
+mDNS_SRC_PATH:=$(SCDF_TRUNK)/project/test_rtp_session/test_mdsn/mDNSResponder-576.30.4
 
-include $(BLAS_MAKEFILE_PATH)/Android.mk
-include $(FFTW3_MAKEFILE_PATH)/Android.mk
+#include $(BLAS_MAKEFILE_PATH)/Android.mk
+#include $(FFTW3_MAKEFILE_PATH)/Android.mk
 
 include $(CLEAR_VARS)
-LOCAL_PATH := $(ADE_SRC_PATH)
-LOCAL_C_INCLUDES := $(ADE_SRC_PATH) $(ADE_SRC_PATH)/headers
+LOCAL_PATH := $(mDNS_SRC_PATH)
+LOCAL_C_INCLUDES := $(mDNS_SRC_PATH) $(mDNS_SRC_PATH)/mDNSCore $(mDNS_SRC_PATH)/mDNSPosix $(mDNS_SRC_PATH)/mDNSShared
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
 LOCAL_SHARED_LIBRARIES := blas fftw3 fftw_threads
-#LOCAL_CFLAGS := -DADE_TARGET_TYPE=3 #ADE_ANDROID 
-#-DADE_BLAS_IMPLEMENTATION=1 -DADE_FP_PRECISION=1
-LOCAL_MODULE    := ade
-LOCAL_SRC_FILES :=  ADE.c \
-					ADE_Bench_Utils.c \
-					ADE_blas_level1.c \
-					ADE_blas_level2.c \
-					ADE_blas_level3.c \
-					ADE_complex.c \
-					ADE_Utils.c \
-					ADE_Blow.c \
-					ADE_iir.c \
-					ADE_fir.c \
-					ADE_polyfit.c \
-					ADE_Error_Handler.c \
-					ADE_Snap.c \
-					ADE_fft.c \
-					ADE_nrutil.c			
+LOCAL_CFLAGS := -DNOT_HAVE_SA_LEN -DUSES_NETLINK -DDNSSEC_DISABLED -DMDNS_DEBUGMSGS
+#-DmDNS_BLAS_IMPLEMENTATION=1 -DmDNS_FP_PRECISION=1
+LOCAL_MODULE    := mDNS
+LOCAL_SRC_FILES :=  ./mDNSCore/CryptoAlg.c ./mDNSCore/DNSCommon.c ./mDNSCore/DNSDigest.c ./mDNSCore/anonymous.c \
+./mDNSCore/mDNS.c ./mDNSCore/nsec3.c \
+./mDNSCore/uDNS.c \
+./mDNSPosix/ExampleClientApp.c \
+./mDNSPosix/mDNSPosix.c \
+./mDNSPosix/mDNSUNP.c \
+./mDNSShared/DebugServices.c \
+./mDNSShared/GenLinkedList.c \
+./mDNSShared/PlatformCommon.c \
+./mDNSShared/dnssd_clientlib.c \
+./mDNSShared/mDNSDebug.c 
+
+					
 include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_PATH := $(ADE_TEST_JNI_DIR)
-LOCAL_STATIC_LIBRARIES := ade
+LOCAL_PATH := $(mDNS_TEST_JNI_DIR)
+LOCAL_STATIC_LIBRARIES := mDNS
 LOCAL_LDLIBS := -llog
 LOCAL_MODULE    := adebenchmark
 LOCAL_SRC_FILES := adebenchmark.cpp
