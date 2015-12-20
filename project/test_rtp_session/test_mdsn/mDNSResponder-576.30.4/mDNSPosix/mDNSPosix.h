@@ -20,6 +20,7 @@
 
 #include <signal.h>
 #include <sys/time.h>
+#include <sys/select.h>
 
 #ifdef  __cplusplus
 extern "C" {

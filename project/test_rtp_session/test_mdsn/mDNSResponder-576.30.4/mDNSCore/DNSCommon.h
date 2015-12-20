@@ -265,8 +265,14 @@ extern mDNSBool RRAssertsNonexistence(const ResourceRecord *const rr, mDNSu16 ty
 extern mDNSBool RRAssertsExistence(const ResourceRecord *const rr, mDNSu16 type);
 extern mDNSBool BitmapTypeCheck(mDNSu8 *bmap, int bitmaplen, mDNSu16 type);
 
+#if defined(ANDROID)
+extern mDNSu16 _swap16(mDNSu16 x);
+extern mDNSu32 _swap32(mDNSu32 x);
+#else
 extern mDNSu16 swap16(mDNSu16 x);
 extern mDNSu32 swap32(mDNSu32 x);
+#endif
+
 
 // ***************************************************************************
 #if COMPILER_LIKES_PRAGMA_MARK

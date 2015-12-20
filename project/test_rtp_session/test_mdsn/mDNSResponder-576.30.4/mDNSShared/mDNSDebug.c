@@ -22,6 +22,7 @@
 
  */
 
+
 #include "mDNSDebug.h"
 
 #include <stdio.h>
@@ -36,7 +37,7 @@
 #endif
 
 #include "mDNSEmbeddedAPI.h"
-
+mDNSexport const char ProgramName[] = "mDNSResponderPosix";
 mDNSexport int mDNS_LoggingEnabled       = 0;
 mDNSexport int mDNS_PacketLoggingEnabled = 0;
 mDNSexport int mDNS_McastLoggingEnabled  = 0;
