@@ -127,9 +127,10 @@ int MainScene::GetGridDistance()
 #ifndef PLATF_IOS
 #include "UsbHandler.h"
 #endif
-
+MainScene* mainScene;
 bool MainScene::init()
 {
+    mainScene = this;
     if ( !Layer::init() )
     {
         return false;

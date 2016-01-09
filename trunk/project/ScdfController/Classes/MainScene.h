@@ -46,6 +46,7 @@ namespace ScdfCtrl
         void UpdateEditButton();
         void UpdateMIDIDevicesMenu();
         WorkingPanel *GetWorkingPanel() { return customPanel.get();}
+        PropertiesPanel *GetPropertiesPanel() { return propertiesPanel.get();}
         void Deserialize(SerializablePatchData *appdata);
         void ResetPatchUI();
         CREATE_FUNC(MainScene);

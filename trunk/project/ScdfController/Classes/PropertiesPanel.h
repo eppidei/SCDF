@@ -124,6 +124,7 @@ namespace ScdfCtrl
         void UpdateSubpanels() override;
     public:
         void UpdateOSCInfo();
+        void UpdateMidiInfo();
         void Update(SubjectSimple* theChangedSubject, SCDFC_EVENTS event) override;
         ScdfCtrl::MultiSender *GetCurrentSender();
         ItemBase *GetSelectedItem();
