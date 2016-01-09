@@ -3,6 +3,7 @@
 #import <mach/mach_time.h>
 #import "Label.h"
 #import "MidiClientIOS.h"
+#import "MidiUtils.h"
 
 
 
@@ -10,16 +11,7 @@
 
 #pragma mark MidiOutConnectionIOS impl
 
-#define NOTE_ON 0x90
-#define NOTE_OFF 0x80
-#define POLY_KEY_PRESSURE 0xA0
-#define CONTROL_CHANGE 0xB0
-#define PROGRAM_CHANGE 0xC0
-#define PITCH_BENDER 0xD0
-#define CHANNEL_PRESSURE 0xE0
 
-#define CHANNEL_MASK 0xF
-#define DATA_BYTE_MASK 0x7F
 
 static
 NSString *NameOfEndpoint(MIDIEndpointRef ref)
@@ -147,7 +139,7 @@ namespace Scdf
     {
         
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = NOTE_ON|channelInt8;
+        char statusByte = ScdfCtrl::NoteOn|channelInt8;
         
         const UInt8 status = statusByte;
         const UInt8 dataByte1    = note;
@@ -162,7 +154,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendNoteOff(s_uint16 note, s_uint16 velocity, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = NOTE_OFF|channelInt8;
+        char statusByte = ScdfCtrl::NoteOff|channelInt8;
 
         const UInt8 status = statusByte;
         UInt8 dataByte1    = note;
@@ -178,7 +170,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendControlChange(s_uint16 control, s_uint16 value, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = CONTROL_CHANGE|channelInt8;
+        char statusByte = ScdfCtrl::ControlChange|channelInt8;
         
         const UInt8 status = statusByte;
         UInt8 dataByte1    = control;
@@ -193,7 +185,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendProgramChange(s_uint16 program, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = PROGRAM_CHANGE|channelInt8;
+        char statusByte = ScdfCtrl::ProgramChange|channelInt8;
         
         const UInt8 status = statusByte;
         UInt8 dataByte1    = program;
@@ -207,7 +199,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendAftertouch(s_uint16 value, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = CHANNEL_PRESSURE|channelInt8;
+        char statusByte = ScdfCtrl::Aftertouch|channelInt8;
         
         const UInt8 status = statusByte;
         UInt8 dataByte1    = value;
@@ -222,7 +214,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendPolyKeyPressure(s_uint16 note, s_uint16 value, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = POLY_KEY_PRESSURE|channelInt8;
+        char statusByte = ScdfCtrl::PolyKeyPressure|channelInt8;
         
         const UInt8 status = statusByte;
         UInt8 dataByte1    = note;
@@ -237,7 +229,7 @@ namespace Scdf
     s_bool MidiOutConnectionIOSImpl::SendModWheel(s_uint16 value, s_uint16 channel)
     {
         char channelInt8 = channel&CHANNEL_MASK;
-        char statusByte = PITCH_BENDER|channelInt8;
+        char statusByte = ScdfCtrl::PitchBend|channelInt8;
         
         const UInt8 status = statusByte;
         UInt8 dataByte1    = value&DATA_BYTE_MASK;

@@ -8,6 +8,10 @@
 #ifndef MIDIUTILS_H_
 #define MIDIUTILS_H_
 
+#define CHANNEL_MASK 0xF
+#define DATA_BYTE_MASK 0x7F
+#define STATUS_MASK 0xF0
+
 namespace ScdfCtrl{
 enum MidiMessageType {
 	InvalidMsg = 0x0,

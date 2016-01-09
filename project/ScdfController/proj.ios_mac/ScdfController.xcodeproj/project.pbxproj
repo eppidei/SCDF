@@ -182,6 +182,8 @@
 		DC4A58C21AE5AA5C0002CD7F /* MidiOutConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */; };
 		DC549FCA1B0A83E20030D469 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */; };
 		DC562A5E1A518D38009C5C95 /* DropDownMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */; };
+		DC5989AA1C41765500F0F76A /* btnLearnOFFSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5989A81C41765500F0F76A /* btnLearnOFFSimple.png */; };
+		DC5989AB1C41765500F0F76A /* btnLearnONSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5989A91C41765500F0F76A /* btnLearnONSimple.png */; };
 		DC5B533D1AE2B0DE004946D9 /* InAppiOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */; };
 		DC5B53411AE2B0F2004946D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5B53401AE2B0F2004946D9 /* StoreKit.framework */; };
 		DC682E261AF659E2008C89BB /* MidiClientIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC682E251AF659E2008C89BB /* MidiClientIOS.mm */; };
@@ -508,6 +510,8 @@
 		DC3F42A51B0E5E230084AB62 /* iPhone6-portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPhone6-portrait@2x.png"; path = "SplashScreen/LaunchImage/iPhone6-portrait@2x.png"; sourceTree = "<group>"; };
 		DC4A58C11AE5AA5C0002CD7F /* MidiOutConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiOutConnection.cpp; path = ../../../src/MidiOutConnection.cpp; sourceTree = "<group>"; };
 		DC562A5D1A518D38009C5C95 /* DropDownMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DropDownMenu.cpp; path = ../Classes/DropDownMenu.cpp; sourceTree = "<group>"; };
+		DC5989A81C41765500F0F76A /* btnLearnOFFSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnLearnOFFSimple.png; sourceTree = "<group>"; };
+		DC5989A91C41765500F0F76A /* btnLearnONSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnLearnONSimple.png; sourceTree = "<group>"; };
 		DC5B533C1AE2B0DE004946D9 /* InAppiOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InAppiOS.mm; path = ../Classes/IOs/InAppiOS.mm; sourceTree = "<group>"; };
 		DC5B53401AE2B0F2004946D9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.3.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "ScdfController iOS/Images.xcassets"; sourceTree = SOURCE_ROOT; };
@@ -516,6 +520,7 @@
 		DC6DBB031C170DBE0038FF9A /* MidiLearnReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiLearnReceiver.cpp; path = ../../../src/MidiLearnReceiver.cpp; sourceTree = "<group>"; };
 		DC6DBB041C170DBE0038FF9A /* MidiLearnReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MidiLearnReceiver.h; path = ../../../src/MidiLearnReceiver.h; sourceTree = "<group>"; };
 		DC6DBB061C172F690038FF9A /* MidiInConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MidiInConnection.cpp; path = ../../../src/MidiInConnection.cpp; sourceTree = "<group>"; };
+		DC6DBB081C17389D0038FF9A /* MidiMessageMasks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MidiMessageMasks.h; path = ../../../src/include/MidiMessageMasks.h; sourceTree = "<group>"; };
 		DCA9F4731A989B3E006B2EF2 /* LoadSavePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadSavePanel.cpp; path = ../Classes/LoadSavePanel.cpp; sourceTree = "<group>"; };
 		DCA9F4741A989B3E006B2EF2 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Panel.cpp; path = ../Classes/Panel.cpp; sourceTree = "<group>"; };
 		DCA9F47B1A989BE2006B2EF2 /* UtilitiesiOs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UtilitiesiOs.mm; path = ../../../src/ios/UtilitiesiOs.mm; sourceTree = "<group>"; };
@@ -701,6 +706,8 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DC5989A81C41765500F0F76A /* btnLearnOFFSimple.png */,
+				DC5989A91C41765500F0F76A /* btnLearnONSimple.png */,
 				DC3F42401B0E5B550084AB62 /* Splash */,
 				DC5CEDD11AEBB3AF0024E143 /* Images.xcassets */,
 				9D21245F1AE42969007AB0E0 /* groupMasterBtnDefault.png */,
@@ -906,6 +913,7 @@
 				DCCA5A2C1A40DB330014FADE /* MidiOutConnectionIOSImpl.mm */,
 				DC6DBB031C170DBE0038FF9A /* MidiLearnReceiver.cpp */,
 				DC6DBB041C170DBE0038FF9A /* MidiLearnReceiver.h */,
+				DC6DBB081C17389D0038FF9A /* MidiMessageMasks.h */,
 			);
 			name = MIDI;
 			path = ../proj.ios_mac;
@@ -1203,6 +1211,7 @@
 				DC3F42B91B0E5E230084AB62 /* Default~ipad~landscape~nostatusbar@2x.png in Resources */,
 				DC3F42B21B0E5E230084AB62 /* Default@2x-1.png in Resources */,
 				DC3F42B41B0E5E230084AB62 /* Default~ipad.png in Resources */,
+				DC5989AB1C41765500F0F76A /* btnLearnONSimple.png in Resources */,
 				9D2124CB1AE4296A007AB0E0 /* moveDefault.png in Resources */,
 				9DF27D5B1B079C3B00BF15B7 /* overwriteHover.png in Resources */,
 				9D2124AF1AE4296A007AB0E0 /* knobVOL2.png in Resources */,
@@ -1220,6 +1229,7 @@
 				9DEEDD581AED488800BB7082 /* saveActiveNew.png in Resources */,
 				DC3F42A71B0E5E230084AB62 /* Default-iPad-Landscape-1.png in Resources */,
 				9D2124DC1AE4296A007AB0E0 /* switchSlider.png in Resources */,
+				DC5989AA1C41765500F0F76A /* btnLearnOFFSimple.png in Resources */,
 				9D2124591AE42951007AB0E0 /* btnPanelRightClose.png in Resources */,
 				9D2124B21AE4296A007AB0E0 /* knobVOL5.png in Resources */,
 				9D2124CC1AE4296A007AB0E0 /* newActive.png in Resources */,
@@ -1327,6 +1337,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -1375,6 +1386,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_INPUT_FILETYPE = automatic;
@@ -1474,6 +1486,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1504,6 +1517,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_BITCODE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (

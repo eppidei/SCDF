@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <memory>
 
 
 
@@ -23,6 +24,8 @@ namespace Scdf {
     {
         bool isEnable;
         static MidiLearnReceiver *_instance;
+        
+        std::unique_ptr<MidiInData> midiLearnData;
         
         std::vector<MidiInConnection*> midiInputconnections;
         

@@ -22,6 +22,21 @@ using namespace ScdfCtrl;
 using namespace cocos2d;
 using namespace ui;
 
+extern MainScene* mainScene;
+void OnMidiLearnReceived(ScdfCtrl::MidiMessageType message, int channel, int dataValue_01,int dataValue_02)
+{
+    PropertiesPanel *panel=mainScene->GetPropertiesPanel();
+    
+    if (panel->GetSelectedItem()==NULL) return;
+    
+    panel->GetSelectedItem()->GetControlUnit()->GetSender()->SetMidiMessageType(message);
+    panel->GetSelectedItem()->GetControlUnit()->GetSender()->SetMidiChannel(channel);
+    if(message==ControlChange)
+      panel->GetSelectedItem()->GetControlUnit()->GetSender()->SetMidiControl(dataValue_01);
+    
+    panel->UpdateMidiInfo();
+}
+
 void CheckControlUnitPurchased(ControlUnit::Type cType)
 {
     if (cType==ControlUnit::Wire) return;
@@ -239,10 +254,9 @@ void OSCInfo::OnTextInput(cocos2d::ui::TextField *widget)
 void MIDIInfo::UpdateMidiLearnToggle()
 {
     if (Scdf::MidiLearnReceiver::Instance()->IsEnable())
-        midiLearnToggle->loadTextureNormal("btnONSimple.png");
+        midiLearnToggle->loadTextureNormal("btnLearnONSimple.png");
     else
-        midiLearnToggle->loadTextureNormal("btnOFFSimple.png");
-    
+        midiLearnToggle->loadTextureNormal("btnLearnOFFSimple.png");
 }
 
 void MIDIInfo::UpdateVelocity()
@@ -427,7 +441,11 @@ void MIDIInfo::UpdateElementsVisibilityOnMessageTypeChanged()
     HideElement(pitchValue,true);
     HideElement(programValue,true);
     
-    if (collapsed) return;
+    midiLearnToggle->setVisible(!collapsed);
+    
+    if (collapsed)
+        return;
+    
     
     PropertiesPanel *panel=dynamic_cast<PropertiesPanel*>(GetParent());
     if (NULL==panel->GetCurrentSender()) return;
@@ -632,10 +650,10 @@ void MIDIInfo::CreateControls()
     
     //Create toggle
     midiLearnToggle=Button::create();
-    midiLearnToggle->loadTextures("btnOFFSimple.png", "btnONSimple.png", "");
+    midiLearnToggle->loadTextures("btnLearnOFFSimple.png", "btnLearnONSimple.png", "");
     midiLearnToggle->addTouchEventListener(CC_CALLBACK_2(SubpanelBase::TouchEventCallback, this));
     midiLearnToggle->setTouchEnabled(true);
-    midiLearnToggle->setContentSize(cocos2d::Size(r.size.height,r.size.height));
+    midiLearnToggle->setContentSize(cocos2d::Size(90,r.size.height));
     midiLearnToggle->setAnchorPoint(Vec2(0,1));
     addChild(midiLearnToggle,1,PROPERTIES_MIDI_LEARN_TOGGLE);
     midiLearnToggle->ignoreContentAdaptWithSize(false);
@@ -1210,6 +1228,11 @@ void PropertiesPanel::UpdateSubpanels()
 void PropertiesPanel::UpdateOSCInfo()
 {
     sectionOSCInfo->Update();
+}
+
+void PropertiesPanel::UpdateMidiInfo()
+{
+    sectionMIDIInfo->Update();
 }
 
 void PropertiesPanel::Update(SubjectSimple* subject, SCDFC_EVENTS event)
