@@ -1,0 +1,364 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9DADF02F1C414C0B004BD97D /* RtpMIDISession.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9DADF02E1C414C0B004BD97D /* RtpMIDISession.h */; };
+		9DADF0311C414C0B004BD97D /* RtpMIDISession.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0301C414C0B004BD97D /* RtpMIDISession.m */; };
+		9DADF0721C4152C6004BD97D /* SessionStarter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0701C4152C6004BD97D /* SessionStarter.cpp */; };
+		9DADF0761C4169E7004BD97D /* FuzAppleMIDIChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0741C4169E7004BD97D /* FuzAppleMIDIChannel.cpp */; };
+		9DADF0861C416C33004BD97D /* anonymous.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0771C416C33004BD97D /* anonymous.c */; };
+		9DADF0871C416C33004BD97D /* CryptoAlg.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0781C416C33004BD97D /* CryptoAlg.c */; };
+		9DADF0881C416C33004BD97D /* DNSCommon.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0791C416C33004BD97D /* DNSCommon.c */; };
+		9DADF0891C416C33004BD97D /* DNSDigest.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07A1C416C33004BD97D /* DNSDigest.c */; };
+		9DADF08A1C416C33004BD97D /* mDNS.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07B1C416C33004BD97D /* mDNS.c */; };
+		9DADF08B1C416C33004BD97D /* mDNSDebug.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07C1C416C33004BD97D /* mDNSDebug.c */; };
+		9DADF08C1C416C33004BD97D /* mDNSPosix.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07D1C416C33004BD97D /* mDNSPosix.c */; };
+		9DADF08D1C416C33004BD97D /* PlatformCommon.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07E1C416C33004BD97D /* PlatformCommon.c */; };
+		9DADF08E1C416C33004BD97D /* uDNS.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF07F1C416C33004BD97D /* uDNS.c */; };
+		9DADF08F1C416C33004BD97D /* DebugServices.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0801C416C33004BD97D /* DebugServices.c */; };
+		9DADF0901C416C33004BD97D /* dnssd_clientlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0811C416C33004BD97D /* dnssd_clientlib.c */; };
+		9DADF0911C416C33004BD97D /* GenLinkedList.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0821C416C33004BD97D /* GenLinkedList.c */; };
+		9DADF0921C416C33004BD97D /* nsec3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0831C416C33004BD97D /* nsec3.c */; };
+		9DADF0931C416C33004BD97D /* ExampleClientApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0841C416C33004BD97D /* ExampleClientApp.c */; };
+		9DADF0941C416C33004BD97D /* mDNSUNP.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DADF0851C416C33004BD97D /* mDNSUNP.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9DADF0291C414C0B004BD97D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				9DADF02F1C414C0B004BD97D /* RtpMIDISession.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9DADF02B1C414C0B004BD97D /* libRtpMIDISession.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRtpMIDISession.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DADF02E1C414C0B004BD97D /* RtpMIDISession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RtpMIDISession.h; sourceTree = "<group>"; };
+		9DADF0301C414C0B004BD97D /* RtpMIDISession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RtpMIDISession.m; sourceTree = "<group>"; };
+		9DADF0701C4152C6004BD97D /* SessionStarter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SessionStarter.cpp; path = src/SessionStarter.cpp; sourceTree = SOURCE_ROOT; };
+		9DADF0711C4152C6004BD97D /* SessionStarter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SessionStarter.hpp; path = src/SessionStarter.hpp; sourceTree = SOURCE_ROOT; };
+		9DADF0741C4169E7004BD97D /* FuzAppleMIDIChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FuzAppleMIDIChannel.cpp; path = src/FuzAppleMIDIChannel.cpp; sourceTree = SOURCE_ROOT; };
+		9DADF0751C4169E7004BD97D /* FuzAppleMIDIChannel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FuzAppleMIDIChannel.hpp; path = src/FuzAppleMIDIChannel.hpp; sourceTree = SOURCE_ROOT; };
+		9DADF0771C416C33004BD97D /* anonymous.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = anonymous.c; path = src/src_private/anonymous.c; sourceTree = SOURCE_ROOT; };
+		9DADF0781C416C33004BD97D /* CryptoAlg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CryptoAlg.c; path = src/src_private/CryptoAlg.c; sourceTree = SOURCE_ROOT; };
+		9DADF0791C416C33004BD97D /* DNSCommon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DNSCommon.c; path = src/src_private/DNSCommon.c; sourceTree = SOURCE_ROOT; };
+		9DADF07A1C416C33004BD97D /* DNSDigest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DNSDigest.c; path = src/src_private/DNSDigest.c; sourceTree = SOURCE_ROOT; };
+		9DADF07B1C416C33004BD97D /* mDNS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mDNS.c; path = src/src_private/mDNS.c; sourceTree = SOURCE_ROOT; };
+		9DADF07C1C416C33004BD97D /* mDNSDebug.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mDNSDebug.c; path = src/src_private/mDNSDebug.c; sourceTree = SOURCE_ROOT; };
+		9DADF07D1C416C33004BD97D /* mDNSPosix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mDNSPosix.c; path = src/src_private/mDNSPosix.c; sourceTree = SOURCE_ROOT; };
+		9DADF07E1C416C33004BD97D /* PlatformCommon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PlatformCommon.c; path = src/src_private/PlatformCommon.c; sourceTree = SOURCE_ROOT; };
+		9DADF07F1C416C33004BD97D /* uDNS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDNS.c; path = src/src_private/uDNS.c; sourceTree = SOURCE_ROOT; };
+		9DADF0801C416C33004BD97D /* DebugServices.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DebugServices.c; path = src/src_private/DebugServices.c; sourceTree = SOURCE_ROOT; };
+		9DADF0811C416C33004BD97D /* dnssd_clientlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dnssd_clientlib.c; path = src/src_private/dnssd_clientlib.c; sourceTree = SOURCE_ROOT; };
+		9DADF0821C416C33004BD97D /* GenLinkedList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GenLinkedList.c; path = src/src_private/GenLinkedList.c; sourceTree = SOURCE_ROOT; };
+		9DADF0831C416C33004BD97D /* nsec3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nsec3.c; path = src/src_private/nsec3.c; sourceTree = SOURCE_ROOT; };
+		9DADF0841C416C33004BD97D /* ExampleClientApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ExampleClientApp.c; path = src/src_private/ExampleClientApp.c; sourceTree = SOURCE_ROOT; };
+		9DADF0851C416C33004BD97D /* mDNSUNP.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mDNSUNP.c; path = src/src_private/mDNSUNP.c; sourceTree = SOURCE_ROOT; };
+		9DADF0951C416C88004BD97D /* deprecated_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deprecated_main.c; path = src/deprecated_main.c; sourceTree = SOURCE_ROOT; };
+		9DADF0961C416C88004BD97D /* deprecated_mainConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = deprecated_mainConnection.cpp; path = src/deprecated_mainConnection.cpp; sourceTree = SOURCE_ROOT; };
+		9DADF0971C416C88004BD97D /* deprecated_AppleMIDI_CtrlCh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deprecated_AppleMIDI_CtrlCh.c; path = src/deprecated_AppleMIDI_CtrlCh.c; sourceTree = SOURCE_ROOT; };
+		9DADF09C1C416CBF004BD97D /* FuzAppleMIDIDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FuzAppleMIDIDefines.h; path = src/include/FuzAppleMIDIDefines.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9DADF0281C414C0B004BD97D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9DADF0221C414C0B004BD97D = {
+			isa = PBXGroup;
+			children = (
+				9DADF02D1C414C0B004BD97D /* RtpMIDISession */,
+				9DADF02C1C414C0B004BD97D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9DADF02C1C414C0B004BD97D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DADF02B1C414C0B004BD97D /* libRtpMIDISession.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9DADF02D1C414C0B004BD97D /* RtpMIDISession */ = {
+			isa = PBXGroup;
+			children = (
+				9DADF06F1C415103004BD97D /* src_private */,
+				9DADF0371C4150B4004BD97D /* src */,
+				9DADF02E1C414C0B004BD97D /* RtpMIDISession.h */,
+				9DADF0301C414C0B004BD97D /* RtpMIDISession.m */,
+			);
+			path = RtpMIDISession;
+			sourceTree = "<group>";
+		};
+		9DADF0371C4150B4004BD97D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9DADF09C1C416CBF004BD97D /* FuzAppleMIDIDefines.h */,
+				9DADF0951C416C88004BD97D /* deprecated_main.c */,
+				9DADF0961C416C88004BD97D /* deprecated_mainConnection.cpp */,
+				9DADF0971C416C88004BD97D /* deprecated_AppleMIDI_CtrlCh.c */,
+				9DADF0701C4152C6004BD97D /* SessionStarter.cpp */,
+				9DADF0711C4152C6004BD97D /* SessionStarter.hpp */,
+				9DADF0741C4169E7004BD97D /* FuzAppleMIDIChannel.cpp */,
+				9DADF0751C4169E7004BD97D /* FuzAppleMIDIChannel.hpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		9DADF06F1C415103004BD97D /* src_private */ = {
+			isa = PBXGroup;
+			children = (
+				9DADF0771C416C33004BD97D /* anonymous.c */,
+				9DADF0781C416C33004BD97D /* CryptoAlg.c */,
+				9DADF0791C416C33004BD97D /* DNSCommon.c */,
+				9DADF07A1C416C33004BD97D /* DNSDigest.c */,
+				9DADF07B1C416C33004BD97D /* mDNS.c */,
+				9DADF07C1C416C33004BD97D /* mDNSDebug.c */,
+				9DADF07D1C416C33004BD97D /* mDNSPosix.c */,
+				9DADF07E1C416C33004BD97D /* PlatformCommon.c */,
+				9DADF07F1C416C33004BD97D /* uDNS.c */,
+				9DADF0801C416C33004BD97D /* DebugServices.c */,
+				9DADF0811C416C33004BD97D /* dnssd_clientlib.c */,
+				9DADF0821C416C33004BD97D /* GenLinkedList.c */,
+				9DADF0831C416C33004BD97D /* nsec3.c */,
+				9DADF0841C416C33004BD97D /* ExampleClientApp.c */,
+				9DADF0851C416C33004BD97D /* mDNSUNP.c */,
+			);
+			name = src_private;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9DADF02A1C414C0B004BD97D /* RtpMIDISession */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DADF0341C414C0B004BD97D /* Build configuration list for PBXNativeTarget "RtpMIDISession" */;
+			buildPhases = (
+				9DADF0271C414C0B004BD97D /* Sources */,
+				9DADF0281C414C0B004BD97D /* Frameworks */,
+				9DADF0291C414C0B004BD97D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RtpMIDISession;
+			productName = RtpMIDISession;
+			productReference = 9DADF02B1C414C0B004BD97D /* libRtpMIDISession.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9DADF0231C414C0B004BD97D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = fuzone;
+				TargetAttributes = {
+					9DADF02A1C414C0B004BD97D = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 9DADF0261C414C0B004BD97D /* Build configuration list for PBXProject "RtpMIDISession" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9DADF0221C414C0B004BD97D;
+			productRefGroup = 9DADF02C1C414C0B004BD97D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9DADF02A1C414C0B004BD97D /* RtpMIDISession */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9DADF0271C414C0B004BD97D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DADF0761C4169E7004BD97D /* FuzAppleMIDIChannel.cpp in Sources */,
+				9DADF0901C416C33004BD97D /* dnssd_clientlib.c in Sources */,
+				9DADF0911C416C33004BD97D /* GenLinkedList.c in Sources */,
+				9DADF08A1C416C33004BD97D /* mDNS.c in Sources */,
+				9DADF0921C416C33004BD97D /* nsec3.c in Sources */,
+				9DADF08B1C416C33004BD97D /* mDNSDebug.c in Sources */,
+				9DADF0891C416C33004BD97D /* DNSDigest.c in Sources */,
+				9DADF0941C416C33004BD97D /* mDNSUNP.c in Sources */,
+				9DADF0871C416C33004BD97D /* CryptoAlg.c in Sources */,
+				9DADF0861C416C33004BD97D /* anonymous.c in Sources */,
+				9DADF0311C414C0B004BD97D /* RtpMIDISession.m in Sources */,
+				9DADF08D1C416C33004BD97D /* PlatformCommon.c in Sources */,
+				9DADF08C1C416C33004BD97D /* mDNSPosix.c in Sources */,
+				9DADF08E1C416C33004BD97D /* uDNS.c in Sources */,
+				9DADF08F1C416C33004BD97D /* DebugServices.c in Sources */,
+				9DADF0881C416C33004BD97D /* DNSCommon.c in Sources */,
+				9DADF0931C416C33004BD97D /* ExampleClientApp.c in Sources */,
+				9DADF0721C4152C6004BD97D /* SessionStarter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9DADF0321C414C0B004BD97D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9DADF0331C414C0B004BD97D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9DADF0351C414C0B004BD97D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"ADE_TARGET_TYPE=ADE_IOS",
+				);
+				HEADER_SEARCH_PATHS = (
+					../../src/include,
+					src/include,
+					../../ext/ADE_API/API/src,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DADF0361C414C0B004BD97D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					../../src/include,
+					src/include,
+					../../ext/ADE_API/API/src,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9DADF0261C414C0B004BD97D /* Build configuration list for PBXProject "RtpMIDISession" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DADF0321C414C0B004BD97D /* Debug */,
+				9DADF0331C414C0B004BD97D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DADF0341C414C0B004BD97D /* Build configuration list for PBXNativeTarget "RtpMIDISession" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DADF0351C414C0B004BD97D /* Debug */,
+				9DADF0361C414C0B004BD97D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9DADF0231C414C0B004BD97D /* Project object */;
+}
