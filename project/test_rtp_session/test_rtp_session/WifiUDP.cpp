@@ -49,7 +49,7 @@ uint8_t WiFiUDP::begin(uint16_t port)
 {
     try {
         udpSocket.reset(new scdf::UDPSender());
-        udpSocket->InitEndpoints(port, 1 , "192.168.1.69");
+        udpSocket->InitEndpoints(port, 1 , "192.168.1.18");
         udpSocket->Bind(0);
     }
     catch (const std::runtime_error& error)
