@@ -150,21 +150,24 @@ mDNSexport void mDNSPlatformWriteDebugMsg(const char *msg)
 
 mDNSexport void mDNSPlatformWriteLogMsg(const char *ident, const char *buffer, mDNSLogLevel_t loglevel)
 {
+FILE *p_pid;
 #if APPLE_OSX_mDNSResponder && LogTimeStamps
     extern mDNS mDNSStorage;
     extern mDNSu32 mDNSPlatformClockDivisor;
     mDNSs32 t = mDNSStorage.timenow ? mDNSStorage.timenow : mDNSPlatformClockDivisor ? mDNS_TimeNow_NoLock(&mDNSStorage) : 0;
     int ms = ((t < 0) ? -t : t) % 1000;
 #endif
-
+p_pid=fopen("./mDNSlog.txt","a");
     if (mDNS_DebugMode) // In debug mode we write to stderr
     {
 #if APPLE_OSX_mDNSResponder && LogTimeStamps
         if (ident && ident[0] && mDNSPlatformClockDivisor)
             fprintf(stderr,"%8d.%03d: %s\n", (int)(t/1000), ms, buffer);
+            fprintf(p_pid,"%8d.%03d: %s\n", (int)(t/1000), ms, buffer);
         else
 #endif
         fprintf(stderr,"%s\n", buffer);
+        fprintf(p_pid,"%s\n", buffer);
         fflush(stderr);
     }
     else                // else, in production mode, we write to syslog
@@ -181,6 +184,7 @@ mDNSexport void mDNSPlatformWriteLogMsg(const char *ident, const char *buffer, m
         case MDNS_LOG_DEBUG:     syslog_level = LOG_DEBUG;   break;
         default:
             fprintf(stderr, "Unknown loglevel %d, assuming LOG_ERR\n", loglevel);
+            fprintf(p_pid, "Unknown loglevel %d, assuming LOG_ERR\n", loglevel);
             fflush(stderr);
         }
 
@@ -196,4 +200,6 @@ mDNSexport void mDNSPlatformWriteLogMsg(const char *ident, const char *buffer, m
         syslog(syslog_level, "%s", buffer);
 #endif
     }
+
+    fclose(p_pid);
 }

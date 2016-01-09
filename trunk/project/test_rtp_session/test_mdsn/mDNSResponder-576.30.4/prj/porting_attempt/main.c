@@ -209,12 +209,15 @@ enum {
 
 
 static mDNSBool gAvoidPort53      = mDNStrue;
-static const char *gServiceName      = "";
-static const char *gServiceType      = kDefaultServiceType;
+static const char *gServiceName_control      = "AugMIDI4_ctrl2";
+static const char *gServiceType_control      = "_ws-midi._tcp";/*kDefaultServiceType;*/
+static int gPortNumber_control       = 50000;/*kDefaultPortNumber;*/
+static const char *gServiceName_stream      = "AugMIDI4_stream50004";
+static const char *gServiceType_stream      = "_apple-midi._udp";/*kDefaultServiceType;*/
+static int gPortNumber_stream       = 50004;/*kDefaultPortNumber;*/
 static const char *gServiceDomain    = kDefaultServiceDomain;
 static mDNSu8 gServiceText[sizeof(RDataBody)];
 static mDNSu16 gServiceTextLen   = 0;
-static int gPortNumber       = kDefaultPortNumber;
 static const char *gServiceFile      = "";
 static mDNSBool gDaemon           = mDNSfalse;
 static const char *gPIDFile          = kDefaultPIDFile;
@@ -253,14 +256,14 @@ static const char *gPIDFile          = kDefaultPIDFile;
 //                gAvoidPort53 = mDNSfalse;
 //                break;
 //            case 'n':
-//                gServiceName = optarg;
-//                if ( !CheckThatRichTextNameIsUsable(gServiceName, mDNStrue) ) {
+//                gServiceName_control = optarg;
+//                if ( !CheckThatRichTextNameIsUsable(gServiceName_control, mDNStrue) ) {
 //                    exit(1);
 //                }
 //                break;
 //            case 't':
-//                gServiceType = optarg;
-//                if ( !CheckThatServiceTypeIsUsable(gServiceType, mDNStrue) ) {
+//                gServiceType_control = optarg;
+//                if ( !CheckThatServiceTypeIsUsable(gServiceType_control, mDNStrue) ) {
 //                    exit(1);
 //                }
 //                break;
@@ -268,8 +271,8 @@ static const char *gPIDFile          = kDefaultPIDFile;
 //                gServiceDomain = optarg;
 //                break;
 //            case 'p':
-//                gPortNumber = atol(optarg);
-//                if ( !CheckThatPortNumberIsUsable(gPortNumber, mDNStrue) ) {
+//                gPortNumber_control = atol(optarg);
+//                if ( !CheckThatPortNumberIsUsable(gPortNumber_control, mDNStrue) ) {
 //                    exit(1);
 //                }
 //                break;
@@ -311,7 +314,7 @@ static const char *gPIDFile          = kDefaultPIDFile;
 //
 //    // Check for inconsistency between the arguments.
 //
-//    if ( (gServiceName[0] == 0) && (gServiceFile[0] == 0) ) {
+//    if ( (gServiceName_control[0] == 0) && (gServiceFile[0] == 0) ) {
 //        PrintUsage();
 //        fprintf(stderr, "%s: You must specify a service name to register (-n) or a service file (-f).\n", gProgramName);
 //        exit(1);
@@ -590,16 +593,28 @@ static mStatus RegisterOurServices(void)
     mStatus status;
 
     status = mStatus_NoError;
-    if (gServiceName[0] != 0) {
-        status = RegisterOneService(gServiceName,
-                                    gServiceType,
-                                    gServiceDomain,
-                                    gServiceText, gServiceTextLen,
-                                    gPortNumber);
+//    if (gServiceName_control[0] != 0) {
+//        status = RegisterOneService(gServiceName_control,
+//                                    gServiceType_control,
+//                                    gServiceDomain,
+//                                    gServiceText, gServiceTextLen,
+//                                    gPortNumber_control);
+//    }
+
+    if (status==mStatus_NoError)
+    {
+
+        if (gServiceName_stream[0] != 0) {
+            status = RegisterOneService(gServiceName_stream,
+                                        gServiceType_stream,
+                                        gServiceDomain,
+                                        gServiceText, gServiceTextLen,
+                                        gPortNumber_stream);
+        }
     }
-    if (status == mStatus_NoError && gServiceFile[0] != 0) {
+    /*if (status == mStatus_NoError && gServiceFile[0] != 0) {
         status = RegisterServicesInFile(gServiceFile);
-    }
+    }*/
     return status;
 }
 
@@ -635,19 +650,19 @@ int main()//(int argc, char **argv)
     int result;
 
 
-    gServiceName="AugMIDI";
+  /*  gServiceName_control="AugMIDI";
     gMDNSPlatformPosixVerboseLevel=2;
-    gServiceType="_apple-midi._udp";
+    gServiceType_control="_apple-midi._udp";
     gServiceDomain="local";
-    gPortNumber=5004;
+    gPortNumber_control=5004;*/
     gDaemon = mDNSfalse;
     // Parse our command line arguments.  This won't come back if there's an error.
 
    // ParseArguments(argc, argv);
 
-   if(!CheckThatRichTextNameIsUsable(gServiceName, mDNStrue)) return -1;
-   if ( !CheckThatPortNumberIsUsable(gPortNumber, mDNStrue) ) return -1;
-    if ( !CheckThatServiceTypeIsUsable(gServiceType, mDNStrue) ) return -1;
+   if(!CheckThatRichTextNameIsUsable(gServiceName_control, mDNStrue)) return -1;
+   if ( !CheckThatPortNumberIsUsable(gPortNumber_control, mDNStrue) ) return -1;
+    if ( !CheckThatServiceTypeIsUsable(gServiceType_control, mDNStrue) ) return -1;
 
    if (gMDNSPlatformPosixVerboseLevel > 0) {
             fprintf(stderr, "%s: Starting in foreground mode, PID %ld\n", gProgramName, (long) getpid());
@@ -730,6 +745,11 @@ int main()//(int argc, char **argv)
         {
             // 5. Call mDNSPosixProcessFDSet to let the mDNSPosix layer do its work
             mDNSPosixProcessFDSet(&mDNSStorage, &readfds);
+
+            if (mDNSStorage.imsg.m.h.numAnswers!=0)
+            {
+                printf("here\n");
+            }
 
             // 6. This example client has no other work it needs to be doing,
             // but a real client would do its work here
