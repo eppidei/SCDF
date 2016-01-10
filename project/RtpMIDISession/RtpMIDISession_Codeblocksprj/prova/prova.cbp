@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="prova" />
+		<Option pch_mode="2" />
+		<Option compiler="clang" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/prova" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_RTP_MIDI_PROJECT" />
+					<Add option="-DNOT_HAVE_SA_LEN" />
+					<Add option="-DUSES_NETLINK" />
+					<Add option="-DDNSSEC_DISABLED" />
+					<Add option="-DMDNS_DEBUGMSGS" />
+					<Add option="-DANDROID" />
+					<Add option="-D_TEST_PC" />
+					<Add directory="../../../../ext/ADE_API/API/src" />
+					<Add directory="../../../../src" />
+					<Add directory="../../../../src/include" />
+					<Add directory="../../src/include" />
+					<Add directory="../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-lrt -lpthread" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/prova" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Weverything" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="../../../../ext/ADE_API/API/src/ADE_Error_Handler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../ext/ADE_API/API/src/ADE_Udp_Receiver.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../ext/ADE_API/API/src/ADE_Udp_Sender.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../../src/ThreadUtils.cpp" />
+		<Unit filename="../../project/RtpMIDISession/src/FuzAppleMIDIChannel.hpp" />
+		<Unit filename="../../project/RtpMIDISession/src/SessionStarter.hpp" />
+		<Unit filename="../../project/RtpMIDISession/src/deprecated_AppleMIDI_CtrlCh.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/CommonServices.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/CryptoAlg.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/DNSCommon.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/DebugServices.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/ExampleClientApp.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/FuzAppleMIDIDefines.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/GenLinkedList.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/PlatformCommon.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/anonymous.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/dns_sd.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/dnsextd.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/dnsproxy.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/dnssd_ipc.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/dnssec.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/mDNSDebug.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/mDNSEmbeddedAPI.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/mDNSPosix.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/mDNSUNP.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/nsec.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/nsec3.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/uDNS.h" />
+		<Unit filename="../../project/RtpMIDISession/src/include/uds_daemon.h" />
+		<Unit filename="../../src/FuzAppleMIDIChannel.cpp" />
+		<Unit filename="../../src/FuzAppleMIDIChannel.hpp" />
+		<Unit filename="../../src/SessionStarter.cpp" />
+		<Unit filename="../../src/SessionStarter.hpp" />
+		<Unit filename="../../src/deprecated_AppleMIDI_CtrlCh.h" />
+		<Unit filename="../../src/include/CommonServices.h" />
+		<Unit filename="../../src/include/CryptoAlg.h" />
+		<Unit filename="../../src/include/DNSCommon.h" />
+		<Unit filename="../../src/include/DebugServices.h" />
+		<Unit filename="../../src/include/ExampleClientApp.h" />
+		<Unit filename="../../src/include/FuzAppleMIDIDefines.h" />
+		<Unit filename="../../src/include/GenLinkedList.h" />
+		<Unit filename="../../src/include/PlatformCommon.h" />
+		<Unit filename="../../src/include/anonymous.h" />
+		<Unit filename="../../src/include/dns_sd.h" />
+		<Unit filename="../../src/include/dnsextd.h" />
+		<Unit filename="../../src/include/dnsproxy.h" />
+		<Unit filename="../../src/include/dnssd_ipc.h" />
+		<Unit filename="../../src/include/dnssec.h" />
+		<Unit filename="../../src/include/mDNSDebug.h" />
+		<Unit filename="../../src/include/mDNSEmbeddedAPI.h" />
+		<Unit filename="../../src/include/mDNSPosix.h" />
+		<Unit filename="../../src/include/mDNSUNP.h" />
+		<Unit filename="../../src/include/nsec.h" />
+		<Unit filename="../../src/include/nsec3.h" />
+		<Unit filename="../../src/include/uDNS.h" />
+		<Unit filename="../../src/include/uds_daemon.h" />
+		<Unit filename="../../src/src_private/CryptoAlg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/DNSCommon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/DNSDigest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/DebugServices.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/ExampleClientApp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/GenLinkedList.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/PlatformCommon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/anonymous.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/dnssd_clientlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/mDNS.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/mDNSDebug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/mDNSPosix.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/mDNSUNP.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/nsec3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/src_private/uDNS.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

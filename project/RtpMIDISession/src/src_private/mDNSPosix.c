@@ -16,7 +16,7 @@
  *
  */
 
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 
 #include <android/log.h>
 #endif

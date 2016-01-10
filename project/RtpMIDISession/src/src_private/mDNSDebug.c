@@ -32,7 +32,7 @@
 #define LOG_PID 0x01
 #define LOG_CONS 0x02
 #define LOG_PERROR 0x20
-#elif defined(ANDROID)
+#elif defined(_ANDROID)
 #include <android/log.h>
 #else
 #include <syslog.h>
@@ -43,7 +43,7 @@
 mDNSexport int mDNS_LoggingEnabled       = 0;
 mDNSexport int mDNS_PacketLoggingEnabled = 0;
 mDNSexport int mDNS_McastLoggingEnabled  = 0;
-mDNSexport int mDNS_McastTracingEnabled  = 0; 
+mDNSexport int mDNS_McastTracingEnabled  = 0;
 
 #if MDNS_DEBUGMSGS
 mDNSexport int mDNS_DebugMode = mDNStrue;
@@ -73,7 +73,7 @@ mDNSlocal void LogMsgWithLevelv(mDNSLogLevel_t logLevel, const char *format, va_
     mDNSPlatformWriteLogMsg(ProgramName, buffer, logLevel);
 }
 
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 mDNSlocal void AndroidLogMsgWithLevelv(mDNSLogLevel_t logLevel, const char *format, va_list ptr)
 {
     char buffer[512];
