@@ -27,7 +27,7 @@
 #include <TargetConditionals.h>
 #endif
 #include "uDNS.h"
-
+#include <stdio.h>
 #if (defined(_MSC_VER))
 // Disable "assignment within conditional expression".
 // Other compilers understand the convention that if you place the assignment expression within an extra pair
@@ -4799,7 +4799,7 @@ mDNSexport void uDNS_CheckCurrentQuestion(mDNS *const m)
                         q->LocalSocket = mDNSPlatformUDPSocket(m, zeroIPPort);
                         if (q->LocalSocket)
                         //LEO
-                        printf("Missing Implementation\n");
+                        fprintf(stderr,"Missing Implementation\n");
                           //  mDNSPlatformSetuDNSSocktOpt(q->LocalSocket, &q->qDNSServer->addr, q);
                     }
                     if (!q->LocalSocket) err = mStatus_NoMemoryErr; // If failed to make socket (should be very rare), we'll try again next time
