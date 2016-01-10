@@ -31,10 +31,10 @@ namespace scdf
         void JoinThread(ThreadHandle handle);
         void TerminateThread(ThreadHandle handle);
         class CustomMutex {
-            
+
             CustomMutex(const CustomMutex &refCustomMutex);
 			CustomMutex &operator=(const CustomMutex &refCustomMutex);
-            
+
 			CUSTOM_MUTEX cMutex;
 		public:
 			CustomMutex() {
@@ -44,15 +44,15 @@ namespace scdf
                 pthread_mutex_init(&cMutex, &attr);
                 pthread_mutexattr_destroy(&attr);
 			};
-            
+
 			~CustomMutex() {
 				pthread_mutex_destroy(&cMutex);
 			};
-            
+
 			void Lock() {
 				pthread_mutex_lock(&cMutex);
 			};
-            
+
 			void Unlock() {
 				pthread_mutex_unlock(&cMutex);
 			};
@@ -109,7 +109,7 @@ namespace scdf
             }
             CustomSemaphore(s_int32 _initValue)
             {
-            	
+
             	Init(_initValue);
             }
             void Set()
@@ -132,22 +132,22 @@ namespace scdf
 
         };
         class AutoLock {
-            
+
 			// make copy constructor and assignment operator inaccessible
-            
+
 			AutoLock(const AutoLock &refAutoLock);
 			AutoLock &operator=(const AutoLock &refAutoLock);
-            
+
 		protected:
 			CustomMutex * pLock;
-            
+
 		public:
 			AutoLock(CustomMutex * _plock)
 			{
 				pLock = _plock;
 				pLock->Lock();
 			};
-            
+
 			~AutoLock() {
 				pLock->Unlock();
 			};

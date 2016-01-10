@@ -19,7 +19,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 
 #include <android/log.h>
 #endif

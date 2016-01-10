@@ -19,7 +19,7 @@
  * is supposed to be malloc-free so that it runs in constant memory determined at compile-time.
  * Any dynamic run-time requirements should be handled by the platform layer below or client layer above
  */
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 
 #include <android/log.h>
 #endif

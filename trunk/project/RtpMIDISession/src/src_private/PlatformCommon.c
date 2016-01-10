@@ -30,7 +30,7 @@
 #ifdef NOT_HAVE_SOCKLEN_T
 typedef unsigned int socklen_t;
 #endif
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 
 #include <android/log.h>
 #endif

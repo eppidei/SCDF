@@ -95,7 +95,7 @@ extern "C" {
 #if (MDNS_HAS_VA_ARG_MACROS)
     #if (MDNS_C99_VA_ARGS)
         #define debug_noop(... ) ((void)0)
-        #if defined(ANDROID)
+        #if defined(ANDROID) && !defined(_TEST_PC)
 
             #define LogMsg(... )          __android_log_print(ANDROID_LOG_DEBUG,"mDNSANDROIDLogMsg",__VA_ARGS__)
              #define LogInfo(... )          do { if (mDNS_LoggingEnabled) __android_log_print(ANDROID_LOG_DEBUG, "mDNSANDROIDLogInfo" ,__VA_ARGS__);} while (0)

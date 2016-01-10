@@ -10,37 +10,43 @@
 #include "FuzAppleMIDIDefines.h"
 #include <stdlib.h>
 #include <string.h>
-
-//#include <time.h>
+#ifdef ANDROID
+#include <time.h>
+#else
 #include <mach/clock.h>
 #include <mach/mach.h>
+#endif
 
 #include "Logging.h"
 
+static ADE_UINT64_T htonll(ADE_UINT64_T val);
+static ADE_UINT64_T ntohll(ADE_UINT64_T val);
 
-//ADE_UINT64_T htonll(ADE_UINT64_T val)
-//{
-//    union
-//    {
-//        ADE_UINT32_T lw[2];
-//        ADE_UINT64_T llw;
-//    } u;
-//    u.lw[0]=htonl(val>>32);
-//    u.lw[1]=htonl(val & 0xFFFFFFFFULL);
-//    return u.llw;
-//}
-//
-//ADE_UINT64_T ntohll(ADE_UINT64_T val)
-//{
-//    union
-//    {
-//        ADE_UINT32_T lw[2];
-//        ADE_UINT64_T llw;
-//    } u;
-//    u.llw = val;
-//    
-//    return  ( (ADE_UINT64_T) ntohl(u.lw[0])<<32) | (ADE_UINT64_T)ntohl (u.lw[1]);
-//}
+
+static ADE_UINT64_T htonll(ADE_UINT64_T val)
+{
+    union
+    {
+        ADE_UINT32_T lw[2];
+        ADE_UINT64_T llw;
+    } u;
+    u.lw[0]=htonl(val>>32);
+    u.lw[1]=htonl(val & 0xFFFFFFFFULL);
+    return u.llw;
+}
+
+static ADE_UINT64_T ntohll(ADE_UINT64_T val)
+{
+    union
+    {
+        ADE_UINT32_T lw[2];
+        ADE_UINT64_T llw;
+    } u;
+    u.llw = val;
+
+    return  ( (ADE_UINT64_T) ntohl(u.lw[0])<<32) | (ADE_UINT64_T)ntohl (u.lw[1]);
+}
+
 
 void AppleMIDIChannel::Init(char *p_LocalIp, char *p_RemoteIp, int DstPort, int SrcPort, int *p_TxDesc, int *p_RxDesc, std::string p_ChName, unsigned int SenderSrc)
 {
@@ -59,9 +65,9 @@ void AppleMIDIChannel::Init(char *p_LocalIp, char *p_RemoteIp, int DstPort, int 
 int AppleMIDIChannel::DoInit()
 {
 //    APPLEMIDI_CH_T *p_this=NULL;
-//    
+//
     channel=(APPLEMIDI_CH_T*)calloc(1,sizeof(APPLEMIDI_CH_T));
-    
+
     if (channel!=NULL)
     {
         ADE_UdpSender_Init(&(channel->p_Sender));
@@ -113,25 +119,25 @@ void AppleMIDIChannel::PrepareAcceptInvitationPacket(int *p_actual_len)
 void DoParsePacket(char *p_buff, APPLEMIDI_T* p_AppleMIDIPkt)
 {
     APPLEMIDI_T * p_int_buff=NULL;
-    
+
     p_int_buff=(APPLEMIDI_T *)p_buff;
     short Command,Signature;
-    
+
     Command=ntohs(p_int_buff->header.Command);
     Signature=ntohs(p_int_buff->header.Signature);
-    
+
     p_AppleMIDIPkt->header.Command=Command;
     p_AppleMIDIPkt->header.Signature=Signature;
-    
-    
+
+
     if (Command==Invitation || Command==InvitationRejected || Command==InvitationAccepted )
     {
-        
+
         p_AppleMIDIPkt->Invitation.ProtVersion=ntohl(p_int_buff->Invitation.ProtVersion);
         p_AppleMIDIPkt->Invitation.IniziatorToken=ntohl(p_int_buff->Invitation.IniziatorToken);
         p_AppleMIDIPkt->Invitation.SenderSource=ntohl(p_int_buff->Invitation.SenderSource);
         strcpy(p_AppleMIDIPkt->Invitation.name,p_int_buff->Invitation.name);
-        
+
     }
     else if (Command==Synchronization)
     {
@@ -141,20 +147,20 @@ void DoParsePacket(char *p_buff, APPLEMIDI_T* p_AppleMIDIPkt)
         p_AppleMIDIPkt->Synchronization.TimeStamp1=ntohll(p_int_buff->Synchronization.TimeStamp1);
         p_AppleMIDIPkt->Synchronization.TimeStamp2=ntohll(p_int_buff->Synchronization.TimeStamp2);
         p_AppleMIDIPkt->Synchronization.TimeStamp3=ntohll(p_int_buff->Synchronization.TimeStamp3);
-        
+
     }
     else if (Command==ReceiverFeedback)
     {
         p_AppleMIDIPkt->RecvFeedBack.SenderSSRC=ntohl(p_int_buff->RecvFeedBack.SenderSSRC);
         p_AppleMIDIPkt->RecvFeedBack.SequenceNumber=ntohl(p_int_buff->RecvFeedBack.SequenceNumber);
-        
+
     }
     else
     {
         LOGD("APPLE COMMAND UNKNOWN !\n");
 //        fprintf(stderr, "APPLE COMMAND UNKNOWN !\n");
     }
-    
+
 }
 
 void AppleMIDIChannel::ParsePacket()
@@ -209,24 +215,26 @@ void AppleMIDIChannel::GetReceivedToken(int *p_Token)
 }
 
 void SetTimestamp(APPLEMIDI_CH_T *p_ch)
-{    
-//    struct timespec monotime;
-//    clock_gettime(CLOCK_MONOTONIC, &monotime);
-//    p_ch->Timestamp=monotime.tv_nsec;
-    
+{
+#ifdef ANDROID
+    struct timespec monotime;
+    clock_gettime(CLOCK_MONOTONIC, &monotime);
+    p_ch->Timestamp=monotime.tv_nsec;
+#else
     clock_serv_t cclock;
     mach_timespec_t mts;
-    
+
     host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
     clock_get_time(cclock, &mts);
     p_ch->Timestamp=mts.tv_nsec;
     mach_port_deallocate(mach_task_self(), cclock);
+    #endif
 }
 
 void DoPrepareSyncPacket(APPLEMIDI_T *p_pkt_tx,APPLEMIDI_T *p_pkt_rx,unsigned int SenderSource,ADE_UINT64_T tstamp,char count,int padding,int *p_actual_len)
 {
     int temp=( count << 24 | (0x00FFFFFF & padding) );
-    
+
     p_pkt_tx->header.Signature=htons(0xffff);
     p_pkt_tx->header.Command=htons(Synchronization);
     p_pkt_tx->Synchronization.SenderSSRC=htonl(SenderSource);
@@ -251,7 +259,7 @@ void DoPrepareSyncPacket(APPLEMIDI_T *p_pkt_tx,APPLEMIDI_T *p_pkt_rx,unsigned in
         p_pkt_tx->Synchronization.TimeStamp2=p_pkt_rx->Synchronization.TimeStamp2;
         p_pkt_tx->Synchronization.TimeStamp3=p_pkt_rx->Synchronization.TimeStamp3;
     }
-    
+
     *p_actual_len=4+4+4+8+8+8;
 }
 
@@ -266,6 +274,7 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
 {
     AppleMIDIChannelsManager *manager=(AppleMIDIChannelsManager*)param;
     int i;
+    while(1){
     for (i=0;i<manager->active_read_fds;i++)
     {
         FD_SET(manager->my_read_fds[i], &manager->readset);
@@ -309,7 +318,7 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                 }
                 else if (i==1)
                 {
-                    
+
                     LOGD("STREAM CHANNELL RECEIVED\n");
                     manager->GetDataChannel()->ParsePacket();
                     manager->GetDataChannel()->GetReceivedCommand(&rx_command);
@@ -327,13 +336,13 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                         manager->GetDataChannel()->PrepareSyncPacket(&tx_pkt_len);
                         manager->GetDataChannel()->SendPkt(tx_pkt_len);
                     }
-                    
+
                 }
             }
         }
     }
-    
 
+}
 }
 
 void AppleMIDIChannelsManager::StopConnection()
@@ -349,16 +358,16 @@ void AppleMIDIChannelsManager::StartConnection()
     int dst_ctrl=5004;
     int src_stream=50005;
     int dst_stream=5005;
-    
-    char RemoteIp[40]="192.168.1.164";
+
+    char RemoteIp[40]="192.168.1.183";
     char LocalIp[40]="192.168.1.52";
-    
+
     controlChannel.Init(LocalIp, RemoteIp, dst_ctrl, src_ctrl, &my_write_fds[0],&my_read_fds[0], "AugmentedAppleMidi Crtl Channel" ,0x6db86c19);
     dataChannel.Init(LocalIp, RemoteIp, dst_stream, src_stream, &my_write_fds[1],&my_read_fds[1], "AugmentedAppleMidi Stream Channel", 0x6db86c1a);
     FD_ZERO(&readset);
-    maxfd=my_read_fds[active_read_fds-1]+1;
+
     active_read_fds=2;
     active_write_fds=2;
-    
+maxfd=my_read_fds[active_read_fds-1]+1;
     this->handle=scdf::ThreadUtils::CreateThread((start_routine)ConnectionProcedure, this);
 }

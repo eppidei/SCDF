@@ -21,7 +21,7 @@
 // provided by the platform and the functions in this file just provide an
 // interface to access them in a more generic way.
 // ***************************************************************************
-#if defined(ANDROID)
+#if defined(ANDROID) && !defined(_TEST_PC)
 
 #include <android/log.h>
 #endif

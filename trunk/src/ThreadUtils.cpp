@@ -8,6 +8,8 @@
 
 #include <ThreadUtils.h>
 #include "Logging.h"
+#include <signal.h>
+#include <string.h>
 
 #ifdef ANDROID
 

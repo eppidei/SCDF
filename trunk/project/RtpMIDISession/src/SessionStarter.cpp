@@ -6,11 +6,14 @@
 //  Copyright © 2016 fuzone. All rights reserved.
 //
 
-#include "FuzAppleMIDIChannel.hpp"
+
 #include "SessionStarter.hpp"
+#include <stdlib.h>
+#include <string.h>
 
 SessionStarter *SessionStarter::_instance=NULL;
 SessionStarter::PosixService *SessionStarter::gServiceList=NULL;
+AppleMIDIChannelsManager SessionStarter::appleMIDIChannelsManager;
 int SessionStarter::gServiceID=0;
 
 static const char kDefaultServiceDomain[] = "local.";
@@ -45,19 +48,19 @@ void SessionStarter::Start()
         LOGD("Error Service Type");
         return;
     }
-    
+
     if (gMDNSPlatformPosixVerboseLevel > 0)
     {
         LOGD("%s: Starting in foreground mode, PID %ld\n", gProgramName, (long) getpid());
 //        fprintf(stderr, "%s: Starting in foreground mode, PID %ld\n", gProgramName, (long) getpid());
     }
-    
+
     // If we're told to run as a daemon, then do that straight away.
     // Note that we don't treat the inability to create our PID
     // file as an error.  Also note that we assign getpid to a long
     // because printf has no format specified for pid_t.
-    
-    
+
+
     mStatus status = mDNS_Init(&mDNSStorage, &PlatformStorage,
                        mDNS_Init_NoCache, mDNS_Init_ZeroCacheSize,
                        mDNS_Init_AdvertiseLocalAddresses,
@@ -67,24 +70,26 @@ void SessionStarter::Start()
         LOGD("Error session init");
         return;
     }
-    
+
     status = RegisterOurServices();
     if (status != mStatus_NoError)
     {
         LOGD("Error service reg");
         return;
     }
-    
+
     this->handle=scdf::ThreadUtils::CreateThread((start_routine)SessionProcedure, this);
+    scdf::ThreadUtils::JoinThread(this->handle);
+
 }
 
 SessionStarter::~SessionStarter()
 {
     scdf::ThreadUtils::TerminateThread(this->handle);
-    
+
     DeregisterOurServices();
     mDNS_Close(&mDNSStorage);
-//    
+//
 //    if (status == mStatus_NoError) {
 //        result = 0;
 //    } else {
@@ -101,17 +106,17 @@ void SessionStarter::RegistrationCallback(mDNS *const m, ServiceRecordSet *const
 // entirely on the value of status.
 {
     switch (status) {
-            
+
         case mStatus_NoError:
-            debugf("Callback: %##s Name Registered",   thisRegistration->RR_SRV.resrec.name->c);
+            //debugf("Callback: %##s Name Registered",   thisRegistration->RR_SRV.resrec.name->c);
             appleMIDIChannelsManager.StartConnection();
             // Do nothing; our name was successfully registered.  We may
             // get more call backs in the future.
             break;
-            
+
         case mStatus_NameConflict:
-            debugf("Callback: %##s Name Conflict",     thisRegistration->RR_SRV.resrec.name->c);
-            
+           // debugf("Callback: %##s Name Conflict",     thisRegistration->RR_SRV.resrec.name->c);
+
             // In the event of a conflict, this sample RegistrationCallback
             // just calls mDNS_RenameAndReregisterService to automatically
             // pick a new unique name for the service. For a device such as a
@@ -122,21 +127,21 @@ void SessionStarter::RegistrationCallback(mDNS *const m, ServiceRecordSet *const
             //
             // Also, what do we do if mDNS_RenameAndReregisterService returns an
             // error.  Right now I have no place to send that error to.
-            
+
             status = mDNS_RenameAndReregisterService(m, thisRegistration, mDNSNULL);
             assert(status == mStatus_NoError);
             break;
-            
+
         case mStatus_MemFree:
             debugf("Callback: %##s Memory Free",       thisRegistration->RR_SRV.resrec.name->c);
-            
+
             // When debugging is enabled, make sure that thisRegistration
             // is not on our gServiceList.
-            
+
 #if !defined(NDEBUG)
         {
             PosixService *cursor;
-            
+
             cursor = gServiceList;
             while (cursor != NULL) {
                 assert(&cursor->coreServ != thisRegistration);
@@ -146,7 +151,7 @@ void SessionStarter::RegistrationCallback(mDNS *const m, ServiceRecordSet *const
 #endif
             free(thisRegistration);
             break;
-            
+
         default:
             debugf("Callback: %##s Unknown Status %ld", thisRegistration->RR_SRV.resrec.name->c, status);
             break;
@@ -156,29 +161,30 @@ void SessionStarter::RegistrationCallback(mDNS *const m, ServiceRecordSet *const
 void SessionStarter::SessionProcedure(void *param)
 {
     SessionStarter *session=(SessionStarter*)param;
+    while(1){
     int nfds = 0;
     fd_set readfds;
     struct timeval timeout;
     int result;
-    
+
     // 1. Set up the fd_set as usual here.
     // This example client has no file descriptors of its own,
     // but a real application would call FD_SET to add them to the set here
     FD_ZERO(&readfds);
-    
+
     // 2. Set up the timeout.
     // This example client has no other work it needs to be doing,
     // so we set an effectively infinite timeout
     timeout.tv_sec = 0x3FFFFFFF;
     timeout.tv_usec = 0;
-    
+
     // 3. Give the mDNSPosix layer a chance to add its information to the fd_set and timeout
     mDNSPosixGetFDSet(&session->mDNSStorage, &nfds, &readfds, &timeout);
-    
+
     // 4. Call select as normal
     verbosedebugf("select(%d, %d.%06d)", nfds, timeout.tv_sec, timeout.tv_usec);
     result = select(nfds, &readfds, NULL, NULL, &timeout);
-    
+
     if (result < 0)
     {
         verbosedebugf("select() returned %d errno %d", result, errno);
@@ -211,15 +217,16 @@ void SessionStarter::SessionProcedure(void *param)
     {
         // 5. Call mDNSPosixProcessFDSet to let the mDNSPosix layer do its work
         mDNSPosixProcessFDSet(&session->mDNSStorage, &readfds);
-        
+
         if (session->mDNSStorage.imsg.m.h.numAnswers!=0)
         {
             printf("here\n");
         }
-        
+
         // 6. This example client has no other work it needs to be doing,
         // but a real client would do its work here
         // ... (do work) ...
+    }
     }
 
 }
@@ -227,7 +234,7 @@ void SessionStarter::SessionProcedure(void *param)
 mStatus SessionStarter::RegisterOurServices()
 {
     mStatus status = mStatus_NoError;
-    
+
     if (gServiceName_stream[0] != 0)
     {
         status = RegisterOneService(gServiceName_stream,
@@ -247,15 +254,15 @@ void SessionStarter::DeregisterOurServices(void)
 {
     PosixService *thisServ;
     int thisServID;
-    
+
     while (gServiceList != NULL) {
         thisServ = gServiceList;
         gServiceList = thisServ->next;
-        
+
         thisServID = thisServ->serviceID;
-        
+
         mDNS_DeregisterService(&mDNSStorage, &thisServ->coreServ);
-        
+
         if (gMDNSPlatformPosixVerboseLevel > 0) {
             fprintf(stderr,
                     "%s: Deregistered service %d\n",
@@ -294,7 +301,7 @@ mDNSBool SessionStarter::CheckThatServiceTypeIsUsable(const char *serviceType, m
 // an explanation of why not.
 {
     mDNSBool result;
-    
+
     result = mDNStrue;
     if (result && strlen(serviceType) > 63) {
         if (printExplanation) {
@@ -321,7 +328,7 @@ mDNSBool SessionStarter::CheckThatPortNumberIsUsable(long portNumber, mDNSBool p
 // an explanation of why not.
 {
     mDNSBool result;
-    
+
     result = mDNStrue;
     if (result && (portNumber <= 0 || portNumber > 65535)) {
         if (printExplanation) {
@@ -346,7 +353,7 @@ mStatus SessionStarter::RegisterOneService(const char *  richTextName,
     domainlabel name;
     domainname type;
     domainname domain;
-    
+
     status = mStatus_NoError;
     thisServ = (PosixService *) malloc(sizeof(*thisServ));
     if (thisServ == NULL) {
@@ -367,10 +374,10 @@ mStatus SessionStarter::RegisterOneService(const char *  richTextName,
     if (status == mStatus_NoError) {
         thisServ->serviceID = gServiceID;
         gServiceID += 1;
-        
+
         thisServ->next = gServiceList;
         gServiceList = thisServ;
-        
+
         if (gMDNSPlatformPosixVerboseLevel > 0) {
             fprintf(stderr,
                     "%s: Registered service %d, name \"%s\", type \"%s\", domain \"%s\",  port %ld\n",
