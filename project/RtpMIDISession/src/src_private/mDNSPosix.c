@@ -644,9 +644,9 @@ mDNSlocal int SetupSocket(struct sockaddr *intfAddr, mDNSIPPort port, int interf
     // ... with a shared UDP port, if it's for multicast receiving
     if (err == 0 && port.NotAnInteger)
     {
-      //  #if defined(SO_REUSEPORT)
-      //  err = setsockopt(*sktPtr, SOL_SOCKET, SO_REUSEPORT, &kOn, sizeof(kOn));
-        #if defined(SO_REUSEADDR)
+        #if defined(SO_REUSEPORT) && !defined(ANDROID) /* This options on android is defined but setsockopt fails */
+        err = setsockopt(*sktPtr, SOL_SOCKET, SO_REUSEPORT, &kOn, sizeof(kOn));
+        #elif defined(SO_REUSEADDR)
         err = setsockopt(*sktPtr, SOL_SOCKET, SO_REUSEADDR, &kOn, sizeof(kOn));
         #else
             #error This platform has no way to avoid address busy errors on multicast.
