@@ -109,6 +109,7 @@ void SessionStarter::RegistrationCallback(mDNS *const m, ServiceRecordSet *const
 
         case mStatus_NoError:
             //debugf("Callback: %##s Name Registered",   thisRegistration->RR_SRV.resrec.name->c);
+
             appleMIDIChannelsManager.StartConnection();
             // Do nothing; our name was successfully registered.  We may
             // get more call backs in the future.

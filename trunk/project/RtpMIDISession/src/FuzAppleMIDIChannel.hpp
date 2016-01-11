@@ -19,9 +19,11 @@ class AppleMIDIChannel
     friend class AppleMIDIChannelsManager;
 private:
     APPLEMIDI_CH_T *channel;
-    
+
     int DoInit();
+    void ConfigUDPReceiverProbe(int DstPort);
     void ConfigUDPSender(char *p_LocalIp,char *p_RemoteIp, int DstPort, int SrcPort);
+    void ProbeStreamInfo();
     void ConfigUDPReceiver(char *p_LocalIp,char *p_RemoteIp, int DstPort, int SrcPort);
     void PrepareAcceptInvitationPacket(int *p_actual_len);
     void ParsePacket();
@@ -36,11 +38,13 @@ private:
     void PrepareSyncPacket(int *p_actual_len);
 public:
     void Init(char *p_LocalIp, char *p_RemoteIp, int DstPort, int SrcPort, int *p_TxDesc, int *p_RxDesc, std::string p_ChName, unsigned int SenderSrc);
+    void InitProbeChannelOnly( int DstPort,int *remote_port,char *remote_ipv4name,size_t remote_name_size,int *local_port,char *local_ipv4name,size_t local_name_size);
+
 };
 
 class AppleMIDIChannelsManager
 {
-    AppleMIDIChannel controlChannel, dataChannel;
+    AppleMIDIChannel controlChannel, dataChannel,probeChannel;
     int my_read_fds[2];
     int my_write_fds[2];
     int maxfd;
@@ -48,9 +52,9 @@ class AppleMIDIChannelsManager
     int active_write_fds;
     fd_set readset;
     fd_set writeset;
-    
+
     scdf::ThreadUtils::ThreadHandle handle;
-    
+
     static void ConnectionProcedure(void *param);
 public:
     void StartConnection();

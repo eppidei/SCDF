@@ -48,6 +48,49 @@ static ADE_UINT64_T ntohll(ADE_UINT64_T val)
 }
 
 
+void AppleMIDIChannel::InitProbeChannelOnly( int DstPort,int *remote_port,char *remote_ipv4name,size_t remote_name_size,int *local_port,char *local_ipv4name,size_t local_name_size)
+{
+     struct sockaddr_in *s ;
+     short AppleMIDISignature=0;
+
+    if (DoInit()<0)
+    {
+        LOGD("Error creating probe channel");
+        return;
+    }
+        ConfigUDPReceiverProbe(DstPort);
+    //    while (AppleMIDISignature!=0xffff) /* TO DO : ADD SANITY CHECK MAYBE WITH A CHECK ON SIGNATURE TO BE SURE ABOUT SENDER IDENTITY
+     //   {
+        ProbeStreamInfo();
+       // ParsePacket();
+
+        /* remote*/
+        s = &(channel->p_Receiver->SocketAddressRemote);
+
+  // if (s->s == AF_INET) {
+
+        *remote_port = ntohs(s->sin_port);
+        inet_ntop(AF_INET, &s->sin_addr, remote_ipv4name,remote_name_size);
+//
+//     }
+//     else
+//     {
+//
+//        LOGD("REMOTE ADDRESS SEEMS TO BE IPV6 NOT HANDLED CASE!");
+//     }
+
+
+      /*local*/
+        s =&(channel->p_Receiver->SocketAddressLocal);
+
+   // if (s->sin_addr == AF_INET) {
+        *local_port = ntohs(s->sin_port);
+        inet_ntop(AF_INET, &s->sin_addr, local_ipv4name,local_name_size);
+       // }
+//        }
+//     else
+
+}
 void AppleMIDIChannel::Init(char *p_LocalIp, char *p_RemoteIp, int DstPort, int SrcPort, int *p_TxDesc, int *p_RxDesc, std::string p_ChName, unsigned int SenderSrc)
 {
     if (DoInit()<0)
@@ -96,6 +139,29 @@ void AppleMIDIChannel::ConfigUDPReceiver(char *p_LocalIp,char *p_RemoteIp, int D
     ADE_UdpReceiver_SetLocal(channel->p_Receiver,p_LocalIp,DstPort);
     ADE_UdpReceiver_SetRemote(channel->p_Receiver,p_RemoteIp,SrcPort);
     //ADE_UdpReceiver_SetNonBlocking(p_ch->p_Receiver);
+}
+
+
+void AppleMIDIChannel::ConfigUDPReceiverProbe(int DstPort)
+{
+    ADE_UdpReceiver_CreateSocket(channel->p_Receiver);
+    ADE_UdpReceiver_SetLocalAnyAddress(channel->p_Receiver,DstPort);
+}
+
+void AppleMIDIChannel::ProbeStreamInfo()
+{
+    socklen_t sock_len;
+    ssize_t NBytesRx;
+
+
+   ADE_UdpReceiver_Recvfrom(channel->p_Receiver,&NBytesRx,(struct sockaddr *)&(channel->p_Receiver->SocketAddressRemote), &(sock_len));
+
+
+//     {
+//
+//        LOGD("LOCAL ADDRESS SEEMS TO BE IPV6 NOT HANDLED CASE!");
+//     }
+
 }
 
 
@@ -355,12 +421,27 @@ void AppleMIDIChannelsManager::StopConnection()
 void AppleMIDIChannelsManager::StartConnection()
 {
     int src_ctrl=50004;
-    int dst_ctrl=5004;
-    int src_stream=50005;
-    int dst_stream=5005;
+    int dst_ctrl=-1;//5004;
+    int src_stream=src_ctrl+1;//50005;
+    int dst_stream=-1;
 
-    char RemoteIp[40]="192.168.1.183";
-    char LocalIp[40]="192.168.1.52";
+
+    char RemoteIp[40];//="192.168.1.183";
+    char LocalIp[40];//="192.168.1.52";
+
+    int local_port;
+
+
+
+    probeChannel.InitProbeChannelOnly(src_ctrl,&dst_ctrl,RemoteIp,sizeof(RemoteIp),&local_port,LocalIp,sizeof(LocalIp));
+    probeChannel.Release();
+
+    if (local_port!=src_ctrl)
+    {
+
+        LOGD("ERROR : received port message %d is different from expected %d\n)",local_port,src_ctrl);
+    }
+    dst_stream=dst_ctrl+1;
 
     controlChannel.Init(LocalIp, RemoteIp, dst_ctrl, src_ctrl, &my_write_fds[0],&my_read_fds[0], "AugmentedAppleMidi Crtl Channel" ,0x6db86c19);
     dataChannel.Init(LocalIp, RemoteIp, dst_stream, src_stream, &my_write_fds[1],&my_read_fds[1], "AugmentedAppleMidi Stream Channel", 0x6db86c1a);
