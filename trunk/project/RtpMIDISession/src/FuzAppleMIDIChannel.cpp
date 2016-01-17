@@ -150,7 +150,7 @@ void AppleMIDIChannel::ConfigUDPReceiverProbe(int DstPort)
 
 void AppleMIDIChannel::ProbeStreamInfo()
 {
-    socklen_t sock_len;
+    socklen_t sock_len=sizeof((struct sockaddr *)&(channel->p_Receiver->SocketAddressRemote));
     ssize_t NBytesRx;
 
 
