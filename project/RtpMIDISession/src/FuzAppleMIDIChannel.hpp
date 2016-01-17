@@ -33,6 +33,7 @@ private:
     void SetName(const char *p_name);
     void SendPkt(size_t BuffSize);
     void GetReceivedCommand(short *p_Command);
+    void GetReceivedSyncCount(short *p_count);
     void Release();
     void GetReceivedToken(int *p_Token);
     void PrepareSyncPacket(int *p_actual_len);

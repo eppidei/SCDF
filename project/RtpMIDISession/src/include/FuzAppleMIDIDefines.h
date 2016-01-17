@@ -32,15 +32,18 @@ typedef struct APPLE_MIDI_INVITATION_PCKT_S
     int name_length;
 } APPLE_MIDI_INVITATION_PCKT_T;
 
+
+
+
 typedef struct APPLE_MIDI_SYNC_PCKT_S
 {
     int SenderSSRC;
-    union
-    {
-        int Count:8;
+  /*  union
+    {*/
         int Padding :24;
-        int word;
-    };
+        int Count:8;
+  /*      int word;
+    };*/
     ADE_INT64_T TimeStamp1;
     ADE_INT64_T TimeStamp2;
     ADE_INT64_T TimeStamp3;

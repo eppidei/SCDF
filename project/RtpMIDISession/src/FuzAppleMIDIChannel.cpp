@@ -188,6 +188,7 @@ void DoParsePacket(char *p_buff, APPLEMIDI_T* p_AppleMIDIPkt)
 
     p_int_buff=(APPLEMIDI_T *)p_buff;
     short Command,Signature;
+    int tmp_word_rx;
 
     Command=ntohs(p_int_buff->header.Command);
     Signature=ntohs(p_int_buff->header.Signature);
@@ -208,8 +209,11 @@ void DoParsePacket(char *p_buff, APPLEMIDI_T* p_AppleMIDIPkt)
     else if (Command==Synchronization)
     {
         p_AppleMIDIPkt->Synchronization.SenderSSRC=ntohl(p_int_buff->Synchronization.SenderSSRC);
-        p_AppleMIDIPkt->Synchronization.Count=ntohl(p_int_buff->Synchronization.Count);
-        p_AppleMIDIPkt->Synchronization.Padding=ntohl(p_int_buff->Synchronization.Padding);
+        tmp_word_rx=ntohl( *(((int*)&(p_int_buff->Synchronization))+1) ); /* punta campo padding-count) */
+        p_AppleMIDIPkt->Synchronization.Padding=tmp_word_rx & (0x00FFFFFF);
+        p_AppleMIDIPkt->Synchronization.Count=(tmp_word_rx & (0xFF000000))>>24;
+     /*   p_AppleMIDIPkt->Synchronization.Count= p_AppleMIDIPkt->Synchronization.Count;
+        p_AppleMIDIPkt->Synchronization.Padding=p_AppleMIDIPkt->Synchronization.Padding);*/
         p_AppleMIDIPkt->Synchronization.TimeStamp1=ntohll(p_int_buff->Synchronization.TimeStamp1);
         p_AppleMIDIPkt->Synchronization.TimeStamp2=ntohll(p_int_buff->Synchronization.TimeStamp2);
         p_AppleMIDIPkt->Synchronization.TimeStamp3=ntohll(p_int_buff->Synchronization.TimeStamp3);
@@ -264,6 +268,12 @@ void AppleMIDIChannel::SendPkt(size_t BuffSize)
     ADE_UdpSender_SendExternalBuff(channel->p_Sender,BuffSize, &SentSize);
 }
 
+
+void AppleMIDIChannel::GetReceivedSyncCount(short *p_count)
+{
+    *p_count=channel->AppleMidiRx.Synchronization.Count;
+}
+
 void AppleMIDIChannel::GetReceivedCommand(short *p_Command)
 {
     *p_Command=channel->AppleMidiRx.header.Command;
@@ -299,32 +309,40 @@ void SetTimestamp(APPLEMIDI_CH_T *p_ch)
 
 void DoPrepareSyncPacket(APPLEMIDI_T *p_pkt_tx,APPLEMIDI_T *p_pkt_rx,unsigned int SenderSource,ADE_UINT64_T tstamp,char count,int padding,int *p_actual_len)
 {
-    int temp=( count << 24 | (0x00FFFFFF & padding) );
+    int temp=0;
 
     p_pkt_tx->header.Signature=htons(0xffff);
     p_pkt_tx->header.Command=htons(Synchronization);
     p_pkt_tx->Synchronization.SenderSSRC=htonl(SenderSource);
     // p_pkt_tx->Synchronization.Count=count;//htonl(IniziatorToken);
     // p_pkt_tx->Synchronization.Padding=0x000;//htonl(SenderSource);
-    p_pkt_tx->Synchronization.word=htonl(temp);
+
     if (count==0)
     {
-        p_pkt_tx->Synchronization.TimeStamp1= p_pkt_rx->Synchronization.TimeStamp1;
-        p_pkt_tx->Synchronization.TimeStamp2=tstamp;
-        p_pkt_tx->Synchronization.TimeStamp3=p_pkt_rx->Synchronization.TimeStamp3;
+         temp=( 1 << 24 | (0x00FFFFFF & padding) );
+        *(( (int*)&(p_pkt_tx->Synchronization) ) +1)=htonl(temp);
+        p_pkt_tx->Synchronization.TimeStamp1= htonll(p_pkt_rx->Synchronization.TimeStamp1);
+        p_pkt_tx->Synchronization.TimeStamp2=htonll(tstamp);
+        p_pkt_tx->Synchronization.TimeStamp3=htonll(p_pkt_rx->Synchronization.TimeStamp3);
+
     }
     else if (count==1)
     {
-        p_pkt_tx->Synchronization.TimeStamp1= p_pkt_rx->Synchronization.TimeStamp1;
-        p_pkt_tx->Synchronization.TimeStamp2=p_pkt_rx->Synchronization.TimeStamp2;
-        p_pkt_tx->Synchronization.TimeStamp3=tstamp;
+        temp=( 2 << 24 | (0x00FFFFFF & padding) );
+        *(( (int*)&(p_pkt_tx->Synchronization) ) +1)=htonl(temp);
+        p_pkt_tx->Synchronization.TimeStamp1= htonll(p_pkt_rx->Synchronization.TimeStamp1);
+        p_pkt_tx->Synchronization.TimeStamp2=htonll(p_pkt_rx->Synchronization.TimeStamp2);
+        p_pkt_tx->Synchronization.TimeStamp3=htonll(tstamp);
     }
     else if (count==2)
     {
-        p_pkt_tx->Synchronization.TimeStamp1= tstamp;
-        p_pkt_tx->Synchronization.TimeStamp2=p_pkt_rx->Synchronization.TimeStamp2;
-        p_pkt_tx->Synchronization.TimeStamp3=p_pkt_rx->Synchronization.TimeStamp3;
+        temp=( 0 << 24 | (0x00FFFFFF & padding) );
+        *(( (int*)&(p_pkt_tx->Synchronization) ) +1)=htonl(temp);
+        p_pkt_tx->Synchronization.TimeStamp1= htonll(tstamp);
+        p_pkt_tx->Synchronization.TimeStamp2=htonll(p_pkt_rx->Synchronization.TimeStamp2);
+        p_pkt_tx->Synchronization.TimeStamp3=htonll(p_pkt_rx->Synchronization.TimeStamp3);
     }
+
 
     *p_actual_len=4+4+4+8+8+8;
 }
@@ -332,6 +350,7 @@ void DoPrepareSyncPacket(APPLEMIDI_T *p_pkt_tx,APPLEMIDI_T *p_pkt_rx,unsigned in
 void AppleMIDIChannel::PrepareSyncPacket(int *p_actual_len)
 {
     int padding = 0x0000;
+
     SetTimestamp(channel);
     DoPrepareSyncPacket(&(channel->AppleMidiTx),&(channel->AppleMidiRx),channel->SenderSource,channel->Timestamp,channel->AppleMidiRx.Synchronization.Count,padding,p_actual_len);
 }
@@ -362,7 +381,7 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
         {
             if (FD_ISSET(manager->my_read_fds[i], &manager->readset))
             {
-                short rx_command, ch_state;
+                short rx_command, ch_state,rx_cnt;
                 int rx_token, tx_pkt_len;
                 if (i==0)
                 {
@@ -399,8 +418,13 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                     }
                     else if (ch_state==Synchronization)
                     {
-                        manager->GetDataChannel()->PrepareSyncPacket(&tx_pkt_len);
-                        manager->GetDataChannel()->SendPkt(tx_pkt_len);
+
+                        manager->GetDataChannel()->GetReceivedSyncCount(&rx_cnt);
+                        if (rx_cnt==0)
+                        {
+                            manager->GetDataChannel()->PrepareSyncPacket(&tx_pkt_len);
+                            manager->GetDataChannel()->SendPkt(tx_pkt_len);
+                        }
                     }
 
                 }
