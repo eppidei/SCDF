@@ -10,6 +10,7 @@
 #include "FuzAppleMIDIDefines.h"
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #ifdef ANDROID
 #include <time.h>
 #else
@@ -394,7 +395,13 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                     manager->GetControlChannel()->GetReceivedToken(&rx_token);
                     manager->GetControlChannel()->SetIniziatorToken(rx_token);
                     ch_state=rx_command;
-                    if (ch_state==Invitation)
+                    if (ch_state==EndSession)
+                    {
+                            manager->GetControlChannel()->Release();
+                         LOGD("Session ENDED BY HOST\n");
+
+                    }
+                    else if (ch_state==Invitation)
                     {
                         manager->GetControlChannel()->PrepareAcceptInvitationPacket(&tx_pkt_len);
                         manager->GetControlChannel()->SendPkt(tx_pkt_len);
@@ -403,6 +410,7 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                     {
                         LOGD("CTRL CHANNELL FEEDBACK\n");
                     }
+
                 }
                 else if (i==1)
                 {
@@ -413,6 +421,13 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
                     manager->GetDataChannel()->GetReceivedToken(&rx_token);
                     manager->GetDataChannel()->SetIniziatorToken(rx_token);
                     ch_state=rx_command;
+                    if (ch_state==EndSession)
+                    {
+                        manager->GetDataChannel()->Release();
+                         LOGD("Session ENDED BY HOST\n");
+
+                    }
+                    else
                     if (ch_state==Invitation)
                     {
                         manager->GetDataChannel()->PrepareAcceptInvitationPacket(&tx_pkt_len);
