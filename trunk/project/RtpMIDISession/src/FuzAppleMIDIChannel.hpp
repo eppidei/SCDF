@@ -57,6 +57,7 @@ class AppleMIDIChannelsManager
     scdf::ThreadUtils::ThreadHandle handle;
 
     static void ConnectionProcedure(void *param);
+    void InitConnection();
 public:
     void StartConnection();
     void StopConnection();

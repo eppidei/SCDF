@@ -358,6 +358,9 @@ void AppleMIDIChannel::PrepareSyncPacket(int *p_actual_len)
 void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
 {
     AppleMIDIChannelsManager *manager=(AppleMIDIChannelsManager*)param;
+
+    manager->InitConnection();
+
     int i;
     while(1){
     for (i=0;i<manager->active_read_fds;i++)
@@ -442,7 +445,7 @@ void AppleMIDIChannelsManager::StopConnection()
     dataChannel.Release();
 }
 
-void AppleMIDIChannelsManager::StartConnection()
+void AppleMIDIChannelsManager::InitConnection()
 {
     int src_ctrl=50004;
     int dst_ctrl=-1;//5004;
@@ -473,6 +476,40 @@ void AppleMIDIChannelsManager::StartConnection()
 
     active_read_fds=2;
     active_write_fds=2;
-maxfd=my_read_fds[active_read_fds-1]+1;
+    maxfd=my_read_fds[active_read_fds-1]+1;
+}
+
+void AppleMIDIChannelsManager::StartConnection()
+{
+//    int src_ctrl=50004;
+//    int dst_ctrl=-1;//5004;
+//    int src_stream=src_ctrl+1;//50005;
+//    int dst_stream=-1;
+//
+//
+//    char RemoteIp[40];//="192.168.1.183";
+//    char LocalIp[40];//="192.168.1.52";
+//
+//    int local_port;
+//
+//
+//
+//    probeChannel.InitProbeChannelOnly(src_ctrl,&dst_ctrl,RemoteIp,sizeof(RemoteIp),&local_port,LocalIp,sizeof(LocalIp));
+//    probeChannel.Release();
+//
+//    if (local_port!=src_ctrl)
+//    {
+//
+//        LOGD("ERROR : received port message %d is different from expected %d\n)",local_port,src_ctrl);
+//    }
+//    dst_stream=dst_ctrl+1;
+//
+//    controlChannel.Init(LocalIp, RemoteIp, dst_ctrl, src_ctrl, &my_write_fds[0],&my_read_fds[0], "AugmentedAppleMidi Crtl Channel" ,0x6db86c19);
+//    dataChannel.Init(LocalIp, RemoteIp, dst_stream, src_stream, &my_write_fds[1],&my_read_fds[1], "AugmentedAppleMidi Stream Channel", 0x6db86c1a);
+//    FD_ZERO(&readset);
+//
+//    active_read_fds=2;
+//    active_write_fds=2;
+//    maxfd=my_read_fds[active_read_fds-1]+1;
     this->handle=scdf::ThreadUtils::CreateThread((start_routine)ConnectionProcedure, this);
 }
