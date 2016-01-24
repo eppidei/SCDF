@@ -32,6 +32,7 @@ private:
     void SetIniziatorToken(int Token);
     void SetName(const char *p_name);
     void SendPkt(size_t BuffSize);
+    void SendDataPkt(char *buff, size_t buffSize);
     void GetReceivedCommand(short *p_Command);
     void GetReceivedSyncCount(short *p_count);
     void Release();
@@ -40,7 +41,7 @@ private:
 public:
     void Init(char *p_LocalIp, char *p_RemoteIp, int DstPort, int SrcPort, int *p_TxDesc, int *p_RxDesc, std::string p_ChName, unsigned int SenderSrc);
     void InitProbeChannelOnly( int DstPort,int *remote_port,char *remote_ipv4name,size_t remote_name_size,int *local_port,char *local_ipv4name,size_t local_name_size);
-
+    unsigned int GetChSsrc();
 };
 
 class AppleMIDIChannelsManager
@@ -57,12 +58,14 @@ class AppleMIDIChannelsManager
     scdf::ThreadUtils::ThreadHandle handle;
 
     static void ConnectionProcedure(void *param);
+    static void TestRtpMIDISendProcedure(void *param);
     void InitConnection();
 public:
     void StartConnection();
     void StopConnection();
     AppleMIDIChannel *GetControlChannel() {return &controlChannel;}
     AppleMIDIChannel *GetDataChannel() {return &dataChannel;}
+    int64_t GetDataChSsrc();
 };
 
 #endif /* FuzAppleMIDIChannel_hpp */

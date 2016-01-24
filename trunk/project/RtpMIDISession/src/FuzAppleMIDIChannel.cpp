@@ -8,6 +8,7 @@
 
 #include "FuzAppleMIDIChannel.hpp"
 #include "FuzAppleMIDIDefines.h"
+#include "RtpMidi.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -269,10 +270,21 @@ void AppleMIDIChannel::SendPkt(size_t BuffSize)
     ADE_UdpSender_SendExternalBuff(channel->p_Sender,BuffSize, &SentSize);
 }
 
+void AppleMIDIChannel::SendDataPkt(char *buff, size_t buffSize)
+{
+    ssize_t SentSize;
+    ADE_UdpSender_SetExternallBuff(channel->p_Sender,buff, buffSize);
+    ADE_UdpSender_SendExternalBuff(channel->p_Sender,buffSize, &SentSize);
+}
 
 void AppleMIDIChannel::GetReceivedSyncCount(short *p_count)
 {
     *p_count=channel->AppleMidiRx.Synchronization.Count;
+}
+
+unsigned int AppleMIDIChannel::GetChSsrc()
+{
+    return channel->SenderSource;
 }
 
 void AppleMIDIChannel::GetReceivedCommand(short *p_Command)
@@ -291,21 +303,27 @@ void AppleMIDIChannel::GetReceivedToken(int *p_Token)
     *p_Token=channel->AppleMidiRx.Invitation.IniziatorToken;
 }
 
-void SetTimestamp(APPLEMIDI_CH_T *p_ch)
+int64_t GetTimestamp()
 {
+    int64_t ret=0;
 #ifdef ANDROID
     struct timespec monotime;
     clock_gettime(CLOCK_MONOTONIC, &monotime);
-    p_ch->Timestamp=monotime.tv_nsec;
+    ret=monotime.tv_nsec;
 #else
     clock_serv_t cclock;
     mach_timespec_t mts;
 
     host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
     clock_get_time(cclock, &mts);
-    p_ch->Timestamp=mts.tv_nsec;
+    ret=mts.tv_nsec;
     mach_port_deallocate(mach_task_self(), cclock);
-    #endif
+#endif
+    return ret;
+}
+void SetTimestamp(APPLEMIDI_CH_T *p_ch)
+{
+    p_ch->Timestamp=GetTimestamp();
 }
 
 void DoPrepareSyncPacket(APPLEMIDI_T *p_pkt_tx,APPLEMIDI_T *p_pkt_rx,unsigned int SenderSource,ADE_UINT64_T tstamp,char count,int padding,int *p_actual_len)
@@ -356,11 +374,32 @@ void AppleMIDIChannel::PrepareSyncPacket(int *p_actual_len)
     DoPrepareSyncPacket(&(channel->AppleMidiTx),&(channel->AppleMidiRx),channel->SenderSource,channel->Timestamp,channel->AppleMidiRx.Synchronization.Count,padding,p_actual_len);
 }
 
+void AppleMIDIChannelsManager::TestRtpMIDISendProcedure(void *param)
+{
+    AppleMIDIChannelsManager *manager=(AppleMIDIChannelsManager*)param;
+    sleep(5);
+    RtpMidiPack_Class rtpPacker(manager->GetDataChSsrc(), GetTimestamp());
+    while(1)
+    {
+        int note = 45;
+        int velocity = 120;
+        int channel = 1;
+
+        rtpPacker.noteOn(note, velocity, channel);
+        manager->GetDataChannel()->SendDataPkt(rtpPacker.GetPacket(), rtpPacker.GetPacketSize());
+        //AppleMIDI.noteOff(note, velocity, channel);
+        //manager->GetDataChannel()->SendDataPkt(AppleMIDI.GetPacket(), AppleMIDI.GetPacketSize());
+        sleep(2);
+    }
+}
+
 void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
 {
     AppleMIDIChannelsManager *manager=(AppleMIDIChannelsManager*)param;
 
     manager->InitConnection();
+
+    scdf::ThreadUtils::CreateThread((start_routine)TestRtpMIDISendProcedure, manager);
 
     int i;
     while(1){
@@ -451,6 +490,11 @@ void AppleMIDIChannelsManager::ConnectionProcedure(void *param)
     }
 
 }
+}
+
+int64_t AppleMIDIChannelsManager::GetDataChSsrc()
+{
+    return GetDataChannel()->GetChSsrc();
 }
 
 void AppleMIDIChannelsManager::StopConnection()
