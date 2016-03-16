@@ -1,6 +1,6 @@
 mDNS_TEST_JNI_DIR := $(call my-dir)
-SCDF_TRUNK := /Users/leonardo/Documents/SCDF2.0
-#SCDF_TRUNK := $(mDNS_TEST_JNI_DIR)/../../../..
+#SCDF_TRUNK := /Users/leonardo/Documents/SCDF2.0
+SCDF_TRUNK := $(mDNS_TEST_JNI_DIR)/../../..
 
 BLAS_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/CLAPACK/jni
 FFTW3_MAKEFILE_PATH:=$(SCDF_TRUNK)/lib/FFTw3/jni

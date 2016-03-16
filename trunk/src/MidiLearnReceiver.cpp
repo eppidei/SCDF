@@ -12,7 +12,14 @@
 #include "Logging.h"
 #include "MidiUtils.h"
 
+#ifndef ANDROID
 void OnMidiLearnReceived(ScdfCtrl::MidiMessageType message, int channel, int dataValue_01,int dataValue_02);
+#else
+void OnMidiLearnReceived(ScdfCtrl::MidiMessageType message, int channel, int dataValue_01,int dataValue_02)
+{
+
+}
+#endif
 
 namespace Scdf {
     

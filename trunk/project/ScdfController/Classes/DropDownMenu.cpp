@@ -73,14 +73,18 @@ void DropDownMenu::OnToggleOpenMenu()
         getItem(_curSelectedIndex)->setColor(Color3B::BLACK);
 }
 
-void DropDownMenu::ToggleOpenMenu()
+bool DropDownMenu::ToggleOpenMenu()
 {
-    if (GetNumItems()<=1) return;
+    if (GetNumItems()<=1) {
+    	opened=false;
+    	return false;
+    }
     
     EnableTouchEvents(false);
     opened=!opened;
     OnToggleOpenMenu();
     Resize();
+    return true;
 }
 
 void DropDownMenu::SetCallback(DropDownMenuCallback *_callback)
@@ -161,15 +165,20 @@ void DropDownMenu::OnControlTouch(Ref *pSender, cocos2d::ui::ListView::EventType
     switch (type)
     {
         case ListView::EventType::ON_SELECTED_ITEM_END:
-            if(touchEnabled)
-                ToggleOpenMenu();
-            if (!opened) //on closure
+        {
+        	bool toggled;
+
+        	if(touchEnabled)
+                toggled = ToggleOpenMenu();
+
+        	if (toggled && !opened) //on closure
             {
                 SetSelectedIndex((int)getCurSelectedIndex());
                 if (callback )
                     callback->OnSelectItem(this);
             }
             break;
+        }
         default:
             break;
     }

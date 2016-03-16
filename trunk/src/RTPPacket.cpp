@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "RTPPacket.h"
-
+#include <sys/endian.h>
 #define HEADER_SIZE 12
 #define MIDI_PAYLOAD_HEADER_SIZE 1
 

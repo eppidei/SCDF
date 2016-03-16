@@ -20,6 +20,8 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 @SuppressLint("NewApi") 
@@ -91,7 +93,7 @@ public class UsbHandler {
 	        	Log.i(TAG,"USB - action usb device detached");
 	    		UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 	    		if (device != null) {
-	    			//CloseUsbDevice(device);
+	    			CloseUsbDevice(device);
 	    		}
 	    		Log.i(TAG, "USB - usb device parcelable extra got");
 	    	}
@@ -314,7 +316,7 @@ public class UsbHandler {
 	{
 		Log.d(TAG,"USB - Close usb device using UsbDevice (java part)");
 		
-		for (int i=openDevices.size(); i>=0; i--)
+		for (int i=openDevices.size()-1; i>=0; i--)
 		{
 			if (openDevices.get(i).device==device)
 				CloseUsbDevice(i);
@@ -340,16 +342,22 @@ public class UsbHandler {
 	public static boolean AddListener(UsbListener l) { return listeners.add(l); }
 	public static boolean RemoveListener(UsbListener l) { return listeners.remove(l); }
 	public static void ClearListeners() { listeners.clear();}
-		
-	private static void CallListeners(int deviceId, int evCode) 
+	
+	private static void CallListeners(final int deviceId, final int evCode) 
 	{ 
-		Log.i(TAG,"USB - java handler call java listeners");
-		// java listeners:
-		for (UsbListener list: listeners) 
-			list.OnUsbEvent(deviceId,evCode);
-		// native listeners:
-		Log.i(TAG,"USB java handler- call native listeners");
-		CallNativeListeners(deviceId,evCode);
+		new Handler(Looper.getMainLooper()).post( new Runnable() {
+		    @Override 
+		    public void run() 
+		    {
+				Log.i(TAG,"USB - java handler call java listeners");
+				// java listeners:
+				for (UsbListener list: listeners) 
+					list.OnUsbEvent(deviceId,evCode);
+				// native listeners:
+				Log.i(TAG,"USB java handler- call native listeners");
+				CallNativeListeners(deviceId,evCode);
+		    }
+		});
 	}
 	
 	// Will need something like this in the activity for auto discovery of usb devices:

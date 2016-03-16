@@ -43,7 +43,7 @@ namespace ScdfCtrl
         void ScrollToSelected();
         void Resize();
         void DoResizeAndScroll(float newHeight, bool disableScrolling);
-        void ToggleOpenMenu();
+        bool ToggleOpenMenu();
         void BeforeInitData();
         void AfterInitData();
         void InitNullData();
