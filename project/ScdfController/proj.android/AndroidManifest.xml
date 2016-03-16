@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="it.fuzone.controller"
-      android:versionCode="10200031" 
-      android:versionName="1.0.2"
+      android:versionCode="10400051" 
+      android:versionName="1.0.4"
       android:installLocation="auto">
 
     <!-- versionCode: vvvbbbbp (v: version, b: build number, p: platform (1=armv7) -->

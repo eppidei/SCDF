@@ -31,7 +31,7 @@
 
 #ifndef DNSSEC_DISABLED
 
-typedef enum 
+typedef enum
 {
     NSEC3ClosestEncloser,
     NSEC3Covers,
@@ -62,7 +62,7 @@ mDNSlocal int NSEC3SameName(const mDNSu8 *name, int namelen, const mDNSu8 *nsecN
 {
     int i;
 
-    // Note: With NSEC3, the lengths should always be same. 
+    // Note: With NSEC3, the lengths should always be same.
     if (namelen != nsecLen)
     {
         LogMsg("NSEC3SameName: ERROR!! namelen %d, nsecLen %d", namelen, nsecLen);
@@ -103,7 +103,7 @@ mDNSlocal mDNSBool NSEC3CoversName(mDNS *const m, CacheRecord *ncr, const mDNSu8
     // Compare the owner names and the "nxt" names.
     //
     // Owner name is base32 encoded and hence use the base32 encoded name b32name.
-    // nxt name is binary and hence use the binary value in hashName. 
+    // nxt name is binary and hence use the binary value in hashName.
     ret1 = NSEC3SameName(&ncr->resrec.name->c[1], ncr->resrec.name->c[0], b32Name, b32len);
     ret2 = DNSMemCmp(nxtName, hashName, hashLen);
 
@@ -147,7 +147,7 @@ mDNSlocal mDNSBool NSEC3CoversName(mDNS *const m, CacheRecord *ncr, const mDNSu8
     //
     // - ret1 < 0 means "name > owner"
     // - ret2 > 0 means "name < nxt"
-    // 
+    //
     // Note: We also handle the case of only NSEC3 in the zone where NSEC3SameName returns zero.
     ret = NSEC3SameName(b32nxtname, b32nxtlen, &ncr->resrec.name->c[1], ncr->resrec.name->c[0]);
     if (ret <= 0 &&
@@ -228,7 +228,7 @@ mDNSlocal mDNSBool NSEC3Find(mDNS *const m, NSEC3FindValues val, CacheRecord *nc
     }
 
     for (i = 0; i < labelCount + 1; i++)
-    { 
+    {
         int hlen;
         const mDNSu8 hashName[NSEC3_MAX_HASH_LEN];
         const domainname *name;
@@ -269,9 +269,9 @@ mDNSlocal mDNSBool NSEC3Find(mDNS *const m, NSEC3FindValues val, CacheRecord *nc
             // NSEC3 owner names are formed by hashing the owner name and then appending
             // the zone name to it. If we skip the first label, the rest should be
             // the zone name. See whether it is the subdomain of the name we are looking
-            // for. 
+            // for.
             result = DNSSECCanonicalOrder(origName, nsecZone, &subdomain);
-            
+
             // The check can't be a strict subdomain check. When NSEC3ClosestEncloser is
             // passed in, there can be an exact match. If it is a subdomain or an exact
             // match, we should continue with the proof.
@@ -723,7 +723,7 @@ mDNSexport CacheRecord *NSEC3RecordIsDelegation(mDNS *const m, domainname *name,
             // Section 2.3 of RFC 4035 states that:
             //
             // Each owner name in the zone that has authoritative data or a delegation point NS RRset MUST
-            // have an NSEC resource record. 
+            // have an NSEC resource record.
             //
             // This applies to NSEC3 record. So, if we have an NSEC3 record matching the question name with the
             // NS bit set, then this is a delegation.
@@ -732,7 +732,7 @@ mDNSexport CacheRecord *NSEC3RecordIsDelegation(mDNS *const m, domainname *name,
             {
                 int bmaplen;
                 mDNSu8 *bmap;
-                
+
                 LogDNSSEC("NSEC3RecordIsDelegation: CacheRecord %s matches name %##s, b32name %s", CRDisplayString(m, cr), name->c, b32Name);
                 NSEC3Parse(&cr->resrec, mDNSNULL, mDNSNULL, mDNSNULL, &bmaplen, &bmap);
 

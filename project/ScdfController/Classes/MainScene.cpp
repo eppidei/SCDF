@@ -110,6 +110,7 @@ float MainScene::GetUnityBase()
 
 void MainScene::UpdateMIDIDevicesMenu()
 {
+	//propertiesPanel->HideShow(true);
 	LOGD("USB - update mimdi devices menu");
     if (propertiesPanel.get())
         propertiesPanel->UpdateDevicesMenu();

@@ -16,7 +16,11 @@
 #include "SCDFCItems.h"
 #include "OsUtilities.h"
 #include "InAppPurchase.h"
-#include "MidiLearnReceiver.h"
+#include "../MidiLearnReceiver.h"
+
+#ifdef ANDROID
+#include "UsbHandler.h"
+#endif
 
 using namespace ScdfCtrl;
 using namespace cocos2d;
@@ -565,6 +569,7 @@ MIDIInfo::MIDIInfo()
     midiMessage=controlChange=channel=octaveMenu=pitchValue=programValue=velocity=NULL;
     midiMessageLabel=controlChangeLabel=channelLabel=velocityLabel=midiLabel=NULL;
 }
+
 #ifndef PLATF_IOS
 #include "UsbHandler.h"
 #endif
@@ -591,12 +596,16 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 
         case PROPERTIES_MIDI_OUT_DEVICE:
         	LOGD("USB - touch event began, PROPERTIES_MIDI_OUT_DEVICE");
-#ifndef PLATF_IOS
+			#ifndef PLATF_IOS
         	UsbHandler::TryOpeningFirstUsbDevice();
-#endif
+        	this->UpdateDevicesMenu();
+		    #endif
+        	//devices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
         	midiOutDevices->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
-        case PROPERTIES_MIDI_MESSAGE: midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
+
+        case PROPERTIES_MIDI_MESSAGE:
+        	midiMessage->OnControlTouch(NULL, ListView::EventType::ON_SELECTED_ITEM_END);
             break;
         case PROPERTIES_MIDI_CONTROL:
         {
@@ -625,15 +634,28 @@ void MIDIInfo::OnTouchEventBegan(cocos2d::Node *widget)
 
 void MIDIInfo::UpdateDevicesMenu()
 {
+	//static int K = 0;
 	LOGD("USB - midiinfo update devices menu");
     std::vector<DropDownMenuData> dropDownData;
     dropDownData.push_back(DropDownMenuData("No MIDI connection",Colors::Instance()->GetUIColor(Colors::DropDownText)));
-    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i) {
+
+    for (int i=0;i<Scdf::MidiOutConnection::GetNumAvailableOutputs();++i)
+    {
        LOGD("USB - update devices menu. get name for out %d",i);
     	dropDownData.push_back(DropDownMenuData(Scdf::MidiOutConnection::GetOutputName(i),Colors::Instance()->GetUIColor(Colors::DropDownText)));
     }
     midiOutDevices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
-    
+
+    /*for (int i=0;i<K;++i)
+    {
+    	std::stringstream ss;
+    	ss << "Dummy " << i;
+    	dropDownData.push_back(DropDownMenuData(ss.str(),Colors::Instance()->GetUIColor(Colors::DropDownText)));
+    }
+
+    devices->InitData(dropDownData, SUBPANEL_ITEM_HEIGHT);
+
+    K++;*/
 }
 #ifndef PLATF_IOS
 #include "UsbHandler.h"
